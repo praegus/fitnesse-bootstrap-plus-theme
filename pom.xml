@@ -33,9 +33,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</connection>
+		<connection>scm:git:https://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</connection>
 		<url>https://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</url>
-		<developerConnection>scm:git:git://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</developerConnection>
+		<developerConnection>scm:git: https://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</developerConnection>
 	</scm>
 
 	<build>
@@ -80,6 +80,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
 				<configuration>
 				</configuration>
 			</plugin>
