@@ -8,8 +8,8 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 * Suites now have a 'run tags' input field in the navigation bar, so all tests containing any of the specified tags in this input field can be run immediately
 
 ###Usage:
-* Build the jar via mvn clean install
-* Place the jar in FitNesse's plugins-directory
+* Build the jar: `mvn clean install`
+* Copy the jar form the traget directory to FitNesse's plugins-directory
 * Add 'Theme=bootstrap-plus' to plugins.properties
 
 ###Screenshots:
