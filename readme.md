@@ -9,7 +9,7 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 
 ###Usage:
 * Build the jar: `mvn clean install`
-* Copy the jar form the traget directory to FitNesse's plugins-directory
+* Copy the jar from the target directory to FitNesse's plugins-directory
 * Add 'Theme=bootstrap-plus' to plugins.properties
 
 ###Screenshots:
