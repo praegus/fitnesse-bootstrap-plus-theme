@@ -18,7 +18,7 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 ![alt text](https://github.com/tcnh/binstore/raw/master/tabs.png "Tab bar")
 
 ####Table of contents
-![alt text](https://github.com/tcnh/binstore/raw/master/toc.png|alt="Table of contents")
+![alt text](https://github.com/tcnh/binstore/raw/master/toc.png "Table of contents")
 
 ####Navigation Bar
-![alt text](https://github.com/tcnh/binstore/raw/master/navbar.png|alt="Navigation bar for suites")
+![alt text](https://github.com/tcnh/binstore/raw/master/navbar.png "Navigation bar for suites")
