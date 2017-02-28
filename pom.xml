@@ -45,7 +45,7 @@
 							<directory>${project.basedir}/fitnesse/resources/bootstrap-plus/css</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
-								<include>**</include>
+								<include>fitnesse-bootstrap-plus.css</include>
 							</includes>
 						</fileset>
 					</filesets>
