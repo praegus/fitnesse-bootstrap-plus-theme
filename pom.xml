@@ -42,7 +42,6 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<!-- On clean throw away old screenshots, pagesources and downloads stored by BrowserTest -->
 							<directory>${project.basedir}/fitnesse/resources/bootstrap-plus/css</directory>
 							<followSymlinks>false</followSymlinks>
 							<includes>
@@ -110,6 +109,9 @@
 				<includes>
 					<include>fitnesse/resources/bootstrap-plus/**/*.*</include>
 				</includes>
+				<excludes>
+					<exclude>**/less/**</exclude>
+				</excludes>
 			</resource>
 		</resources>
 	</build>
