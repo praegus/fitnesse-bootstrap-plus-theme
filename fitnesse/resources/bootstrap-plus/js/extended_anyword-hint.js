@@ -1,6 +1,7 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 // Modified to adjust to FitNesse.org basic needs
+var autoCompleteJson;
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -11,17 +12,16 @@
     mod(CodeMirror);
 })(function(CodeMirror) {
   "use strict";
-
+  $("#spinner").show();
   var WORD = /([@>!$\w]\w*)([^|]*\|)?/, RANGE = 500;
-  var autonames;
+  var autonames = [];
   var autocompletes = [];
-
-    var pageDataUrl = window.location.pathname + "?names";
+  var pageDataUrl = window.location.pathname + "?names";
       $.ajax({
         url: pageDataUrl,
 		async: true,
         cache: true,
-        timeout: 2000,
+        timeout: 10000,
         success: function(result) {
 		    autonames = result.split(/\r?\n/);
         },
@@ -33,35 +33,32 @@
 	if(window.location.pathname.indexOf("ScenarioLibrary") !== -1) {
 	    pageDataUrl = document.referrer + "?autoComplete";
 	} else {
-        var pageDataUrl = window.location.pathname + "?autoComplete";
+        pageDataUrl = window.location.pathname + "?autoComplete";
 	}
       $.ajax({
         dataType: "json",
         url: pageDataUrl,
 		async: true,
         cache: true,
-        timeout: 6000,
+        timeout: 10000,
         success: function(result) {
+        autoCompleteJson = result;
             $.each(result.classes, function(cIndex, c) {
              autocompletes.push(c.readableName);
              $.each(c.availableMethods, function(mIndex, m) {
-                var methodEntry = m.name;
-                if(m.parameters) {
-                  methodEntry += " | " + m.parameters;
-                  }
+                var methodEntry = m.wikiText;
                 autocompletes.push(methodEntry);
                 });
              });
 		     $.each(result.scenarios, function(sIndex, s) {
-		      var scenarioEntry = s.name;
-		       if(s.parameters) {
-                scenarioEntry += " | " + s.parameters;
-                }
+		     var scenarioEntry = s.wikiText;
                 autocompletes.push(scenarioEntry);
 		     });
 		     $.each(result.variables, function(vIndex, v) {
 		      autocompletes.push(v);
 		     });
+		     $("#spinner").remove();
+		     $('.toggle-bar').show();
         },
         error: function() {
           console.log("Error Accessing Page Content from autoComplete Responder. Is it installed? See https://github.com/tcnh/FitNesseAutocompleteResponder");

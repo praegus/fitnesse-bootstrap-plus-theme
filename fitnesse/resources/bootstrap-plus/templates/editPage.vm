@@ -71,6 +71,7 @@
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
  </fieldset>
 </form>
+<div id="helper-bar" class="side-bar">&nbsp;</div>
 
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen" />
 <script src="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.js" type="text/javascript"></script>
