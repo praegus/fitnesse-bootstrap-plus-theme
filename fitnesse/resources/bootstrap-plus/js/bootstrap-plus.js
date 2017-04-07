@@ -55,6 +55,33 @@ function filterHelpList() {
         }
     }
 
+function getCellValues(line) {
+    var pattern = /([^|]+)/g;
+    var match;
+    var cells = [];
+    do {
+        match = pattern.exec(line);
+        if (match) {
+            cells.push(match[0]);
+        }
+    } while (match);
+    return cells;
+    }
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+var fitnesseWords = ['show', 'ensure', 'reject', 'check', 'check not', 'note'];
+
 $( document ).ready(function() {
    $(".test").each(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
@@ -71,28 +98,31 @@ $( document ).ready(function() {
             var cmEditor = $('.CodeMirror')[0].CodeMirror;
             var lineNr = cmEditor.doc.getCursor().line;
             var line = cmEditor.doc.getLine(lineNr);
-            var firstCell = line.match(/[a-zA-Z0-9 _-]+/);
+            var lineCells = getCellValues(line);
+            var offset = 0;
+            var useCell = true;
+            var searchString = '';
+            if(fitnesseWords.includes(lineCells[0].trim())) {
+                offset = 1;
+            }
+            for (var i = (0 + offset); i < lineCells.length; i++) {
+                if(useCell == true ) {
+                    searchString += lineCells[i].trim() + ' ';
+                    useCell = false;
+                } else {
+                    useCell = true;
+                }
+            }
             if(!$(".side-bar").is(":visible")){
                 $(".side-bar").slideToggle();
             }
-            $('#filter').val(firstCell[0].trim());
+            $('#filter').val(searchString.trim());
             filterHelpList();
         };
    })();
 
-   var insertAtCursor = (function insertAtCursor(line) {
-           return function(){
-               var cmEditor = $('.CodeMirror')[0].CodeMirror;
-               var lineNr = cmEditor.doc.getCursor().line;
-               var line = cmEditor.doc.getLine(lineNr);
-               var firstCell = line.match(/[a-zA-Z0-9 _-]+/);
-               if(!$(".side-bar").is(":visible")){
-                   $(".side-bar").slideToggle();
-               }
-               $('#filter').val(firstCell[0].trim());
-               filterHelpList();
-           };
-      })();
+
+
 
 
    //Get definition on SHIFT-ALT-D
@@ -139,6 +169,12 @@ $( document ).ready(function() {
         }, 600 );
     });
 
+    $('body').on('click', '.insert', function() {
+         var cmEditor = $('.CodeMirror')[0].CodeMirror;
+         var textToInsert = $( this ).attr( 'insertText' );
+         cmEditor.doc.replaceSelection(textToInsert + '\n');
+    });
+
    function populateContext(){
        var helpList = "";
        var helpId = 0;
@@ -148,9 +184,11 @@ $( document ).ready(function() {
         helpList += '<li class="coll closed"><label for="tree-scenarios">Scenario\'s</label>';
                helpList += '<input class="togglebox" type="checkbox" id="tree-scenarios" />';
                helpList += '<ol id="scenarios">'
-                    $.each(autoCompleteJson.scenarios, function(sIndex, s) {
+               var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort("name"));
+                    $.each(sortedScenarios, function(sIndex, s) {
                          helpList += '<li class="coll closed">';
                          helpList += '<label class="filterIt" for="help-' + helpId + '">' + s.name.UcFirst() + '</label>';
+                         helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
                          helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                          helpList += '<ol>';
                          helpId = helpId+1;
@@ -171,12 +209,14 @@ $( document ).ready(function() {
                  helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                  helpId = helpId+1;
                  helpList += '<ol>';
-                  $.each(c.availableMethods, function(mIndex, m) {
+                 var sortedMethods = c.availableMethods.sort(dynamicSort("name"));
+                  $.each(sortedMethods, function(mIndex, m) {
                         helpList += '<li class="item method"><span class="filterIt">' + m.name;
                         if(m.parameters) {
                             helpList += ' (' + m.parameters + ')';
                         }
-                        helpList += '</span></li>';
+                        helpList += '</span>';
+                        helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i></li>';
                   });
                   helpList += '</ol></li>';
             });

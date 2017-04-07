@@ -439,6 +439,10 @@ fieldset {
   float: right;
 }
 
+.collapse_rim {
+    background: #ff0 !important;
+}
+
 .side-bar {
   font-size: 0.8em;
   position: absolute;
@@ -473,7 +477,7 @@ fieldset {
 .side-bar li{list-style-type:none;color:#000;position:relative;margin-left:-15px;}
 .side-bar li label{cursor:pointer;display:inline-block;}
 .side-bar li input{width:1em;height:1em;position:absolute;left:-0.5em;top:0;opacity:0;cursor:pointer;}
-.side-bar li.closed:before {content: "\f196"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
+.side-bar li.closed:before {content: "\f0d7"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
 .side-bar li input + ol{height:1em;margin:-16px 0 0 -44px;}
 .side-bar li input + ol > li{display:none;margin-left:-14px !important;padding-left:1px}
 .side-bar li.item{margin-left:-1px !important;}
@@ -481,7 +485,8 @@ fieldset {
 .side-bar li input:checked + ol{height:auto;margin:-21px 0 0 -44px;padding:15px 0 0 80px;}
 .side-bar li input:checked + ol > li{display:block;margin:0 0 0.063em;}
 .side-bar li input:checked + ol > li:first-child{margin:0 0 0.125em;}
-.side-bar li.open:before {content: "\f147"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
-#side-bar-tree label { text-align:left; width: 95%; font-weight:normal;}
+.side-bar li.open:before {content: "\f0d8"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
+#side-bar-tree label { text-align:left; width: 95%; font-weight:normal; margin-left: -15px; padding-left: 15px;}
 #side-bar-tree table { display:inline-table; border: 1px solid grey; }
 #side-bar-tree td { border: 1px solid grey; }
+.side-bar .insert {float: right; margin-right: 17px; cursor: pointer; color: #337ab7; }
