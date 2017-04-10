@@ -6309,6 +6309,9 @@ a.tag:focus {
 .navbar-form.run {
   float: right;
 }
+.collapse_rim {
+  background: #ff0 !important;
+}
 .side-bar {
   font-size: 0.8em;
   position: absolute;
@@ -6342,7 +6345,9 @@ a.tag:focus {
 .side-bar input {
   font-size: 1em;
   margin-left: 20px;
-  max-width: 80%;
+  max-width: 70%;
+  display: inline;
+  vertical-align: middle;
 }
 .side-bar ol.side-bar-tree {
   padding-left: 20px;
@@ -6367,7 +6372,7 @@ a.tag:focus {
   cursor: pointer;
 }
 .side-bar li.closed:before {
-  content: "\f196";
+  content: "\f0d7";
   font-family: FontAwesome;
   display: inline-block;
   width: 1.3em;
@@ -6380,15 +6385,6 @@ a.tag:focus {
   display: none;
   margin-left: -14px !important;
   padding-left: 1px;
-}
-.side-bar li.item {
-  margin-left: -1px !important;
-}
-.side-bar li.item a {
-  display: inline-block;
-  padding-left: 21px;
-  color: #000;
-  text-decoration: none;
 }
 .side-bar li input:checked + ol {
   height: auto;
@@ -6403,7 +6399,7 @@ a.tag:focus {
   margin: 0 0 0.125em;
 }
 .side-bar li.open:before {
-  content: "\f147";
+  content: "\f0d8";
   font-family: FontAwesome;
   display: inline-block;
   width: 1.3em;
@@ -6412,6 +6408,8 @@ a.tag:focus {
   text-align: left;
   width: 95%;
   font-weight: normal;
+  margin-left: -15px;
+  padding-left: 15px;
 }
 #side-bar-tree table {
   display: inline-table;
@@ -6419,5 +6417,20 @@ a.tag:focus {
 }
 #side-bar-tree td {
   border: 1px solid grey;
+}
+.side-bar .insert {
+  float: right;
+  margin-right: 10px;
+  cursor: pointer;
+  color: #337ab7;
+}
+.item:nth-child(even) {
+  background: #DDD;
+}
+li i {
+  padding-top: 3px;
+}
+button#clearFilter {
+  padding: 11px;
 }
 
