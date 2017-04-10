@@ -102,10 +102,14 @@ $( document ).ready(function() {
             var offset = 0;
             var useCell = true;
             var searchString = '';
+            var relevantCells = lineCells.length;
             if(fitnesseWords.includes(lineCells[0].trim())) {
                 offset = 1;
+                if(lineCells[0].trim().indexOf('check') > -1) {
+                    relevantCells--;
+                }
             }
-            for (var i = (0 + offset); i < lineCells.length; i++) {
+            for (var i = (0 + offset); i < relevantCells; i++) {
                 if(useCell == true ) {
                     searchString += lineCells[i].trim() + ' ';
                     useCell = false;
@@ -175,10 +179,16 @@ $( document ).ready(function() {
          cmEditor.doc.replaceSelection(textToInsert + '\n');
     });
 
+    $('body').on('click', '#clearFilter', function(e) {
+               e.preventDefault();
+               $('#filter').val('');
+               filterHelpList();
+          });
+
    function populateContext(){
        var helpList = "";
        var helpId = 0;
-       helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">';
+       helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fa fa-undo" id="clearFilter"></button>';
        helpList += '<ol id="side-bar-tree" class="tree">';
 
         helpList += '<li class="coll closed"><label for="tree-scenarios">Scenario\'s</label>';
@@ -186,7 +196,7 @@ $( document ).ready(function() {
                helpList += '<ol id="scenarios">'
                var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort("name"));
                     $.each(sortedScenarios, function(sIndex, s) {
-                         helpList += '<li class="coll closed">';
+                         helpList += '<li class="coll closed item">';
                          helpList += '<label class="filterIt" for="help-' + helpId + '"><span>' + s.name.UcFirst() + '</span></label>';
                          helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
                          helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
