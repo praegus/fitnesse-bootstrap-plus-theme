@@ -474,8 +474,16 @@ fieldset {
 
 .side-bar input{font-size:1em; margin-left: 20px; max-width:80%;}
 .side-bar ol.side-bar-tree{padding-left:20px;}
-.side-bar li{list-style-type:none;color:#000;position:relative;margin-left:-15px;}
-.side-bar li label{cursor:pointer;display:inline-block;}
+.side-bar li {
+    list-style-type:none;
+    color:#000;
+    position:relative;
+    margin-left:-15px;
+    }
+.side-bar li label{
+    cursor:pointer;
+    display:inline-block;
+    }
 .side-bar li input{width:1em;height:1em;position:absolute;left:-0.5em;top:0;opacity:0;cursor:pointer;}
 .side-bar li.closed:before {content: "\f0d7"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
 .side-bar li input + ol{height:1em;margin:-16px 0 0 -44px;}
@@ -489,4 +497,14 @@ fieldset {
 #side-bar-tree label { text-align:left; width: 95%; font-weight:normal; margin-left: -15px; padding-left: 15px;}
 #side-bar-tree table { display:inline-table; border: 1px solid grey; }
 #side-bar-tree td { border: 1px solid grey; }
-.side-bar .insert {float: right; margin-right: 17px; cursor: pointer; color: #337ab7; }
+.side-bar .insert {float: right; margin-right: 10px; cursor: pointer; color: #337ab7; }
+.filterIt:after {
+    content: '.........................................................................................................';
+    float: left;
+    width: 0;
+    white-space: nowrap;
+    color: #999;
+}
+li span {
+    background: #EEE;
+}

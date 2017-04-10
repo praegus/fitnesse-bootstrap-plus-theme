@@ -187,7 +187,7 @@ $( document ).ready(function() {
                var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort("name"));
                     $.each(sortedScenarios, function(sIndex, s) {
                          helpList += '<li class="coll closed">';
-                         helpList += '<label class="filterIt" for="help-' + helpId + '">' + s.name.UcFirst() + '</label>';
+                         helpList += '<label class="filterIt" for="help-' + helpId + '"><span>' + s.name.UcFirst() + '</span></label>';
                          helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
                          helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                          helpList += '<ol>';
