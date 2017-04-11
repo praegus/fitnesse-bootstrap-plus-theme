@@ -14,7 +14,7 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
   * NOTE: If you want context-aware autosuggest in ScenarioLibraries, make sure to edit them from an edit link on a *test-page*. The hint-script will then use the referring page as context
 * Context-help pane containing all fixtures, methods, scenario's in current test scope
 * Jump to definition for fixture methods and scenario's by pressing alt-shift-d in the editor, revealing candidates in the context-help pane
-  * Definition now works by using the first cell as a filter. So no support for lines starting with check/show/ensure/reject/etc
+* Insert scenario's and fixture methods in the editor by clicking the plus-icon in the context pane
 
 ### Usage:
 #### Option 1
