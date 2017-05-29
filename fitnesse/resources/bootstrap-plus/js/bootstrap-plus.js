@@ -133,6 +133,7 @@ $( document ).ready(function() {
    $(document).keydown(function (e) {
        var evtobj = window.event? event : e
        if (evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) {
+       e.preventDefault();
             if($(".toggle-bar").attr('populated') === undefined) {
                  populateContext();
             }
@@ -213,7 +214,8 @@ $( document ).ready(function() {
         helpList += '<li class="coll closed"><label for="tree-fixtures">Fixtures</label>';
            helpList += '<input class="togglebox" type="checkbox" id="tree-fixtures" />';
            helpList += '<ol id="fixtures">'
-            $.each(autoCompleteJson.classes, function(cIndex, c) {
+            var sortedClasses = autoCompleteJson.classes.sort(dynamicSort("readableName"));
+            $.each(sortedClasses, function(cIndex, c) {
                  helpList += '<li class="coll closed">';
                  helpList += '<label for="help-' + helpId + '">' + c.readableName.UcFirst() + '</label>';
                  helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
