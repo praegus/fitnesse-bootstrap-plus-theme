@@ -21,7 +21,7 @@ var autoCompleteJson;
         url: pageDataUrl,
 		async: true,
         cache: true,
-        timeout: 10000,
+        timeout: 20000,
         success: function(result) {
 		    autonames = result.split(/\r?\n/);
         },
@@ -31,7 +31,11 @@ var autoCompleteJson;
       });
 
 	if(window.location.pathname.indexOf("ScenarioLibrary") !== -1) {
-	    pageDataUrl = document.referrer + "?autoComplete";
+	    var referrer = document.referrer;
+	    if (referrer.slice(-1) == '?') {
+	        referrer = referrer.slice(0, -1);
+	        }
+	    pageDataUrl = referrer + "?autoComplete";
 	} else {
         pageDataUrl = window.location.pathname + "?autoComplete";
 	}
@@ -40,7 +44,7 @@ var autoCompleteJson;
         url: pageDataUrl,
 		async: true,
         cache: true,
-        timeout: 10000,
+        timeout: 20000,
         success: function(result) {
         autoCompleteJson = result;
             $.each(result.classes, function(cIndex, c) {
