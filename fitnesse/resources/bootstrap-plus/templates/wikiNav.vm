@@ -9,6 +9,9 @@
 #if( $actions.suitePage )
  <form class="navbar-form run" role="run" action="?suite">
   <input type="hidden" name="responder" value="suite" />
-  <input type="text" id="searchString" name="runTestsMatchingAnyTag" class="form-control" placeholder="Run tests with tags (any)" />
+  <div id="tagfilter">
+    <input type="text" id="filtertags" name="runTestsMatchingAnyTag" class="form-control" placeholder="Run tests with tags" />
+    <label><input type="checkbox" id="alltags" />All</label>
+  </div>
  </form>
 #end

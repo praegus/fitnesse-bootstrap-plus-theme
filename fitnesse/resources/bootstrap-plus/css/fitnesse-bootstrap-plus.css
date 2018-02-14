@@ -4895,6 +4895,20 @@ label {
 .navbar-form.run {
   float: right;
 }
+#tagfilter label {
+  display: inline;
+  position: relative;
+  right: 55px;
+  font-weight: normal;
+  color: #999;
+  top: 3px;
+}
+#alltags {
+  width: 1.25em;
+  height: 1.25em;
+  position: relative;
+  top: 3px;
+}
 a[name] {
   position: relative;
   display: inline-block;

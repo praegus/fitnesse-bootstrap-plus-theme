@@ -93,6 +93,15 @@ $( document ).ready(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
    });
 
+   $('#alltags').change(function() {
+        if(this.checked) {
+            $("#filtertags").attr('name', 'runTestsMatchingAllTags');
+        } else {
+            $("#filtertags").attr('name', 'runTestsMatchingAnyTag');
+        }
+
+   });
+
    var showDefinitions = (function showDefinitions() {
         return function(){
             var cmEditor = $('.CodeMirror')[0].CodeMirror;
