@@ -87,7 +87,7 @@ $( document ).ready(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
    });
    $(".suite").each(function() {
-        $(this).before('<i class="fa fa-cogs icon-test" aria-hidden="true"></i>&nbsp;');
+        $(this).before('<i class="fa fa-cogs icon-test" aria-hidden="true" title="show/hide"></i>&nbsp;');
    });
    $(".static").each(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
@@ -100,6 +100,10 @@ $( document ).ready(function() {
             $("#filtertags").attr('name', 'runTestsMatchingAnyTag');
         }
 
+   });
+
+   $('.fa-cogs').click(function() {
+        $(this).siblings('ul').toggle();
    });
 
    var showDefinitions = (function showDefinitions() {
