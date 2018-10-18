@@ -5656,7 +5656,7 @@ fieldset[disabled] .editor-toggle label {
   padding: 5px 15px 5px 30px;
   background-image: url(../img/minus-sign.png);
   background-repeat: no-repeat;
-  background-position: 12px 7px;
+  background-position: 8px 8px;
 }
 .collapsible p.title > .dropdown .dropdown-toggle,
 .collapsible.closed p.title > .dropdown .dropdown-toggle {
@@ -5720,6 +5720,7 @@ fieldset[disabled] .editor-toggle label {
   border-radius: 3px;
   float: left;
   position: relative;
+  margin: 0px;
 }
 .collapsible > ul li a:focus,
 .collapsible > ul li a:active:focus,
@@ -6229,21 +6230,25 @@ fieldset[disabled] .btn-primary.focus {
 }
 .btn-secondary {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
+  color: #ffffff;
   background-color: #00A859;
   border: 2px solid #00A859;
 }
 .btn-secondary:focus,
 .btn-secondary.focus {
+  color: #ffffff;
   background-color: #005323;
   border: 2px solid #00A859;
 }
 .btn-secondary:hover {
+  color: #ffffff;
   background-color: #005323;
   border: 2px solid #00A859;
 }
 .btn-secondary:active,
 .btn-secondary.active,
 .open > .dropdown-toggle.btn-secondary {
+  color: #ffffff;
   background-color: #005323;
   border: 2px solid #00A859;
 }
@@ -6256,6 +6261,7 @@ fieldset[disabled] .btn-primary.focus {
 .btn-secondary:active.focus,
 .btn-secondary.active.focus,
 .open > .dropdown-toggle.btn-secondary.focus {
+  color: #ffffff;
   background-color: #005323;
   border: 2px solid #00A859;
 }
