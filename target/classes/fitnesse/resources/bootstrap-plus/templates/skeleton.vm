@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>$pageTitle.Title ($title)</title>
+  ## Deal with HTML 5 element in older IE browsers
+  <!--[if lt IE 9]>
+   <script>
+    document.createElement('header');
+    document.createElement('nav');
+    document.createElement('section');
+    document.createElement('article');
+    document.createElement('footer');
+   </script>
+  <![endif]-->
+
+  #if( $actions.testPage )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/bootstrap-plus/img/test-favicon.png" />
+  #elseif( $actions.suitePage )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/bootstrap-plus/img/suite-favicon.png" />
+  #elseif ( $title.contains("Edit:") )
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/bootstrap-plus/img/edit-favicon.png" />
+  #else
+   <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
+  #end
+
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css">
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
+
+  <script src="${contextRoot}files/fitnesse/javascript/jquery-1.11.3.min.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
+
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
+
+ </head>
+ <body#if( $bodyClass ) class="$bodyClass"#end>
+
+  <nav class="navbar-fixed-top " role="navigation">
+   <div class="navbar navbar-default">
+   <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0;"><img src="${contextRoot}files/fitnesse/bootstrap-plus/img/spinner.gif"></div>
+   <div class="toggle-bar" style="display:none">Context help</div>
+   <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+     <a class="navbar-brand" href="${contextRoot}FrontPage"><span>FitNesse</span></a>
+    </div>
+
+    #parse( $navTemplate )
+    #if( $!errorNavTemplate )
+     #parse( $errorNavTemplate )
+    #end
+
+   </div>
+   #parse( 'breadcrumb.vm' )
+  </nav>
+
+  <header>
+   #parse( $headerTemplate )
+  </header>
+
+  <article>
+   #parse( $mainTemplate )
+  </article>
+
+  #if( $!footerTemplate )
+  <footer>
+   #parse( $footerTemplate )
+  </footer>
+  #end
+
+ </body>
+</html>
