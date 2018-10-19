@@ -80,7 +80,7 @@ function dynamicSort(property) {
     }
 }
 
-var fitnesseWords = ['show', 'ensure', 'reject', 'check', 'check not', 'note'];
+var fitnesseWords = ['show', 'ensure', 'reject', 'check', 'check not', 'note', '', 'note'];
 
 $( document ).ready(function() {
    $(".test").each(function() {
@@ -194,10 +194,22 @@ $( document ).ready(function() {
     });
 
     $('body').on('click', '#clearFilter', function(e) {
-               e.preventDefault();
-               $('#filter').val('');
-               filterHelpList();
-          });
+         e.preventDefault();
+         $('#filter').val('');
+         filterHelpList();
+    });
+
+    $('body').on('click', '.validate', function() {
+        var cm = $('.CodeMirror')[0].CodeMirror;
+        var info = cm.lineInfo(8);
+        cm.setGutterMarker(8, "CodeMirror-lint-markers", info.gutterMarkers ? null : makeMarker());
+    });
+
+    function makeMarker() {
+      var marker = document.createElement("div");
+      marker.setAttribute("class", "CodeMirror-lint-marker-warning");
+      return marker;
+    }
 
    function populateContext(){
        var helpList = "";
@@ -252,6 +264,10 @@ $( document ).ready(function() {
 
        $(".side-bar").append(helpList);
        $(".toggle-bar").attr('populated', 'true');
+   }
+
+   function validateTestPage() {
+
    }
 });
 
