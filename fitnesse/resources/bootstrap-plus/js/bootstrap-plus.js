@@ -212,7 +212,7 @@ $( document ).ready(function() {
     }
 
    function populateContext(){
-       var helpList = "";
+       var helpList = "<div class=\"helper-content\" >";
        var helpId = 0;
        helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fa fa-undo" id="clearFilter"></button>';
        helpList += '<ol id="side-bar-tree" class="tree">';
@@ -260,9 +260,9 @@ $( document ).ready(function() {
             helpList += '</ol>';
             helpList += '</li>';
 
-        helpList += '</ol>';
+        helpList += '</ol></div>';
 
-       $(".side-bar").append(helpList);
+       $(".side-bar").prepend(helpList);
        $(".toggle-bar").attr('populated', 'true');
    }
 
