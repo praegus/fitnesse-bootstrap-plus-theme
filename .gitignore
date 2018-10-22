@@ -6,3 +6,4 @@
 .idea/workspace.xml
 target/*
 .gitignore
+.fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus.css
