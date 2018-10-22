@@ -1,9 +1,3 @@
-.idea/compiler.xml
-.idea/fitnesse-bootstrap-plus-theme.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-.idea/workspace.xml
+.idea/*
 target/*
-.gitignore
 .fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus.css
