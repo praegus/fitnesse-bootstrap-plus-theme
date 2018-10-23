@@ -166,10 +166,10 @@ $( document ).ready(function() {
    })();
 
 
-   //Get definition on SHIFT-ALT-D
+   //Get definition on SHIFT-ALT-D or ctrl-comme
    $(document).keydown(function (e) {
        var evtobj = window.event? event : e
-       if (evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) {
+       if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey) ) {
        e.preventDefault();
             if($(".toggle-bar").attr('populated') === undefined) {
                  populateContext();
@@ -177,6 +177,18 @@ $( document ).ready(function() {
             showDefinitions();
        }
    });
+
+   //Validate on ctrl dot
+      $(document).keydown(function (e) {
+          var evtobj = window.event? event : e
+          if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
+          e.preventDefault();
+               if($(".toggle-bar").attr('populated') === undefined) {
+                    populateContext();
+               }
+               validateTestPage();
+          }
+      });
 
    var delay = (function(){
      var timer = 0;
@@ -227,7 +239,40 @@ $( document ).ready(function() {
         if($(".toggle-bar").attr('populated') === undefined) {
              populateContext();
         }
-        $(".validate-badge").remove();
+        validateTestPage();
+    });
+
+    function isCommentLine(line) {
+        var cells = getCellValues(line);
+        if (cells[0].toLowerCase().trim().startsWith('#') ||
+            cells[0].toLowerCase().trim().startsWith('*') ||
+            cells[0].toLowerCase().trim() === '' ||
+            cells[0].toLowerCase().trim() == 'note') {
+            return true;
+            }
+        return false;
+    }
+
+    function makeMarker(msg, type) {
+      var marker = document.createElement("div");
+      marker.setAttribute("class", "CodeMirror-lint-marker-" + type);
+      marker.setAttribute("title", msg)
+      return marker;
+    }
+
+    function setvalidationBadge(messages) {
+        if(messages == 0) {
+            messages = "✓"
+        }
+        var badge = document.createElement("span");
+        badge.setAttribute("class", "validate-badge");
+        badge.setAttribute("id", "validate-badge");
+        badge.innerHTML = messages;
+        $("#save_buttons").append(badge);
+    }
+
+   function validateTestPage() {
+     $(".validate-badge").remove();
         var cm = $('.CodeMirror')[0].CodeMirror;
         var totalLines = cm.doc.size;
         var row = 0;
@@ -343,36 +388,7 @@ $( document ).ready(function() {
             }
         }
         setvalidationBadge(msgs);
-    });
-
-    function isCommentLine(line) {
-        var cells = getCellValues(line);
-        if (cells[0].toLowerCase().trim().startsWith('#') ||
-            cells[0].toLowerCase().trim().startsWith('*') ||
-            cells[0].toLowerCase().trim() === '' ||
-            cells[0].toLowerCase().trim() == 'note') {
-            return true;
-            }
-        return false;
-    }
-
-    function makeMarker(msg, type) {
-      var marker = document.createElement("div");
-      marker.setAttribute("class", "CodeMirror-lint-marker-" + type);
-      marker.setAttribute("title", msg)
-      return marker;
-    }
-
-    function setvalidationBadge(messages) {
-        if(messages == 0) {
-            messages = "✓"
-        }
-        var badge = document.createElement("span");
-        badge.setAttribute("class", "validate-badge");
-        badge.setAttribute("id", "validate-badge");
-        badge.innerHTML = messages;
-        $("#save_buttons").append(badge);
-    }
+   }
 
    function populateContext(){
        var helpList = "<div class=\"helper-content\" >";
