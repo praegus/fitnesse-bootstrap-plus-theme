@@ -247,7 +247,7 @@ $( document ).ready(function() {
                           firstCellVal.indexOf('storyboard') > -1 ||
                           firstCellVal == 'table template') {
                             tableType = "script";
-                       } else if(firstCellVal == 'import' || firstCellVal == 'library') {
+                       } else if(firstCellVal == 'import' || firstCellVal == 'library' || firstCellVal == 'comment') {
                           tableType = "ignore";
                        } else {
                           tableType = "treatAsDT";
