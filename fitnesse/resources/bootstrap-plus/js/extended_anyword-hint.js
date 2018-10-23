@@ -107,6 +107,32 @@ var autoCompleteJson;
 		addIfMatch(item);
 	});
 
+    addIfMatch("!today");
+    addIfMatch("!today (dd-MM-yyyy)");
+    addIfMatch("!monday");
+    addIfMatch("!tuesday");
+    addIfMatch("!wednesday");
+    addIfMatch("!thursday");
+    addIfMatch("!friday");
+    addIfMatch("!saturday");
+    addIfMatch("!sunday");
+    addIfMatch("!randomBSN");
+    addIfMatch("!randomInt");
+    addIfMatch("!randomString");
+    addIfMatch("!randomEmail");
+    addIfMatch("!monthsFromToday");
+    addIfMatch("!lastDayOfMonth");
+    addIfMatch("!weekDaysFromToday");
+    addIfMatch("!define");
+    addIfMatch("!defineDefault");
+    addIfMatch("!defineFromProperties");
+    addIfMatch("!defineDefaultFromProperties");
+    addIfMatch("!randomIBAN");
+    addIfMatch("!randomPostalCode");
+    addIfMatch("!randomDutchLicensePlate");
+
+    list.sort();
+
     return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
   });
 

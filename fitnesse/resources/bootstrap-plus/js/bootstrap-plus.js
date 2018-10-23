@@ -2,6 +2,8 @@ String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+var signatureList = [];
+
 function filterHelpList() {
         // Declare variables
         var input, filter;
@@ -56,6 +58,7 @@ function filterHelpList() {
     }
 
 function getCellValues(line) {
+    line = line.replace("||", "| |");
     var pattern = /([^|]+)/g;
     var match;
     var cells = [];
@@ -67,6 +70,48 @@ function getCellValues(line) {
     } while (match);
     return cells;
     }
+
+function getInfoForLine(line, returnParamCount) {
+    var lineCells = getCellValues(line);
+    var offset = 0;
+    var useCell = true;
+    var result = '';
+    var params = 0;
+    var relevantCells = lineCells.length;
+    var ignoreParams = false;
+    var validate = false;
+    var firstCell = lineCells[0].toLowerCase().trim();
+    if(reservedWords.includes(firstCell) || firstCell.startsWith("$")) {
+            offset = 1;
+            if(firstCell.indexOf('check') > -1) {
+                relevantCells--;
+            }
+            if(firstCell.indexOf('script') > -1 ||
+                firstCell.indexOf('storyboard') > -1 ||
+                firstCell.indexOf('table') > -1 ||
+                firstCell.indexOf('import') > -1 ||
+                firstCell.indexOf('library') > -1) {
+                ignoreParams = true;
+            }
+        }
+    if(!lineCells[0].trim() == '') {
+        for (var i = (0 + offset); i < relevantCells; i++) {
+            if(useCell == true ) {
+                result += lineCells[i].trim() + ' ';
+                useCell = false;
+            } else {
+                useCell = true;
+                if(!ignoreParams) {
+                    params++;
+                }
+            }
+        }
+        if(returnParamCount) {
+        result = result.trim();
+        result += "#" + params}
+    }
+    return result;
+}
 
 function dynamicSort(property) {
     var sortOrder = 1;
@@ -80,7 +125,7 @@ function dynamicSort(property) {
     }
 }
 
-var fitnesseWords = ['show', 'ensure', 'reject', 'check', 'check not', 'note', '', 'note'];
+var reservedWords = ['script', 'storyboard', 'comment', 'table', 'scenario', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture'];
 
 $( document ).ready(function() {
    $(".test").each(function() {
@@ -111,25 +156,7 @@ $( document ).ready(function() {
             var cmEditor = $('.CodeMirror')[0].CodeMirror;
             var lineNr = cmEditor.doc.getCursor().line;
             var line = cmEditor.doc.getLine(lineNr);
-            var lineCells = getCellValues(line);
-            var offset = 0;
-            var useCell = true;
-            var searchString = '';
-            var relevantCells = lineCells.length;
-            if(fitnesseWords.includes(lineCells[0].trim())) {
-                offset = 1;
-                if(lineCells[0].trim().indexOf('check') > -1) {
-                    relevantCells--;
-                }
-            }
-            for (var i = (0 + offset); i < relevantCells; i++) {
-                if(useCell == true ) {
-                    searchString += lineCells[i].trim() + ' ';
-                    useCell = false;
-                } else {
-                    useCell = true;
-                }
-            }
+            var searchString = getInfoForLine(line, false);
             if(!$(".side-bar").is(":visible")){
                 $(".side-bar").slideToggle();
             }
@@ -137,9 +164,6 @@ $( document ).ready(function() {
             filterHelpList();
         };
    })();
-
-
-
 
 
    //Get definition on SHIFT-ALT-D
@@ -200,15 +224,154 @@ $( document ).ready(function() {
     });
 
     $('body').on('click', '.validate', function() {
+        if($(".toggle-bar").attr('populated') === undefined) {
+             populateContext();
+        }
+        $(".validate-badge").remove();
         var cm = $('.CodeMirror')[0].CodeMirror;
-        var info = cm.lineInfo(8);
-        cm.setGutterMarker(8, "CodeMirror-lint-markers", info.gutterMarkers ? null : makeMarker());
+        var totalLines = cm.doc.size;
+        var row = 0;
+        var tableType = 'unknown';
+        var noOfColumns;
+        var msgs = 0;
+        for (var i = 0; i < totalLines; i++) {
+            var lineContent = cm.doc.getLine(i).trim();
+            if(lineContent.startsWith("|") || lineContent.startsWith("!|") || lineContent.startsWith("-|") || lineContent.startsWith("-!|")) {
+                  //Treat as a table line
+                  if(row == 0) {
+                       //determine the table type
+                       var cleanLineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
+                       var firstCellVal = getCellValues(cleanLineContent)[0].toLowerCase().trim();
+                       if(firstCellVal.indexOf('script') > -1 ||
+                          firstCellVal.indexOf('scenario') > -1 ||
+                          firstCellVal.indexOf('storyboard') > -1 ||
+                          firstCellVal == 'table template') {
+                            tableType = "script";
+                       } else if(firstCellVal == 'import' || firstCellVal == 'library') {
+                          tableType = "ignore";
+                       } else {
+                          tableType = "treatAsDT";
+                       }
+                  } else if (!lineContent.startsWith("|")) {
+                       var message = "only the first row can start with ! or -"
+                       cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "error"));
+                       msgs++;
+                       row++;
+                       continue;
+                  }
+                  if(!lineContent.endsWith("|")) {
+                       var message = "Missing end pipe"
+                       cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "error"));
+                       msgs++;
+                       row++;
+                       continue;
+                  } else {
+                        if(tableType == "ignore") {
+                            //ignore
+                            cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
+                            row++;
+                            continue;
+                        } else if(tableType == "script") {
+                            //Script tables
+                            lineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
+                            lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
+                            lineContent = lineContent.replace(/ +(?= )/g,'');
+                            var infoForLine = getInfoForLine(lineContent, true)
+                            if(isCommentLine(lineContent)) {
+                                continue;
+                            }
+                            if(!signatureList.includes(infoForLine) && !infoForLine.startsWith("#")) {
+                                var message = "Unknown command: " + infoForLine.split("#")[0] +
+                                                " (" + infoForLine.split("#")[1] + " parameters)";
+                               cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "warning"));
+                               msgs++;
+                               row++;
+                               continue;
+                            }
+                        } else if (tableType == "treatAsDT") {
+                            //Decision tables/datadriven scenariotables
+                            if(row == 0) {
+                            //Validate first line against context
+                                lineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
+                                lineContent = lineContent.replace(/[\w\s]+:/, '');
+                                lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
+                                lineContent = lineContent.replace(/ +(?= )/g,'');
+                                if(isCommentLine(lineContent)) {
+                                    continue;
+                                }
+                                var infoForLine = getInfoForLine(lineContent, true)
+                                //ignore parameters for DT
+                                infoForLine = infoForLine.replace(/#\d+$/, "#0");
+                                if(!signatureList.includes(infoForLine) && !infoForLine.startsWith("#")) {
+                                    var message = "Unknown command: " + infoForLine.split("#")[0] +
+                                                    " (" + infoForLine.split("#")[1] + " parameters)";
+                                   cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "warning"));
+                                   msgs++;
+                                   row++;
+                                   continue;
+                                }
+                            } else if(row == 1) {
+                            //Get expected columncount for rest of table
+                                if(isCommentLine(lineContent)) {
+                                    continue;
+                                }
+                                var cells = getCellValues(lineContent);
+                                noOfColumns = cells.length;
+                                row++;
+                                continue;
+                            } else {
+                            //validate columncount
+                                if(isCommentLine(lineContent)) {
+                                    continue;
+                                }
+                                if(getCellValues(lineContent).length != noOfColumns) {
+                                   var message = "Column count is not equal to the first row's column number)";
+                                   cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "hint"));
+                                   msgs++;
+                                   row++;
+                                   continue;
+                                }
+                            }
+                        }
+                        row++;
+                  }
+                  cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
+            } else {
+                row = 0;
+                tableType = "unknown";
+                cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
+            }
+        }
+        setvalidationBadge(msgs);
     });
 
-    function makeMarker() {
+    function isCommentLine(line) {
+        var cells = getCellValues(line);
+        if (cells[0].toLowerCase().trim().startsWith('#') ||
+            cells[0].toLowerCase().trim().startsWith('*') ||
+            cells[0].toLowerCase().trim() === '' ||
+            cells[0].toLowerCase().trim() == 'note') {
+            return true;
+            }
+        return false;
+    }
+
+    function makeMarker(msg, type) {
       var marker = document.createElement("div");
-      marker.setAttribute("class", "CodeMirror-lint-marker-warning");
+      marker.setAttribute("class", "CodeMirror-lint-marker-" + type);
+      marker.setAttribute("title", msg)
       return marker;
+    }
+
+    function setvalidationBadge(messages) {
+        if(messages == 0) {
+            messages = "✓"
+        }
+        var badge = document.createElement("span");
+        badge.setAttribute("class", "validate-badge");
+        badge.setAttribute("id", "validate-badge");
+        badge.innerHTML = messages;
+        $("#save_buttons").append(badge);
     }
 
    function populateContext(){
@@ -232,6 +395,7 @@ $( document ).ready(function() {
                          helpList += s.html;
                          helpList += '</li>';
                          helpList += '</ol></li>';
+                         signatureList.push(s.name.toLowerCase().trim() + '#' + s.parameters.length);
                     });
                     helpList += '</ol>';
                     helpList += '</li>';
@@ -246,6 +410,7 @@ $( document ).ready(function() {
                  helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                  helpId = helpId+1;
                  helpList += '<ol>';
+                 signatureList.push(c.readableName.toLowerCase() + '#0');
                  var sortedMethods = c.availableMethods.sort(dynamicSort("name"));
                   $.each(sortedMethods, function(mIndex, m) {
                         helpList += '<li class="item method"><span class="filterIt">' + m.name;
@@ -254,6 +419,11 @@ $( document ).ready(function() {
                         }
                         helpList += '</span>';
                         helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i></li>';
+                        if(m.parameters === undefined) {
+                            signatureList.push(m.name.toLowerCase().trim() + '#0');
+                        } else {
+                            signatureList.push(m.name.toLowerCase().trim() + '#' + m.parameters.length);
+                        }
                   });
                   helpList += '</ol></li>';
             });
@@ -266,8 +436,5 @@ $( document ).ready(function() {
        $(".toggle-bar").attr('populated', 'true');
    }
 
-   function validateTestPage() {
-
-   }
 });
 

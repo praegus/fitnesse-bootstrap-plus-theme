@@ -4830,6 +4830,7 @@ table {
   border: 1px solid #dddddd;
   width: auto;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
   min-width: 45%;
 }
 table > thead > tr > th,
@@ -6653,14 +6654,74 @@ article tr:not([class^='slim']):nth-child(2n+3) {
 .CodeMirror {
   border-radius: 6px;
 }
+.CodeMirror-hints {
+  min-width: 400px;
+  overflow: auto !important;
+  max-height: 35% !important;
+  border-radius: 5px;
+  box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+}
+.CodeMirror-hint {
+  max-width: 100% !important;
+}
+li.CodeMirror-hint:nth-child(even) {
+  background-color: #fafafa;
+}
+.CodeMirror-hint-active {
+  background-color: #88d !important;
+}
 .CodeMirror-lint-marker-warning {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAANlBMVEX/uwDvrwD/uwD/uwD/uwD/uwD/uwD/uwD/uwD6twD/uwAAAADurwD2tQD7uAD+ugAAAAD/uwDhmeTRAAAADHRSTlMJ8mN1EYcbmiixgACm7WbuAAAAVklEQVR42n3PUQqAIBBFUU1LLc3u/jdbOJoW1P08DA9Gba8+YWJ6gNJoNYIBzAA2chBth5kLmG9YUoG0NHAUwFXwO9LuBQL1giCQb8gC9Oro2vp5rncCIY8L8uEx5ZkAAAAASUVORK5CYII=");
+  background-image: url(../../bootstrap-plus/img/warn.png);
+  background-size: 80%;
   background-position: center center;
   background-repeat: no-repeat;
   display: inline-block;
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   vertical-align: middle;
   position: relative;
+  top: -2px;
+  left: -1px;
+}
+.CodeMirror-lint-marker-hint {
+  background-image: url(../../bootstrap-plus/img/hint.png);
+  background-size: 80%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+  left: -1px;
+}
+.CodeMirror-lint-marker-error {
+  background-image: url(../../bootstrap-plus/img/error.png);
+  background-size: 80%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+  left: -1px;
+}
+.validate-badge {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  font-size: .7em;
+  background: darkorange;
+  color: white;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-weight: bold;
+  line-height: 18px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 6px 0px #969696;
 }
 
