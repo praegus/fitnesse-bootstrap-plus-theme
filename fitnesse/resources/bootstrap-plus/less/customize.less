@@ -32,7 +32,7 @@ table {
   .table-bordered;
   .table-condensed;
   width: auto;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   min-width: 45%;
   &.hash_table {
@@ -608,7 +608,7 @@ fieldset {
   display: none;
   overflow: auto;
   margin-top: 50px;
-  box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   z-index:9998;
 }
@@ -655,6 +655,9 @@ fieldset {
 .item:nth-child(even){
     background: #f1f1f1;
 }
+.side-bar .symbol:before {content: "\2195"; font-size: 1.5em; margin-right:5px; cursor: pointer; float: left; margin-top: 4px; margin-left: -15px;}
+.side-bar .symbol {cursor: pointer;}
+.side-bar-tr-highlight {border: 2px solid red;}
 
 .helper-content {
     min-height: 98%;
@@ -669,7 +672,7 @@ fieldset {
 li i {
     padding-top: 3px;
 }
-button#clearFilter {
+button#clearFilter, button#resync  {
     padding: 11px;
 }
 .fa-cogs {
@@ -701,7 +704,7 @@ article tr:not([class^='slim']):nth-child(2n+3) {
     overflow: auto !important;
     max-height: 35% !important;
     border-radius:5px;
-    box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.2);
 }
 
 .CodeMirror-hint {
@@ -769,5 +772,5 @@ li.CodeMirror-hint:nth-child(even) {
     font-weight: bold;
     line-height: 18px;
     border-radius: 50%;
-    box-shadow: 2px 2px 6px 0px #969696;
+    box-shadow: -2px 2px 10px 1px rgba(0, 0, 0, 0.2);
 }

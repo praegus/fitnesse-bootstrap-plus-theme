@@ -113,6 +113,7 @@ function getInfoForLine(line, returnParamCount) {
     return result;
 }
 
+
 function dynamicSort(property) {
     var sortOrder = 1;
     if(property[0] === "-") {
@@ -235,11 +236,28 @@ $( document ).ready(function() {
          filterHelpList();
     });
 
+    $('body').on('click', '#resync', function(e) {
+         e.preventDefault();
+         $('.toggle-bar').removeAttr('populated');
+         $('.helper-content').remove()
+         $.when(loadAutoCompletesFromResponder()).done(function(a){
+             populateContext();
+         })
+    });
+
     $('body').on('click', '.validate', function() {
         if($(".toggle-bar").attr('populated') === undefined) {
              populateContext();
         }
         validateTestPage();
+    });
+
+    $('body').on('click', '.symbol', function() {
+        var currentItem = $(this).attr('help-id');
+        var variable = $("[for='help-" + currentItem + "'").text();
+        $('.singleSymbolTableLine' + currentItem).toggle();
+        $('.fullSymbolTable' + currentItem).toggle();
+        $('.fullSymbolTable' + currentItem + ' tr:contains(' + variable + '=)').addClass('side-bar-tr-highlight');
     });
 
     function isCommentLine(line) {
@@ -393,7 +411,7 @@ $( document ).ready(function() {
    function populateContext(){
        var helpList = "<div class=\"helper-content\" >";
        var helpId = 0;
-       helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fa fa-undo" id="clearFilter"></button>';
+       helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fa fa-undo" id="clearFilter" title="Clear Filter"></button>&nbsp;<button class="fa fa-refresh" id="resync" title="Reload Context"></button>';
        helpList += '<ol id="side-bar-tree" class="tree">';
 
         helpList += '<li class="coll closed"><label for="tree-scenarios">Scenario\'s</label>';
@@ -445,6 +463,25 @@ $( document ).ready(function() {
             });
             helpList += '</ol>';
             helpList += '</li>';
+
+        helpList += '<li class="coll closed"><label for="tree-symbols">Slim symbols</label>';
+                       helpList += '<input class="togglebox" type="checkbox" id="tree-symbols" />';
+                       helpList += '<ol id="slimSymbols">'
+                       var sortedSymbols = autoCompleteJson.variables.sort(dynamicSort("varName"));
+                            $.each(sortedSymbols, function(sIndex, s) {
+                                 helpList += '<li class="coll closed item">';
+                                 helpList += '<label class="filterIt" for="help-' + helpId + '"><span>' + s.varName + '</span></label>';
+                                 helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
+                                 helpList += '<ol>';
+                                 helpList += '<li class="item symbol" help-id="' + helpId + '">';
+                                 helpList += '<span class="singleSymbolTableLine' + helpId + '">' + s.html + '</span>';;
+                                 helpList += '<span class="fullSymbolTable' + helpId + '" style="display: none">' + s.fullTable + '</span>';
+                                 helpList += '</li>';
+                                 helpList += '</ol></li>';
+                                 helpId = helpId+1;
+                            });
+                            helpList += '</ol>';
+                            helpList += '</li>';
 
         helpList += '</ol></div>';
 
