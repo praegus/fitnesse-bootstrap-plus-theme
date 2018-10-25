@@ -12,8 +12,9 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
   * All scenario's from include ScenarioLibraries
   * All slim symbols set by `$varName=` that are available
   * NOTE: If you want context-aware autosuggest in ScenarioLibraries, make sure to edit them from an edit link on a *test-page*. The hint-script will then use the referring page as context
-* Context-help pane containing all fixtures, methods, scenario's in current test scope
-* Jump to definition for fixture methods and scenario's by pressing alt-shift-d in the editor, revealing candidates in the context-help pane
+* Context-help pane containing all fixtures, methods, scenario's, slim symbols in current test scope
+* Jump to definition for fixture methods and scenario's by pressing alt-shift-d or ctrl-comma in the editor, revealing candidates in the context-help pane
+* validation of wiki tables against current context and basic syntax. Use validate button or ctrl-dot.
 * Insert scenario's and fixture methods in the editor by clicking the plus-icon in the context pane
 
 ### Usage:
@@ -35,16 +36,22 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 
 ### Screenshots:
 
+#### Fonts, margins and colors
+![alt text](https://github.com/tcnh/binstore/raw/master/styling.png "Overall styling")
+
 #### Browser Tabs
 ![alt text](https://github.com/tcnh/binstore/raw/master/tabs.png "Tab bar")
 
 #### Table of contents
 ![alt text](https://github.com/tcnh/binstore/raw/master/toc.png "Table of contents")
 
+#### Editor Linting
+![alt text](https://github.com/tcnh/binstore/raw/master/linting.png "Editor linting")
+
 #### Navigation Bar
 ![alt text](https://github.com/tcnh/binstore/raw/master/navbar.png "Navigation bar for suites")
 
-#### Scenario's in auto-suggest
+#### Scenario's, Slim Symbols and available Fixture methods in auto-suggest
 ![alt text](https://github.com/tcnh/binstore/raw/master/suggest.png "Auto suggest contains scenario's")
 
 #### Context help
