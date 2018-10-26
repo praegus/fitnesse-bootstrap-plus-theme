@@ -67,8 +67,8 @@
 
  <fieldset id="save_buttons">
   <input type="submit" name="save" value="Save" accesskey="s"/>
+  <a class="btn btn-secondary validate" >Validate</a>
   <a class="button" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
-  <a class="button validate" >Validate</a>
  </fieldset>
 </form>
 <div id="helper-bar" class="side-bar">&nbsp;</div>

@@ -286,10 +286,10 @@ $( document ).ready(function() {
         badge.setAttribute("class", "validate-badge");
         badge.setAttribute("id", "validate-badge");
         badge.innerHTML = messages;
-        $("#save_buttons").append(badge);
+        $(".btn.validate").append(badge);
     }
 
-   function validateTestPage() {
+    function validateTestPage() {
      $(".validate-badge").remove();
         var cm = $('.CodeMirror')[0].CodeMirror;
         var totalLines = cm.doc.size;
