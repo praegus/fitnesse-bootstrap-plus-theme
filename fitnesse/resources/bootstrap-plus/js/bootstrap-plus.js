@@ -167,9 +167,9 @@ $( document ).ready(function() {
    })();
 
 
-   //Get definition on SHIFT-ALT-D or ctrl-comme
+   //Get definition on SHIFT-ALT-D or ctrl-comma
    $(document).keydown(function (e) {
-       var evtobj = window.event? event : e
+       var evtobj = window.event? event : e;
        if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey) ) {
        e.preventDefault();
             if($(".toggle-bar").attr('populated') === undefined) {
@@ -181,7 +181,7 @@ $( document ).ready(function() {
 
    //Validate on ctrl dot
       $(document).keydown(function (e) {
-          var evtobj = window.event? event : e
+          var evtobj = window.event? event : e;
           if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
           e.preventDefault();
                if($(".toggle-bar").attr('populated') === undefined) {
@@ -286,7 +286,7 @@ $( document ).ready(function() {
         badge.setAttribute("class", "validate-badge");
         badge.setAttribute("id", "validate-badge");
         badge.innerHTML = messages;
-        $(".btn.validate").append(badge);
+        $(".button.validate").append(badge);
     }
 
     function validateTestPage() {
@@ -341,6 +341,7 @@ $( document ).ready(function() {
                             lineContent = lineContent.replace(/ +(?= )/g,'');
                             var infoForLine = getInfoForLine(lineContent, true)
                             if(isCommentLine(lineContent)) {
+                                cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                                 continue;
                             }
                             if(!signatureList.includes(infoForLine) && !infoForLine.startsWith("#")) {
@@ -360,6 +361,7 @@ $( document ).ready(function() {
                                 lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
                                 lineContent = lineContent.replace(/ +(?= )/g,'');
                                 if(isCommentLine(lineContent)) {
+                                    cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                                     continue;
                                 }
                                 var infoForLine = getInfoForLine(lineContent, true)
@@ -376,6 +378,7 @@ $( document ).ready(function() {
                             } else if(row == 1) {
                             //Get expected columncount for rest of table
                                 if(isCommentLine(lineContent)) {
+                                    cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                                     continue;
                                 }
                                 var cells = getCellValues(lineContent);
@@ -385,6 +388,7 @@ $( document ).ready(function() {
                             } else {
                             //validate columncount
                                 if(isCommentLine(lineContent)) {
+                                    cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                                     continue;
                                 }
                                 if(getCellValues(lineContent).length != noOfColumns) {
