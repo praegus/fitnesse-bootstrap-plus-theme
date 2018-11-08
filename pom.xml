@@ -4,7 +4,7 @@
 
 	<groupId>com.github.tcnh</groupId>
 	<artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-	<version>1.0.10-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<url>https://github.com/tcnh/fitnesse-bootstrap-plus-theme</url>
 	<name>Extended boostrap theme for FitNesse</name>
 	<description>Makes FitNesse more user friendly</description>
@@ -46,6 +46,7 @@
 							<followSymlinks>false</followSymlinks>
 							<includes>
 								<include>fitnesse-bootstrap-plus.css</include>
+								<include>fitnesse-bootstrap-plus-dark.css</include>
 							</includes>
 						</fileset>
 					</filesets>
@@ -55,20 +56,36 @@
 				<groupId>org.lesscss</groupId>
 				<artifactId>lesscss-maven-plugin</artifactId>
 				<version>1.7.0.1.1</version>
-				<configuration>
-					<sourceDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/less</sourceDirectory>
-					<outputDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/css</outputDirectory>
-					<compress>false</compress>
-					<includes>
-						<include>fitnesse-bootstrap.less</include>
-					</includes>
-					<outputFileFormat>fitnesse-bootstrap-plus.css</outputFileFormat>
-				</configuration>
 				<executions>
 					<execution>
+						<id>light</id>
 						<goals>
 							<goal>compile</goal>
 						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/less/light</sourceDirectory>
+							<outputDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/css</outputDirectory>
+							<compress>false</compress>
+							<includes>
+								<include>fitnesse-bootstrap.less</include>
+							</includes>
+							<outputFileFormat>fitnesse-bootstrap-plus.css</outputFileFormat>
+						</configuration>
+					</execution>
+					<execution>
+						<id>dark</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/less/dark</sourceDirectory>
+							<outputDirectory>${project.basedir}/fitnesse/resources/bootstrap-plus/css</outputDirectory>
+							<compress>false</compress>
+							<includes>
+								<include>fitnesse-bootstrap.less</include>
+							</includes>
+							<outputFileFormat>fitnesse-bootstrap-plus-dark.css</outputFileFormat>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

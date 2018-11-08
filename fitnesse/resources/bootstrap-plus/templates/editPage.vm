@@ -9,6 +9,7 @@
 <script src="${contextRoot}files/fitnesse/codemirror/fitnesse/fitnesse.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
+<link rel="stylesheet" href="${contextRoot}files/fitnesse/bootstrap-plus/css/codemirror/theme/darcula.css">
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.css">
 <script src="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/extended_anyword-hint.js" type="text/javascript"></script>
@@ -119,6 +120,10 @@ $(function () {
       rte.height(h - rte.position().top - 6);
       wrappedElement.height(h - wrappedElement.position().top - 6);
     }).resize();
+
+    if(localStorage.getItem('themeType') == 'dark') {
+        editor.codeMirrorEditor.setOption("theme", "darcula");
+      }
   }
 
   /* Tags */

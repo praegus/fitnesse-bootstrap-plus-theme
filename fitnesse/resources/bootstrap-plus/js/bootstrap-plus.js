@@ -90,7 +90,8 @@ function getInfoForLine(line, returnParamCount) {
                 firstCell.indexOf('storyboard') > -1 ||
                 firstCell.indexOf('table') > -1 ||
                 firstCell.indexOf('import') > -1 ||
-                firstCell.indexOf('library') > -1) {
+                firstCell.indexOf('library') > -1||
+                firstCell.indexOf('start') > -1) {
                 ignoreParams = true;
             }
         }
@@ -126,9 +127,10 @@ function dynamicSort(property) {
     }
 }
 
-var reservedWords = ['script', 'storyboard', 'comment', 'table', 'scenario', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture'];
+var reservedWords = ['script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 $( document ).ready(function() {
+
    $(".test").each(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
    });
@@ -199,6 +201,12 @@ $( document ).ready(function() {
      };
    })();
 
+    $('body').on('click', '#theme-switch', function(e) {
+               e.preventDefault();
+               switchTheme();
+               }
+          );
+
     $('body').on('click', '.toggle-bar', function(e) {
            e.preventDefault();
            if($(".toggle-bar").attr('populated') === undefined) {
@@ -259,6 +267,16 @@ $( document ).ready(function() {
         $('.fullSymbolTable' + currentItem).toggle();
         $('.fullSymbolTable' + currentItem + ' tr:contains(' + variable + '=)').addClass('side-bar-tr-highlight');
     });
+
+    function switchTheme() {
+        if(localStorage.getItem('themeType') == 'dark') {
+            localStorage.setItem('themeType', 'light');
+            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
+        } else {
+            localStorage.setItem('themeType', 'dark');
+            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
+        }
+    }
 
     function isCommentLine(line) {
         var cells = getCellValues(line);
@@ -336,9 +354,13 @@ $( document ).ready(function() {
                             continue;
                         } else if(tableType == "script") {
                             //Script tables
-                            lineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
-                            lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
-                            lineContent = lineContent.replace(/ +(?= )/g,'');
+                            lineContent = lineContent.replace(/([!-]*)(?=\|)/, '')
+                                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                                .replace(/([A-Z])([a-z])/g, ' $1$2')
+                                .replace(/\ +/g, ' ').trim().toLowerCase();
+
+                            //lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
+                            //lineContent = lineContent.replace(/ +(?= )/g,'');
                             var infoForLine = getInfoForLine(lineContent, true)
                             if(isCommentLine(lineContent)) {
                                 cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
@@ -356,10 +378,10 @@ $( document ).ready(function() {
                             //Decision tables/datadriven scenariotables
                             if(row == 0) {
                             //Validate first line against context
-                                lineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
-                                lineContent = lineContent.replace(/[\w\s]+:/, '');
-                                lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
-                                lineContent = lineContent.replace(/ +(?= )/g,'');
+                                lineContent = lineContent.replace(/([!-]*)(?=\|)/, '')
+                                        .replace(/[\w\s]+:/, '') .replace(/([a-z])([A-Z])/g, '$1 $2')
+                                        .replace(/([A-Z])([a-z])/g, ' $1$2')
+                                        .replace(/\ +/g, ' ').trim().toLowerCase();
                                 if(isCommentLine(lineContent)) {
                                     cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                                     continue;
@@ -433,7 +455,11 @@ $( document ).ready(function() {
                          helpList += s.html;
                          helpList += '</li>';
                          helpList += '</ol></li>';
-                         signatureList.push(s.name.toLowerCase().trim() + '#' + s.parameters.length);
+                         signatureList.push(s.name
+                            .replace(/([a-z])([A-Z])/g, '$1 $2')
+                            .replace(/([A-Z])([a-z])/g, ' $1$2')
+                            .replace(/\ +/g, ' ')
+                            .toLowerCase().trim() + '#' + s.parameters.length);
                     });
                     helpList += '</ol>';
                     helpList += '</li>';
