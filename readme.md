@@ -3,6 +3,7 @@
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
 
 ### Features:
+* Light and dark version of the theme for the wiki and Codeirror editor
 * Different favicons for Tests, Suites, Static pages and Edit mode
 * Show the page name first in the page title (So different tabs have recognizable titles)
 * Icons in Table of contents to distinguish between Tests, Suites and Static pages
@@ -56,3 +57,11 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 
 #### Context help
 ![alt text](https://github.com/tcnh/binstore/raw/master/context-help.png "Context help panel")
+
+#### Style switch to toggle light/dark modes
+![alt text](https://github.com/tcnh/binstore/raw/master/style-switch.png "Light/dark mode toggle")
+
+#### Dark mode
+![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_1.png "Dark theme")
+![alt text](https://github.com/tcnh/binstore/raw/master/dark_editor.PNG "Dark editor")
+![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_result.PNG "Test results in dark mode")
