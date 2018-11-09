@@ -77,6 +77,7 @@ label {
   float: left;
   display: inline-flex;
   position: relative;
+  max-height: 0px;
 }
 
 .navextras {
@@ -218,6 +219,7 @@ input[type="file"] {
   .panel-heading;
   .panel-default > .panel-heading;
   padding:  5px 15px 5px 30px;
+  border-color: #909090;
   background-color: #595959;
   background-image: url(../img/minus-sign.png);
   background-repeat: no-repeat;
@@ -585,11 +587,11 @@ font-size:12px;
 }
 
 .icon-test {
-  color: #999;
+  color: #00aeee;;
 }
 
 .icon-suite {
-  color: #ccf;
+  color: @brand-primary;
 }
 
 .icon-static {
@@ -703,7 +705,12 @@ button#theme-switch {
 
 a.suite {
  font-weight: 500 !important;
+ color: #00aeee;
  }
+
+a.static {
+  color: #c1c1c1;
+}
 
 .slimRowTitle {
   background-color: #222;
@@ -711,20 +718,36 @@ a.suite {
   color: #eee;
 }
 
-article tr:not([class^='slim']):first-child, .slimRowTitle {
+article tr:not([class^='slim']):not([class^='hash_']):first-child, .slimRowTitle {
     background-color: #222 !important;
     font-weight: 500 !important;
     color: #eee;
 }
 
-article tr:not([class^='slim']):nth-child(even), .slimRowColor0 {
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(even), .slimRowColor0 {
     background-color: #565656 !important;
     color: #eee;
 }
 
-article tr:not([class^='slim']):nth-child(2n+3), .slimRowColor1 {
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(2n+3), .slimRowColor1 {
     background-color: #6b6b6b !important;
     color: #eee;
+}
+
+.hash_row {
+  background-color: #6b6b6b;
+  color: #eee;
+}
+
+.hash_row:nth-child(even) {
+  background-color: #565656;
+}
+
+span.code {
+  color: #efffb1;
+  border: 1px solid silver;
+  border-radius: 3px;
+  padding: 0 2px 0 2px;
 }
 
 .CodeMirror {

@@ -71,6 +71,7 @@ label {
   float: left;
   display: inline-flex;
   position: relative;
+  max-height: 0px;
 }
 
 .navextras {
@@ -679,17 +680,31 @@ button#theme-switch {
   font-weight: 500;
 }
 
-article tr:not([class^='slim']):first-child {
+article tr:not([class^='slim']):not([class^='hash_']):first-child {
     background-color: #f5f5f5;
     font-weight: 500;
 }
 
-article tr:not([class^='slim']):nth-child(even) {
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(even) {
     background-color: #F5FEFF;
 }
 
-article tr:not([class^='slim']):nth-child(2n+3) {
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(2n+3) {
     background-color: #F5FFF7;;
+}
+
+.hash_row {
+  background-color: #F5FFF7;
+}
+
+.hash_row:nth-child(even) {
+  background-color: #F5FEFF;
+}
+
+span.code {
+  border: 1px solid silver;
+  border-radius: 3px;
+  padding: 0 2px 0 2px;
 }
 
 .CodeMirror {
