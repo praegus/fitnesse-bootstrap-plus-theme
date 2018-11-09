@@ -25,26 +25,24 @@
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
   #end
 
-
-
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
+  <script>
+       var themecss = document.createElement('link');
+       if(localStorage.getItem('themeType') == 'dark') {
+           themecss.rel = 'stylesheet';
+           themecss.type = 'text/css';
+           themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css';
+           document.head.appendChild(themecss);
+       } else {
+           themecss.rel = 'stylesheet';
+           themecss.type = 'text/css';
+           themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css';
+           document.head.appendChild(themecss);
+       }
+     </script>
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
-  <script>
-    var themecss = document.createElement('link');
-    if(localStorage.getItem('themeType') == 'dark') {
-        themecss.rel = 'stylesheet';
-        themecss.type = 'text/css';
-        themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css';
-        document.head.appendChild(themecss);
-    } else {
-        themecss.rel = 'stylesheet';
-        themecss.type = 'text/css';
-        themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css';
-        document.head.appendChild(themecss);
-    }
-  </script>
 
   <script src="${contextRoot}files/fitnesse/javascript/jquery-1.11.3.min.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
@@ -54,7 +52,7 @@
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
 
  </head>
- <body#if( $bodyClass ) class="$bodyClass"#end style="opacity: 0;">
+ <body#if( $bodyClass ) class="$bodyClass"#end">
 
   <nav class="navbar-fixed-top " role="navigation">
    <div class="navbar navbar-default">
@@ -88,9 +86,6 @@
    #parse( $footerTemplate )
   </footer>
   #end
-  <script type="text/javascript">
-    //avoid css-less content flashing on load
-    $(window).on('load', function() { $("body").removeAttr('style'); });
-  </script>
+
  </body>
 </html>
