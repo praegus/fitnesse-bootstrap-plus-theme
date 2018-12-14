@@ -269,11 +269,11 @@ $( document ).ready(function() {
     });
 
     function switchTheme() {
-        if(localStorage.getItem('themeType') == 'dark') {
-            localStorage.setItem('themeType', 'light');
+        if(document.cookie && document.cookie.indexOf('bootstrap-plus-dark') > -1) {
+            document.cookie = "themeType=bootstrap-plus";
             $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
         } else {
-            localStorage.setItem('themeType', 'dark');
+            document.cookie = "themeType=bootstrap-plus-dark";
             $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
         }
     }

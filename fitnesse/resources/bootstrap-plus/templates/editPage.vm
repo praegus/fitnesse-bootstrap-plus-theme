@@ -1,3 +1,8 @@
+#set( $themeCookieName = "themeType")
+#set ($themeType = $request.getCookie($themeCookieName))
+#if(!${themeType})
+    #set( $themeType = 'bootstrap-plus' )
+#end
 <script src="${contextRoot}files/fitnesse/javascript/SpreadsheetTranslator.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/WikiFormatter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/TemplateInserter.js" type="text/javascript"></script>
@@ -121,9 +126,9 @@ $(function () {
       wrappedElement.height(h - wrappedElement.position().top - 6);
     }).resize();
 
-    if(localStorage.getItem('themeType') == 'dark') {
+    #if($themeType == "bootstrap-plus-dark")
         editor.codeMirrorEditor.setOption("theme", "darcula");
-      }
+    #end
   }
 
   /* Tags */

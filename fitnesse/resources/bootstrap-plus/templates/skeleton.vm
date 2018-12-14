@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+#set( $themeCookieName = "themeType")
+#set ($themeType = $request.getCookie($themeCookieName))
+#if($themeType == "")
+    #set( $themeType = 'bootstrap-plus' )
+#end
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -27,20 +32,8 @@
 
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
-  <script>
-       var themecss = document.createElement('link');
-       if(localStorage.getItem('themeType') == 'dark') {
-           themecss.rel = 'stylesheet';
-           themecss.type = 'text/css';
-           themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css';
-           document.head.appendChild(themecss);
-       } else {
-           themecss.rel = 'stylesheet';
-           themecss.type = 'text/css';
-           themecss.href = '${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css';
-           document.head.appendChild(themecss);
-       }
-     </script>
+  <link rel="stylesheet" id="theme" type="text/css" title="light" href="${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-${themeType}.css" />
+
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
 
