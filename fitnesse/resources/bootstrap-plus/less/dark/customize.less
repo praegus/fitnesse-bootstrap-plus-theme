@@ -725,14 +725,16 @@ article tr:not([class^='slim']):not([class^='hash_']):first-child, .slimRowTitle
     color: #eee;
 }
 
-article tr:not([class^='slim']):not([class^='hash_']):nth-child(even), .slimRowColor0 {
-    background-color: #565656 !important;
-    color: #eee;
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(even),
+tr[class^='slim']:nth-child(even) {
+  background-color: #565656 !important;
+  color: #eee;
 }
 
-article tr:not([class^='slim']):not([class^='hash_']):nth-child(2n+3), .slimRowColor1 {
-    background-color: #6b6b6b !important;
-    color: #eee;
+article tr:not([class^='slim']):not([class^='hash_']):nth-child(2n+3),
+tr[class^='slim']:nth-child(odd) {
+  background-color: #6b6b6b !important;
+  color: #eee;
 }
 
 .hash_row {
