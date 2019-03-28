@@ -91,8 +91,6 @@ label {
   max-width: 40px;
 }
 
-
-
 #alltags {
   position: relative;
   top: 1px;
@@ -806,6 +804,7 @@ li.CodeMirror-hint:nth-child(odd) {
 .cm-s-default .cm-operator {}
 .cm-s-default .cm-variable-2 {color: #05a;}
 .cm-s-default .cm-variable-3, .cm-s-default .cm-type {color: #085;}
+.cm-s-darcula .cm-expr {font-style: normal; color: #333366; font-size: 0.95em;}
 .cm-s-default .cm-comment {color: #a50;}
 .cm-s-default .cm-string {color: #a11;}
 .cm-s-default .cm-string-2 {color: #f50;}
@@ -837,4 +836,43 @@ li.CodeMirror-hint:nth-child(odd) {
     line-height: 18px;
     border-radius: 50%;
     box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.19);
+}
+
+.page-variable {
+   .cm-s-default .cm-variable;
+   font-weight: 500;
+}
+
+.page-expr {
+   font-family: monospace;
+   color: #000f5f;
+}
+
+.symbol-data {
+    display:none;
+}
+
+.canToggle {
+    cursor: pointer;
+}
+
+.canToggle.closed:after {
+    content: "\f08e";
+    font-family: FontAwesome;
+    display: inline;
+    width: 1.3em;
+    font-style: normal;
+    font-size: 0.8em;
+    padding-left: 5px;
+}
+
+.canToggle.open:after {
+    content: "\f112";
+    font-family: FontAwesome;
+    display: inline;
+    width: 1.3em;
+    font-style: normal;
+    font-size: 0.8em;
+    padding-left: 2px;
+    margin: 0px 2px;
 }

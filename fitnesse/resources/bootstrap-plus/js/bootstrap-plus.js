@@ -140,6 +140,43 @@ $( document ).ready(function() {
    $(".static").each(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
    });
+   $('.contents li a').each(function() {
+       var item = $(this)
+       var orig = item.html();
+       var tags = orig.match(/\((.*)\)/);
+       if (tags) {
+            var nwhtml = orig.replace(/\(.*\)/, '');
+            item.html(nwhtml);
+            var tagList = tags[1].split(', ');
+            $.each(tagList, function(i, tag){
+                var tagbadge = document.createElement("span");
+                    tagbadge.setAttribute("class", "tag");
+                    tagbadge.innerText = tag;
+                item.after(tagbadge);
+               });
+       }
+   });
+   $('table').html(function(index,html){
+       return html.replace(/(\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
+              .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>')
+              .replace(/((?:&lt;-|-&gt;)\[.*?\]+)/gs, '<span class="symbol-data">$1</span>');
+   });
+
+   $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
+        $(this).addClass('canToggle');
+        $(this).addClass('closed');
+   });
+
+   $('.canToggle').click(function() {
+        $(this).next('.symbol-data').toggle();
+        if($(this).hasClass('closed')) {
+            $(this).removeClass('closed');
+            $(this).addClass('open');
+        } else {
+            $(this).removeClass('open');
+            $(this).addClass('closed');
+        }
+   });
 
    $('#alltags').change(function() {
         if(this.checked) {
@@ -147,7 +184,6 @@ $( document ).ready(function() {
         } else {
             $("#filtertags").attr('name', 'runTestsMatchingAnyTag');
         }
-
    });
 
    $('.fa-cogs').click(function() {

@@ -840,3 +840,43 @@ li.CodeMirror-hint:nth-child(odd) {
     border-radius: 50%;
     box-shadow: 0px 3px 10px 0px rgba(0,0,0,0.19);
 }
+
+.page-variable {
+    color: #deaa31;
+    font-style: italic;
+    font-weight: 500;
+    }
+
+.page-expr {
+        font-family: monospace;
+        color: #faebd7;
+}
+
+.symbol-data {
+    display:none;
+}
+
+.canToggle {
+    cursor: pointer;
+}
+
+.canToggle.closed:after {
+    content: "\f08e";
+    font-family: FontAwesome;
+    display: inline;
+    width: 1.3em;
+    font-style: normal;
+    font-size: 0.8em;
+    padding-left: 5px;
+}
+
+.canToggle.open:after {
+    content: "\f112";
+    font-family: FontAwesome;
+    display: inline;
+    width: 1.3em;
+    font-style: normal;
+    font-size: 0.8em;
+    padding-left: 2px;
+    margin: 0px 2px;
+}

@@ -141,8 +141,10 @@ CodeMirror.defineSimpleMode("fitnesse", {
     {regex: /![\w]+/, token: "keyword"},
      //comment
     {regex: /#.*/, token: "comment"},
-     //Slim Symbol
-    {regex: /\$[^\$\s\|\!]+/, token: "variable"},
+    //Slim Symbol
+    {regex: /\$[^\$\s\|\!`]+/, token: "variable"},
+    //Slim expression
+    {regex: /\$`.+`/, token: "expr"},
     //Scenario symbol
     {regex: /\@{\w+}/, token: "variable"},
     //literals

@@ -13,6 +13,7 @@
 .cm-s-darcula .cm-operator {}
 .cm-s-darcula .cm-variable-2 {color: #05a;}
 .cm-s-darcula .cm-variable-3, .cm-s-default .cm-type {color: #999;}
+.cm-s-darcula .cm-expr {font-style: normal; color: #faebd7; font-size: 0.95em;}
 .cm-s-darcula .cm-comment {color: #6dab63;}
 .cm-s-darcula .cm-string {color: #dedda2;}
 .cm-s-darcula .cm-string-2 {color: #f50;}

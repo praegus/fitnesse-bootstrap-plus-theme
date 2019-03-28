@@ -2,13 +2,14 @@
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 // Modified to adjust to FitNesse.org basic needs
 // Extended version to use ?autoComplete responder (com.github.tcnh)
+
 var autoCompleteJson;
 var autocompletes = [];
 
 function loadAutoCompletesFromResponder() {
     $("#spinner").show();
     $('.toggle-bar').hide();
-    if(window.location.pathname.indexOf("ScenarioLibrary") !== -1) {
+    if(window.location.pathname.indexOf("ScenarioLibrary") !== -1 || window.location.pathname.indexOf("SetUp") !== -1) {
     	    var referrer = document.referrer;
     	    if (referrer.slice(-1) == '?') {
     	        referrer = referrer.slice(0, -1);
