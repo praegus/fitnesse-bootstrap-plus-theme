@@ -127,6 +127,48 @@ function dynamicSort(property) {
     }
 }
 
+function indexesOf(string, regex) {
+    var match,
+        indexes = {};
+
+    regex = new RegExp(regex);
+
+    while (match = regex.exec(string)) {
+        if (!indexes[match[0]]) indexes[match[0]] = [];
+        indexes[match[0]].push(match.index);
+    }
+
+    return indexes;
+}
+
+function processSymbolData(str) {
+    var result = '';
+    var inSymbol = false;
+    var nesting = 0;
+    for(var i=0; i<str.length;i++) {
+        if (str[i] === "[") {
+            if (nesting == 0) { result += '<span class="symbol-data">'; }
+            else { result += str[i]; }
+            nesting++;
+            inSymbol = true;
+        }
+        else if (str[i] === "]") {
+            nesting--;
+
+            if(nesting > 0) {
+                result += str[i];
+            } else if (inSymbol) {
+                result += '</span>';
+                inSymbol = false;
+            }
+        }
+        else {
+            result += str[i];
+        }
+    }
+    return result.replace(/&lt;-|-&gt;/g, '');
+}
+
 var reservedWords = ['script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 $( document ).ready(function() {
@@ -158,25 +200,33 @@ $( document ).ready(function() {
    });
    $('table').html(function(index,html){
        return html.replace(/(\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
-              .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>')
-              .replace(/((?:&lt;-|-&gt;)\[.*?\]+)/gs, '<span class="symbol-data">$1</span>');
+              .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
    });
 
-   $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
-        $(this).addClass('canToggle');
-        $(this).addClass('closed');
-   });
+   if(document.cookie && document.cookie.indexOf('collapseSymbols=true') > -1) {
+       $("td").filter(function() {
+            return this.innerHTML.indexOf("&lt;-") >= 0 || this.innerHTML.indexOf("-&gt;") >= 0; }).each( function(cell) {
+            this.innerHTML = processSymbolData(this.innerHTML);
+            });
 
-   $('.canToggle').click(function() {
-        $(this).next('.symbol-data').toggle();
-        if($(this).hasClass('closed')) {
-            $(this).removeClass('closed');
-            $(this).addClass('open');
-        } else {
-            $(this).removeClass('open');
+       $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
+            $(this).addClass('canToggle');
             $(this).addClass('closed');
-        }
-   });
+       });
+
+       $('.canToggle').click(function() {
+            if($(this).hasClass('closed')) {
+                $(this).next('.symbol-data').css('display', 'inline-flex');
+                $(this).removeClass('closed');
+                $(this).addClass('open');
+            } else {
+                $(this).next('.symbol-data').css('display', 'none');
+                $(this).removeClass('open');
+                $(this).addClass('closed');
+            }
+       });
+   }
+
 
    $('#alltags').change(function() {
         if(this.checked) {
@@ -236,12 +286,23 @@ $( document ).ready(function() {
        timer = setTimeout(callback, ms);
      };
    })();
+    $('body').on('click', '#prefs-switch', function(e) {
+           e.preventDefault();
+           $('.settings-panel').toggle();
+           }
+      );
 
     $('body').on('click', '#theme-switch', function(e) {
-               e.preventDefault();
-               switchTheme();
-               }
-          );
+           e.preventDefault();
+           switchTheme();
+           }
+      );
+
+    $('body').on('click', '#collapse-switch', function(e) {
+           e.preventDefault();
+           switchCollapse();
+           }
+      );
 
     $('body').on('click', '.toggle-bar', function(e) {
            e.preventDefault();
@@ -308,11 +369,27 @@ $( document ).ready(function() {
         if(document.cookie && document.cookie.indexOf('bootstrap-plus-dark') > -1) {
             document.cookie = "themeType=bootstrap-plus";
             $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
+            $('#theme-switch').removeClass('fa-toggle-on');
+            $('#theme-switch').addClass('fa-toggle-off');
         } else {
             document.cookie = "themeType=bootstrap-plus-dark";
             $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
+            $('#theme-switch').removeClass('fa-toggle-off');
+            $('#theme-switch').addClass('fa-toggle-on');
         }
     }
+
+    function switchCollapse() {
+            if(document.cookie && document.cookie.indexOf('collapseSymbols=true') > -1) {
+                document.cookie = "collapseSymbols=false";
+                $('#collapse-switch').removeClass('fa-toggle-on');
+                $('#collapse-switch').addClass('fa-toggle-off');
+            } else {
+                document.cookie = "collapseSymbols=true";
+                $('#collapse-switch').removeClass('fa-toggle-off');
+                $('#collapse-switch').addClass('fa-toggle-on');
+            }
+        }
 
     function isCommentLine(line) {
         var cells = getCellValues(line);

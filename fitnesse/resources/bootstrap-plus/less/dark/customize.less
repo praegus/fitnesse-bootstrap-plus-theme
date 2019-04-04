@@ -688,11 +688,15 @@ button#clearFilter, button#resync {
   padding: 6px 10px 6px 10px !important;
 }
 
-button#theme-switch {
+button.prefsbutton {
+    padding: 4px 3px 3px 3px;
+    border: 1px solid #aaaaaa !important;
+}
+button#prefs-switch {
     float: right;
-    padding: 2px 4px 2px 4px;
     position: relative;
     top: 11px;
+    right: 5px;
     }
 
 #spinner {
@@ -854,6 +858,10 @@ li.CodeMirror-hint:nth-child(odd) {
 
 .symbol-data {
     display:none;
+    border: 1px solid #999;
+    padding: 2px;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.08);
 }
 
 .canToggle {
@@ -879,4 +887,27 @@ li.CodeMirror-hint:nth-child(odd) {
     font-size: 0.8em;
     padding-left: 2px;
     margin: 0px 2px;
+}
+
+.settings-panel {
+    position: absolute;
+    right: 5px;
+    float: right;
+    font-size: 0.8em;
+    border: 1px solid #999;
+    top: 40px;
+    border-radius:  8px;
+    background-color: #515151;
+    margin:5px;
+    z-index: 999;
+    }
+
+.settings-panel h5 {
+    padding-left: 5px;
+}
+.settings-panel ul {
+    padding: 8px;
+}
+.settings-panel li {
+    list-style: none;
 }

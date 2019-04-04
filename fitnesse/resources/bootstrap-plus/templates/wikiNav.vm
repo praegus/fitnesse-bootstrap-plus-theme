@@ -16,5 +16,20 @@
   </div>
  </form>
 #end
-<button class="fa fa-adjust" id="theme-switch" title="Toggle light/dark mode" />
+<button class="fa fa-cog prefsbutton" id="prefs-switch" title="Toggle preferences panel" />
+</div>
+<div style="display:none" class="settings-panel">
+    <h5>Bootstrap<sup>+</sup> Preferences</h5>
+    <ul>
+        #if ( $themeType == 'bootstrap-plus-dark' )
+    	<li><button class="fa fa-toggle-on prefsbutton" id="theme-switch" title="Toggle light/dark mode"></button> Come to the dark side</li>
+        #else
+        <li><button class="fa fa-toggle-off prefsbutton" id="theme-switch" title="Toggle light/dark mode"></button> Come to the dark side</li>
+        #end
+        #if ( $collapseSymbols == 'true' )
+        <li><button class="fa fa-toggle-on prefsbutton" id="collapse-switch" title="Toggle symbol collapse on result pages"></button>  Collapse Slim Symbols &amp; Expressions</li>
+        #else
+        <li><button class="fa fa-toggle-off prefsbutton" id="collapse-switch" title="Toggle symbol collapse on result pages"></button>  Collapse Slim Symbols &amp; Expressions</li>
+        #end
+    </ul>
 </div>
