@@ -4,7 +4,7 @@
 
 	<groupId>com.github.tcnh</groupId>
 	<artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-	<version>1.1.8</version>
+	<version>1.1.9-SNAPSHOT</version>
 	<url>https://github.com/tcnh/fitnesse-bootstrap-plus-theme</url>
 	<name>Extended boostrap theme for FitNesse</name>
 	<description>Makes FitNesse more user friendly</description>
@@ -31,7 +31,7 @@
 		<connection>scm:git:git@github.com:tcnh/fitnesse-bootstrap-plus-theme.git</connection>
 		<url>https://github.com/tcnh/fitnesse-bootstrap-plus-theme.git</url>
 		<developerConnection>scm:git:git@github.com:tcnh/fitnesse-bootstrap-plus-theme.git</developerConnection>
-		<tag>fitnesse-bootstrap-plus-theme-1.1.8</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<build>
