@@ -204,10 +204,11 @@ $( document ).ready(function() {
    });
 
    if(document.cookie && document.cookie.indexOf('collapseSymbols=true') > -1) {
-       $("td").filter(function() {
-            return this.innerHTML.indexOf("&lt;-") >= 0 || this.innerHTML.indexOf("-&gt;") >= 0; }).each( function(cell) {
-            this.innerHTML = processSymbolData(this.innerHTML);
-            });
+       $("td").contents().filter(function() {
+            return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0; })
+                .each( function(cell) {
+                    this.parentNode.innerHTML = processSymbolData(this.parentNode.innerHTML);
+                });
 
        $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
             $(this).addClass('canToggle');
