@@ -198,8 +198,9 @@ $( document ).ready(function() {
                });
        }
    });
+
    $('table').html(function(index,html){
-       return html.replace(/(\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
+       return html.replace(/((?![^<>]*>)\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
               .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
    });
 
