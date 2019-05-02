@@ -208,7 +208,9 @@ $( document ).ready(function() {
        $("td").contents().filter(function() {
             return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0; })
                 .each( function(cell) {
-                    this.parentNode.innerHTML = processSymbolData(this.parentNode.innerHTML);
+                    if (this.parentNode != null && this.parentNode != undefined) {
+                        this.parentNode.innerHTML = processSymbolData(this.parentNode.innerHTML);
+                    }
                 });
 
        $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
