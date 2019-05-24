@@ -594,7 +594,11 @@ $( document ).ready(function() {
                  signatureList.push(c.readableName.toLowerCase() + '#0');
                  var sortedMethods = c.availableMethods.sort(dynamicSort("name"));
                   $.each(sortedMethods, function(mIndex, m) {
-                        helpList += '<li class="item method"><span class="filterIt">' + m.name;
+                        var methodCss = 'item method';
+                        if(m.annotations && m.annotations.includes('Deprecated')) {
+                             methodCss += ' deprecated';
+                        }
+                        helpList += '<li class="' + methodCss + '"><span class="filterIt">' + m.name;
                         if(m.parameters) {
                             helpList += ' (' + m.parameters + ')';
                         }

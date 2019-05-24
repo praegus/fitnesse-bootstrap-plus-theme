@@ -45,7 +45,7 @@ function loadAutoCompletesFromResponder() {
     		     $('.toggle-bar').show();
             },
             error: function() {
-              console.log("Error Accessing Page Content from autoComplete Responder. Is it installed? See https://github.com/tcnh/FitNesseAutocompleteResponder");
+              console.log("Unable to retrieve page context from autoComplete Responder. Is it installed?");
             }
     });
 }
