@@ -2,6 +2,31 @@ String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+/**
+ * [Gets the cookie value if the cookie key exists in the right format]
+ * @param  {[string]} name [name of the cookie]
+ * @return {[string]}      [value of the cookie]
+ */
+var getCookie = function (name) {
+    return parseCookies()[name] || '';
+};
+
+/**
+ * [Parsing the cookieString and returning an object of the available cookies]
+ * @return {[object]} [map of the available objects]
+ */
+var parseCookies = function () {
+	var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
+
+	return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
+		var cookiePair = cookieString.split('=');
+
+		cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
+
+		return cookies;
+	}, {});
+};
+
 var signatureList = [];
 
 function filterHelpList() {
@@ -204,7 +229,7 @@ $( document ).ready(function() {
               .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
    });
 
-   if(document.cookie && document.cookie.indexOf('collapseSymbols=true') > -1) {
+   if(getCookie('collapseSymbols') == 'true') {
        $("td").contents().filter(function() {
             return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0; })
                 .each( function(cell) {
@@ -370,7 +395,7 @@ $( document ).ready(function() {
     });
 
     function switchTheme() {
-        if(document.cookie && document.cookie.indexOf('bootstrap-plus-dark') > -1) {
+        if(getCookie('themeType') == 'bootstrap-plus-dark') {
             document.cookie = "themeType=bootstrap-plus";
             $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href','/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
             $('#theme-switch').removeClass('fa-toggle-on');
@@ -384,7 +409,7 @@ $( document ).ready(function() {
     }
 
     function switchCollapse() {
-            if(document.cookie && document.cookie.indexOf('collapseSymbols=true') > -1) {
+            if(getCookie('collapseSymbols') == 'true') {
                 document.cookie = "collapseSymbols=false";
                 $('#collapse-switch').removeClass('fa-toggle-on');
                 $('#collapse-switch').addClass('fa-toggle-off');

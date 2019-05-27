@@ -26,6 +26,7 @@
   <![endif]-->
 
   #if( $actions.testPage )
+   <script type="text/javascript">document.cookie = "latestContext=${actions.localPageName}";</script>
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/bootstrap-plus/img/test-favicon.png" />
   #elseif( $actions.suitePage )
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/bootstrap-plus/img/suite-favicon.png" />

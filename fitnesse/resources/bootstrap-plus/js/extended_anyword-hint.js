@@ -6,17 +6,16 @@
 var autoCompleteJson;
 var autocompletes = [];
 
+
 function loadAutoCompletesFromResponder() {
     $("#spinner").show();
     $('.toggle-bar').hide();
-    if(window.location.pathname.indexOf("ScenarioLibrary") !== -1 || window.location.pathname.indexOf("SetUp") !== -1) {
-    	    var referrer = document.referrer;
-    	    if (referrer.slice(-1) == '?') {
-    	        referrer = referrer.slice(0, -1);
-    	        }
-    	    pageDataUrl = referrer + "?autoComplete";
+    if(window.location.pathname.indexOf("ScenarioLibrary") !== -1
+        || window.location.pathname.indexOf("SetUp") !== -1
+        || window.location.pathname.indexOf("TearDown") !== -1) {
+            pageDataUrl = window.location.origin + "/" + getCookie('latestContext') + "?autoComplete";
     	} else {
-            pageDataUrl = window.location.pathname + "?autoComplete";
+            pageDataUrl = window.location.pathname.split('?')[0] + "?autoComplete";
     	}
     autocompletes = [];
     return $.ajax({
