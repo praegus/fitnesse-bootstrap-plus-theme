@@ -12,7 +12,8 @@ function loadAutoCompletesFromResponder() {
     $('.toggle-bar').hide();
     if(window.location.pathname.indexOf("ScenarioLibrary") !== -1
         || window.location.pathname.indexOf("SetUp") !== -1
-        || window.location.pathname.indexOf("TearDown") !== -1) {
+        || window.location.pathname.indexOf("TearDown") !== -1
+        || window.location.href.indexOf("?new") !== -1) {
             pageDataUrl = window.location.origin + "/" + getCookie('latestContext') + "?autoComplete";
     	} else {
             pageDataUrl = window.location.pathname.split('?')[0] + "?autoComplete";
