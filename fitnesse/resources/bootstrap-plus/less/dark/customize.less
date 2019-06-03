@@ -651,6 +651,7 @@ font-size:12px;
     cursor:pointer;
     display:inline-block;
     }
+.side-bar li.item {margin-left:0px !important;}
 .side-bar li input{width:1em;height:1em;position:absolute;left:-0.5em;top:0;opacity:0;cursor:pointer;}
 .side-bar li.closed:before {content: "\f0d7"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
 .side-bar li input + ol{height:1em;margin:-16px 0 0 -45px;}
@@ -670,6 +671,10 @@ font-size:12px;
 .side-bar .symbol {cursor: pointer;}
 .side-bar-tr-highlight {border: 2px solid #dede32;}
 .side-bar .deprecated {text-decoration: line-through; color: #bbb;}
+.side-bar li.javadoc {
+    border: 1px solid silver;
+    margin-right: 25px !important;
+    padding: 2px 2px 0 4px;}
 
 .helper-content {
     min-height: 98%;

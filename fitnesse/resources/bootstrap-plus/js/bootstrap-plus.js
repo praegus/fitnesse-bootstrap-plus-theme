@@ -619,23 +619,70 @@ $( document ).ready(function() {
                  signatureList.push(c.readableName.toLowerCase() + '#0');
                  var sortedMethods = c.availableMethods.sort(dynamicSort("name"));
                   $.each(sortedMethods, function(mIndex, m) {
-                        var methodCss = 'item method';
+                        var labelCss = 'filterIt';
                         if(m.annotations && m.annotations.includes('Deprecated')) {
-                             methodCss += ' deprecated';
+                             labelCss += ' deprecated';
                         }
-                        helpList += '<li class="' + methodCss + '"><span class="filterIt">' + m.name;
-                        if(m.parameters) {
-                            helpList += ' (' + m.parameters + ')';
+
+                        if (m.hasOwnProperty('javaDoc')) {
+                            helpList += '<li class="coll closed">';
+                            helpList += '<label class="' + labelCss + '" for="help-' + helpId + '"><span>' + m.name;
+
+                            if(m.parameters) {
+                                helpList += ' (' + m.parameters + ')';
+                            }
+                            helpList += '</span></label>';
+                            helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i>';
+                            helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
+                            helpId = helpId+1;
+
+                            helpList += '<ol>';
+
+                            helpList += '<li class="item javadoc">';
+
+                            if (m.javaDoc.hasOwnProperty('body') && m.javaDoc['body'] ) {
+                                helpList += '<b>Description:</b><br />';
+                                helpList += m.javaDoc.body;
+                                helpList += '<br />&nbsp;<br />';
+                            }
+                            if (m.javaDoc.hasOwnProperty('params') && m.javaDoc.params.length > 0 ) {
+                                helpList += '<b>Parameters:</b><br />';
+                                $.each(m.javaDoc.params, function(p, param) {
+                                     helpList += param + '<br />';
+                                });
+                                helpList += '&nbsp;<br />';
+                            }
+                            if (m.javaDoc.hasOwnProperty('return') && m.javaDoc['return'] ) {
+                                helpList += '<b>Returns:</b><br />';
+                                helpList += m.javaDoc.return;
+                                helpList += '<br />&nbsp;<br />';
+                            }
+                            if (m.javaDoc.hasOwnProperty('throws') && m.javaDoc['throws'] ) {
+                                helpList += '<b>Throws:</b><br />';
+                                helpList += m.javaDoc.throws;
+                                helpList += '<br />&nbsp;<br />';
+                            }
+
+                            helpList += '</li>';
+                            helpList += '</ol>';
+                        } else {
+                             helpList += '<li class="item method">';
+                             helpList += '<span>' + m.name;
+                             if(m.parameters) {
+                                 helpList += ' (' + m.parameters + ')';
+                             }
+                             helpList += '</span>';
+                             helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i>';
                         }
-                        helpList += '</span>';
-                        helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i></li>';
+
                         if(m.parameters === undefined) {
                             signatureList.push(m.name.toLowerCase().trim() + '#0');
                         } else {
                             signatureList.push(m.name.toLowerCase().trim() + '#' + m.parameters.length);
                         }
+                        helpList += '</li>';
                   });
-                  helpList += '</ol></li>';
+                   helpList += '</ol></li>';
             });
             helpList += '</ol>';
             helpList += '</li>';
