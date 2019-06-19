@@ -115,6 +115,10 @@ Wysiwyg.getAutoformat = function () {
     return Wysiwyg.getBooleanFromCookie('textautoformat', false);
 };
 
+Wysiwyg.getValidateOnSave = function () {
+    return Wysiwyg.getBooleanFromCookie('validateOnSave', false);
+};
+
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
     var setEditorMode = function (mode) {
@@ -191,6 +195,18 @@ Wysiwyg.prototype.setupFormEvent = function () {
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
                 self.codeMirrorEditor.setValue(formatter.format(self.codeMirrorEditor.getValue()));
+                self.codeMirrorEditor.save();
+            }
+            if (Wysiwyg.getValidateOnSave()) {
+                if($(".toggle-bar").attr('populated') === undefined) {
+                     populateContext();
+                }
+                var validationMessages = validateTestPage();
+                if(validationMessages > 0) {
+                    if(!confirm("There are " + validationMessages + " validation messages. Save anyway?")) {
+                    return false;
+                    }
+                }
                 self.codeMirrorEditor.save();
             }
         } catch (e) {
@@ -432,7 +448,8 @@ Wysiwyg.prototype.createTextareaToolbar = function (d) {
         '<select id="tt-template-map">' + $('#templateMap').html() + '</select>',
         '<input id="tt-insert-template" type="button" value="Insert Template" title="Inserts the selected template" />',
         '<label title="Turns on/off wrapping"><input type="checkbox" id="tt-wrap-text" />wrap</label>',
-        '<label title="Automatically format wiki text on save"><input type="checkbox" id="tt-autoformat" />autoformat</label>'];
+        '<label title="Automatically format wiki text on save"><input type="checkbox" id="tt-autoformat" />autoformat</label>',
+        '<label title="Automatically validate wiki text on save and ask for confirmation when there are issues"><input type="checkbox" id="tt-autovalidate" />validate on save</label>'];
     var div = d.createElement("div");
     div.className = "textarea-toolbar";
     div.innerHTML = html.join(" ");
@@ -496,6 +513,14 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         }
     }
 
+    function setValidateOnSave(validateOnSave) {
+        if (validateOnSave) {
+            Wysiwyg.setCookie("validateOnSave", "true");
+        } else {
+            Wysiwyg.setCookie("validateOnSave", "false");
+        }
+    }
+
     $('#tt-wrap-text', container)
         .change(function () {
             setWrap($(this).is(':checked'));
@@ -508,6 +533,12 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
         })
         .prop('checked', Wysiwyg.getAutoformat())
         .change();
+    $('#tt-autovalidate', container)
+            .change(function () {
+                setValidateOnSave($(this).is(':checked'));
+            })
+            .prop('checked', Wysiwyg.getValidateOnSave())
+            .change();
 };
 
 Wysiwyg.prototype.toggleMenu = function (menu) {
