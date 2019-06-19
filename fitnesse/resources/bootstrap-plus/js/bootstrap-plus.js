@@ -53,7 +53,7 @@ function filterHelpList() {
                 $(this).parent("li.coll").removeClass( 'open' );
                 $(this).parent("li.coll").addClass( 'closed' );
             } else {
-                if ($(this).text().toUpperCase().indexOf(filter) > -1){
+                if ($(this).attr('title').toUpperCase().indexOf(filter) > -1){
                 //expand if match
                     parents.each(function(){
                          $(this).children("input").each(function(){
@@ -84,7 +84,7 @@ function filterHelpList() {
 
 function getCellValues(line) {
     line = line.replace("||", "| |");
-    var pattern = /([^|]+)/g;
+    var pattern = /(!-.+-!|[^|]+)/g;
     var match;
     var cells = [];
     do {
@@ -104,6 +104,7 @@ function getInfoForLine(line, returnParamCount) {
     var params = 0;
     var relevantCells = lineCells.length;
     var ignoreParams = false;
+    var containsConstructor = false;
     var validate = false;
     var firstCell = lineCells[0].toLowerCase().trim();
     if(reservedWords.includes(firstCell) || firstCell.startsWith("$")) {
@@ -111,13 +112,15 @@ function getInfoForLine(line, returnParamCount) {
             if(firstCell.indexOf('check') > -1) {
                 relevantCells--;
             }
-            if(firstCell.indexOf('script') > -1 ||
-                firstCell.indexOf('storyboard') > -1 ||
-                firstCell.indexOf('table') > -1 ||
+            if( firstCell.indexOf('table') > -1 ||
                 firstCell.indexOf('import') > -1 ||
-                firstCell.indexOf('library') > -1||
+                firstCell.indexOf('library') > -1 ||
                 firstCell.indexOf('start') > -1) {
                 ignoreParams = true;
+            }
+            if( firstCell.indexOf('script') > -1 ||
+                firstCell.indexOf('storyboard') > -1) {
+                containsConstructor = true;
             }
         }
     if(!lineCells[0].trim() == '') {
@@ -126,7 +129,9 @@ function getInfoForLine(line, returnParamCount) {
                 result += lineCells[i].trim() + ' ';
                 useCell = false;
             } else {
-                useCell = true;
+                if (!containsConstructor) {
+                    useCell = true;
+                }
                 if(!ignoreParams) {
                     params++;
                 }
@@ -194,7 +199,7 @@ function processSymbolData(str) {
     return result.replace(/&lt;-|-&gt;/g, '');
 }
 
-var reservedWords = ['script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
+var reservedWords = ['script', 'debug script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 $( document ).ready(function() {
 
@@ -466,6 +471,7 @@ $( document ).ready(function() {
                        var cleanLineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
                        var firstCellVal = getCellValues(cleanLineContent)[0].toLowerCase().trim();
                        if(firstCellVal.indexOf('script') > -1 ||
+                          firstCellVal.indexOf('debug script') > -1 ||
                           firstCellVal.indexOf('scenario') > -1 ||
                           firstCellVal.indexOf('storyboard') > -1 ||
                           firstCellVal == 'table template') {
@@ -501,8 +507,6 @@ $( document ).ready(function() {
                                 .replace(/([A-Z])([a-z])/g, ' $1$2')
                                 .replace(/\ +/g, ' ').trim().toLowerCase();
 
-                            //lineContent = lineContent.replace(/([A-Z])/g, " $1" ).trim().toLowerCase();
-                            //lineContent = lineContent.replace(/ +(?= )/g,'');
                             var infoForLine = getInfoForLine(lineContent, true)
                             if(isCommentLine(lineContent)) {
                                 cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
@@ -517,20 +521,25 @@ $( document ).ready(function() {
                                continue;
                             }
                         } else if (tableType == "treatAsDT") {
-                            //Decision tables/datadriven scenariotables
+                            //Decision tables/datadriven scenariotables/table templates
                             if(row == 0) {
+                            if(isCommentLine(lineContent)) {
+                                    cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
+                                    continue;
+                                }
+
                             //Validate first line against context
                                 lineContent = lineContent.replace(/([!-]*)(?=\|)/, '')
                                         .replace(/[\w\s]+:/, '') .replace(/([a-z])([A-Z])/g, '$1 $2')
                                         .replace(/([A-Z])([a-z])/g, ' $1$2')
                                         .replace(/\ +/g, ' ').trim().toLowerCase();
-                                if(isCommentLine(lineContent)) {
-                                    cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
-                                    continue;
-                                }
-                                var infoForLine = getInfoForLine(lineContent, true)
-                                //ignore parameters for DT
-                                infoForLine = infoForLine.replace(/#\d+$/, "#0");
+
+                                var infoForLine = getInfoForLine(lineContent, false)
+
+                                //Get parameter count from next line in a DT
+                                var paramCells = getCellValues(cm.doc.getLine(i+1).trim());
+
+                                infoForLine = infoForLine.trim() + '#' + paramCells.length;
                                 if(!signatureList.includes(infoForLine) && !infoForLine.startsWith("#")) {
                                     var message = "Unknown command: " + infoForLine.split("#")[0] +
                                                     " (" + infoForLine.split("#")[1] + " parameters)";
@@ -588,8 +597,8 @@ $( document ).ready(function() {
                var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort("name"));
                     $.each(sortedScenarios, function(sIndex, s) {
                          helpList += '<li class="coll closed item">';
-                         helpList += '<label class="filterIt" for="help-' + helpId + '"><span>' + s.name.UcFirst() + '</span></label>';
-                         helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
+                         helpList += '<label for="help-' + helpId + '"><span>' + s.contexthelp + '</span></label>';
+                         helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
                          helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                          helpList += '<ol>';
                          helpId = helpId+1;
@@ -616,69 +625,93 @@ $( document ).ready(function() {
                  helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                  helpId = helpId+1;
                  helpList += '<ol>';
-                 signatureList.push(c.readableName.toLowerCase() + '#0');
-                 var sortedMethods = c.availableMethods.sort(dynamicSort("name"));
+                 helpList += '<li class="coll closed">';
+                 helpList += '<label class="constructors "for="help-' + helpId + '"><span><i>Constructors</i></span></label>';
+                 helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
+                 helpId = helpId+1;
+                 helpList += '<ol>';
+                 helpList += '<li class="item javadoc">';
+                 helpList += '<ul>';
+
+                 $.each(c.constructors, function(index, cstr) {
+                    signatureList.push(cstr.readableName.toLowerCase() + '#' + cstr.parameters.length);
+
+                    helpList += '<li class="docItem"><b>' + cstr.usage + '</b><br />';
+                    if(cstr.hasOwnProperty('docString') && cstr['docString'] ) {
+                        helpList += cstr.docString.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                    }
+                    helpList += '</li>';
+
+                 });
+                 helpList += '</ul>';
+                 helpList += '</li>';
+                 helpList += '</ol>';
+                 helpList += '</li>';
+
+                 var sortedMethods = c.methods.sort(dynamicSort("name"));
                   $.each(sortedMethods, function(mIndex, m) {
-                        var labelCss = 'filterIt';
+                        var labelCss = '';
                         if(m.annotations && m.annotations.includes('Deprecated')) {
-                             labelCss += ' deprecated';
+                             labelCss += 'deprecated';
                         }
 
-                        if (m.hasOwnProperty('javaDoc')) {
-                            helpList += '<li class="coll closed">';
-                            helpList += '<label class="' + labelCss + '" for="help-' + helpId + '"><span>' + m.name;
+                        helpList += '<li class="coll closed">';
+                        helpList += '<label class="' + labelCss + '" for="help-' + helpId + '"><span>' + m.contexthelp;
 
-                            if(m.parameters) {
-                                helpList += ' (' + m.parameters + ')';
-                            }
-                            helpList += '</span></label>';
-                            helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i>';
-                            helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
-                            helpId = helpId+1;
+                        helpList += '</span></label>';
+                        helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="' + m.usage + '" title="' + m.readableName + '"></i>';
+                        helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
+                        helpId = helpId+1;
 
-                            helpList += '<ol>';
+                        helpList += '<ol>';
 
-                            helpList += '<li class="item javadoc">';
+                        helpList += '<li class="item javadoc">';
 
-                            if (m.javaDoc.hasOwnProperty('body') && m.javaDoc['body'] ) {
-                                helpList += '<b>Description:</b><br />';
-                                helpList += m.javaDoc.body;
-                                helpList += '<br />&nbsp;<br />';
-                            }
-                            if (m.javaDoc.hasOwnProperty('params') && m.javaDoc.params.length > 0 ) {
-                                helpList += '<b>Parameters:</b><br />';
-                                $.each(m.javaDoc.params, function(p, param) {
-                                     helpList += param + '<br />';
-                                });
-                                helpList += '&nbsp;<br />';
-                            }
-                            if (m.javaDoc.hasOwnProperty('return') && m.javaDoc['return'] ) {
-                                helpList += '<b>Returns:</b><br />';
-                                helpList += m.javaDoc.return;
-                                helpList += '<br />&nbsp;<br />';
-                            }
-                            if (m.javaDoc.hasOwnProperty('throws') && m.javaDoc['throws'] ) {
-                                helpList += '<b>Throws:</b><br />';
-                                helpList += m.javaDoc.throws;
-                                helpList += '<br />&nbsp;<br />';
-                            }
-
-                            helpList += '</li>';
-                            helpList += '</ol>';
-                        } else {
-                             helpList += '<li class="item method">';
-                             helpList += '<span>' + m.name;
-                             if(m.parameters) {
-                                 helpList += ' (' + m.parameters + ')';
-                             }
-                             helpList += '</span>';
-                             helpList += '<i class="fa fa-plus-circle insert" aria-hidden="false" insertText="|' + m.wikiText + '" title="' + m.name + '"></i>';
+                        if (m.hasOwnProperty('docString') && m['docString'] ) {
+                            helpList += '<h5>Description:</h5>';
+                            helpList += m.docString.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                            helpList += '<br />&nbsp;<br />';
                         }
+                        if (m.hasOwnProperty('parameters') && m.parameters.length > 0 ) {
+                            helpList += '<h5>Parameters:</h5>';
+                            helpList += '<ul>';
+                            $.each(m.parameters, function(p, param) {
+                                 helpList += '<li class="docItem"><b>' + param.type + '</b>';
+                                 if (param.hasOwnProperty('name')) {
+                                    helpList += ' ' + param.name;
+                                    if (param.hasOwnProperty('description')) {
+                                        helpList += ': <i>' + param.description + '</i>';
+                                    }
+                                 }
+                                 helpList += '</li>';
+                            });
+                            helpList += '</ul><br />';
+                        }
+                        if (m.hasOwnProperty('returnType') && m['returnType'] ) {
+                            helpList += '<h5>Returns:</h5>';
+                            helpList += m.returnType;
+                            if (m.hasOwnProperty('returnDescription')) {
+                                helpList += ': <i>' + m.returnDescription + '</i>';
+                            }
+                            helpList += '<br />';
+                        }
+                        if (m.hasOwnProperty('exceptions') && m.exceptions.length > 0 ) {
+                            helpList += '<h5>Throws:</h5>';
+                            helpList += '<ul>';
+                            $.each(m.exceptions, function(e, ex) {
+                                helpList += '<li class="docItem">' + ex + '</li>';
+                            });
+                            helpList += '</ul>';
+                        }
+
+                        helpList += '</li>';
+                        helpList += '</ol>';
+
 
                         if(m.parameters === undefined) {
-                            signatureList.push(m.name.toLowerCase().trim() + '#0');
+                            signatureList.push(m.readableName.toLowerCase().trim() + '#0');
                         } else {
-                            signatureList.push(m.name.toLowerCase().trim() + '#' + m.parameters.length);
+                            signatureList.push(m.readableName.toLowerCase().trim() + '#' + m.parameters.length);
                         }
                         helpList += '</li>';
                   });
@@ -693,7 +726,7 @@ $( document ).ready(function() {
                        var sortedSymbols = autoCompleteJson.variables.sort(dynamicSort("varName"));
                             $.each(sortedSymbols, function(sIndex, s) {
                                  helpList += '<li class="coll closed item">';
-                                 helpList += '<label class="filterIt" for="help-' + helpId + '"><span>' + s.varName + '</span></label>';
+                                 helpList += '<label class="filterIt" for="help-' + helpId + '" title="' + s.varName + '"><span>' + s.varName + '</span></label>';
                                  helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
                                  helpList += '<ol>';
                                  helpList += '<li class="item symbol" help-id="' + helpId + '">';

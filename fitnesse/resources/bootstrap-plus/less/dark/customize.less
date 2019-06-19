@@ -672,10 +672,13 @@ font-size:12px;
 .side-bar-tr-highlight {border: 2px solid #dede32;}
 .side-bar .deprecated {text-decoration: line-through; color: #bbb;}
 .side-bar li.javadoc {
-    border: 1px solid silver;
-    margin-right: 25px !important;
-    padding: 2px 2px 0 4px;}
-
+   border: 1px solid silver;
+   padding: 4px;
+   left: -22px;
+   }
+.side-bar li.docItem {
+    list-style-type: circle;
+}
 .helper-content {
     min-height: 98%;
         padding-bottom: 60px;
@@ -769,7 +772,7 @@ span.code {
 }
 
 .CodeMirror-hints {
-  min-width: 450px;
+  min-width: 500px;
   overflow: auto !important;
   max-height: 35% !important;
   border-radius: 5px;

@@ -28,9 +28,12 @@ function loadAutoCompletesFromResponder() {
             success: function(result) {
             autoCompleteJson = result;
                 $.each(result.classes, function(cIndex, c) {
+                 $.each(c.constructors, function(constrIndex, constructor) {
+                    autocompletes.push(constructor.usage.substring(2))
+                 });
                  autocompletes.push(c.readableName);
-                 $.each(c.availableMethods, function(mIndex, m) {
-                    var methodEntry = m.wikiText;
+                 $.each(c.methods, function(mIndex, m) {
+                    var methodEntry = m.usage.substring(2);
                     autocompletes.push(methodEntry);
                     });
                  });
