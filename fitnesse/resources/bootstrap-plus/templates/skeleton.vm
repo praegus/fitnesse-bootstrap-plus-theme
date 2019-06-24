@@ -9,6 +9,11 @@
 #if($collapseSymbols == "")
     #set( $collapseSymbols = 'false' )
 #end
+#set( $autoSaveCookieName = "autoSave")
+#set ($autoSave = $request.getCookie($autoSaveCookieName))
+#if($autoSave == "")
+    #set( $autoSave = 'false' )
+#end
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>

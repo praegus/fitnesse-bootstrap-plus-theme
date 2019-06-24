@@ -88,6 +88,8 @@ var Wysiwyg = function (textarea, options) {
         alert("Failed to activate the wysiwyg editor.");
         throw exception;
     }
+       //remember the original content to revert to on cancel
+       document.originalContent = document.querySelector('.CodeMirror').CodeMirror.doc.getValue();
 };
 
 Wysiwyg.getBooleanFromCookie = function(fieldName, defaultValue) {
@@ -520,6 +522,7 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
             Wysiwyg.setCookie("validateOnSave", "false");
         }
     }
+
 
     $('#tt-wrap-text', container)
         .change(function () {

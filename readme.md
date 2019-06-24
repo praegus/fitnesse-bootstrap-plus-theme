@@ -14,26 +14,14 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
   * All slim symbols set by `$varName=` that are available
   * NOTE: If you want context-aware autosuggest in ScenarioLibraries, make sure to edit them from an edit link on a *test-page*. The hint-script will then use the referring page as context
 * Context-help pane containing all fixtures, methods, scenario's, slim symbols in current test scope
-* Jump to definition for fixture methods and scenario's by pressing alt-shift-d or ctrl-comma in the editor, revealing candidates in the context-help pane
-* validation of wiki tables against current context and basic syntax. Use validate button or ctrl-dot.
+* Jump to definition for fixture methods and scenario's by pressing ctrl-comma in the editor, revealing candidates in the context-help pane
+* validation of wiki tables against current context and basic syntax (aimed at slim usage). Use validate button,auto validate on save option or ctrl-dot.
 * Insert scenario's and fixture methods in the editor by clicking the plus-icon in the context pane
+* Experimental: Autosave and validate test pages on enter
 
 ### Usage:
-#### Option 1
-* Build the jar: `mvn clean install` Or download [latest jar from Sonatype OSS repo](https://oss.sonatype.org/service/local/artifact/maven/content?r=releases&g=com.github.tcnh&a=fitnesse-bootstrap-plus-theme&v=LATEST)
-* Copy the jar from the target directory to FitNesse's plugins-directory
-* Add `Theme=bootstrap-plus` to plugins.properties
-* For context-aware autosuggest:
-  * Install FitNesseAutocompleteResponder
-  * Add `Responders=autoComplete:com.github.tcnh.fitnesse.responders.AutoCompleteResponder` to plugins.properties
-
-#### Option 2
-* Include in a maven project (group id: com.github.tcnh, artifact: fitnesse-bootstrap-plus-theme)
-* Use maven-dependency-plugin to copy the jar to the plugins directory
-* Add `Theme=bootstrap-plus` to plugins.properties
-* For context-aware autosuggest:
-  * Add group id: com.github.tcnh, artifact: fitnesse-autocomplete-responder to your project and copy the jar to your plugins directory
-  * Add `Responders=autoComplete:com.github.tcnh.fitnesse.responders.AutoCompleteResponder` to plugins.properties
+Use Praegus' toolchain-plugin to use bootstrap-plus and enable all of it's features.
+See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 
 ### Screenshots:
 

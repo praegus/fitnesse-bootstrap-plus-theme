@@ -31,5 +31,10 @@
         #else
         <li><button class="fa fa-toggle-off prefsbutton" id="collapse-switch" title="Toggle symbol collapse on result pages"></button>  Collapse Slim Symbols &amp; Expressions</li>
         #end
+        #if ( $autoSave == 'true' )
+        <li><button class="fa fa-toggle-on prefsbutton" id="autoSave-switch" title="Toggle auto saving edits and realtime validation"></button>  <b>Experimental:</b> Save and validate test pages on enter</li>
+        #else
+        <li><button class="fa fa-toggle-off prefsbutton" id="autoSave-switch" title="Toggle auto saving edits and realtime validation"></button>  <b>Experimental:</b> Save and validate test pages on enter</li>
+        #end
     </ul>
 </div>

@@ -35,6 +35,36 @@ var parseCookies = function () {
 
 var signatureList = [];
 
+function autoSave(){
+        if (!document.querySelector('.CodeMirror').CodeMirror.doc.isClean()) {
+            $('#pageContent').val(document.querySelector('.CodeMirror').CodeMirror.doc.getValue())
+            $.ajax({
+                url : $('[name="f"]').attr('action'),
+                type : 'POST',
+                data : $('[name="f"]').serialize(),
+                success: function(data){
+                    document.querySelector('.CodeMirror').CodeMirror.doc.markClean()
+                    //Only reload helper if helper is closed
+                    if($("#helper-bar").is(":hidden")) {
+                        $('.toggle-bar').removeAttr('populated');
+                        $('.helper-content').remove()
+                        $.when(loadAutoCompletesFromResponder()).done(function(a){
+                            populateContext();
+                        })
+                    }
+                    else { setNewContextBadge(); }
+
+                    if($(".toggle-bar").attr('populated') === undefined) {
+                        populateContext();
+                    }
+
+                    validateTestPage();
+                }
+            });
+        }
+    return false;
+}
+
 function filterHelpList() {
         // Declare variables
         var input, filter;
@@ -434,6 +464,7 @@ $(".validate-badge").remove();
                            cm.setGutterMarker(i, "CodeMirror-lint-markers", null);
                            continue;
                        }
+
                        if(!signatureList.includes(infoForLine) && !infoForLine.startsWith("#")) {
                            var message = "Unknown command: " + infoForLine.split("#")[0] +
                                            " (" + infoForLine.split("#")[1] + " parameters)";
@@ -573,6 +604,14 @@ function isCommentLine(line) {
         $(".button.validate").append(badge);
     }
 
+    function setNewContextBadge() {
+        var badge = document.createElement("span");
+        badge.setAttribute("class", "newContext-badge");
+        badge.setAttribute("id", "newContext-badge");
+        badge.setAttribute("title", "Document has changed since last context sync!");
+        badge.innerHTML = '★';
+        $("#resync").append(badge);
+    }
 
 var reservedWords = ['script', 'debug script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
@@ -667,6 +706,7 @@ $( document ).ready(function() {
    //Get definition on SHIFT-ALT-D or ctrl-comma
    $(document).keydown(function (e) {
        var evtobj = window.event? event : e;
+       //Get definition on SHIFT-ALT-D or ctrl-comma
        if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey) ) {
        e.preventDefault();
             if($(".toggle-bar").attr('populated') === undefined) {
@@ -674,19 +714,21 @@ $( document ).ready(function() {
             }
             showDefinitions();
        }
+       //Validate on ctrl dot
+       if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
+       e.preventDefault();
+            if($(".toggle-bar").attr('populated') === undefined) {
+                 populateContext();
+            }
+            validateTestPage();
+       }
+       //AutoSave on enter
+       if (getCookie('autoSave') == 'true' && e.keyCode === 13) {
+               autoSave();
+           }
    });
 
-   //Validate on ctrl dot
-      $(document).keydown(function (e) {
-          var evtobj = window.event? event : e;
-          if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
-          e.preventDefault();
-               if($(".toggle-bar").attr('populated') === undefined) {
-                    populateContext();
-               }
-               validateTestPage();
-          }
-      });
+
 
    var delay = (function(){
      var timer = 0;
@@ -713,6 +755,12 @@ $( document ).ready(function() {
            }
       );
 
+    $('body').on('click', '#autoSave-switch', function(e) {
+               e.preventDefault();
+               switchAutoSave();
+               }
+          );
+
     $('body').on('click', '.toggle-bar', function(e) {
            e.preventDefault();
            if($(".toggle-bar").attr('populated') === undefined) {
@@ -721,6 +769,25 @@ $( document ).ready(function() {
            $(".side-bar").slideToggle()
            }
       );
+
+    $('body').on('click', '#cancelEdit', function(e) {
+       e.preventDefault();
+       var location = $(this).attr('href')
+       if(getCookie('autoSave') == 'true') {
+
+            $('#pageContent').val(document.originalContent);
+            $.ajax({
+                url : $('[name="f"]').attr('action'),
+                type : 'POST',
+                data : $('[name="f"]').serialize(),
+                success: function(data){
+                    window.location.href=location;
+                }
+            });
+       } else {
+            window.location.href=location;
+       }
+    });
 
     $('body').on('click', '.coll', function() {
                 if($(this).children("input").is(":checked")) {
@@ -799,6 +866,19 @@ $( document ).ready(function() {
                 $('#collapse-switch').addClass('fa-toggle-on');
             }
         }
+
+    function switchAutoSave() {
+            if(getCookie('autoSave') == 'true') {
+                document.cookie = "autoSave=false";
+                $('#autoSave-switch').removeClass('fa-toggle-on');
+                $('#autoSave-switch').addClass('fa-toggle-off');
+            } else {
+                document.cookie = "autoSave=true";
+                $('#autoSave-switch').removeClass('fa-toggle-off');
+                $('#autoSave-switch').addClass('fa-toggle-on');
+            }
+        }
+
 
 });
 
