@@ -36,33 +36,45 @@ var parseCookies = function () {
 var signatureList = [];
 
 function autoSave(){
-        if (!document.querySelector('.CodeMirror').CodeMirror.doc.isClean()) {
-            $('#pageContent').val(document.querySelector('.CodeMirror').CodeMirror.doc.getValue())
-            $.ajax({
-                url : $('[name="f"]').attr('action'),
-                type : 'POST',
-                data : $('[name="f"]').serialize(),
-                success: function(data){
-                    document.querySelector('.CodeMirror').CodeMirror.doc.markClean()
-                    //Only reload helper if helper is closed
-                    if($("#helper-bar").is(":hidden")) {
-                        $('.toggle-bar').removeAttr('populated');
-                        $('.helper-content').remove()
-                        $.when(loadAutoCompletesFromResponder()).done(function(a){
-                            populateContext();
-                        })
-                    }
-                    else { setNewContextBadge(); }
-
-                    if($(".toggle-bar").attr('populated') === undefined) {
-                        populateContext();
-                    }
-
-                    validateTestPage();
-                }
-            });
-        }
+    var cm = document.querySelector('.CodeMirror').CodeMirror;
+    if ($('[name="responder"]').attr('value') == 'saveData' && !cm.doc.isClean()) {
+        $('#pageContent').val(cm.doc.getValue())
+        savePage($('[name="f"]').attr('action'));
+        var warning = "Autosave is enabled. To discard any changes, use the cancel button. ";
+    } else if ($('[name="responder"]').attr('value') == 'addChild') {
+        var warning = "Autosave is enabled, but new pages need to be saved manually the first time!";
+    }
+    if (warning.length > 0) {
+        $('#editorMessage').addClass('bootstrap-plus-warn');
+        $('#editorMessage').text( warning );
+    }
     return false;
+}
+
+function savePage(target) {
+    $.ajax({
+        url : target,
+        type : 'POST',
+        data : $('[name="f"]').serialize(),
+        success: function(data){
+            document.querySelector('.CodeMirror').CodeMirror.doc.markClean()
+            //Only reload helper if helper is closed
+            if($("#helper-bar").is(":hidden")) {
+                $('.toggle-bar').removeAttr('populated');
+                $('.helper-content').remove()
+                $.when(loadAutoCompletesFromResponder()).done(function(a){
+                    populateContext();
+                })
+            }
+            else { setNewContextBadge(); }
+
+            if($(".toggle-bar").attr('populated') === undefined) {
+                populateContext();
+            }
+
+            validateTestPage();
+        }
+    });
 }
 
 function filterHelpList() {
@@ -421,8 +433,9 @@ $(".validate-badge").remove();
                   //determine the table type
                   var cleanLineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
                   var firstCellVal = getCellValues(cleanLineContent)[0].toLowerCase().trim();
-                  if(firstCellVal.indexOf('script') > -1 ||
-                     firstCellVal.indexOf('debug script') > -1 ||
+                  if (firstCellVal == 'conditional script') {
+                     tableType = "conditional";
+                  } else if(firstCellVal.indexOf('script') > -1 ||
                      firstCellVal.indexOf('scenario') > -1 ||
                      firstCellVal.indexOf('storyboard') > -1 ||
                      firstCellVal == 'table template') {
@@ -473,6 +486,18 @@ $(".validate-badge").remove();
                           row++;
                           continue;
                        }
+                   } else if (tableType ==  "conditional") {
+                        if (row == 1) {
+                            var cells = getCellValues(lineContent);
+                            if(cells.length > 1) {
+                                var message = "First row of conditional script should have only one cell containing the condition."
+                                cm.setGutterMarker(i, "CodeMirror-lint-markers", makeMarker(message, "error"));
+                                msgs++;
+                            }
+                            tableType = 'script';
+                            row++;
+                            continue;
+                        }
                    } else if (tableType == "treatAsDT") {
                        var ignoreParams;
                        var map_of_maps;
@@ -613,7 +638,7 @@ function isCommentLine(line) {
         $("#resync").append(badge);
     }
 
-var reservedWords = ['script', 'debug script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
+var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 $( document ).ready(function() {
 
@@ -773,8 +798,8 @@ $( document ).ready(function() {
     $('body').on('click', '#cancelEdit', function(e) {
        e.preventDefault();
        var location = $(this).attr('href')
-       if(getCookie('autoSave') == 'true') {
 
+       if($('[name="responder"]').attr('value') == 'saveData' && getCookie('autoSave') == 'true') {
             $('#pageContent').val(document.originalContent);
             $.ajax({
                 url : $('[name="f"]').attr('action'),

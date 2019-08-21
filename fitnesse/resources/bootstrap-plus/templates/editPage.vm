@@ -68,6 +68,7 @@
 
 
  <fieldset id="editor">
+ <span id="editorMessage">&nbsp;</span>
   <textarea class="wikitext no_wrap mousetrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
  </fieldset>
 

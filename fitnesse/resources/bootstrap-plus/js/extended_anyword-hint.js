@@ -120,6 +120,11 @@ function loadAutoCompletesFromResponder() {
 		addIfMatch(item);
 	});
 
+    addIfMatch("script");
+    addIfMatch("debug script");
+    addIfMatch("storyboard");
+    addIfMatch("table template");
+    addIfMatch("conditional script");
     addIfMatch("!today");
     addIfMatch("!today (dd-MM-yyyy)");
     addIfMatch("!monday");
