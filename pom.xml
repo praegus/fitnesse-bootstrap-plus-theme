@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-        <groupId>Team24</groupId>
+	<groupId>nl.praegus</groupId>
 	<artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-	<version>2.0.1</version>
-	<url>https://github.com/AppaYY/fitnesse-bootstrap-plus-theme</url>
+	<version>2.0.3-SNAPSHOT</version>
+	<url>https://github.com/praegus/fitnesse-bootstrap-plus-theme</url>
 	<name>Extended boostrap theme for FitNesse</name>
 	<description>Makes FitNesse more user friendly</description>
 
@@ -28,9 +28,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git@github.com:AppaYY/fitnesse-bootstrap-plus-theme.git</connection>
-		<url>https://github.com/AppaYY/fitnesse-bootstrap-plus-theme.git</url>
-		<developerConnection>scm:git:git@github.com:AppaYY/fitnesse-bootstrap-plus-theme.git</developerConnection>
+		<connection>scm:git:git@github.com:praegus/fitnesse-bootstrap-plus-theme.git</connection>
+		<url>https://github.com/praegus/fitnesse-bootstrap-plus-theme.git</url>
+		<developerConnection>scm:git:git@github.com:praegus/fitnesse-bootstrap-plus-theme.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
@@ -169,3 +169,4 @@
 		</repository>
 	</distributionManagement>
 </project>
+
