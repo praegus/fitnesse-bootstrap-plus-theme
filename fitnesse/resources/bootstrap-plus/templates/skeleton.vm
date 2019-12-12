@@ -44,6 +44,7 @@
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
   <link rel="stylesheet" id="theme" type="text/css" title="light" href="${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-${themeType}.css" />
+  <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-gold.css">
 
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">

@@ -13,9 +13,9 @@ $(document).ready(function() {
 function displayToolTip(text) {
     var textarray = text.split(",");
     var PickedTip = Math.floor(Math.random() * textarray.length);
-    var footer = document.querySelector('footer');
-    var tooltip = document.createElement("p");
-    footer.appendChild(tooltip);
+    var body = document.querySelector('body');
+    var tooltip = document.createElement("div");
+    body.appendChild(tooltip);
     tooltip.id = "tooltip";
-    tooltip.innerHTML = "<img src='/files/fitnesse/bootstrap-plus/img/hint.png'>" + textarray[PickedTip];
+    tooltip.innerHTML = '<img src="/files/fitnesse/bootstrap-plus/img/hint.png"><p id="tooltip">' + textarray[PickedTip] + '</p>';
 }
