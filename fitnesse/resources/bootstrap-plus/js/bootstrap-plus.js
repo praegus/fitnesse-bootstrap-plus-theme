@@ -641,7 +641,6 @@ function isCommentLine(line) {
 var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 $( document ).ready(function() {
-
    $(".test").each(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
    });
