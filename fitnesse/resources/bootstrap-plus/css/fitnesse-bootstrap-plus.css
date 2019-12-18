@@ -4816,6 +4816,7 @@ footer {
   background-color: #f8f8f8;
   min-height: 50px;
   border-top: 1px solid #e7e7e7;
+  z-index:5;
 }
 input,
 select,
