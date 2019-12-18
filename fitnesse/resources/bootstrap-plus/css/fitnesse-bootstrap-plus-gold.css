@@ -1,8 +1,4 @@
 p#tooltip {
     display: inline;
 }
-@media (max-width: 1444px) {
- div#tooltip{
-     margin-top: -6% !important;
- }
-}
+
