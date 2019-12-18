@@ -41,6 +41,6 @@ function displayToolTip(text) {
     var parent = document.querySelector('body');
     parent.appendChild(tooltip);
     tooltip.id = "tooltip";
-    tooltip.setAttribute('style','margin-top: 7%;text-align: center;')
+    tooltip.setAttribute('style','margin-top: 8%;text-align: center;')
     tooltip.innerHTML = '<img style="position:relative;top:30px:" src="/files/fitnesse/bootstrap-plus/img/hint.png"><p style="position:relative;top:30px:" id="tooltip">' + textarray[PickedTip] + '</p>';
 }
