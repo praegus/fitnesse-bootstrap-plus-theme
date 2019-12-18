@@ -6978,7 +6978,7 @@ li.CodeMirror-hint:nth-child(odd) {
 }
 
 /*Keyshortcut page*/
-.modal-dialog > div {
+#-shortcut-keys > div {
   background-color: #ffffff;
 }
 
@@ -6989,4 +6989,16 @@ kbd {
   background-color: #333333;
   border-radius: 3px;
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+#-shortcut-keys h4 {
+  margin: 6px 0;
+}
+
+#-shortcut-keys li {
+  padding: 2px 0;
+}
+
+#-shortcut-keys .button {
+  margin-top: 8px;
 }
