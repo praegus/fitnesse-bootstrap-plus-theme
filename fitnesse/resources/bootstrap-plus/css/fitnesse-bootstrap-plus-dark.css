@@ -727,7 +727,14 @@ code {
   background-color: #f9f2f4;
   border-radius: 4px;
 }
-
+kbd {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #ffffff;
+  background-color: #333333;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
 kbd kbd {
   padding: 0;
   font-size: 100%;
@@ -6907,7 +6914,7 @@ li.CodeMirror-hint:nth-child(odd) {
 
 /*Keyshortcut page*/
 #-shortcut-keys > div {
-  background-color: #3a3a3a;
+  background-color: #333333;
 }
 
 kbd {
@@ -6930,4 +6937,3 @@ kbd {
 #-shortcut-keys .button {
   margin-top: 8px;
 }
-
