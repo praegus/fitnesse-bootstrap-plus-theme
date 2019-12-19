@@ -4,7 +4,7 @@ function getTooltips()
 {
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", "files/fitnesse/bootstrap-plus/csv/toolTipData.csv"); // false for synchronous request
+    xmlHttp.open( "GET", "files/fitnesse/bootstrap-plus/csv/toolTipData.csv",false); // false for synchronous request
     xmlHttp.send( null );
     return xmlHttp.responseText;
 
