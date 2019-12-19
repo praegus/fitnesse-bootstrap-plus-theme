@@ -53,6 +53,7 @@
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-gold.js" type="text/javascript"></script>
 
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end">
