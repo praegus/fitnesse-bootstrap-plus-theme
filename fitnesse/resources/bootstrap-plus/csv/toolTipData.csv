@@ -8,9 +8,9 @@ Did you know you can add/edit templates when you go to FitNesse/templatelibrary?
 Did you notice that there a special page titles?,
 Did you know you can save your searches?,
 You can make a table of contents with '!headings -',
-You can give a page an expiration date with '-e <days>' which when passed will be subject to deletion
+You can give a page an expiration date with '-e <days>' which when passed will be subject to deletion,
 Did you know you can style your syntax for more information see in the full reference guide "MarkupLanguageReference"?,
 Did you know you simply fill in the Wiki import in page properties with the URL of your remote wiki to import it into the page? ,
 Did you know that the version button brings up a list of old versions of the page?,
 Did you know you add non-wiki files to /files/?,
-If you click on the name of the page FitNesse will print a list of every page that references that page,
+If you click on the name of the page FitNesse will print a list of every page that references that page
