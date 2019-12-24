@@ -1,0 +1,25 @@
+{
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
+  "scripts": {
+    "tests": "jest"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>"
+    ],
+    "modulePaths": [
+      "<rootDir>"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "resources"
+    ],
+    "setupFiles": ["<rootDir>/setup-jest.js"]
+  },
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+
+}
