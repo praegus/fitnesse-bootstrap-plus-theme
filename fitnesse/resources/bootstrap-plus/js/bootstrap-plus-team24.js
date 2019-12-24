@@ -1,13 +1,8 @@
 //checks if ? is pressed
 
-
-
 document.addEventListener('keydown', Createshortcuts);
 
 function Createshortcuts(key) {
-
-
-
     if (key.key === "?"){
         // checks if element in question already exists as to avoid duplicates
         if(ul != document.getElementById("bootstrap-shortcuts")) {
@@ -21,39 +16,17 @@ function Createshortcuts(key) {
     ul.innerHTML =
         '<li><h4>Bootstrap-plus</h4></li>\n' +
         '   <li>\n' +
-        '    <kbd>t</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
+        '    <kbd>CTRL+space</kbd>\n' +
+        '    <span class="help-key-def">Autocomplete suggestions</span>\n' +
         '   </li>\n' +
         '   <li>\n' +
-        '    <kbd>e</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
+        '    <kbd>CTRL+.</kbd>\n' +
+        '    <span class="help-key-def">validate</span>\n' +
         '   </li>\n' +
         '   <li>\n' +
-        '    <kbd>v</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>\n' +
-        '   <li>\n' +
-        '    <kbd>a</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>\n' +
-        '\n' +
-        '   <li><h4>Go To</h4></li>\n' +
-        '   <li>\n' +
-        '    <kbd>g u</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>\n' +
-        '   <li>\n' +
-        '    <kbd>g q</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>\n' +
-        '   <li>\n' +
-        '    <kbd>g f</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>\n' +
-        '   <li>\n' +
-        '    <kbd>g c</kbd>\n' +
-        '    <span class="help-key-def">sample</span>\n' +
-        '   </li>' ;
+        '    <kbd>CTRL+,</kbd>\n' +
+        '    <span class="help-key-def">search for a method/scenario in the contect helper</span>\n' +
+        '   </li>\n';
     //identifies and appends to parent element
 var helplist = document.getElementsByClassName("help-list");
 var parent = helplist[0].parentElement;
