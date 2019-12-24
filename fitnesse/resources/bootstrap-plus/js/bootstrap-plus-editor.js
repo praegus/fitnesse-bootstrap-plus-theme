@@ -595,6 +595,14 @@ $( document ).ready(function() {
         };
    })();
 
+   var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+          clearTimeout (timer);
+          timer = setTimeout(callback, ms);
+        };
+      })();
+
    //Get definition on SHIFT-ALT-D or ctrl-comma
    $(document).keydown(function (e) {
        var evtobj = window.event? event : e;
