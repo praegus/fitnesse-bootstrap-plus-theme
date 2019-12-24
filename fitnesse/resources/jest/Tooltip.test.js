@@ -2,8 +2,9 @@ const tooltip = require('bootstrap-plus/js/bootstrap-plus-team24');
 
 //tests if DOM element is correct by giving different MOCK article heights
 test('tooltip Correct DOM element test', () => {
-    expect(tooltip("text",300)).toBe("margin-top: 22%;text-align: center;0,text");
-    expect(tooltip("text",500)).toBe("margin-top: 8%;text-align: center;0,text");
+    expect(tooltip("text",200)).toBe("position:relative;top:520px;text-align:center;0,text");
+    expect(tooltip("text",300)).toBe("position:relative;top:482px;text-align:center;0,text");
+    expect(tooltip("text",600)).toBe("margin-top: 8%;text-align: center;0,text");
 
 });
 //checks if inputted CSV format data comes out correctly

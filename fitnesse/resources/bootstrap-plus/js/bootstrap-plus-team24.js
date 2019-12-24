@@ -23,15 +23,18 @@ function displayToolTip(text, height) {
     var tooltip = document.createElement("div");
     var parent = document.querySelector('body');
     //checks what height article is and decides on what height to put the tooltip
-    if(height < 400){
-        tooltip.setAttribute('style','margin-top: 22%;text-align: center;')
+    if(height < 220){
+        tooltip.setAttribute('style','position:relative;top:520px;text-align:center;')
+    }
+    else if(height < 500){
+        tooltip.setAttribute('style','position:relative;top:482px;text-align:center;')
     }else{
         tooltip.setAttribute('style','margin-top: 8%;text-align: center;');
     }
     //creates DOM element and appends it
     parent.appendChild(tooltip);
     tooltip.id = "tooltip";
-    tooltip.innerHTML = '<img style="position:relative;top:30px:" src="/files/fitnesse/bootstrap-plus/img/hint.png"><p style="position:relative;top:30px:" id="tooltip">' + textarray[PickedTip] + '</p>';
+    tooltip.innerHTML = '<img style="position:relative;" src="/files/fitnesse/bootstrap-plus/img/hint.png"><p style="display:inline;position:relative;" id="tooltip">' + textarray[PickedTip] + '</p>';
     //return for unit-testing
     return tooltip.getAttribute('style') + PickedTip + "," + textarray[PickedTip];
 }
