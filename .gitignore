@@ -2,3 +2,4 @@
 target/*
 node_modules/*
 fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus*.css
+/package-lock.json
