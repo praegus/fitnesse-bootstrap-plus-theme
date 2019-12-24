@@ -124,7 +124,7 @@
 			<resource>
 				<directory>.</directory>
 				<includes>
-					<include>fitnesse/resources/bootstrap-plus/**/*.*</include>
+					<include>fitnesse/resources/**/*.*</include>
 				</includes>
 				<excludes>
 					<exclude>**/less/**</exclude>
