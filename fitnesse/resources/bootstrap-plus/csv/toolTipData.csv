@@ -13,4 +13,13 @@ Did you know you can style your syntax for more information see in the full refe
 Did you know you simply fill in the Wiki import in page properties with the URL of your remote wiki to import it into the page? ,
 Did you know that the version button brings up a list of old versions of the page?,
 Did you know you add non-wiki files to /files/?,
-If you click on the name of the page FitNesse will print a list of every page that references that page
+If you click on the name of the page FitNesse will print a list of every page that references that page,
+Did you know you can rename, move and delete existing pages,
+You can add a comment to the wiki markup text by simply putting the '#' sign as the first character of a line,
+You can add an open collapsible section by writing '!* title [enter] text *!',
+You can add an closed collapsible section by writing '!*> title [enter] text *!',
+Did you know there is an contexthelper?,
+Headers are created by prefixing a line with !1 or !2 or !3 or !4 or !5 or !6,
+Bullet lists are created by prefixing a space and an * to a line,
+Numbered lists are created by prefixing a space and a number to a line,
+Picture can be added by using the !img marker followed by a URL
