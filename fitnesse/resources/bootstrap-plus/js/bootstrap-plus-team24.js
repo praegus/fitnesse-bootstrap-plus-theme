@@ -2,12 +2,10 @@
 // if the document has been loaded, then get data from toolTipData.csv
 function getTooltips()
 {
-
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", "files/fitnesse/bootstrap-plus/csv/toolTipData.csv",false); // false for synchronous request
     xmlHttp.send( null );
     return xmlHttp.responseText;
-
 }
 // gets article height
 function getArticleHeight(){
@@ -18,7 +16,7 @@ function getArticleHeight(){
     }
 }
 
-function displayToolTip(text,height) {
+function displayToolTip(text, height) {
     //initialization code
     var textarray = text.split(",");
     var PickedTip = Math.floor(Math.random() * textarray.length);
@@ -46,7 +44,6 @@ $(document).ready(function () {
     callback(displayToolTip,getTooltips(),getArticleHeight());
 });
 
-window.onerror = function(){
-    return true;
-}
+try{
 module.exports = displayToolTip;
+}catch (e) {}
