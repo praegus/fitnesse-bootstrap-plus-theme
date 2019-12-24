@@ -1,5 +1,6 @@
 .idea/*
 target/*
-node_modules/*
 fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus*.css
-/package-lock.json
+node_modules/*
+package.lock.json
+
