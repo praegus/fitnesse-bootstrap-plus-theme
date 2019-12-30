@@ -1,4 +1,4 @@
- [![Maven Central](https://img.shields.io/maven-central/v/com.github.tcnh/fitnesse-bootstrap-plus-theme.svg?maxAge=21600)](https://mvnrepository.com/artifact/com.github.tcnh/fitnesse-bootstrap-plus-theme)
+ [![Maven Central](https://img.shields.io/maven-central/v/nl.praegus/fitnesse-bootstrap-plus-theme.svg?maxAge=21600)](https://mvnrepository.com/artifact/com.github.tcnh/fitnesse-bootstrap-plus-theme)
 ## Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
 

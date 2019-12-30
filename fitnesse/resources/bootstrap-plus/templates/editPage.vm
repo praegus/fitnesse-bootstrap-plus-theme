@@ -16,6 +16,7 @@
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
 <link rel="stylesheet" href="${contextRoot}files/fitnesse/bootstrap-plus/css/codemirror/theme/darcula.css">
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.css">
+<script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-editor.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/extended_anyword-hint.js" type="text/javascript"></script>
 
