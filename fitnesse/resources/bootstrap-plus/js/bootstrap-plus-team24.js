@@ -1,17 +1,17 @@
-
+//checks if user reloaded page with the shortcut panel open
 $('document').ready(function(){
    if(window.location.href.search("#-shortcut-keys") != '-1'){
+       //fires createshortcuts function
        Createshortcuts("urlfound");
    }
 });
-
+//event listener for keys
 document.addEventListener('keydown', Createshortcuts);
-function Createshortcuts(key) {
-    console.log(window.location.href);
-    console.log(document.URL);
-    if (key.key === "?"|| key == "urlfound"){
-        // checks if element in question already exists as to avoid duplicates
-
+//function for creating new shortcuts
+function Createshortcuts(e) {
+    //checks if e is "?" or "urlfound"
+    if (e.key === "?"|| e == "urlfound"){
+        // checks if element already exists to avoid duplicates
         if(ul != document.getElementById("bootstrap-shortcuts")) {
             //removes duplicate element
             document.getElementById("bootstrap-shortcuts").remove();
