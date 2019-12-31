@@ -1,9 +1,15 @@
-//checks if ? is pressed
+
+$('document').ready(function(){
+   if(window.location.href.search("#-shortcut-keys") != '-1'){
+       Createshortcuts("urlfound");
+   }
+});
 
 document.addEventListener('keydown', Createshortcuts);
-
 function Createshortcuts(key) {
-    if (key.key === "?"){
+    console.log(window.location.href);
+    console.log(document.URL);
+    if (key.key === "?"|| key == "urlfound"){
         // checks if element in question already exists as to avoid duplicates
 
         if(ul != document.getElementById("bootstrap-shortcuts")) {
