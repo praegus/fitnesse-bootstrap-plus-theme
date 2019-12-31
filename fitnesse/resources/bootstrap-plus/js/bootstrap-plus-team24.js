@@ -5,6 +5,7 @@ document.addEventListener('keydown', Createshortcuts);
 function Createshortcuts(key) {
     if (key.key === "?"){
         // checks if element in question already exists as to avoid duplicates
+
         if(ul != document.getElementById("bootstrap-shortcuts")) {
             //removes duplicate element
             document.getElementById("bootstrap-shortcuts").remove();
@@ -13,6 +14,7 @@ function Createshortcuts(key) {
     var ul = document.createElement("ul");
     ul.className = "help-list";
     ul.id ="bootstrap-shortcuts";
+    ul.style = "float:right;";
     ul.innerHTML =
         '<li><h4>Bootstrap-plus</h4></li>\n' +
         '   <li>\n' +
@@ -25,7 +27,7 @@ function Createshortcuts(key) {
         '   </li>\n' +
         '   <li>\n' +
         '    <kbd>CTRL+,</kbd>\n' +
-        '    <span class="help-key-def">search for a method/scenario in the contect helper</span>\n' +
+        '    <span class="help-key-def">search for a method</span>\n' +
         '   </li>\n';
     //identifies and appends to parent element
 var helplist = document.getElementsByClassName("help-list");
@@ -33,6 +35,13 @@ var parent = helplist[0].parentElement;
 parent.appendChild(ul);
 //returns helplist for testing
 var helplist = document.getElementsByClassName("help-list");
-return helplist;
+
+return helplist.length;
 }}
-module.exports = Createshortcuts;
+
+//module is not defined, catches error
+try {
+    module.exports = {
+        Createshortcuts: Createshortcuts,
+    }
+}catch (e) {}
