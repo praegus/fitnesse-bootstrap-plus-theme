@@ -22,7 +22,12 @@ function displayToolTip(text, height) {
     var PickedTip = Math.floor(Math.random() * textarray.length);
     var tooltip = document.createElement("div");
     var parent = document.querySelector('body');
-    //checks what height article is and decides on what height to put the tooltip
+    //checks if current page is an editpage
+    if (parent.className == "editPage"){
+        tooltip.setAttribute('style','margin-top: 1%;text-align: center;');
+    }
+    else{
+        //checks what height the page is and adjusts styling accordingly
     if(height < 220){
         tooltip.setAttribute('style','position:relative;top:520px;text-align:center;')
     }
@@ -30,7 +35,7 @@ function displayToolTip(text, height) {
         tooltip.setAttribute('style','position:relative;top:482px;text-align:center;')
     }else{
         tooltip.setAttribute('style','margin-top: 8%;text-align: center;');
-    }
+    }}
     //creates DOM element and appends it
     parent.appendChild(tooltip);
     tooltip.id = "tooltip";
@@ -48,5 +53,7 @@ $(document).ready(function () {
 });
 
 try{
-module.exports = displayToolTip;
+module.exports = {
+    displayToolTip: displayToolTip
+};
 }catch (e) {}
