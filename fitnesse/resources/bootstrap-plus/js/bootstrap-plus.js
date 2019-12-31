@@ -63,7 +63,10 @@ function processSymbolData(str) {
 }
 
 $( document ).ready(function() {
-
+   //If the first row is hidden, don't use header row styling
+   $('tr.hidden').each(function() {
+        $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
+   });
    $(".test").each(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
    });
@@ -140,14 +143,6 @@ $( document ).ready(function() {
    $('.fa-cogs').click(function() {
         $(this).siblings('ul').toggle();
    });
-
-   var delay = (function(){
-     var timer = 0;
-     return function(callback, ms){
-       clearTimeout (timer);
-       timer = setTimeout(callback, ms);
-     };
-   })();
 
     $('body').on('click', '#prefs-switch', function(e) {
            e.preventDefault();
