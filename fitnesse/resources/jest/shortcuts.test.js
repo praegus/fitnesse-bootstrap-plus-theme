@@ -1,4 +1,4 @@
-const shortcut = require('bootstrap-plus/js/bootstrap-plus-team24');
+const shortcut = require('bootstrap-plus/js/bootstrap-plus-comakership');
 
 test('no duplicate elements',()=>{
     // initialize new keyboard event
