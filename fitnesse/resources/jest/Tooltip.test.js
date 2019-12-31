@@ -1,4 +1,4 @@
-const tooltip = require('bootstrap-plus/js/bootstrap-plus-team24');
+const tooltip = require('bootstrap-plus/js/bootstrap-plus-comakership');
 
 //tests if DOM element is correct by giving different MOCK article heights
 test('tooltip Correct DOM element test', () => {
