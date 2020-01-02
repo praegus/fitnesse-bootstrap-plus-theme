@@ -52,6 +52,10 @@
                     <kbd>ESC</kbd>
                     <span class="help-key-def">Cancel edit</span>
                 </li>
+                <li>
+                    <kbd>ALT+SHIFT+f</kbd>
+                    <span class="help-key-def">Format wiki markup</span>
+                </li>
 
                 <li><h4>Tools</h4></li>
                 <li>
@@ -63,11 +67,11 @@
                     <span class="help-key-def">Where used?</span>
                 </li>
                 <li>
-                    <kbd>AK+v</kbd>
+                    <kbd>ALT+v</kbd>
                     <span class="help-key-def">Versions</span>
                 </li>
                 <li>
-                    <kbd>AK+h</kbd>
+                    <kbd>ALT+h</kbd>
                     <span class="help-key-def">Page History</span>
                 </li>
                 <li>
@@ -91,6 +95,10 @@
             </li>
             <li>
                 <kbd>CTRL+,</kbd>
+                <span class="help-key-def">search context helper</span>
+            </li>
+            <li>
+                <kbd>ALT+SHIFT+F</kbd>
                 <span class="help-key-def">search context helper</span>
             </li>
             </ul>
