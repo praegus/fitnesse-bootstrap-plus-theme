@@ -84,8 +84,8 @@
    #parse( $mainTemplate )
   </article>
  <div id="tooltip-div">
-<img>
-  <p></p>
+<img src="/files/fitnesse/bootstrap-plus/img/hint.png">
+  <p id="tooltip"></p>
   </div>
   #if( $!footerTemplate )
   <footer>
