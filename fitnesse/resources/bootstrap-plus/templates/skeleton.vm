@@ -83,8 +83,9 @@
   <article>
    #parse( $mainTemplate )
   </article>
- <div>
-
+ <div id="tooltip-div">
+<img>
+  <p></p>
   </div>
   #if( $!footerTemplate )
   <footer>
