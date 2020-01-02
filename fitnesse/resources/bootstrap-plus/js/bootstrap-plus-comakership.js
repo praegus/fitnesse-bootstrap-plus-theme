@@ -1,3 +1,4 @@
+/*
 //checks if user reloaded page with the shortcut panel open
 $('document').ready(function () {
     if (window.location.href.search("#-shortcut-keys") != '-1') {
@@ -53,4 +54,4 @@ try {
         Createshortcuts: Createshortcuts,
     }
 } catch (e) {
-}
+}*/

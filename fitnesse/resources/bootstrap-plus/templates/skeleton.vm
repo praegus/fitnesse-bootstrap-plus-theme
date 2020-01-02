@@ -90,6 +90,6 @@
    #parse( $footerTemplate )
   </footer>
   #end
-
+  #parse("keyboardShortcutsbootstrap.vm")
  </body>
 </html>
