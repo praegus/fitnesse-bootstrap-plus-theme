@@ -23,19 +23,9 @@ function displayToolTip(text, height) {
     var tooltip = document.createElement("div");
     var parent = document.querySelector('body');
     //checks if current page is an editpage
-    if (parent.className == "editPage"){
-        tooltip.setAttribute('style','margin-top: 1%;text-align: center;');
-    }
-    else{
-        //checks what height the page is and adjusts styling accordingly
-    if(height < 220){
-        tooltip.setAttribute('style','position:relative;top:520px;text-align:center;')
-    }
-    else if(height < 500){
-        tooltip.setAttribute('style','position:relative;top:482px;text-align:center;')
-    }else{
-        tooltip.setAttribute('style','margin-top: 8%;text-align: center;');
-    }}
+
+        tooltip.setAttribute('style','text-align: center;');
+
     //creates DOM element and appends it
     parent.appendChild(tooltip);
     tooltip.id = "tooltip";
