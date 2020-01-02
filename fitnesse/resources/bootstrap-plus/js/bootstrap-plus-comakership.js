@@ -39,8 +39,11 @@ function getVersionData(callback){
     });
 
 }
-$.get("${FITNESSE_VERSION}",function(data){
-  console.log(data);
+$.get("/FitNesse.ReleaseNotes",function(data){
+    var parser = new DOMParser();
+    var XMLversions = parser.parseFromString(data,"text/xml");
+  console.log(XMLversions);
+
 });
 function versionCheck(data) {
     var versions = []
