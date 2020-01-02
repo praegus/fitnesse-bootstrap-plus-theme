@@ -53,7 +53,7 @@
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
-  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-comakership.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-extra.js" type="text/javascript"></script>
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end">
 
@@ -83,7 +83,7 @@
   <article>
    #parse( $mainTemplate )
    #if($pageTitle.Title == "FrontPage" && !$title.contains("Edit:") )
-   <p>"{{ ${FITNESSE_VERSION} }}"</p>
+   <p>#</p>
   #end
   </article>
 
