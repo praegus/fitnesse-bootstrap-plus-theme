@@ -4,7 +4,7 @@
     <div>
         <h4>Keyboard Shortcuts <kbd>?</kbd></h4>
         <div>
-            <ul class="help-list">
+            <ul class="help-list" style="float: left;">
 
                 <li><h4>General</h4></li>
                 <li>
@@ -91,11 +91,11 @@
             </li>
             <li>
                 <kbd>CTRL+.</kbd>
-                <span class="help-key-def">validate</span>
+                <span class="help-key-def">Validate</span>
             </li>
             <li>
                 <kbd>CTRL+,</kbd>
-                <span class="help-key-def">search context helper</span>
+                <span class="help-key-def">Find current line in context help</span>
             </li>
             </ul>
         </div>
