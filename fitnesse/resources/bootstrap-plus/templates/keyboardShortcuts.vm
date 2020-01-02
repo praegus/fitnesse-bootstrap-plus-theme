@@ -54,7 +54,7 @@
                 </li>
                 <li>
                     <kbd>ALT+SHIFT+f</kbd>
-                    <span class="help-key-def">Format wiki markup</span>
+                    <span class="help-key-def">Format</span>
                 </li>
 
                 <li><h4>Tools</h4></li>
@@ -95,10 +95,6 @@
             </li>
             <li>
                 <kbd>CTRL+,</kbd>
-                <span class="help-key-def">search context helper</span>
-            </li>
-            <li>
-                <kbd>ALT+SHIFT+F</kbd>
                 <span class="help-key-def">search context helper</span>
             </li>
             </ul>
