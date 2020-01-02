@@ -82,6 +82,9 @@
 
   <article>
    #parse( $mainTemplate )
+   #if($pageTitle.Title == "FrontPage" && !$title.contains("Edit:") )
+   <p>"{{ ${FITNESSE_VERSION} }}"</p>
+  #end
   </article>
 
   #if( $!footerTemplate )

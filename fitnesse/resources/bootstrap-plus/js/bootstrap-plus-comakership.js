@@ -39,6 +39,9 @@ function getVersionData(callback){
     });
 
 }
+$.get("${FITNESSE_VERSION}",function(data){
+  console.log(data);
+});
 function versionCheck(data) {
     var versions = []
    for (var i=0; i < data.length; i++){
