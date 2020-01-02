@@ -1,14 +1,57 @@
+/*
+$(document).ready(createCORSRequest);
+function createCORSRequest() {
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
 
-var xmlHttp = new XMLHttpRequest();
-xmlHttp.open( "GET", "http://central.maven.org/maven2/org/fitnesse/fitnesse/maven-metadata.xml",false);
-xmlHttp.setRequestHeader('Content-type',"xml");
-xmlHttp.send(null);
-console.log(xmlHttp.responseText);
+        // Check if the XMLHttpRequest object has a "withCredentials" property.
+        // "withCredentials" only exists on XMLHTTPRequest2 objects.
+        xhr.open("get", "http://central.maven.org/maven2/org/fitnesse/fitnesse/maven-metadata.xml", true);
 
-$(document).ready(function(){
-$.get("http://central.maven.org/maven2/org/fitnesse/fitnesse/maven-metadata.xml",checkFunction);
-});
+    } else if (typeof XDomainRequest != "undefined") {
 
-function checkFunction(data){
-    console.log(data);
+        // Otherwise, check if XDomainRequest.
+        // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+        xhr = new XDomainRequest();
+        xhr.open("get", "http://central.maven.org/maven2/org/fitnesse/fitnesse/maven-metadata.xml");
+
+    } else {
+
+        // Otherwise, CORS is not supported by the browser.
+        xhr = null;
+
+    }
+    return xhr;
 }
+
+var xhr = createCORSRequest('GET', "http://central.maven.org/maven2/org/fitnesse/fitnesse/maven-metadata.xml");
+if (!xhr) {
+    throw new Error('CORS not supported');
+}
+*/
+$(document).ready(getVersionData);
+
+function getVersionData(callback){
+    var versions;
+ $.get("https://api.github.com/repos/unclebob/fitnesse/tags",function(data){
+     versions = data;
+     callback(versions);
+    });
+
+}
+function versionCheck(data) {
+    var versions = []
+   for (var i=0; i < data.length; i++){
+       data[i].name = data[i].name.replace(/\D/g,'');
+       if (data[i].name == ""){
+           data.splice(i,1);
+       }
+       data[i].name = parseInt(data[i].name);
+       versions.push(data[i].name);
+   }
+   versions.sort();
+   versions.reverse();
+   console.log(versions);
+   console.log(versions[0]);
+}
+getVersionData(versionCheck);
