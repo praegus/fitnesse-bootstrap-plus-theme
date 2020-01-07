@@ -76,6 +76,12 @@ $( document ).ready(function() {
    $(".static").each(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
    });
+
+   // Add tags
+    $(".test, .suite, .static").each(function() {
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
+
    $('.contents li a').each(function() {
        var item = $(this)
        var orig = item.html();
@@ -216,5 +222,86 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
+
+    // SHOW ADD TAG BUTTON
+    $('.suite').parent().hover(
+        function() {
+            $(this).find('.addTag:first').css("visibility", "visible");
+        }, function() {
+            $(this).find('.addTag:first').css("visibility", "hidden");
+        }
+    );
+    $('.static').parent().hover(
+        function() {
+            $(this).find('.addTag:first').css("visibility", "visible");
+        }, function() {
+            $(this).find('.addTag:first').css("visibility", "hidden");
+        }
+    );
+    $('.test').parent().hover(
+        function() {
+            $(this).find('.addTag:first').css("visibility", "visible");
+        }, function() {
+            $(this).find('.addTag:first').css("visibility", "hidden");
+        }
+    );
+    // Werkt niet
+    // $('.suite').parent().addEventListener("mouseover", function(){
+    //     showAddTagButton($(this));
+    // });
+    // $('.test').parent().addEventListener("mouseover", function(){
+    //     showAddTagButton($(this));
+    // });
+    // $('.static').parent().addEventListener("mouseover", function(){
+    //     showAddTagButton($(this));
+    // });
+
+    // function showAddTagButton(currentPage) {
+    //     $(currentPage).find('.addTag:first').css("visibility", "visible");
+    // }
+
+    // SHOW INPUT FIELD AFTER CLICKING ADD
+    $('.addTag').click(function() {
+        $('.tagInputOverview').remove();
+        $(this).after('<input type="text" class="tagInputOverview">');
+        $('.tagInputOverview').keyup(function(event) {
+            if (event.keyCode == 13) {
+                var inputValue = $('.tagInputOverview').val();
+                GetCurrentTagList($(this), inputValue);
+                $(this).siblings('span:first').before("<span class='tag'>" + inputValue + "</span>");
+                $('.tagInputOverview').remove();
+            }
+        });
+    });
+
+    function GetCurrentTagList(currentFile, newTags){
+        var currentURL = currentFile.siblings('a').attr('href');
+
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:9090/" + currentURL,
+            contentType: 'application/json; charset=utf-8',
+            data : 'responder=tableOfContents',
+            dataType: 'json',
+            success: function(data){
+                var currentTagList = data[0].tags.toString();
+                var newTagList = currentTagList + ", " + newTags;
+                postTag(currentURL, newTagList);
+            }
+        });
+    }
+
+    function postTag(currentURL, tagList) {
+        $.ajax({
+            type: 'POST',
+            url: "http://localhost:9090/" + currentURL,
+            contentType: 'application/json; charset=utf-8',
+            data : 'responder=updateTags&suites=' + tagList,
+            dataType: 'json',
+            success: function(data){
+                console.log(data)
+            }
+        });
+    }
 });
 
