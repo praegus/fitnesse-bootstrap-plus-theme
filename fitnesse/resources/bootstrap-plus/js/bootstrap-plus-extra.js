@@ -8,6 +8,12 @@ function getVersionData(callback){
     });
 
 }
+
+$.get("prop",function(data){
+    console.log(data);
+});
+
+}
 function versionCheck(data) {
     var versions = []
    for (var i=0; i < data.length; i++){
