@@ -80,7 +80,8 @@
    #parse( $headerTemplate )
   </header>
 
-  <article>
+
+  <article #if(!$bodyClass.contains("edit")) style="min-height: 690px" #end >
    #parse( $mainTemplate )
   </article>
  <div id="tooltip-div">
