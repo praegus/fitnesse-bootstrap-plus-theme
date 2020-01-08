@@ -279,12 +279,15 @@ $( document ).ready(function() {
             success: function(data){
                 //Convert data object to string
                 var currentTagList = data[0].tags.toString();
+                //Combine the current tag list and the input tag(s) in 1 variable
                 var newTagList = currentTagList + ", " + newTags;
+                //Send current href value, new tag list and input tag(s) to post tag function
                 postTag(currentURL, newTagList, newTags);
             }
         });
     }
 
+    //Post new tag list function
     function postTag(currentURL, tagList, inputTag) {
         $.ajax({
             type: 'POST',
@@ -293,7 +296,9 @@ $( document ).ready(function() {
             data : 'responder=updateTags&suites=' + tagList,
             dataType: 'json',
             success: function(data){
+                //Add new tag span layout to page
                 $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
+                //Remove input field
                 $('.tagInputOverview').remove();
             }
         });
