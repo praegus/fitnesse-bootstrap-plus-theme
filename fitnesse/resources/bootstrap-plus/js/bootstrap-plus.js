@@ -77,7 +77,7 @@ $( document ).ready(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
    });
 
-   // Add tags
+   // Add hidden tag buttons upon entering overview page
     $(".test, .suite, .static").each(function() {
         $(this).after('<i class="fas fa-plus-circle addTag"></i>');
     });
@@ -223,7 +223,7 @@ $( document ).ready(function() {
             }
         }
 
-    // SHOW ADD TAG BUTTON
+    // Add hover function to show add tag button
     $('.suite').parent().hover(
         function() {
             $(this).find('.addTag:first').css("visibility", "visible");
@@ -245,38 +245,31 @@ $( document ).ready(function() {
             $(this).find('.addTag:first').css("visibility", "hidden");
         }
     );
-    // Werkt niet
-    // $('.suite').parent().addEventListener("mouseover", function(){
-    //     showAddTagButton($(this));
-    // });
-    // $('.test').parent().addEventListener("mouseover", function(){
-    //     showAddTagButton($(this));
-    // });
-    // $('.static').parent().addEventListener("mouseover", function(){
-    //     showAddTagButton($(this));
-    // });
 
-    // function showAddTagButton(currentPage) {
-    //     $(currentPage).find('.addTag:first').css("visibility", "visible");
-    // }
-
-    // SHOW INPUT FIELD AFTER CLICKING ADD
+    // Click add tag function
     $('.addTag').click(function() {
+        //Remove all existing tag input fields
         $('.tagInputOverview').remove();
+        //Add input field
         $(this).after('<input type="text" class="tagInputOverview">');
+
+        //If "Enter" button is pressed
         $('.tagInputOverview').keyup(function(event) {
             if (event.keyCode == 13) {
+                //Get current input value
                 var inputValue = $('.tagInputOverview').val();
+                //Call get current tag list function
                 GetCurrentTagList($(this), inputValue);
-                $(this).siblings('span:first').before("<span class='tag'>" + inputValue + "</span>");
-                $('.tagInputOverview').remove();
             }
         });
     });
 
+    //Get current tag list function
     function GetCurrentTagList(currentFile, newTags){
+        //Get href value of the a tag
         var currentURL = currentFile.siblings('a').attr('href');
 
+        //Get current tag list
         $.ajax({
             type: 'POST',
             url: "http://localhost:9090/" + currentURL,
@@ -284,14 +277,15 @@ $( document ).ready(function() {
             data : 'responder=tableOfContents',
             dataType: 'json',
             success: function(data){
+                //Convert data object to string
                 var currentTagList = data[0].tags.toString();
                 var newTagList = currentTagList + ", " + newTags;
-                postTag(currentURL, newTagList);
+                postTag(currentURL, newTagList, newTags);
             }
         });
     }
 
-    function postTag(currentURL, tagList) {
+    function postTag(currentURL, tagList, inputTag) {
         $.ajax({
             type: 'POST',
             url: "http://localhost:9090/" + currentURL,
@@ -299,7 +293,8 @@ $( document ).ready(function() {
             data : 'responder=updateTags&suites=' + tagList,
             dataType: 'json',
             success: function(data){
-                console.log(data)
+                $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
+                $('.tagInputOverview').remove();
             }
         });
     }
