@@ -279,10 +279,17 @@ $( document ).ready(function() {
             success: function(data){
                 //Convert data object to string
                 var currentTagList = data[0].tags.toString();
-                //Combine the current tag list and the input tag(s) in 1 variable
-                var newTagList = currentTagList + ", " + newTags;
-                //Send current href value, new tag list and input tag(s) to post tag function
-                postTag(currentURL, newTagList, newTags);
+                //Convert input tags to lowercase
+                var newTags = newTags.toLowerCase();
+                //Check if input tag exists in current tag list
+                var checkIfExists = currentTagList.includes(newTags);
+                //If tag doesn't exist yet, post it
+                if (checkIfExists === false){
+                    //Combine the current tag list and the input tag(s) in 1 variable
+                    var newTagList = currentTagList + ", " + newTags;
+                    //Send current href value, new tag list and input tag(s) to post tag function
+                    postTag(currentURL, newTagList, newTags);
+                }
             }
         });
     }
