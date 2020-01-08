@@ -256,8 +256,8 @@ $( document ).ready(function() {
         //If "Enter" button is pressed
         $('.tagInputOverview').keyup(function(event) {
             if (event.keyCode == 13) {
-                //Get current input value
-                var inputValue = $('.tagInputOverview').val();
+                //Get current input value & replace empty spaces at the end of input
+                var inputValue = $('.tagInputOverview').val().replace(/\s+\S*$/, "");
                 //Call get current tag list function
                 GetCurrentTagList($(this), inputValue);
             }
@@ -280,15 +280,22 @@ $( document ).ready(function() {
                 //Convert data object to string
                 var currentTagList = data[0].tags.toString();
                 //Convert input tags to lowercase
-                var newTags = newTags.toLowerCase();
-                //Check if input tag exists in current tag list
-                var checkIfExists = currentTagList.includes(newTags);
-                //If tag doesn't exist yet, post it
-                if (checkIfExists === false){
-                    //Combine the current tag list and the input tag(s) in 1 variable
-                    var newTagList = currentTagList + ", " + newTags;
-                    //Send current href value, new tag list and input tag(s) to post tag function
-                    postTag(currentURL, newTagList, newTags);
+                var lowerCaseTags = newTags.toLowerCase();
+                //Check if there are any tags currently present
+                if (currentTagList.length > 0){
+                    //Check if input tag exists in current tag list
+                    var checkIfExists = currentTagList.includes(lowerCaseTags);
+                    //If tag doesn't exist yet, post it
+                    if (checkIfExists === false){
+                        //Combine the current tag list and the input tag(s) in 1 variable
+                        var newTagList = currentTagList + ", " + lowerCaseTags;
+                        //Send current href value, new tag list and input tag(s) to post tag function
+                        postTag(currentURL, newTagList, newTags);
+                    }
+                }
+                //If there are no tags present only post the input tags
+                else {
+                    postTag(currentURL, lowerCaseTags, newTags);
                 }
             }
         });
