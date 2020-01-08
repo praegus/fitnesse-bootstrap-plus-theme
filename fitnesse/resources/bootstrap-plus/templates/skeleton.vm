@@ -83,7 +83,8 @@
   <article>
    #parse( $mainTemplate )
    #if($pageTitle.Title == "FrontPage" && !$title.contains("Edit:") )
-   <p>#</p>
+    <div id="versioncheck">
+   </div>
   #end
   </article>
 
