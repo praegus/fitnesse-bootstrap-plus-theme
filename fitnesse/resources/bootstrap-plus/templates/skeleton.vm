@@ -40,6 +40,7 @@
   #else
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
   #end
+  <link rel="csv file" type="text/csv" href="${contextRoot}files/fitnesse/bootstrap-plus/csv/bootstrap-version.csv">
 
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
