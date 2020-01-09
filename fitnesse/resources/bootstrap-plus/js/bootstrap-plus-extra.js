@@ -16,11 +16,11 @@ function getVersionData(callback,currentversionurl,newestversionurl){
     var currentversion;
     var appkind;
 // gets current function
-    $.get(currentversionurl,function(data) {
+    $.get(currentversionurl,function(data,status) {
         // removes incoming data of any dots or letters
         currentversion = data.replace(/\./g,"").replace(/\D/g, "");
         //gets newestversion
-        $.get(newestversionurl,function(data) {
+        $.get(newestversionurl,function(data,status) {
             //init
             var versions = [];
             // for loop on the length of data
@@ -51,14 +51,8 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             }
             // callback
             callback (newestversion,currentversion,appkind,newestversionurl);
-
         })
-
-
-
     })
-
-
 }
 
 function versionCheck(newversion,currentversion,appkind,newesturl) {
