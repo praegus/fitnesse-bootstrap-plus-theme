@@ -1,12 +1,11 @@
 
-
 function getVersionData(callback,currentversionurl,newestversionurl){
     var newestversion;
     var currentversion;
     var appkind;
 
     $.get(currentversionurl,function(data) {
-        currentversion = data.replace(/\./g,"");
+        currentversion = data.replace(/\./g,"").replace(/\D/g, "");
 
 
 
@@ -24,8 +23,8 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             versions.sort();
             versions.reverse();
             newestversion = versions[0];
-            if (newestversionurl.includes("fitnesse-bootstrap")){
-                appkind = "Bootstrap-plus";
+            if (newestversionurl.includes("toolchain-fitnesse-plugin")){
+                appkind = "FitNesse toolchain plugin";
             }
             else if (newestversionurl.includes("fitnesse")){
                 appkind = "FitNesse";
@@ -100,6 +99,6 @@ console.log(versiondiv);
 if (versiondiv != undefined) {
     console.log("trigger");
     getVersionData(versionCheck, "http://localhost:9090/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
-    getVersionData(versionCheck, "files/fitnesse/bootstrap-plus/csv/bootstrap-version.csv", "https://api.github.com/repos/praegus/fitnesse-bootstrap-plus-theme/tags");
+    getVersionData(versionCheck, "http://localhost:9090/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
 
 }});
