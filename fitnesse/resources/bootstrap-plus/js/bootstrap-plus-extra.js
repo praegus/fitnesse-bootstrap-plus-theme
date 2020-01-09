@@ -24,16 +24,14 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             versions.sort();
             versions.reverse();
             newestversion = versions[0];
-            switch (newestversionurl) {
-                case newestversionurl.includes("fitnesse"):
-                    appkind = "FitNesse";
-                    break;
-                case newestversionurl.includes("fitnesse-bootstrap"):
-                   appkind = "Bootstrap-plus"
-                    break;
+            if (newestversionurl.includes("fitnesse-bootstrap")){
+                appkind = "Bootstrap-plus";
+            }
+            else if (newestversionurl.includes("fitnesse")){
+                appkind = "FitNesse";
             }
 
-            callback (newestversion,currentversion,appkind);
+            callback (newestversion,currentversion,appkind,newestversionurl);
 
         })
 
@@ -44,28 +42,58 @@ function getVersionData(callback,currentversionurl,newestversionurl){
 
 }
 
-function versionCheck(newversion,currentversion,appkind) {
-var versioncheck =  document.createElement("div");
-var check;
+function versionCheck(newversion,currentversion,appkind,newesturl) {
+var versiontable = document.getElementById("versioncheck");
+var versiontablebody =  versiontable.getElementsByTagName("tbody")[0];
+var versioncheck =  document.createElement("tr");
+    versioncheck.className = "check";
+var text =  document.createElement("td");
+    text.innerHTML = appkind +" Release v"+currentversion;
+var check = document.createElement("td");
+var outdated = false;
+
 if (currentversion <= newversion){
 if (currentversion < newversion){
-    check = document.createElement("p");
+    outdated = true
     check.className = "checkfailed";
-    check.innerHTML = "- out of date";
+    check.innerHTML = " outdated";
+    var updateurl = newesturl.replace("api.","").replace("/repos","").replace("/tags","");
+    var linktr = document.createElement("tr");
+    var linktd = document.createElement("td");
+    var link = document.createElement("a");
+    var linktext = document.createElement("p");
+    linktext.innerHTML = "please update "+appkind;
+    link.href = updateurl;
+    link.innerHTML = " here";
+    link.setAttribute("target","_blank");
+    linktd.className = "update";
+    linktd.setAttribute("colspan","2");
+    linktd.appendChild(linktext);
+    linktd.appendChild(link);
+    linktr.appendChild(linktd);
+
+
 }else if (currentversion == newversion){
-    check = document.createElement("p");
     check.className = "checkpassed";
-    check.innerHTML = "- up to date";
+    check.innerHTML = " up-to-date";
+
 }
+versioncheck.appendChild(text);
 versioncheck.appendChild(check);
-
-
-}else
-    versioncheck.innerHTML = "something went wrong, check console log";
-    versioncheck.appendChild(check);
-console.log( "it appears that the current version of "+currentversion+" was higher than the newest version of "+newversion);
+versiontablebody.appendChild(versioncheck);
+if (outdated == true){
+    versiontablebody.appendChild(linktr);
 }
 
+
+
+}else{
+  check.innerHTML = "something went wrong, check console log";
+check.className = "checkerror";
+    versioncheck.appendChild(check);
+    versiontablebody.appendChild(versioncheck);
+console.log( "it appears that the current version of "+currentversion+" was higher than the newest version of "+newversion);
+}}
 $(document).ready(function(){
 var versiondiv = document.getElementById("versioncheck");
 console.log(versiondiv);

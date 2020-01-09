@@ -84,8 +84,13 @@
   <article>
    #parse( $mainTemplate )
    #if($pageTitle.Title == "FrontPage" && !$title.contains("Edit:") )
-    <div id="versioncheck">
-   </div>
+    <table id="versioncheck">
+     <tbody>
+     <td colspan="2">
+      <b>Versioncheck</b>
+     </td>
+     </tbody>
+   </table>
   #end
   </article>
 

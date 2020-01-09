@@ -53,3 +53,5 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_1.png "Dark theme")
 ![alt text](https://github.com/tcnh/binstore/raw/master/dark_editor.PNG "Dark editor")
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_result.PNG "Test results in dark mode")
+
+
