@@ -1,4 +1,4 @@
-const tooltip = require('bootstrap-plus/js/bootstrap-plus-comakerschap');
+const tooltip = require('bootstrap-plus/js/bootstrap-plus-extra');
 //checks if inputted CSV format data comes out correctly
 test('tooltip Correct data randomization test', () => {
     document.body.innerHTML=
