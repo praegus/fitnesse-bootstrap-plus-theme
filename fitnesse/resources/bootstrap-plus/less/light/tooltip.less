@@ -99,28 +99,23 @@
     border-bottom-color: @tooltip-arrow-color;
   }
 }
-#tooltip-div{
+
+#tooltip-div {
   text-align: center;
-  padding-top: 20px;
+  padding: 3px 0;
+  margin: 3px 0 10px;
+  background-color: #f5f5f5;
 }
-#tooltip{
+#tooltip-div-edit {
+  padding-top: 16px;
+  margin-left: 380px;
+  margin-bottom: 10px;
+}
+.tooltip-text {
   display:inline;
   position:relative;
+  font-weight: 500;
 }
-#tooltip-div-edit{
-  text-align: center;
-  padding-top: 20px;
-}
-@media screen and (max-width: 1460px){
-  #tooltip-div-edit{
-    margin-left: 10%;
-  }}
-@media screen and (max-width: 1200px){
-  #tooltip-div-edit{
-    margin-left: 20%;
-  }}
-@media screen and (max-width: 1092px){
-#tooltip-div-edit{
-  margin-left: 33%;
-}
+.tooltip-icon {
+  height: 23px;
 }

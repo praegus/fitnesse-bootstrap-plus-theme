@@ -1,22 +1,33 @@
 
 // if the document has been loaded, then get data from toolTipData.csv
+// Get list of tooltips
 function getToolTips(callback){
-    var tooltips;
     $.get("files/fitnesse/bootstrap-plus/csv/toolTipData.csv",function(data){
-        tooltips = data;
+        const tooltips = data;
+        // Activate function displayToolTip
         callback(tooltips);
     });
-
 }
+
+// Picks random tooltip
 function displayToolTip(text) {
-    //initialization code
-    var textarray = text.split(",");
-    var PickedTip = Math.floor(Math.random() * textarray.length);
-    var textfield = document.getElementById("tooltip");
-    textfield.innerHTML = textarray[PickedTip];
+    // Picks random tip
+    const tipsArray = text.split(",");
+    const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
-    return PickedTip+","+textarray[PickedTip];
+    placeToolTip(tipsArray, pickedTip);
+
+    // Returns chosen tip in string for jest
+    return pickedTip+","+tipsArray[pickedTip];
 }
+
+// Places picked tooltips on the page
+function placeToolTip(tipsArray, pickedTip) {
+    const textfield = document.getElementsByClassName("tooltip-text");
+    console.log(textfield);
+    textfield[0].innerHTML = tipsArray[pickedTip];
+}
+
 //executes callback function when document is ready
 $(document).ready(function () {
     getToolTips(displayToolTip);

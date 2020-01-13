@@ -82,16 +82,38 @@
 
 
   <article #if(!$bodyClass.contains("edit")) style="min-height: 690px" #end >
+   #if(!$bodyClass.contains("edit"))
+    ## Page Header
+    <a href="?testHistory">
+     <span class="btn btn-primary">Test History</span>
+    </a>
+    <a href="?pageHistory">
+     <span class="btn btn-primary">Page History</span>
+    </a>
+    <a href="?properties">
+     <span class="btn btn-secondary">Properties</span>
+    </a>
+    <br>
+    <hr>
+
+    ## Tooltips
+    <div id="tooltip-div">
+     <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
+     <p class="tooltip-text"></p>
+    </div>
+   #end
+
    #parse( $mainTemplate )
   </article>
- #if($bodyClass.contains("edit"))
- <div id="tooltip-div-edit">
- #else
- <div id="tooltip-div">
+
+  ## Tooltips edit page
+  #if($bodyClass.contains("edit"))
+   <div id="tooltip-div-edit">
+    <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
+    <p class="tooltip-text"></p>
+   </div>
   #end
-<img src="/files/fitnesse/bootstrap-plus/img/hint.png">
-  <p id="tooltip"></p>
- </div>
+
   #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
