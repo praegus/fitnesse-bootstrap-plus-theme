@@ -72,27 +72,30 @@ if (currentversion <= newversion){
     // checks if current version is lower than new version
 if (currentversion < newversion){
     //various inits
-    outdated = true
+    outdated = true;
     var updateurl = newesturl.replace("api.","").replace("/repos","").replace("/tags","");
-    var linktr = document.createElement("tr");
-    var linktd = document.createElement("td");
-    var link = document.createElement("a");
-    var linktext = document.createElement("p");
+    var updatebutton = document.createElement("BUTTON");
+    updatebutton.className = "btn btn-primary";
+    updatebutton.innerHTML = "Update";
+    updatebutton.setAttribute("onClick","window.location.href("+updateurl+",'_blank')");
+
+
+
+
+
+
     //set classnames for css
     check.className = "checkfailed";
-    linktd.className = "update";
+
     // set inner html
-    link.innerHTML = " here";
-    check.innerHTML = " outdated";
-    linktext.innerHTML = "please update "+appkind;
+
+    check.innerHTML = " outdated - ";
+
     // set various atributes
-    link.href = updateurl;
-    link.setAttribute("target","_blank");
-    linktd.setAttribute("colspan","2");
+
+
     // make table content by appending
-    linktd.appendChild(linktext);
-    linktd.appendChild(link);
-    linktr.appendChild(linktd);
+
 
 //checks if current version is equal to new version
 }else if (currentversion == newversion){
@@ -106,7 +109,7 @@ versioncheck.appendChild(check);
 versiontablebody.appendChild(versioncheck);
 //if current version is outdated it also appends content to give the user a link to update
 if (outdated == true){
-    versiontablebody.appendChild(linktr);
+check.appendChild(updatebutton)
 }
 //part of error handling, this is what happends when current version is higher than the new version
 }else{
