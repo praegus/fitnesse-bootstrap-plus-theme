@@ -16,11 +16,11 @@ function getVersionData(callback,currentversionurl,newestversionurl){
     var currentversion;
     var appkind;
 // gets current function
-    $.get(currentversionurl,function(data,status) {
+    $.get(currentversionurl,function(data) {
         // removes incoming data of any dots or letters
         currentversion = data.replace(/\./g,"").replace(/\D/g, "");
         //gets newestversion
-        $.get(newestversionurl,function(data,status) {
+        $.get(newestversionurl,function(data) {
             //init
             var versions = [];
             // for loop on the length of data
@@ -43,15 +43,15 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             // assing the newest version to newest version
             newestversion = versions[0];
             // generates text for in version checker ***** THIS CAN BE OPTIMIZED BY USING THE URL DYNAMICALLY
-            if (newestversionurl.includes("toolchain-fitnesse-plugin")){
-                appkind = "FitNesse toolchain plugin";
-            }
-            else if (newestversionurl.includes("fitnesse")){
-                appkind = "FitNesse";
-            }
+           appkind = newestversionurl.split("/");
+           appkind = appkind[5].replace(/\-/g," ");
             // callback
             callback (newestversion,currentversion,appkind,newestversionurl);
+        }).fail(function (){
+            console.log("the version checker ran into an error");
         })
+    }).fail(function (){
+        console.log("the version checker ran into an error");
     })
 }
 
@@ -60,8 +60,9 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
 var versiontable = document.getElementById("versioncheck");
 var versiontablebody =  versiontable.getElementsByTagName("tbody")[0];
 var versioncheck =  document.createElement("tr");
-var text =  document.createElement("td");
-var check = document.createElement("td");
+var texttd =  document.createElement("td");
+var checktd = document.createElement("td");
+var text = document.createElement("p");
 var outdated = false;
 //generates text for version checker
     text.innerHTML = appkind +" Release v"+currentversion;
@@ -77,47 +78,35 @@ if (currentversion < newversion){
     var updatebutton = document.createElement("BUTTON");
     updatebutton.className = "btn btn-primary";
     updatebutton.innerHTML = "Update";
-    updatebutton.setAttribute("onClick","window.location.href("+updateurl+",'_blank')");
-
-
-
-
-
-
+    updatebutton.setAttribute("onClick","window.open('"+updateurl+"','_blank')");
     //set classnames for css
-    check.className = "checkfailed";
-
+    checktd.className = "checkfailed";
     // set inner html
-
-    check.innerHTML = " outdated - ";
-
+    checktd.innerHTML = " outdated - ";
     // set various atributes
-
-
     // make table content by appending
-
-
 //checks if current version is equal to new version
 }else if (currentversion == newversion){
     //set innerhtml
-    check.className = "checkpassed";
-    check.innerHTML = " up-to-date";
+    checktd.className = "checkpassed";
+    checktd.innerHTML = " up-to-date";
 }
 // generates table content
-versioncheck.appendChild(text);
-versioncheck.appendChild(check);
+versioncheck.appendChild(texttd);
+versioncheck.appendChild(checktd);
+texttd.appendChild(text);
 versiontablebody.appendChild(versioncheck);
 //if current version is outdated it also appends content to give the user a link to update
 if (outdated == true){
-check.appendChild(updatebutton)
+checktd.appendChild(updatebutton)
 }
 //part of error handling, this is what happends when current version is higher than the new version
 }else{
     //set inner html to notify something went wrong
-  check.innerHTML = "something went wrong, check console log";
-check.className = "checkerror";
+  checktd.innerHTML = "something went wrong, check console log";
+checktd.className = "checkerror";
 // generate content by appending
-    versioncheck.appendChild(check);
+    versioncheck.appendChild(checktd);
     versiontablebody.appendChild(versioncheck);
     // make console log and output versions
 console.log( "it appears that the current version of "+currentversion+" was higher than the newest version of "+newversion);

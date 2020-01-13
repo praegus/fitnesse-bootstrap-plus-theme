@@ -946,18 +946,21 @@ li.CodeMirror-hint:nth-child(odd) {
     list-style: none;
 }
 //versionchecker css
-#versioncheck > div > p{
-
-}
-.checkpassed {
-
-}
-#versioncheck > tbody > tr > td > b{
-  white-space: unset;
-}
-#versioncheck > tbody > tr > td{
-  white-space: unset;
+#versioncheck{
+  text-transform: capitalize;
 }
 #versioncheck > tbody > tr > td > p{
   display:inline;
+  position: relative;
+  top: 14%;
+}
+tr.check > td{
+  white-space: unset;
+  height: 45px;
+}
+#versioncheck > tbody > tr:nth-child(1) > td{
+  white-space: normal !important;
+}
+#versioncheck > tbody > tr > td > button {
+  padding: 2px 10px !important;
 }
