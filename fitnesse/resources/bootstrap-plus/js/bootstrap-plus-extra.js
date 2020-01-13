@@ -121,7 +121,8 @@ var versiondiv = document.getElementById("versioncheck");
 if (versiondiv != undefined) {
     //makes callbacks, description at the top
     //=== 1. VERSION CHECKER CALLBACKS
-    getVersionData(versionCheck, "http://localhost:9090/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
-    getVersionData(versionCheck, "http://localhost:9090/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
+    console.log(window.location.protocol+"//"+window.location.hostname+window.location.port+"/?fitNesseVersion");
+    getVersionData(versionCheck, window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
+    getVersionData(versionCheck, window.location.protocol +"//"+window.location.hostname+":"+window.location.port+"/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
 //    =========
 }});
