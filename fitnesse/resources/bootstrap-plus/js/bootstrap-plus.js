@@ -248,74 +248,95 @@ $( document ).ready(function() {
 
     // Click add tag function
     $('.addTag').click(function() {
-        //Remove all existing tag input fields
-        $('.tagInputOverview').remove();
-        //Add input field
-        $(this).after('<input type="text" class="tagInputOverview">');
-
-        //If "Enter" button is pressed
-        $('.tagInputOverview').keyup(function(event) {
-            if (event.keyCode == 13) {
-                //Get current input value & replace empty spaces at the end of input
-                var inputValue = $('.tagInputOverview').val().replace(/\s+\S*$/, "");
-                //Call get current tag list function
-                GetCurrentTagList($(this), inputValue);
-            }
-        });
+        addTagInput($(this));
     });
 
-    //Get current tag list function
-    function GetCurrentTagList(currentFile, newTags){
-        //Get href value of the a tag
-        var currentURL = currentFile.siblings('a').attr('href');
 
-        //Get current tag list
-        $.ajax({
-            type: 'POST',
-            url: "http://localhost:9090/" + currentURL,
-            contentType: 'application/json; charset=utf-8',
-            data : 'responder=tableOfContents',
-            dataType: 'json',
-            success: function(data){
-                //Convert data object to string
-                var currentTagList = data[0].tags.toString();
-                //Convert input tags to lowercase
-                var lowerCaseTags = newTags.toLowerCase();
-                //Check if there are any tags currently present
-                if (currentTagList.length > 0){
-                    //Check if input tag exists in current tag list
-                    var checkIfExists = currentTagList.includes(lowerCaseTags);
-                    //If tag doesn't exist yet, post it
-                    if (checkIfExists === false){
-                        //Combine the current tag list and the input tag(s) in 1 variable
-                        var newTagList = currentTagList + ", " + lowerCaseTags;
-                        //Send current href value, new tag list and input tag(s) to post tag function
-                        postTag(currentURL, newTagList, newTags);
-                    }
-                }
-                //If there are no tags present only post the input tags
-                else {
-                    postTag(currentURL, lowerCaseTags, newTags);
-                }
-            }
-        });
-    }
 
-    //Post new tag list function
-    function postTag(currentURL, tagList, inputTag) {
-        $.ajax({
-            type: 'POST',
-            url: "http://localhost:9090/" + currentURL,
-            contentType: 'application/json; charset=utf-8',
-            data : 'responder=updateTags&suites=' + tagList,
-            dataType: 'json',
-            success: function(data){
-                //Add new tag span layout to page
-                $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
-                //Remove input field
-                $('.tagInputOverview').remove();
-            }
-        });
-    }
 });
+
+function addTagInput(currentAddTagButton){
+    //Remove all existing tag input fields
+    $('.tagInputOverview').remove();
+    //Add input field
+    $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
+
+    //Add focus after clicking button
+    $('.tagInputOverview').focus();
+
+    $('.tagInputOverview').keyup(function(event) {
+        //If "Enter" button is pressed
+        if (event.keyCode == 13) {
+            //Get current input value & replace empty spaces at the end of input
+            var inputValue = $('.tagInputOverview').val().replace(/\s+\S*$/, "");
+            //Get href value of the a tag
+            var currentURL = $(currentAddTagButton).siblings('a').attr('href');
+            //Call get current tag list function
+            GetCurrentTagList(currentURL, inputValue);
+        }
+    });
+
+    return "not pressed";
+}
+
+//Get current tag list function
+function GetCurrentTagList(currentURL, newTags){
+    return currentURL + " " + newTags;
+    //Get current tag list
+    $.ajax({
+        type: 'POST',
+        url: "http://localhost:9090/" + currentURL,
+        contentType: 'application/json; charset=utf-8',
+        data : 'responder=tableOfContents',
+        dataType: 'json',
+        success: function(data){
+            //Convert data object to string
+            var currentTagList = data[0].tags.toString();
+            //Convert input tags to lowercase
+            var lowerCaseTags = newTags.toLowerCase();
+            //Check if there are any tags currently present
+            if (currentTagList.length > 0){
+                //Check if input tag exists in current tag list
+                var checkIfExists = currentTagList.includes(lowerCaseTags);
+                //If tag doesn't exist yet, post it
+                if (checkIfExists === false){
+                    //Combine the current tag list and the input tag(s) in 1 variable
+                    var newTagList = currentTagList + ", " + lowerCaseTags;
+                    //Send current href value, new tag list and input tag(s) to post tag function
+                    postTag(currentURL, newTagList, newTags);
+                }
+            }
+            //If there are no tags present only post the input tags
+            else {
+                postTag(currentURL, lowerCaseTags, newTags);
+            }
+
+            return "CurrentFile: " + currentURL + "  Newtaglist: " + newTags;
+        }
+    });
+}
+
+//Post new tag list function
+function postTag(currentURL, tagList, inputTag) {
+    $.ajax({
+        type: 'POST',
+        url: "http://localhost:9090/" + currentURL,
+        contentType: 'application/json; charset=utf-8',
+        data : 'responder=updateTags&suites=' + tagList,
+        dataType: 'json',
+        success: function(data){
+            //Add new tag span layout to page
+            $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
+            //Remove input field
+            $('.tagInputOverview').remove();
+        }
+    });
+}
+
+try{
+    module.exports = {
+        addTagInput: addTagInput,
+        GetCurrentTagList: GetCurrentTagList
+    };
+}catch (e) {}
 
