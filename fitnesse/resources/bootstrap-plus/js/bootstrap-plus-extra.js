@@ -47,9 +47,11 @@ function getVersionData(callback,currentversionurl,newestversionurl){
            appkind = appkind[5].replace(/\-/g," ");
             // callback
             callback (newestversion,currentversion,appkind,newestversionurl);
+            //error handling
         }).fail(function (){
             console.log("the version checker ran into an error");
         })
+        //error handling
     }).fail(function (){
         console.log("the version checker ran into an error");
     })
