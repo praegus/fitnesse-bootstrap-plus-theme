@@ -252,7 +252,7 @@ $( document ).ready(function() {
         $('.tagInputOverview').remove();
         //Add input field
         $(this).after('<input type="text" class="tagInputOverview">');
-
+        $('.tagInputOverview').focus();
         //If "Enter" button is pressed
         $('.tagInputOverview').keyup(function(event) {
             if (event.keyCode == 13) {
@@ -280,15 +280,15 @@ $( document ).ready(function() {
                 //Convert data object to string
                 var currentTagList = data[0].tags.toString();
                 //Convert input tags to lowercase
-                var newTags = newTags.toLowerCase();
+                var newTagsLowercase = newTags.toLowerCase();
                 //Check if input tag exists in current tag list
-                var checkIfExists = currentTagList.includes(newTags);
+                var checkIfExists = currentTagList.includes(newTagsLowercase);
                 //If tag doesn't exist yet, post it
                 if (checkIfExists === false){
                     //Combine the current tag list and the input tag(s) in 1 variable
-                    var newTagList = currentTagList + ", " + newTags;
+                    var newTagList = currentTagList + ", " + newTagsLowercase;
                     //Send current href value, new tag list and input tag(s) to post tag function
-                    postTag(currentURL, newTagList, newTags);
+                    postTag(currentURL, newTagList, newTagsLowercase);
                 }
             }
         });
