@@ -25,7 +25,7 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             var versions = [];
             // for loop on the length of data
             for (var i = 0; i < data.length; i++) {
-                // cleas the data.name from any letters
+                // cleans the data.name from any letters
                 data[i].name = data[i].name.replace(/\D/g, "");
                 // removes potential empty array entrys
                 if (data[i].name == "") {
@@ -38,11 +38,11 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             }
             // as the release list from github is unsorted(wich is weird), versions gets sorted
             versions.sort();
-            // sort puts small first so we revers te array so we know the biggest is always first
+            // sort puts small first so we reverse te array so we know the biggest is always first
             versions.reverse();
             // assing the newest version to newest version
             newestversion = versions[0];
-            // generates text for in version checker ***** THIS CAN BE OPTIMIZED BY USING THE URL DYNAMICALLY
+            // generates text for in version checker
            appkind = newestversionurl.split("/");
            appkind = appkind[5].replace(/\-/g," ");
             // callback
