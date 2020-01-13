@@ -96,11 +96,14 @@
     <br>
     <hr>
 
-    ## Tooltips
-    <div id="tooltip-div">
-     <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
-     <p class="tooltip-text"></p>
-    </div>
+    #if($pageTitle.getTitle().contains("FrontPage"))
+     ## Tooltips
+     <div id="tooltip-div">
+      <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
+      <p class="tooltip-text"></p>
+     </div>
+
+    #end
    #end
 
    #parse( $mainTemplate )
