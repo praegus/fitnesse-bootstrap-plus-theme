@@ -53,7 +53,7 @@
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
-  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-extra.js" type="text/javascript"></script>
+  <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-comakerschap.js" type="text/javascript"></script>
  </head>
  <body#if( $bodyClass ) class="$bodyClass"#end">
 
@@ -80,13 +80,18 @@
    #parse( $headerTemplate )
   </header>
 
-  <article>
+
+  <article #if(!$bodyClass.contains("edit")) style="min-height: 690px" #end >
    #parse( $mainTemplate )
   </article>
+ #if($bodyClass.contains("edit"))
+ <div id="tooltip-div-edit">
+ #else
  <div id="tooltip-div">
+  #end
 <img src="/files/fitnesse/bootstrap-plus/img/hint.png">
   <p id="tooltip"></p>
-  </div>
+ </div>
   #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
