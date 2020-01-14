@@ -105,12 +105,16 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
         }
 //part of error handling, this is what happends when current version is higher than the new version
     }else{
+        var errortext = document.createElement("p");
+        errortext.innerHTML = innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
+
         //set inner html to notify something went wrong
-        checktd.innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
+
         checktd.className = "checkerror";
 // generate content by appending
         versioncheck.appendChild(texttd);
         versioncheck.appendChild(checktd);
+        checktd.appendChild(errortext);
         texttd.appendChild(text);
         versiontablebody.appendChild(versioncheck);
 
