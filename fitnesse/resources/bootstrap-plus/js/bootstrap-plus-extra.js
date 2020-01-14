@@ -65,6 +65,7 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
     var texttd =  document.createElement("td");
     var checktd = document.createElement("td");
     var text = document.createElement("p");
+    var versiontext = document.createElement("p");
     var outdated = false;
     //generates text for version checker
     text.innerHTML = appkind +" Release v"+currentversion;
@@ -76,37 +77,33 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
         if (currentversion < newversion){
             //various inits
             outdated = true;
-            var updateurl = newesturl.replace("api.","").replace("/repos","").replace("/tags","");
-            updateurl = updateurl + "/releases";
-            var updatebutton = document.createElement("BUTTON");
-            updatebutton.className = "btn btn-primary";
-            updatebutton.innerHTML = "Update";
-            updatebutton.setAttribute("onClick","window.open('"+updateurl+"','_blank')");
             //set classnames for css
             checktd.className = "checkfailed";
             // set inner html
-            checktd.innerHTML = " outdated - ";
+            versiontext.innerHTML = " outdated - newest version is: v"+newversion;
             // set various atributes
             // make table content by appending
-//checks if current version is equal to new version
+            //checks if current version is equal to new version
+
         }else if (currentversion == newversion){
             //set innerhtml
             checktd.className = "checkpassed";
-            checktd.innerHTML = " up-to-date";
+            versiontext.innerHTML = " up-to-date - newest version is: v"+newversion;
         }
 // generates table content
         versioncheck.appendChild(texttd);
         versioncheck.appendChild(checktd);
         texttd.appendChild(text);
+        checktd.appendChild(versiontext);
         versiontablebody.appendChild(versioncheck);
 //if current version is outdated it also appends content to give the user a link to update
         if (outdated == true){
-            checktd.appendChild(updatebutton)
+            return "outdated";
         }
+        return "up-to-date"
 //part of error handling, this is what happends when current version is higher than the new version
     }else{
-        var errortext = document.createElement("p");
-        errortext.innerHTML = innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
+        versiontext.innerHTML = innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
 
         //set inner html to notify something went wrong
 
@@ -114,9 +111,10 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
 // generate content by appending
         versioncheck.appendChild(texttd);
         versioncheck.appendChild(checktd);
-        checktd.appendChild(errortext);
+        checktd.appendChild(versiontext);
         texttd.appendChild(text);
         versiontablebody.appendChild(versioncheck);
+        return "current version is to high"
 
     }}
 //wait for document to get ready
@@ -132,3 +130,8 @@ $(document).ready(function(){
 //    =========
     }});
 
+try{
+    module.exports = {
+        versionCheck: versionCheck
+    };
+}catch (e) {}
