@@ -84,9 +84,6 @@ function versionCheck(newversion,currentversion,appkind) {
             // set inner html
             newestvertext.innerHTML = "newest version is: v"+newversion;
             updateabletext.innerHTML= "outdated";
-            // set various attributes
-            // make table content by appending
-            // checks if current version is equal to new version
 
         }else if (currentversion == newversion){
             //set innerhtml
