@@ -222,8 +222,8 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
-
-    // Add hover function to show add tag button
+    // Distinction made between different types of pages so it doesn't apply to all parents
+    // Add hover function to suite page to show add tag button
     $('.suite').parent().hover(
         function() {
             $(this).find('.addTag:first').css("visibility", "visible");
@@ -231,6 +231,7 @@ $( document ).ready(function() {
             $(this).find('.addTag:first').css("visibility", "hidden");
         }
     );
+    // Add hover function to static page to show add tag button
     $('.static').parent().hover(
         function() {
             $(this).find('.addTag:first').css("visibility", "visible");
@@ -238,6 +239,7 @@ $( document ).ready(function() {
             $(this).find('.addTag:first').css("visibility", "hidden");
         }
     );
+    // Add hover function to test page to show add tag button
     $('.test').parent().hover(
         function() {
             $(this).find('.addTag:first').css("visibility", "visible");
