@@ -98,8 +98,10 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
         versiontablebody.appendChild(versioncheck);
 //if current version is outdated it also appends content to give the user a link to update
         if (outdated == true){
+            //return for unit-testing
             return "outdated";
         }
+        //return for unit-testing
         return "up-to-date"
 //part of error handling, this is what happends when current version is higher than the new version
     }else{
@@ -114,6 +116,7 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
         checktd.appendChild(versiontext);
         texttd.appendChild(text);
         versiontablebody.appendChild(versioncheck);
+        //return for unit-testing
         return "current version is to high"
 
     }}
