@@ -250,27 +250,20 @@ $( document ).ready(function() {
     $('.addTag').click(function() {
         addTagInput($(this));
     });
-
-
-
 });
 
 function addTagInput(currentAddTagButton){
-    console.log("trigger1");
     //Remove all existing tag input fields
-    var el = document.getElementsByClassName("tagInputOverview")[0];
-    console.log(el);
     $('.tagInputOverview').remove();
+
     //Add input field
-    console.log("trigger2");
     $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
-    console.log("trigger3");
+
     //Add focus after clicking button
     $('.tagInputOverview').focus();
-    console.log("trigger4");
+
     $('.tagInputOverview').keyup(function(event) {
         //If "Enter" button is pressed
-        console.log("trigger5");
         if (event.keyCode == 13) {
             //Get current input value & replace empty spaces at the end of input
             const inputValue = $('.tagInputOverview').val().replace(/\s+\S*$/, "");
@@ -280,13 +273,10 @@ function addTagInput(currentAddTagButton){
             GetCurrentTagList(currentURL, inputValue);
         }
     });
-
-    return "not pressed";
 }
 
 //Get current tag list function
 function GetCurrentTagList(currentURL, newTags){
-    // return currentURL + " " + newTags;
     //Get current tag list
     $.ajax({
         type: 'POST',
@@ -315,8 +305,6 @@ function GetCurrentTagList(currentURL, newTags){
             else {
                 postTag(currentURL, lowerCaseTags, newTags);
             }
-
-            return "CurrentFile: " + currentURL + "  Newtaglist: " + newTags;
         }
     });
 }
@@ -337,11 +325,4 @@ function postTag(currentURL, tagList, inputTag) {
         }
     });
 }
-
-try{
-    module.exports = {
-        addTagInput: addTagInput,
-        GetCurrentTagList: GetCurrentTagList
-    };
-}catch (e) {}
 
