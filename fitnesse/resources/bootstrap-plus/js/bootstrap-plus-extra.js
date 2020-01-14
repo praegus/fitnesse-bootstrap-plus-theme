@@ -1,9 +1,9 @@
 
 /*
 === FITNESSE VERSION CHECKER ===
-this is a function wich checks the version of fitnesse and the toolchain wich contains bootstrap.
+this is a function which checks the version of fitnesse and the toolchain which contains bootstrap.
  further update checks are possible by adding some simple code snippets as described below
- at the bottom of this function there will be a number 1 at this number youll find callbacks. you can add your own callback to add a version check
+ at the bottom of this function there will be a number 1 at this number you'll find callbacks. you can add your own callback to add a version check
  using format: getVersionData(versionCheck, [oldversionurl], [newversionurl]);
  fields with [] are expected to be replaced with actual values.
  old version expects a version number. this may contain letters as the function cleans it off letters and parses to int
@@ -36,11 +36,11 @@ function getVersionData(callback,currentversionurl,newestversionurl){
                 // pushes data.name into versions for further use
                 versions.push(data[i].name);
             }
-            // as the release list from github is unsorted(wich is weird), versions gets sorted
+            // as the release list from github is unsorted(which is weird), versions gets sorted
             versions.sort();
             // sort puts small first so we reverse te array so we know the biggest is always first
             versions.reverse();
-            // assing the newest version to newest version
+            // passing the newest version to newest version
             newestversion = versions[0];
             // generates text for in version checker
             appkind = newestversionurl.split("/");
@@ -81,9 +81,9 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
             checktd.className = "checkfailed";
             // set inner html
             versiontext.innerHTML = " outdated - newest version is: v"+newversion;
-            // set various atributes
+            // set various attributes
             // make table content by appending
-            //checks if current version is equal to new version
+            // checks if current version is equal to new version
 
         }else if (currentversion == newversion){
             //set innerhtml
@@ -103,7 +103,7 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
         }
         //return for unit-testing
         return "up-to-date"
-//part of error handling, this is what happends when current version is higher than the new version
+//part of error handling, this is what happens when current version is higher than the new version
     }else{
         versiontext.innerHTML = innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
 
