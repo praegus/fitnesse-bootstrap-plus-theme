@@ -77,6 +77,7 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
             //various inits
             outdated = true;
             var updateurl = newesturl.replace("api.","").replace("/repos","").replace("/tags","");
+            updateurl = updateurl + "/releases";
             var updatebutton = document.createElement("BUTTON");
             updatebutton.className = "btn btn-primary";
             updatebutton.innerHTML = "Update";
@@ -105,13 +106,13 @@ function versionCheck(newversion,currentversion,appkind,newesturl) {
 //part of error handling, this is what happends when current version is higher than the new version
     }else{
         //set inner html to notify something went wrong
-        texttd.appendChild(text);
-        //checktd.innerHTML = "it appears that the current version of "+currentversion+" was higher than the newest version of "+newversion;
+        checktd.innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
         checktd.className = "checkerror";
 // generate content by appending
+        versioncheck.appendChild(texttd);
         versioncheck.appendChild(checktd);
+        texttd.appendChild(text);
         versiontablebody.appendChild(versioncheck);
-        // make console log and output versions
 
     }}
 //wait for document to get ready
