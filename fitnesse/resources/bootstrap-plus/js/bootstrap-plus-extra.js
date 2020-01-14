@@ -24,8 +24,9 @@ function displayToolTip(text) {
 // Places picked tooltips on the page
 function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementsByClassName("tooltip-text");
-    console.log(textfield);
-    textfield[0].innerHTML = tipsArray[pickedTip];
+    if (textfield.length !== 0) {
+        textfield[0].innerHTML = tipsArray[pickedTip];
+    }
 }
 
 //executes callback function when document is ready
