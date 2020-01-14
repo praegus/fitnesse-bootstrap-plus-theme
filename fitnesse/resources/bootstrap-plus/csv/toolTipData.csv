@@ -21,6 +21,6 @@ You can add an closed collapsible section by writing '!*> title [enter] text *!'
 You can add an open collapsible section by writing '!* title [enter] text *!'.,
 You can give a page an expiration date with '-e <days>' in the editor. When passes the subject will be deleted.,
 You can make a table of contents with '!headings -' in the editor.,
-If you click 'Recent Changes' in the 'Tools' a history of changes to the page will be shown.
+If you click 'Recent Changes' in the 'Tools' a history of changes to the page will be shown.,
 If you click 'Versions' in the 'Tools' a list of old versions of the page will be shown.,
 If you click on 'Where Used' in the 'Tools' a list of every page that references that page will be shown.,
