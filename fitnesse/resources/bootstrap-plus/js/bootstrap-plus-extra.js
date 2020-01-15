@@ -114,6 +114,7 @@ function versionCheck(newversion,currentversion,appkind) {
         //set inner html to notify something went wrong
 
         newestvertd.className = "checkerror";
+        newestvertd.setAttribute("colspan","2");
 // generate content by appending
         versioncheck.appendChild(texttd);
         versioncheck.appendChild(newestvertd);
