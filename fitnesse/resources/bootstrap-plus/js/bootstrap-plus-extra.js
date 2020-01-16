@@ -63,67 +63,42 @@ function versionCheck(newversion,currentversion,appkind) {
     var versiontablebody =  versiontable.getElementsByTagName("tbody")[0];
     var versioncheck =  document.createElement("tr");
     var texttd =  document.createElement("td");
-    var updateabletd =  document.createElement("td");
+    var currentvertd =  document.createElement("td");
     var newestvertd = document.createElement("td");
     var text = document.createElement("p");
     var newestvertext = document.createElement("p");
-    var updateabletext = document.createElement("p");
+    var currentvertext = document.createElement("p");
     var outdated = false;
     //set innerHTML
-    text.innerHTML = appkind +" Release v"+currentversion;
+    text.innerHTML = appkind;
+    newestvertext.innerHTML = "v"+newversion;
+    currentvertext.innerHTML = "v"+currentversion;
+// generates table content by appending
+    versioncheck.appendChild(texttd);
+    versioncheck.appendChild(currentvertd);
+    versioncheck.appendChild(newestvertd);
+    currentvertd.appendChild(currentvertext);
+    texttd.appendChild(text);
+    newestvertd.appendChild(newestvertext);
+    versiontablebody.appendChild(versioncheck);
     //set classname
     versioncheck.className = "check";
 //checks if the current version is equal or lower then the newest for error handling
     if (currentversion <= newversion){
         // checks if current version is lower than new version
         if (currentversion < newversion){
-            //various inits
-            outdated = true;
-            //set classnames for css
-            newestvertd.className = "checkfailed";
-            // set inner html
-            newestvertext.innerHTML = "newest version is: v"+newversion;
-            updateabletext.innerHTML= "outdated";
-
-        }else if (currentversion == newversion){
-            //set innerhtml
-            newestvertd.className = "checkpassed";
-            newestvertext.innerHTML = "newest version is: v"+newversion;
-            updateabletext.innerHTML = "up-to-date";
-        }
-// generates table content
-        versioncheck.appendChild(texttd);
-        versioncheck.appendChild(updateabletd);
-        versioncheck.appendChild(newestvertd);
-
-        updateabletd.appendChild(updateabletext);
-        texttd.appendChild(text);
-        newestvertd.appendChild(newestvertext);
-        versiontablebody.appendChild(versioncheck);
-//if current version is outdated it also appends content to give the user a link to update
-        if (outdated == true){
+            currentvertd.className = "checkfailed";
             //return for unit-testing
             return "outdated";
+        }else if (currentversion == newversion){
+            newestvertd.className = "checkpassed";
+            //return for unit-testing
+            return "up-to-date";
         }
-        //return for unit-testing
-        return "up-to-date"
-//part of error handling, this is what happens when current version is higher than the new version
     }else{
-        newestvertext.innerHTML = innerHTML = "the current version "+currentversion+" was higher than the newest version of "+newversion;
-
-        //set inner html to notify something went wrong
-
         newestvertd.className = "checkerror";
-        newestvertd.setAttribute("colspan","2");
-// generate content by appending
-        versioncheck.appendChild(texttd);
-        versioncheck.appendChild(newestvertd);
-        newestvertd.appendChild(newestvertext);
-        texttd.appendChild(text);
-        versiontablebody.appendChild(versioncheck);
         //return for unit-testing
-        return "current version is to high"
-
+        return "current version is to high";
     }}
 //wait for document to get ready
 $(document).ready(function(){

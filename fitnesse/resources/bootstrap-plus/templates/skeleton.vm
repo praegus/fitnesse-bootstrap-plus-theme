@@ -90,9 +90,9 @@
       <b>Versioncheck</b>
      </td>
      <tr id="categoryview">
-      <td><p>current</p></td>
-      <td><p></p></td>
-      <td><p>newest</p></td>
+      <td><b>Name</b></td>
+      <td><b>Current Version</b></td>
+      <td><b>Newest version</b></td>
      </tr>
      </tbody>
    </table>
