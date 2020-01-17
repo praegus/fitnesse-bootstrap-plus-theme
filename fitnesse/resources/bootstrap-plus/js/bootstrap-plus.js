@@ -222,31 +222,21 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
-    // Distinction made between different types of pages so it doesn't apply to all parents
-    // Add hover function to suite page to show add tag button
-    $('.suite').parent().hover(
-        function() {
-            $(this).find('.addTag:first').css("visibility", "visible");
-        }, function() {
-            $(this).find('.addTag:first').css("visibility", "hidden");
-        }
-    );
-    // Add hover function to static page to show add tag button
-    $('.static').parent().hover(
-        function() {
-            $(this).find('.addTag:first').css("visibility", "visible");
-        }, function() {
-            $(this).find('.addTag:first').css("visibility", "hidden");
-        }
-    );
-    // Add hover function to test page to show add tag button
-    $('.test').parent().hover(
-        function() {
-            $(this).find('.addTag:first').css("visibility", "visible");
-        }, function() {
-            $(this).find('.addTag:first').css("visibility", "hidden");
-        }
-    );
+
+    //Add hover function to type of page
+    function tagButtonHover(pageType){
+        $('.' + pageType).parent().hover(
+            function() {
+                $(this).find('.addTag:first').css("visibility", "visible");
+            }, function() {
+                $(this).find('.addTag:first').css("visibility", "hidden");
+            }
+        );
+    }
+
+    tagButtonHover("test");
+    tagButtonHover("static");
+    tagButtonHover("suite");
 
     // Click add tag function
     $('.addTag').click(function() {
