@@ -254,6 +254,10 @@ function addTagInput(currentAddTagButton){
     //Add focus after clicking button
     $('.tagInputOverview').focus();
 
+    $('.tagInputOverview').focusout(function(){
+        $('.tagInputOverview').remove();
+    });
+
     $('.tagInputOverview').keyup(function(event) {
         //If "Enter" button is pressed
         if (event.keyCode == 13) {
