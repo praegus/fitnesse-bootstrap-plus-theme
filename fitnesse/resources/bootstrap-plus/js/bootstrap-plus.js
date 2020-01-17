@@ -257,8 +257,8 @@ function addTagInput(currentAddTagButton){
     $('.tagInputOverview').keyup(function(event) {
         //If "Enter" button is pressed
         if (event.keyCode == 13) {
-            //Get current input value & replace empty spaces at the end of input
-            const inputValue = $('.tagInputOverview').val().replace(/\s+\S*$/, "");
+            //Get current input value & replace empty spaces at the start/end of input
+            const inputValue = $('.tagInputOverview').val().trim();
             //Get href value of the a tag
             const currentURL = $(currentAddTagButton).siblings('a').attr('href');
             //Call get current tag list function
@@ -278,7 +278,7 @@ function GetCurrentTagList(currentURL, newTags){
         dataType: 'json',
         success: function(data){
             //Convert data object to string
-            const currentTagList = data[0].tags.toString();
+            const currentTagList = data[0].tags.join(", ");
             //Convert input tags to lowercase
             const lowerCaseTags = newTags.toLowerCase();
             //Check if there are any tags currently present
