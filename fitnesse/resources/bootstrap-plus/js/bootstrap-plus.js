@@ -295,6 +295,12 @@ function GetCurrentTagList(currentURL, newTags){
                     //Send current href value, new tag list and input tag(s) to post tag function
                     postTag(currentURL, newTagList, newTags);
                 }
+                else {
+                    $('.tagInputOverview').css({
+                        "border-color": "red",
+                        "outline": "0"
+                    });
+                }
             }
             //If there are no tags present only post the input tags
             else {
