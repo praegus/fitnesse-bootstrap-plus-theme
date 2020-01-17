@@ -296,6 +296,11 @@ function GetCurrentTagList(currentURL, newTags){
             else {
                 postTag(currentURL, lowerCaseTags, newTags);
             }
+        },
+        error: function(xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
         }
     });
 }
@@ -313,6 +318,11 @@ function postTag(currentURL, tagList, inputTag) {
             $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
             //Remove input field
             $('.tagInputOverview').remove();
+        },
+        error: function(xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
         }
     });
 }
