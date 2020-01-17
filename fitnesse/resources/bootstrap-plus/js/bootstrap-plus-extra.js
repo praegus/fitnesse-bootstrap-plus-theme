@@ -1,8 +1,8 @@
 
-// if the document has been loaded, then get data from toolTipData.csv
+// if the document has been loaded, then get data from toolTipData.txt
 function getToolTips(callback){
     var tooltips;
-    $.get("files/fitnesse/bootstrap-plus/csv/toolTipData.csv",function(data){
+    $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data){
         tooltips = data;
         callback(tooltips);
     });
@@ -10,7 +10,7 @@ function getToolTips(callback){
 }
 function displayToolTip(text) {
     //initialization code
-    var textarray = text.split(",");
+    var textarray = text.split("\n");
     var PickedTip = Math.floor(Math.random() * textarray.length);
     var textfield = document.getElementById("tooltip");
     textfield.innerHTML = textarray[PickedTip];
