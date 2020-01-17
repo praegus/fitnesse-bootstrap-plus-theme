@@ -271,10 +271,9 @@ function addTagInput(currentAddTagButton){
 function GetCurrentTagList(currentURL, newTags){
     //Get current tag list
     $.ajax({
-        type: 'POST',
-        url: "http://localhost:9090/" + currentURL,
+        type: 'GET',
+        url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
         contentType: 'application/json; charset=utf-8',
-        data : 'responder=tableOfContents',
         dataType: 'json',
         success: function(data){
             //Convert data object to string
@@ -305,7 +304,7 @@ function GetCurrentTagList(currentURL, newTags){
 function postTag(currentURL, tagList, inputTag) {
     $.ajax({
         type: 'POST',
-        url: "http://localhost:9090/" + currentURL,
+        url: "http://" + location.host + "/" + currentURL,
         contentType: 'application/json; charset=utf-8',
         data : 'responder=updateTags&suites=' + tagList,
         dataType: 'json',
