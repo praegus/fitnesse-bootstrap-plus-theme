@@ -57,54 +57,28 @@ function getVersionData(callback, currentversionurl, newestversionurl) {
 }
 
 function versionCheck(newversion, currentversion, appkind) {
-    //various inits for global use within function
-    var versiontable = document.getElementById("versioncheck");
-    var versiontablebody = versiontable.getElementsByTagName("tbody")[0];
-    var versioncheck = document.createElement("tr");
-    var texttd = document.createElement("td");
-    var currentvertd = document.createElement("td");
-    var newestvertd = document.createElement("td");
-    var statustd = document.createElement("td");
-    var text = document.createElement("p");
-    var newestvertext = document.createElement("p");
-    var currentvertext = document.createElement("p");
-    var statustext = document.createElement("p");
-    //set innerHTML
-    text.innerHTML = appkind;
-    newestvertext.innerHTML = "v" + newversion;
-    currentvertext.innerHTML = "v" + currentversion;
-    // generates table content by appending
-    versioncheck.appendChild(texttd);
-    versioncheck.appendChild(currentvertd);
-    versioncheck.appendChild(newestvertd);
-    versioncheck.appendChild(statustd);
-    currentvertd.appendChild(currentvertext);
-    texttd.appendChild(text);
-    newestvertd.appendChild(newestvertext);
-    statustd.appendChild(statustext);
-    versiontablebody.appendChild(versioncheck);
-    //set classname
-    versioncheck.className = "check";
     //checks if the current version is equal or lower then the newest for error handling
     if (currentversion <= newversion) {
         // checks if current version is lower than new version
         if (currentversion < newversion) {
-            // set innerhtml
-            statustext.innerHTML = "Outdated";
+            //set status text
+            var status = "outdated";
             //return for unit-testing
             return "outdated";
         } else if (currentversion == newversion) {
-            // set innerhtml
-            statustext.innerHTML = "Up-to-date";
+            //set status text
+            var status = "up-to-date";
             //return for unit-testing
             return "up-to-date";
         }
     } else {
-        // set innerhtml
-        statustext.innerHTML = "ahead";
+        //set status text
+        var status = "ahead";
         //return for unit-testing
         return "current version is to high";
     }
+    //append to generate content
+    $("#versioncheck").append("<tr class='check'><td><p>"+appkind+"</p></td>"+"<td><p>"+"v"+currentversion+"</p></td>"+"<td><p>"+"v"+newversion+"</p></td>"+"<td><p>"+status+"</p></td></tr>");
 }
 
 //wait for document to get ready
