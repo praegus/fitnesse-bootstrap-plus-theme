@@ -62,23 +62,19 @@ function versionCheck(newversion, currentversion, appkind) {
         // checks if current version is lower than new version
         if (currentversion < newversion) {
             //set status text
-            var status = "outdated";
-            //return for unit-testing
-            return "outdated";
+            var status = "Outdated";
         } else if (currentversion == newversion) {
             //set status text
-            var status = "up-to-date";
-            //return for unit-testing
-            return "up-to-date";
+            var status = "Up-to-date";
         }
     } else {
         //set status text
-        var status = "ahead";
-        //return for unit-testing
-        return "current version is to high";
+        var status = "Ahead";
     }
     //append to generate content
-    $("#versioncheck").append("<tr class='check'><td><p>"+appkind+"</p></td>"+"<td><p>"+"v"+currentversion+"</p></td>"+"<td><p>"+"v"+newversion+"</p></td>"+"<td><p>"+status+"</p></td></tr>");
+    $("#versioncheck").append("<tr class='check'><td><p>" + appkind + "</p></td>" + "<td><p>" + "v" + currentversion + "</p></td>" + "<td><p>" + "v" + newversion + "</p></td>" + "<td><p>" + status + "</p></td></tr>");
+    //return for unit testing
+    return status;
 }
 
 //wait for document to get ready
