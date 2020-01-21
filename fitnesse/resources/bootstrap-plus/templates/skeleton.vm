@@ -83,7 +83,7 @@
 
   <article>
    #parse( $mainTemplate )
-   #if($pageTitle.Title == "FrontPage" && !$title.contains("Edit:") )
+   #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
     <table id="versioncheck">
      <tbody>
      <td colspan="3">
