@@ -95,7 +95,7 @@ function versionCheck(newversion, currentversion, appkind) {
             return "outdated";
         } else if (currentversion == newversion) {
             // set innerhtml
-            statustext.innerHTML = "up-to-date";
+            statustext.innerHTML = "Up-to-date";
             //return for unit-testing
             return "up-to-date";
         }
