@@ -89,7 +89,7 @@
      <td colspan="3">
       <b>Versioncheck</b>
      </td>
-     <tr id="categoryview">
+     <tr>
       <td><b>Name</b></td>
       <td><b>Current Version</b></td>
       <td><b>Newest version</b></td>
