@@ -86,13 +86,14 @@
    #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
     <table id="versioncheck">
      <tbody>
-     <td colspan="3">
+     <td colspan="4">
       <b>Versioncheck</b>
      </td>
      <tr>
       <td><b>Name</b></td>
       <td><b>Current Version</b></td>
       <td><b>Newest version</b></td>
+      <td><b>Status</b></td>
      </tr>
      </tbody>
    </table>

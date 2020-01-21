@@ -1,4 +1,3 @@
-
 /*
 === FITNESSE VERSION CHECKER ===
 this is a function which checks the version of fitnesse and the toolchain which contains bootstrap.
@@ -10,17 +9,17 @@ this is a function which checks the version of fitnesse and the toolchain which 
  old version expects a link to the github api towards tags. this may contain letters as the function cleans it off letters and parses to int
  ==================================
 */
-function getVersionData(callback,currentversionurl,newestversionurl){
+function getVersionData(callback, currentversionurl, newestversionurl) {
     // various inits for global use in function
     var newestversion;
     var currentversion;
     var appkind;
-// gets current function
-    $.get(currentversionurl,function(data) {
+    // gets current function
+    $.get(currentversionurl, function (data) {
         // removes incoming data of any dots or letters
-        currentversion = data.replace(/\./g,"").replace(/\D/g, "");
+        currentversion = data.replace(/\./g, "").replace(/\D/g, "");
         //gets newestversion
-        $.get(newestversionurl,function(data) {
+        $.get(newestversionurl, function (data) {
             //init
             var versions = [];
             // for loop on the length of data
@@ -44,77 +43,87 @@ function getVersionData(callback,currentversionurl,newestversionurl){
             newestversion = versions[0];
             // generates text for in version checker
             appkind = newestversionurl.split("/");
-            appkind = appkind[5].replace(/\-/g," ");
+            appkind = appkind[5].replace(/\-/g, " ");
             // callback
-            callback (newestversion,currentversion,appkind);
+            callback(newestversion, currentversion, appkind);
             //error handling
-        }).fail(function (){
+        }).fail(function () {
             console.log("the version checker ran into an error");
         })
         //error handling
-    }).fail(function (){
+    }).fail(function () {
         console.log("the version checker ran into an error");
     })
 }
 
-function versionCheck(newversion,currentversion,appkind) {
+function versionCheck(newversion, currentversion, appkind) {
     //various inits for global use within function
     var versiontable = document.getElementById("versioncheck");
-    var versiontablebody =  versiontable.getElementsByTagName("tbody")[0];
-    var versioncheck =  document.createElement("tr");
-    var texttd =  document.createElement("td");
-    var currentvertd =  document.createElement("td");
+    var versiontablebody = versiontable.getElementsByTagName("tbody")[0];
+    var versioncheck = document.createElement("tr");
+    var texttd = document.createElement("td");
+    var currentvertd = document.createElement("td");
     var newestvertd = document.createElement("td");
+    var statustd = document.createElement("td");
     var text = document.createElement("p");
     var newestvertext = document.createElement("p");
     var currentvertext = document.createElement("p");
-    var outdated = false;
+    var statustext = document.createElement("p");
     //set innerHTML
     text.innerHTML = appkind;
-    newestvertext.innerHTML = "v"+newversion;
-    currentvertext.innerHTML = "v"+currentversion;
-// generates table content by appending
+    newestvertext.innerHTML = "v" + newversion;
+    currentvertext.innerHTML = "v" + currentversion;
+    // generates table content by appending
     versioncheck.appendChild(texttd);
     versioncheck.appendChild(currentvertd);
     versioncheck.appendChild(newestvertd);
+    versioncheck.appendChild(statustd);
     currentvertd.appendChild(currentvertext);
     texttd.appendChild(text);
     newestvertd.appendChild(newestvertext);
+    statustd.appendChild(statustext);
     versiontablebody.appendChild(versioncheck);
     //set classname
     versioncheck.className = "check";
-//checks if the current version is equal or lower then the newest for error handling
-    if (currentversion <= newversion){
+    //checks if the current version is equal or lower then the newest for error handling
+    if (currentversion <= newversion) {
         // checks if current version is lower than new version
-        if (currentversion < newversion){
-            currentvertd.className = "checkfailed";
+        if (currentversion < newversion) {
+            // set innerhtml
+            statustd.innerHTML = "Outdated";
             //return for unit-testing
             return "outdated";
-        }else if (currentversion == newversion){
-            newestvertd.className = "checkpassed";
+        } else if (currentversion == newversion) {
+            // set innerhtml
+            statustext.innerHTML = "up-to-date";
             //return for unit-testing
             return "up-to-date";
         }
-    }else{
-        newestvertd.className = "checkerror";
+    } else {
+        // set innerhtml
+        statustext.innerHTML = "ahead";
         //return for unit-testing
         return "current version is to high";
-    }}
+    }
+}
+
 //wait for document to get ready
-$(document).ready(function(){
+$(document).ready(function () {
     // calls on DOM element with id versioncheck
     var versiondiv = document.getElementById("versioncheck");
-//checks if versiondiv exists, since versiondiv wil only exist on the frontpage from Skeleton.VM
+    //checks if versiondiv exists, since versiondiv wil only exist on the frontpage from Skeleton.VM
     if (versiondiv != undefined) {
         //makes callbacks, description at the top
         //=== 1. VERSION CHECKER CALLBACKS
-        getVersionData(versionCheck, window.location.hostname+"/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
-        getVersionData(versionCheck, window.location.hostname+"/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
-//    =========
-    }});
+        getVersionData(versionCheck, window.location.hostname + "/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
+        getVersionData(versionCheck, window.location.hostname + "/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
+        //=========
+    }
+});
 
-try{
+try {
     module.exports = {
         versionCheck: versionCheck
     };
-}catch (e) {}
+} catch (e) {
+}
