@@ -108,8 +108,8 @@ $(document).ready(function(){
     if (versiondiv != undefined) {
         //makes callbacks, description at the top
         //=== 1. VERSION CHECKER CALLBACKS
-        getVersionData(versionCheck, window.location.protocol+"//"+window.location.hostname+":"+window.location.port+"/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
-        getVersionData(versionCheck, window.location.protocol +"//"+window.location.hostname+":"+window.location.port+"/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
+        getVersionData(versionCheck, window.location.hostname+"/?fitNesseVersion", "https://api.github.com/repos/unclebob/fitnesse/tags");
+        getVersionData(versionCheck, window.location.hostname+"/?fitNesseToolchainVersion", "https://api.github.com/repos/praegus/toolchain-fitnesse-plugin/tags");
 //    =========
     }});
 
