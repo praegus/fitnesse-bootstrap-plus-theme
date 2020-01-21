@@ -90,7 +90,7 @@ function versionCheck(newversion, currentversion, appkind) {
         // checks if current version is lower than new version
         if (currentversion < newversion) {
             // set innerhtml
-            statustd.innerHTML = "Outdated";
+            statustext.innerHTML = "Outdated";
             //return for unit-testing
             return "outdated";
         } else if (currentversion == newversion) {
