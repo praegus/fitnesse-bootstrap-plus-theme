@@ -78,11 +78,6 @@ $(document).ready(function () {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
     });
 
-    // Add hidden tag buttons upon entering overview page
-    $(".test, .suite, .static").each(function () {
-        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-    });
-
     $('.contents li a').each(function () {
         var item = $(this)
         var orig = item.html();
@@ -100,8 +95,13 @@ $(document).ready(function () {
         }
     });
 
-    //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
+    // Add hidden tag buttons upon entering overview page
+    $(".test, .suite, .static").each(function () {
+        $(this).wrap("<div class='addTagDiv'></div>");
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
 
+    //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
     [].forEach.call(document.getElementsByTagName('td'), cell => {
         if (cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
             cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g, '<span class="page-variable">$1</span>');
@@ -249,7 +249,6 @@ $(document).ready(function () {
 function addTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();
-
     //Add input field
     $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
 
@@ -326,7 +325,7 @@ function postTag(currentURL, tagList, inputTag) {
         dataType: 'json',
         success: function (data) {
             //Add new tag span layout to page
-            $("a[href$='" + currentURL + "']").after("<span class='tag'>" + inputTag + "</span>");
+            $("a[href$='" + currentURL + "']").parent().after("<span class='tag'>" + inputTag + "</span>");
             //Remove input field
             $('.tagInputOverview').remove();
         },
