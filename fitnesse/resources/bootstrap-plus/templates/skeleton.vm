@@ -82,7 +82,12 @@
 
   <article>
    #parse( $mainTemplate )
-  </article>
+   #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
+   <div id="testHistoryTable">
+
+   </div>
+   #end
+   </article>
 
   #if( $!footerTemplate )
   <footer>
