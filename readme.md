@@ -53,3 +53,8 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_1.png "Dark theme")
 ![alt text](https://github.com/tcnh/binstore/raw/master/dark_editor.PNG "Dark editor")
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_result.PNG "Test results in dark mode")
+
+#### ToolTips
+* Tooltips now display on every page
+
+New tooltips can be added by editing fitnesse/resources/bootstrap-plus/csv/toolTipData.csv and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets
