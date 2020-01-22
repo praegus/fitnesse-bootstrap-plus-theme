@@ -1,6 +1,15 @@
+html {
+  height: 100%;
+}
+
 body {
-  padding-top: 100px;
-  padding-bottom: 100px;
+  //padding-top: 100px;
+  //padding-bottom: 100px;
+  height: 100%;
+}
+
+article {
+  padding-top: 15px;
 }
 
 header,
@@ -991,4 +1000,31 @@ kbd {
 
 #bootstrap-help-list{
   float:right;
+}
+
+// NEW LAYOUT
+#contentDiv {
+  height: 100%;
+  display: flex;
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 55px 0 100px;
+}
+
+// SIDEBAR
+#sidebar {
+  width: 370px;
+  max-width: 370px;
+  height: 100%;
+  padding: 55px 0 51px;
+  background-color: #464646;
+  border-right: 1px solid #292929;
+}
+
+.displayNone {
+  display: none;
 }

@@ -168,6 +168,12 @@ $( document ).ready(function() {
                }
           );
 
+    $('body').on('click', '#sidebar-switch', function(e) {
+            e.preventDefault();
+            switchSidebar();
+        }
+    );
+
 
     $('body').on('click', '.coll', function() {
                 if($(this).children("input").is(":checked")) {
@@ -216,5 +222,19 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
+
+    function switchSidebar() {
+        if(getCookie('sidebar') == 'true') {
+            document.cookie = "sidebar=false";
+            $('#sidebar-switch').removeClass('fa-toggle-on');
+            $('#sidebar-switch').addClass('fa-toggle-off');
+            $('#sidebar').addClass('displayNone');
+        } else {
+            document.cookie = "sidebar=true";
+            $('#sidebar-switch').removeClass('fa-toggle-off');
+            $('#sidebar-switch').addClass('fa-toggle-on');
+            $('#sidebar').removeClass('displayNone');
+        }
+    }
 });
 
