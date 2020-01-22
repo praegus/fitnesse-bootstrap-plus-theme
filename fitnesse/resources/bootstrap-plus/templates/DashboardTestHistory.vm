@@ -9,34 +9,57 @@
         <th>Latest</th>
         <th colspan="5">Last 5 Results</th>
     </tr>
-
+    #set ($ourarray = [])
+    #set ($array = [])
     #foreach ($page in $testHistory.pageNames)
-        #set ($pageHistory = $testHistory.getPageHistory($page))
-        #if($pageHistory)
+        #set ($singlepageHistory = $testHistory.getPageHistory($page))
+        #set ($dates = "$singlepageHistory.datesInChronologicalOrder()")
+        #set ($splitdates = $dates.split(","))
+        #set ($bargraph = $singlepageHistory.getBarGraph())
+        #set ($passfailArray = $bargraph.passFailArray())
+        #set ($dateint = 0)
+        $dateint.parseInt($passfailArray[0].date)
+
+        #set ($dummy = $ourarray.add({"name":$page,"date":$passfailArray[0].date}))
+        $array.add($singlepageHistory)
+    #end
+
+   #foreach($item in $sorter.sort($ourarray,"date"))
+        $item
+    #end
+#set ($sorted = [] )
+    #foreach ($page in $array)
+
+
             #set($noHistory = false)
 
             <tr>
-                #set ($barGraph = $pageHistory.getBarGraph())
+                #set ($barGraph = $page.getBarGraph())
 
-                #if($pageHistory.passes==0) #set ($passClass = "ignore")
+                #if($page.passes==0) #set ($passClass = "ignore")
                 #else #set ($passClass = "pass")
                 #end
 
-                #if($pageHistory.failures==0) #set ($failClass = "ignore")
+                #if($page.failures==0) #set ($failClass = "ignore")
                 #else #set ($failClass = "fail")
                 #end
 
                 <td><a href="/$page?pageHistory">$page</a></td>
-                <td class="$passClass">$pageHistory.passes</td>
-                <td class="$failClass">$pageHistory.failures</td>
+                <td class="$passClass">$page.passes</td>
+                <td class="$failClass">$page.failures</td>
                 <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
                 #foreach($passFail in $barGraph.passFailArray())
                     <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
+                    $sorted.add($passFail.Date)
+
+
                 #end
 
+
             </tr>
-        #end
+
     #end
+
 
 </table>
 #if ($noHistory)No History#end
