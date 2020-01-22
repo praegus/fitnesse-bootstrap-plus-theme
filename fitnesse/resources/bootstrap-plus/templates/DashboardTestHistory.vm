@@ -18,7 +18,8 @@
         #set ($bargraph = $singlepageHistory.getBarGraph())
         #set ($passfailArray = $bargraph.passFailArray())
         #set ($dateint = 0)
-        $dateint.parseInt($passfailArray[0].date)
+        #set ($dateint = $passfailArray[0].data.intValue())
+
 
         #set ($dummy = $ourarray.add({"name":$page,"date":$passfailArray[0].date}))
         $array.add($singlepageHistory)
