@@ -17,16 +17,13 @@
         #set ($splitdates = $dates.split(","))
         #set ($bargraph = $singlepageHistory.getBarGraph())
         #set ($passfailArray = $bargraph.passFailArray())
-        #set ($dateint = 0)
-        #set ($dateint = $passfailArray[0].data.intValue())
-
-
-        #set ($dummy = $ourarray.add({"name":$page,"date":$passfailArray[0].date}))
-        $array.add($singlepageHistory)
+        #set ($date = $passfailArray[0].data)
+        #set ($dummy = $ourarray.add({"name":$page,"date":$dateint}))
+        #set ($dummy = $array.add($singlepageHistory))
     #end
 
    #foreach($item in $sorter.sort($ourarray,"date"))
-        $item
+        $item.name
     #end
 #set ($sorted = [] )
     #foreach ($page in $array)
