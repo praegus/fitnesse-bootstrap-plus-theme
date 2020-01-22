@@ -81,7 +81,7 @@
   </header>
 
 
-  <article #if(!$bodyClass.contains("edit")) style="min-height: 690px" #end >
+  <article>
    #if(!$bodyClass.contains("edit"))
     ## Page Header
     <a href="?testHistory">
@@ -99,8 +99,7 @@
     #if($pageTitle.getTitle().contains("FrontPage"))
      ## Tooltips
      <div id="tooltip-div">
-      <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
-      <p class="tooltip-text"></p>
+      <p id="tooltip-text"></p>
      </div>
 
     #end
@@ -112,8 +111,7 @@
   ## Tooltips edit page
   #if($bodyClass.contains("edit"))
    <div id="tooltip-div-edit">
-    <img class="tooltip-icon" src="/files/fitnesse/bootstrap-plus/img/hint.png">
-    <p class="tooltip-text"></p>
+    <p id="tooltip-text"></p>
    </div>
   #end
 
