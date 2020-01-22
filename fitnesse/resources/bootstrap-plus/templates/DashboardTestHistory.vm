@@ -1,0 +1,42 @@
+<h1>Test history</h1>
+#set($noHistory = true)
+
+<table>
+    <tr>
+        <th>Page</th>
+        <th>Pass</th>
+        <th>Fail</th>
+        <th>Latest</th>
+        <th colspan="5">Last 5 Results</th>
+    </tr>
+
+    #foreach ($page in $testHistory.pageNames)
+        #set ($pageHistory = $testHistory.getPageHistory($page))
+        #if($pageHistory)
+            #set($noHistory = false)
+
+            <tr>
+                #set ($barGraph = $pageHistory.getBarGraph())
+
+                #if($pageHistory.passes==0) #set ($passClass = "ignore")
+                #else #set ($passClass = "pass")
+                #end
+
+                #if($pageHistory.failures==0) #set ($failClass = "ignore")
+                #else #set ($failClass = "fail")
+                #end
+
+                <td><a href="/$page?pageHistory">$page</a></td>
+                <td class="$passClass">$pageHistory.passes</td>
+                <td class="$failClass">$pageHistory.failures</td>
+                <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
+                #foreach($passFail in $barGraph.passFailArray())
+                    <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
+                #end
+
+            </tr>
+        #end
+    #end
+
+</table>
+#if ($noHistory)No History#end
