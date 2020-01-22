@@ -223,7 +223,7 @@ $( document ).ready(function() {
 // if the document has been loaded, then get data from toolTipData.csv
 function getToolTips(callback){
     var tooltips;
-    $.get("files/fitnesse/bootstrap-plus/csv/toolTipData.txt",function(data){
+    $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data){
         tooltips = data;
         callback(tooltips);
     });
