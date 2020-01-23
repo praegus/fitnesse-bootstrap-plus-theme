@@ -17,9 +17,9 @@
         <th>Latest</th>
         <th colspan="20">Last 20 Results</th>
     </tr>
-    #foreach ($page in $testHistory.pageNames)
-        #set ($pageHistory = $testHistory.getPageHistory($page))
-        #if($pageHistory)
+    #foreach ($page in $testHistory)
+        #if($page)
+        #end
             #set($noHistory = false)
 
             <tr>
@@ -33,17 +33,16 @@
                 #else #set ($failClass = "fail")
                 #end
 
-                <td><a href="/$page?pageHistory">$page</a></td>
+                <td><a href="/$page.page?pageHistory">$page.page</a></td>
                 <td class="$passClass">$pageHistory.passes</td>
                 <td class="$failClass">$pageHistory.failures</td>
-                <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
+                <td>$page.lastRun</td>
                 #foreach($passFail in $barGraph.passFailArray())
                     <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
                 #end
-
             </tr>
         #end
-    #end
+
 
 </table>
 #if ($noHistory)No History#end
