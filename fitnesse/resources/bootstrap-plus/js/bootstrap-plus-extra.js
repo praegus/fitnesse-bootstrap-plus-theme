@@ -1,5 +1,5 @@
 $(document).ready(
-    $.get("http://localhost:9090/?dashboardTestHistory", function (data) {
+    $.get("http://localhost:9090/?testHistory", function (data) {
       var check = document.getElementById("testHistoryTable");  
       if (check != undefined){
             var parser = new DOMParser();
