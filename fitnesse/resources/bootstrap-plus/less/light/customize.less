@@ -1017,14 +1017,48 @@ kbd {
 
 // SIDEBAR
 #sidebar {
-  width: 370px;
-  max-width: 370px;
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
   height: 100%;
-  padding: 55px 0 51px;
+  padding: 65px 0 61px;
   background-color: #f8f8f8;
   border-right: 1px solid #e7e7e7;
+  overflow: auto;
+}
+
+#highlight {
+  background-color: #e7e7e7;
 }
 
 .displayNone {
   display: none;
+}
+
+#sidebarContent {
+  padding: 0 15px;
+}
+
+#sidebarContent li {
+  list-style-type: none;
+}
+
+#sidebarContent ul {
+  padding-left: 18px;
+}
+
+#sidebarContent div {
+  padding: 1px 4px;
+}
+
+#sidebarContent a.suite {
+  font-weight: bold;
+}
+
+#sidebarContent a.static {
+  font-style: italic;
+}
+
+#sidebarContent a.pruned {
+  text-decoration: line-through;
 }

@@ -67,7 +67,7 @@
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
 
 </head>
-        <body #if( $bodyClass ) class="$bodyClass"#end>
+<body #if( $bodyClass ) class="$bodyClass"#end>
 
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
@@ -91,7 +91,7 @@
     ## Sidebar
     #if(!$pageTitle.getTitle().contains("FrontPage"))
         <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
-
+            <ul id="sidebarContent"></ul>
         </div>
     #end
 

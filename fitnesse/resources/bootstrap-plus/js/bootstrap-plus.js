@@ -62,6 +62,9 @@ function processSymbolData(str) {
     return result.replace(/&lt;-|-&gt;/g, '');
 }
 
+/*
+    DOCUMENT READY START
+*/
 $( document ).ready(function() {
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
@@ -234,7 +237,96 @@ $( document ).ready(function() {
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
+            getSidebarContent();
         }
     }
-});
 
+    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+        getSidebarContent();
+    }
+});
+/*
+    DOCUMENT READY END
+*/
+
+/*
+    SIDEBAR FUNCTIONS START
+*/
+// Sidebar content
+function getSidebarContent() {
+    let currentWorkspace = location.pathname;
+    if (currentWorkspace.includes('.')) {
+        const strIndex = location.pathname.indexOf(".");
+        console.log(strIndex);
+        currentWorkspace = currentWorkspace.slice(0, strIndex);
+    }
+    console.log(currentWorkspace);
+
+    $.ajax({
+        type: 'GET',
+        url: "http://" + location.host + currentWorkspace + "?responder=tableOfContents",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (contentArray) {
+            placeSidebarContent(contentArray);
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+function placeSidebarContent(contentArray) {
+    console.log(contentArray);
+    // Empty sidebar content
+    $('#sidebarContent').html("");
+
+    contentArray.forEach(layerOne => {
+        // Place the li in the html
+        $('#sidebarContent').append(getSidebarContentHtml(layerOne));
+
+        // If there are children
+        if (layerOne.children) {
+            sidebarContentLayerLoop(layerOne.name.replace(/\s/g,''), layerOne.children);
+        }
+    });
+}
+
+function sidebarContentLayerLoop(suiteName, children) {
+    // Place new ul in the correct suite (li)
+    $('#' + suiteName).append('<ul></ul>');
+
+    // Loop through the children
+    children.forEach(content => {
+        // Place new li in the new made ul
+        $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
+
+        // If there are children
+        if (content.children) {
+            sidebarContentLayerLoop(content.name.replace(/\s/g,''), content.children)
+        }
+    });
+}
+
+// Generate the li for the html
+function getSidebarContentHtml(content) {
+    const iconClass = content.type.includes('suite') ? "fa fa-cogs icon-test" : content.type.includes('test') ? "fa fa-cog icon-suite": "fa fa-file-o icon-static";
+    const prunedClass = content.type.includes('pruned') ? " pruned": "";
+    const highlight = location.pathname == ('/' + content.path) ? 'id="highlight"' : '';
+
+    const htmlContent =
+        '<li id="' + content.name.replace(/\s/g,'') + '">' +
+            '<div ' + highlight + '>' +
+                '<i class="' + iconClass + '" aria-hidden="true" title="show/hide"></i>' +
+                '&nbsp;' +
+                '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
+            '</div>' +
+        '</li>';
+    return htmlContent;
+}
+
+/*
+    SIDEBAR FUNCTIONS END
+*/
