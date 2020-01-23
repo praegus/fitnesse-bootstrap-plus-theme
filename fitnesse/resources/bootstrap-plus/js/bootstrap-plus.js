@@ -260,8 +260,6 @@ function getSidebarContent() {
         console.log(strIndex);
         currentWorkspace = currentWorkspace.slice(0, strIndex);
     }
-    console.log(currentWorkspace);
-
     $.ajax({
         type: 'GET',
         url: "http://" + location.host + currentWorkspace + "?responder=tableOfContents",
@@ -269,6 +267,10 @@ function getSidebarContent() {
         dataType: 'json',
         success: function (contentArray) {
             placeSidebarContent(contentArray);
+
+            $('#sidebarContent .fa-cogs').click(function() {
+                $(this).parent().siblings('ul').toggle();
+            });
         },
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
