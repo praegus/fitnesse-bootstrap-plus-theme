@@ -22,15 +22,15 @@ var getCookie = function (name) {
  * @return {[object]} [map of the available objects]
  */
 var parseCookies = function () {
-	  var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
+	var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
 
-      return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
-          var cookiePair = cookieString.split('=');
+    return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
+        var cookiePair = cookieString.split('=');
 
-          cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
+        cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
 
-          return cookies;
-      }, {});
+        return cookies;
+    }, {});
 };
 
 
@@ -172,7 +172,7 @@ $( document ).ready(function() {
                e.preventDefault();
                switchAutoSave();
                }
-           );
+          );
 
 
     $('body').on('click', '.coll', function() {
