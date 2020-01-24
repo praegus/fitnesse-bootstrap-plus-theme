@@ -22,15 +22,15 @@ var getCookie = function (name) {
  * @return {[object]} [map of the available objects]
  */
 var parseCookies = function () {
-    var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
+	  var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
 
-    return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
-        var cookiePair = cookieString.split('=');
+      return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
+          var cookiePair = cookieString.split('=');
 
-        cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
+          cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
 
-        return cookies;
-    }, {});
+          return cookies;
+      }, {});
 };
 
 
@@ -90,8 +90,8 @@ $( document ).ready(function() {
                     tagbadge.innerText = tag;
                 item.after(tagbadge);
                });
-        }
-    });
+       }
+   });
 
     // Add hidden tag buttons upon entering overview page
     $(".test, .suite, .static").each(function () {
@@ -110,8 +110,8 @@ $( document ).ready(function() {
         }
     });
 
-    if(getCookie('collapseSymbols') == 'true') {
-        $("td").contents().filter(function() {
+   if(getCookie('collapseSymbols') == 'true') {
+       $("td").contents().filter(function() {
             return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0; })
                 .each( function(cell) {
                     if (this.parentNode != null && this.parentNode != undefined) {
@@ -119,12 +119,12 @@ $( document ).ready(function() {
                     }
                 });
 
-         $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
+       $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
             $(this).addClass('canToggle');
             $(this).addClass('closed');
-         });
+       });
 
-         $('.canToggle').click(function() {
+       $('.canToggle').click(function() {
             if($(this).hasClass('closed')) {
                 $(this).next('.symbol-data').css('display', 'inline-flex');
                 $(this).removeClass('closed');
@@ -154,25 +154,25 @@ $( document ).ready(function() {
            e.preventDefault();
            $('.settings-panel').toggle();
            }
-       );
+      );
 
     $('body').on('click', '#theme-switch', function(e) {
            e.preventDefault();
            switchTheme();
            }
-       );
+      );
 
     $('body').on('click', '#collapse-switch', function(e) {
            e.preventDefault();
            switchCollapse();
            }
-       );
+      );
 
     $('body').on('click', '#autoSave-switch', function(e) {
-           e.preventDefault();
-           switchAutoSave();
-           }
-       );
+               e.preventDefault();
+               switchAutoSave();
+               }
+           );
 
 
     $('body').on('click', '.coll', function() {
