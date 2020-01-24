@@ -63,33 +63,33 @@ function processSymbolData(str) {
 }
 
 $( document ).ready(function() {
-    //If the first row is hidden, don't use header row styling
-    $('tr.hidden').each(function() {
+   //If the first row is hidden, don't use header row styling
+   $('tr.hidden').each(function() {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
-    });
-    $(".test").each(function() {
+   });
+   $(".test").each(function() {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
-    });
-    $(".suite").each(function() {
+   });
+   $(".suite").each(function() {
         $(this).before('<i class="fa fa-cogs icon-test" aria-hidden="true" title="show/hide"></i>&nbsp;');
-    });
-    $(".static").each(function() {
+   });
+   $(".static").each(function() {
         $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
-    });
-    $('.contents li a').each(function() {
-        var item = $(this)
-        var orig = item.html();
-        var tags = orig.match(/\((.*)\)/);
-        if (tags) {
+   });
+   $('.contents li a').each(function() {
+       var item = $(this)
+       var orig = item.html();
+       var tags = orig.match(/\((.*)\)/);
+       if (tags) {
             var nwhtml = orig.replace(/\(.*\)/, '');
             item.html(nwhtml);
             var tagList = tags[1].split(', ');
             $.each(tagList, function(i, tag){
                 var tagbadge = document.createElement("span");
-                tagbadge.setAttribute("class", "tag");
-                tagbadge.innerText = tag;
+                    tagbadge.setAttribute("class", "tag");
+                    tagbadge.innerText = tag;
                 item.after(tagbadge);
-            });
+               });
         }
     });
 
@@ -103,28 +103,28 @@ $( document ).ready(function() {
 
     [].forEach.call(document.getElementsByTagName('td'), cell => {
         if(cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g,'<span class="page-variable">$1</span>');
+             cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g,'<span class="page-variable">$1</span>');
         }
         if(cell.innerHTML.match(/(\$`.+`)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
+             cell.innerHTML = cell.innerHTML.replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
         }
     });
 
     if(getCookie('collapseSymbols') == 'true') {
         $("td").contents().filter(function() {
             return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0; })
-            .each( function(cell) {
-                if (this.parentNode != null && this.parentNode != undefined) {
-                    this.parentNode.innerHTML = processSymbolData(this.parentNode.innerHTML);
-                }
-            });
+                .each( function(cell) {
+                    if (this.parentNode != null && this.parentNode != undefined) {
+                        this.parentNode.innerHTML = processSymbolData(this.parentNode.innerHTML);
+                    }
+                });
 
-        $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
+         $('.symbol-data').prev('.page-variable, .page-expr').each(function() {
             $(this).addClass('canToggle');
             $(this).addClass('closed');
-        });
+         });
 
-        $('.canToggle').click(function() {
+         $('.canToggle').click(function() {
             if($(this).hasClass('closed')) {
                 $(this).next('.symbol-data').css('display', 'inline-flex');
                 $(this).removeClass('closed');
@@ -134,56 +134,56 @@ $( document ).ready(function() {
                 $(this).removeClass('open');
                 $(this).addClass('closed');
             }
-        });
-    }
+       });
+   }
 
 
-    $('#alltags').change(function() {
+   $('#alltags').change(function() {
         if(this.checked) {
             $("#filtertags").attr('name', 'runTestsMatchingAllTags');
         } else {
             $("#filtertags").attr('name', 'runTestsMatchingAnyTag');
         }
-    });
+   });
 
-    $('.fa-cogs').click(function() {
+   $('.fa-cogs').click(function() {
         $(this).siblings('ul').toggle();
-    });
+   });
 
     $('body').on('click', '#prefs-switch', function(e) {
-            e.preventDefault();
-            $('.settings-panel').toggle();
-        }
-    );
+           e.preventDefault();
+           $('.settings-panel').toggle();
+           }
+       );
 
     $('body').on('click', '#theme-switch', function(e) {
-            e.preventDefault();
-            switchTheme();
-        }
-    );
+           e.preventDefault();
+           switchTheme();
+           }
+       );
 
     $('body').on('click', '#collapse-switch', function(e) {
-            e.preventDefault();
-            switchCollapse();
-        }
-    );
+           e.preventDefault();
+           switchCollapse();
+           }
+       );
 
     $('body').on('click', '#autoSave-switch', function(e) {
-            e.preventDefault();
-            switchAutoSave();
-        }
-    );
+           e.preventDefault();
+           switchAutoSave();
+           }
+       );
 
 
     $('body').on('click', '.coll', function() {
-        if($(this).children("input").is(":checked")) {
-            $(this).removeClass("closed");
-            $(this).addClass("open");
-        } else {
-            $(this).removeClass("open");
-            $(this).addClass("closed");
-        }
-    });
+                if($(this).children("input").is(":checked")) {
+                    $(this).removeClass("closed");
+                    $(this).addClass("open");
+                } else {
+                    $(this).removeClass("open");
+                    $(this).addClass("closed");
+                }
+            });
 
     function switchTheme() {
         if(getCookie('themeType') == 'bootstrap-plus-dark') {
@@ -200,28 +200,28 @@ $( document ).ready(function() {
     }
 
     function switchCollapse() {
-        if(getCookie('collapseSymbols') == 'true') {
-            document.cookie = "collapseSymbols=false";
-            $('#collapse-switch').removeClass('fa-toggle-on');
-            $('#collapse-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = "collapseSymbols=true";
-            $('#collapse-switch').removeClass('fa-toggle-off');
-            $('#collapse-switch').addClass('fa-toggle-on');
+            if(getCookie('collapseSymbols') == 'true') {
+                document.cookie = "collapseSymbols=false";
+                $('#collapse-switch').removeClass('fa-toggle-on');
+                $('#collapse-switch').addClass('fa-toggle-off');
+            } else {
+                document.cookie = "collapseSymbols=true";
+                $('#collapse-switch').removeClass('fa-toggle-off');
+                $('#collapse-switch').addClass('fa-toggle-on');
+            }
         }
-    }
 
     function switchAutoSave() {
-        if(getCookie('autoSave') == 'true') {
-            document.cookie = "autoSave=false";
-            $('#autoSave-switch').removeClass('fa-toggle-on');
-            $('#autoSave-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = "autoSave=true";
-            $('#autoSave-switch').removeClass('fa-toggle-off');
-            $('#autoSave-switch').addClass('fa-toggle-on');
+            if(getCookie('autoSave') == 'true') {
+                document.cookie = "autoSave=false";
+                $('#autoSave-switch').removeClass('fa-toggle-on');
+                $('#autoSave-switch').addClass('fa-toggle-off');
+            } else {
+                document.cookie = "autoSave=true";
+                $('#autoSave-switch').removeClass('fa-toggle-off');
+                $('#autoSave-switch').addClass('fa-toggle-on');
+            }
         }
-    }
 
     //Add hover function to type of page
     function tagButtonHover(pageType) {
