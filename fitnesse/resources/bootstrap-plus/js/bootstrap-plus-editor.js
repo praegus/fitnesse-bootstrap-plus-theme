@@ -121,19 +121,22 @@ function getInfoForLine(line, returnParamCount) {
     var containsConstructor = false;
     var validate = false;
     var firstCell = lineCells[0].toLowerCase().trim();
-    if(reservedWords.includes(firstCell) || firstCell.startsWith("$")) {
+    if(reservedWords.includes(firstCell) || (firstCell.startsWith("$") && firstCell.endsWith("="))) {
             offset = 1;
-            if(firstCell.indexOf('check') > -1) {
+            if( firstCell.startsWith('check') ) {
                 relevantCells--;
             }
-            if( firstCell.indexOf('table') > -1 ||
-                firstCell.indexOf('import') > -1 ||
-                firstCell.indexOf('library') > -1 ||
-                firstCell.indexOf('start') > -1) {
+            if( (!firstCell.endsWith('=')) &&
+                (firstCell.indexOf('table') > -1 ||
+                firstCell.startsWith('import')||
+                firstCell.startsWith('library')  ||
+                firstCell.startsWith('start')) ) {
                 ignoreParams = true;
             }
-            if( firstCell.indexOf('script') > -1 ||
-                firstCell.indexOf('storyboard') > -1) {
+            if( (!firstCell.endsWith('=')) &&
+                (firstCell.startsWith('script') ||
+                firstCell.endsWith('script') ||
+                firstCell.startsWith('storyboard')) ) {
                 containsConstructor = true;
             }
         }
@@ -372,7 +375,7 @@ $(".validate-badge").remove();
                   //determine the table type
                   var cleanLineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
                   var firstCellVal = getCellValues(cleanLineContent)[0].toLowerCase().trim();
-                  if (firstCellVal == 'conditional script') {
+                  if (firstCellVal.startsWith('conditional')) {
                      tableType = "conditional";
                   } else if(firstCellVal.indexOf('script') > -1 ||
                      firstCellVal.indexOf('scenario') > -1 ||
@@ -577,7 +580,9 @@ function isCommentLine(line) {
         $("#resync").append(badge);
     }
 
-var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table', 'scenario', 'table template', 'show', 'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
+var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table',
+                     'scenario', 'conditional scenario', 'looping scenario', 'table template', 'show',
+                     'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
 
 
 $( document ).ready(function() {
