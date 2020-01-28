@@ -23,8 +23,7 @@
             #set($noHistory = false)
 
             <tr>
-                #set ($barGraph = $pageHistory.getBarGraph())
-
+                #set ($barGraph = $page.pageHistory.getBarGraph())
                 #if($page.numberOfTimesPassed==0) #set ($passClass = "ignore")
                 #else #set ($passClass = "pass")
                 #end
@@ -37,7 +36,7 @@
                 <td class="$passClass">$page.numberOfTimesPassed</td>
                 <td class="$failClass">$page.numberOfTimesFailed</td>
                 <td>$page.lastRun</td>
-                #foreach($passFail in $lastResults.passFailArray())
+                #foreach($passFail in $barGraph.passFailArray())
                     <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
                 #end
             </tr>
