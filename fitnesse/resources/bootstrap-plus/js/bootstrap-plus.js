@@ -216,6 +216,8 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
+
+    getToolTips(displayToolTip);
 });
 /* === FITNESSE TOOLTIPS === */
 // if the document has been loaded, then get data from toolTipData.csv
@@ -248,11 +250,7 @@ function placeToolTip(tipsArray, pickedTip) {
     }
 }
 
-//executes callback function when document is ready
-$(document).ready(function () {
-    getToolTips(displayToolTip);
-});
-
+// Needed for Jest
 try{
     module.exports = {
         displayToolTip: displayToolTip
