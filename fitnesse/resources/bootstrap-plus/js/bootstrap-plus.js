@@ -1,3 +1,11 @@
+// Needed for Jest
+try{
+    module.exports = {
+        displayToolTip: displayToolTip
+    };
+}catch (e) {}
+
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -63,6 +71,9 @@ function processSymbolData(str) {
 }
 
 $( document ).ready(function() {
+   // Tooltips
+   getToolTips(displayToolTip);
+
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
@@ -223,9 +234,6 @@ $( document ).ready(function() {
             }
         }
 
-    // Tooltips
-    getToolTips(displayToolTip);
-
     //Add hover function to type of page
     function tagButtonHover(pageType) {
         $('.' + pageType).parent().hover(
@@ -276,16 +284,9 @@ function displayToolTip(text) {
 function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById("tooltip-text");
     if (textfield) {
-        textfield.innerHTML = tipsArray[pickedTip];
+        textfield.innerText = tipsArray[pickedTip];
     }
 }
-
-// Needed for Jest
-try{
-    module.exports = {
-        displayToolTip: displayToolTip
-    };
-}catch (e) {}
 
 /*
     ADD TAG
