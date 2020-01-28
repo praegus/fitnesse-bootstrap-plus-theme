@@ -1,3 +1,10 @@
+// Needed for Jest
+try{
+    module.exports = {
+        getSidebarContent: getSidebarContent
+    };
+}catch (e) {}
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
