@@ -82,7 +82,7 @@
 
 
   <article>
-   #if(!$bodyClass.contains("edit"))
+   #if(!$bodyClass.equals("edit"))
     ## Page Header
     <a href="?testHistory">
      <span class="btn btn-primary">Test History</span>
