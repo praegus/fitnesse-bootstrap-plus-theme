@@ -246,12 +246,13 @@ $( document ).ready(function() {
         addTagInput($(this));
     });
 });
+
 /*
     FITNESSE TOOLTIPS
 */
-// if the document has been loaded, then get data from toolTipData.csv
 // Get list of tooltips
 function getToolTips(callback){
+    // if the document has been loaded, then get data from toolTipData.txt
     $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data){
         const tooltips = data;
         // Activate function displayToolTip
