@@ -74,11 +74,11 @@
      <a class="navbar-brand" href="${contextRoot}FrontPage"><span>FitNesse</span></a>
     </div>
 
-     #parse( $navTemplate )
+    #parse( $navTemplate )
 
-     #if( $!errorNavTemplate )
-      #parse( $errorNavTemplate )
-     #end
+    #if( $!errorNavTemplate )
+     #parse( $errorNavTemplate )
+    #end
 
     </div>
    </nav>
@@ -104,11 +104,11 @@
     </div>
 </div>
 
-    #if( $!footerTemplate )
-    <footer>
-        #parse( $footerTemplate )
-    </footer>
-    #end
+  #if( $!footerTemplate )
+  <footer>
+   #parse( $footerTemplate )
+  </footer>
+  #end
 
 </body>
 </html>
