@@ -93,6 +93,12 @@ $( document ).ready(function() {
        }
    });
 
+    // Add hidden tag buttons upon entering overview page
+    $(".test, .suite, .static").each(function () {
+        $(this).wrap("<div class='addTagDiv'></div>");
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
+
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
 
     [].forEach.call(document.getElementsByTagName('td'), cell => {
@@ -217,9 +223,32 @@ $( document ).ready(function() {
             }
         }
 
+    // Tooltips
     getToolTips(displayToolTip);
+
+    //Add hover function to type of page
+    function tagButtonHover(pageType) {
+        $('.' + pageType).parent().hover(
+            function () {
+                $(this).find('.addTag:first').css("visibility", "visible");
+            }, function () {
+                $(this).find('.addTag:first').css("visibility", "hidden");
+            }
+        );
+    }
+
+    tagButtonHover("test");
+    tagButtonHover("static");
+    tagButtonHover("suite");
+
+    // Click add tag function
+    $('.addTag').click(function () {
+        addTagInput($(this));
+    });
 });
-/* === FITNESSE TOOLTIPS === */
+/*
+    FITNESSE TOOLTIPS
+*/
 // if the document has been loaded, then get data from toolTipData.csv
 // Get list of tooltips
 function getToolTips(callback){
@@ -256,3 +285,97 @@ try{
         displayToolTip: displayToolTip
     };
 }catch (e) {}
+
+/*
+    ADD TAG
+*/
+function addTagInput(currentAddTagButton) {
+    //Remove all existing tag input fields
+    $('.tagInputOverview').remove();
+    //Add input field
+    $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
+
+    //Add focus after clicking button
+    $('.tagInputOverview').focus();
+
+    $('.tagInputOverview').focusout(function () {
+        $('.tagInputOverview').remove();
+    });
+
+    $('.tagInputOverview').keyup(function (event) {
+        //If "Enter" button is pressed
+        if (event.keyCode == 13) {
+            //Get current input value & replace empty spaces at the start/end of input
+            const inputValue = $('.tagInputOverview').val().trim();
+            //Get href value of the a tag
+            const currentURL = $(currentAddTagButton).siblings('a').attr('href');
+            //Call get current tag list function
+            GetCurrentTagList(currentURL, inputValue);
+        }
+    });
+}
+
+//Get current tag list function
+function GetCurrentTagList(currentURL, newTags) {
+    //Get current tag list
+    $.ajax({
+        type: 'GET',
+        url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (data) {
+            //Convert data object to string
+            const currentTagList = data[0].tags.join(", ");
+            //Convert input tags to lowercase
+            const lowerCaseTags = newTags.toLowerCase();
+            //Check if there are any tags currently present
+            if (currentTagList.length > 0) {
+                //Check if input tag exists in current tag list
+                const checkIfExists = currentTagList.includes(lowerCaseTags);
+                //If tag doesn't exist yet, post it
+                if (checkIfExists === false) {
+                    //Combine the current tag list and the input tag(s) in 1 variable
+                    const newTagList = currentTagList + ", " + lowerCaseTags;
+                    //Send current href value, new tag list and input tag(s) to post tag function
+                    postTag(currentURL, newTagList, newTags);
+                } else {
+                    $('.tagInputOverview').css({
+                        "border-color": "red",
+                        "outline": "0"
+                    });
+                }
+            }
+            //If there are no tags present only post the input tags
+            else {
+                postTag(currentURL, lowerCaseTags, newTags);
+            }
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+//Post new tag list function
+function postTag(currentURL, tagList, inputTag) {
+    $.ajax({
+        type: 'POST',
+        url: "http://" + location.host + "/" + currentURL,
+        contentType: 'application/json; charset=utf-8',
+        data: 'responder=updateTags&suites=' + tagList,
+        dataType: 'json',
+        success: function (data) {
+            //Add new tag span layout to page
+            $("a[href$='" + currentURL + "']").parent().after("<span class='tag'>" + inputTag + "</span>");
+            //Remove input field
+            $('.tagInputOverview').remove();
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
