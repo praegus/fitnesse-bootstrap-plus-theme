@@ -354,7 +354,6 @@ function getSidebarContentHtml(content) {
         '</li>';
     return htmlContent;
 }
-
 /*
     SIDEBAR FUNCTIONS END
 */
