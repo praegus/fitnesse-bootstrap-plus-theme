@@ -343,6 +343,8 @@ function postTag(currentURL, tagList, inputTag) {
             $("a[href$='" + currentURL + "']").parent().after("<span class='tag'>" + inputTag + " <i class=\"fas fa-times deleteTagButton\"></i></span>");
             //Remove input field
             $('.tagInputOverview').remove();
+            // Call delete tag commands to ensure hover and click over dynamically created elements
+            deleteTagCommands(currentURL);
         },
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
