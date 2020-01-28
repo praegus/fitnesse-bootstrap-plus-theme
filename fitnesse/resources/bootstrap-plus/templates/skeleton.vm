@@ -80,8 +80,8 @@
      #parse( $errorNavTemplate )
     #end
 
-    </div>
-   </nav>
+   </div>
+  </nav>
 
 <div id="contentDiv">
     ## Sidebar
