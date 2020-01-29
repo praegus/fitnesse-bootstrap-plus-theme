@@ -32,10 +32,10 @@
                 #else #set ($failClass = "fail")
                 #end
 
-                <td><a href="/$page.page?pageHistory">$page.page</a></td>
+                <td><a href="/$page.pageName?pageHistory">$page.pageName</a></td>
                 <td class="$passClass">$page.numberOfTimesPassed</td>
                 <td class="$failClass">$page.numberOfTimesFailed</td>
-                <td>$page.formattedDate</td>
+                <td>$page.MostRecentRunDate</td>
                 #foreach($passFail in $barGraph.passFailArray())
                     <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
                 #end

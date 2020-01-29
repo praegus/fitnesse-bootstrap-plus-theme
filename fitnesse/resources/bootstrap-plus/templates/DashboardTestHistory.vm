@@ -45,7 +45,7 @@
                 <td><a href="/$page?pageHistory">$page</a></td>
                 <td class="$passClass">$page.passes</td>
                 <td class="$failClass">$page.failures</td>
-                <td>$barGraph.formatEndingDate("dd MMM yy, HH:mm")</td>
+                <td>$page.MostRecentRunDate("dd MMM yy, HH:mm")</td>
                 #foreach($passFail in $page.passFailArray)
                     <td class="$passFail.result"><a href="$page?pageHistory&resultDate=$passFail.Date">#if($passFail.pass)+#else-#end</a></td>
                     $sorted.add($passFail.Date)
