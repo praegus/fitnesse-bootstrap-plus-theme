@@ -270,8 +270,12 @@ function addTagInput(currentAddTagButton) {
     //Add focus after clicking button
     $('.tagInputOverview').focus();
 
+    //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
         $('.tagInputOverview').remove();
+        if ($('.tagErrorMessage').length) {
+            $('.tagErrorMessage').remove();
+        }
     });
 
     $('.tagInputOverview').keyup(function (event) {
@@ -303,9 +307,15 @@ function GetCurrentTagList(currentURL, newTags) {
             //Check if there are any tags currently present
             if (currentTagList.length > 0) {
                 //Check if input tag exists in current tag list
-                const checkIfExists = currentTagList.includes(lowerCaseTags);
+                const checkIfExists = currentTagList.includes(lowerCaseTags)
+                const checkSpecialCharacters = lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi);
+                console.log(checkSpecialCharacters);
                 //If tag doesn't exist yet, post it
-                if (checkIfExists === false) {
+                if (checkIfExists === false && checkSpecialCharacters === null) {
+                    //Check if error message is present and remove it when it's true
+                    if ($('.tagErrorMessage').length) {
+                        $('.tagErrorMessage').remove();
+                    }
                     //Combine the current tag list and the input tag(s) in 1 variable
                     const newTagList = currentTagList + ", " + lowerCaseTags;
                     //Send current href value, new tag list and input tag(s) to post tag function
@@ -315,11 +325,35 @@ function GetCurrentTagList(currentURL, newTags) {
                         "border-color": "red",
                         "outline": "0"
                     });
+
+                    if ($('.tagErrorMessage').length === 0) {
+                        //SHOW TOAST MESSAGE
+                        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
+                    }
                 }
             }
-            //If there are no tags present only post the input tags
+            //If there are no tags present
             else {
-                postTag(currentURL, lowerCaseTags, newTags);
+                const checkSpecialCharacters = lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi);
+                //Check special characters
+                if (checkSpecialCharacters === null) {
+                    //Check if error message is present and remove it when it's true
+                    if ($('.tagErrorMessage').length) {
+                        $('.tagErrorMessage').remove();
+                    }
+                    //Post tag function
+                    postTag(currentURL, lowerCaseTags, newTags);
+                } else {
+                    $('.tagInputOverview').css({
+                        "border-color": "red",
+                        "outline": "0"
+                    });
+
+                    if ($('.tagErrorMessage').length === 0) {
+                        //SHOW TOAST MESSAGE
+                        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
+                    }
+                }
             }
         },
         error: function (xhr) {
