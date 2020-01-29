@@ -1,3 +1,9 @@
+try{
+    module.exports = {
+        GetCurrentTagList : GetCurrentTagList
+    }
+}catch (e) {}
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -286,81 +292,57 @@ function addTagInput(currentAddTagButton) {
             //Get href value of the a tag
             const currentURL = $(currentAddTagButton).siblings('a').attr('href');
             //Call get current tag list function
-            GetCurrentTagList(currentURL, inputValue);
+            GetCurrentTagList(currentURL, inputValue, GetCurrentTagListAfterSuccess);
         }
     });
 }
 
 //Get current tag list function
-function GetCurrentTagList(currentURL, newTags) {
+function GetCurrentTagList(currentURL, newTags, callback) {
+    // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',
         url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (data) {
-            //Convert data object to string
-            const currentTagList = data[0].tags.join(", ");
-            //Convert input tags to lowercase
-            const lowerCaseTags = newTags.toLowerCase();
-            //Check if there are any tags currently present
-            if (currentTagList.length > 0) {
-                //Check if input tag exists in current tag list
-                const checkIfExists = currentTagList.includes(lowerCaseTags)
-                const checkSpecialCharacters = lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi);
-                console.log(checkSpecialCharacters);
-                //If tag doesn't exist yet, post it
-                if (checkIfExists === false && checkSpecialCharacters === null) {
-                    //Check if error message is present and remove it when it's true
-                    if ($('.tagErrorMessage').length) {
-                        $('.tagErrorMessage').remove();
-                    }
-                    //Combine the current tag list and the input tag(s) in 1 variable
-                    const newTagList = currentTagList + ", " + lowerCaseTags;
-                    //Send current href value, new tag list and input tag(s) to post tag function
-                    postTag(currentURL, newTagList, newTags);
-                } else {
-                    $('.tagInputOverview').css({
-                        "border-color": "red",
-                        "outline": "0"
-                    });
-
-                    if ($('.tagErrorMessage').length === 0) {
-                        //SHOW TOAST MESSAGE
-                        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
-                    }
-                }
-            }
-            //If there are no tags present
-            else {
-                const checkSpecialCharacters = lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi);
-                //Check special characters
-                if (checkSpecialCharacters === null) {
-                    //Check if error message is present and remove it when it's true
-                    if ($('.tagErrorMessage').length) {
-                        $('.tagErrorMessage').remove();
-                    }
-                    //Post tag function
-                    postTag(currentURL, lowerCaseTags, newTags);
-                } else {
-                    $('.tagInputOverview').css({
-                        "border-color": "red",
-                        "outline": "0"
-                    });
-
-                    if ($('.tagErrorMessage').length === 0) {
-                        //SHOW TOAST MESSAGE
-                        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
-                    }
-                }
-            }
-        },
+        success: data => callback(data, currentURL, newTags),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log("Error code: " + xhr.status);
             console.log(xhr);
         }
+    });
+}
+
+function GetCurrentTagListAfterSuccess(data, currentURL, newTags) {
+    const currentTagString = data[0].tags.join(", ");
+    const lowerCaseTags = newTags.toLowerCase();
+    //Check if error message is present and remove it when it's true
+    if ($('.tagErrorMessage').length) {
+        $('.tagErrorMessage').remove();
+    }
+    // Check if tag already exist and if it has no special characters
+    if (currentTagString.length > 0 && currentTagString.includes(lowerCaseTags) === true) {
+        inputBorderStyling();
+    } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
+        inputBorderStyling();
+        // Show tag error message if not exist
+        if ($('.tagErrorMessage').length === 0) {
+            $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
+        }
+    } else {
+        // Post tags
+        const newTagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
+        postTag(currentURL, newTagList, newTags);
+    }
+}
+
+// Make the tag input border red
+function inputBorderStyling() {
+    $('.tagInputOverview').css({
+        "border-color": "red",
+        "outline": "0"
     });
 }
 
@@ -392,23 +374,6 @@ function postTag(currentURL, tagList, inputTag) {
     DELETE TAGS FUNCTIONS START
 */
 function deleteTagInput(currentTag){
-    // Value of chosen tag to delete
-    const chosenTag = $(currentTag).parent().text().trim();
-    // Array for new tag list
-    const currentTagsListArray = [];
-    // Find tags of chosen page
-    const currentTagsList = $(currentTag).parent().parent().find('.tag');
-    // Loop through all found tags
-    $(currentTagsList).each(function() {
-        // Filter current tags from chosen tag
-        if ($(this).text().trim() !== chosenTag)
-        {
-            // Push remaining tags to the array
-            currentTagsListArray.push($(this).text().trim());
-        }
-    });
-    // Join values with comma
-    const newTagList = currentTagsListArray.reverse().join(', ');
     // Get current URL
     const currentURL = $(currentTag).parent().siblings('.addTagDiv').find('a').attr('href');
 
@@ -417,7 +382,7 @@ function deleteTagInput(currentTag){
         type: 'POST',
         url: "http://" + location.host + "/" + currentURL,
         contentType: 'application/json; charset=utf-8',
-        data: 'responder=updateTags&suites=' + newTagList,
+        data: 'responder=updateTags&suites=' + formDeleteTagList(currentTag),
         dataType: 'json',
         success: function (data) {
             // Remove chosen tag from list/view
@@ -431,12 +396,28 @@ function deleteTagInput(currentTag){
     });
 }
 
+// Form new tag list
+function formDeleteTagList(currentTag) {
+    const chosenTag = $(currentTag).parent().text().trim();
+    const newTagArray = [];
+    const currentTagArray = $(currentTag).parent().parent().find('.tag');
+    // Loop through all found tags
+    $(currentTagArray).each(function() {
+        // Filter current tags from chosen tag
+        if ($(this).text().trim() !== chosenTag)
+        {
+            // Push remaining tags to the array
+            newTagArray.push($(this).text().trim());
+        }
+    });
+    // Return joined array values
+    return newTagArray.reverse().join(', ');;
+}
+
 // Commands for new tags
 function deleteTagCommands(currentURL) {
-
     // Find new tag
     const newDeleteTagButton = $("a[href$='" + currentURL + "']").parent().parent().find('.deleteTagButton').first();
-
     // Assign hover listener to new tag
     $('.tag').hover(
         function () {
