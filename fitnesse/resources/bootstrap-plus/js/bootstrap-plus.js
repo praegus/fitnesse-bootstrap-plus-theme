@@ -254,6 +254,9 @@ $( document ).ready(function() {
 
     // Click add tag function
     $('.addTag').click(function () {
+        console.log($(this));
+        console.log($('.addTag'));
+
         createTagInput($(this));
     });
 
@@ -268,7 +271,7 @@ $( document ).ready(function() {
 */
 function postTagRequest(callback, url, tagList, neededValues) {
     // NEEDED FOR UNIT TESTING
-    const $ = require('jquery');
+    // const $ = require('jquery');
     $.ajax({
         type: 'POST',
         url: url,
@@ -316,11 +319,13 @@ function createTagInput(currentAddTagButton) {
             GetCurrentTagList(currentURL, inputValue, checkIfNewTagIsValid);
         }
     });
+
 }
 
 // Get current tag list from the parent where you want your new tag
 function GetCurrentTagList(currentURL, newTags, callback) {
-    const $ = require('jquery');
+    // NEEDED FOR UNIT TESTING
+    // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',

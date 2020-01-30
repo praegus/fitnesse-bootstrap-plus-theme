@@ -31,6 +31,41 @@ it('calls into $.ajax with the correct params', () => {
 /*
     ADD TAGS TESTS START
 */
+// createTagInput
+it('Test if the tag input element will show up', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHtml =
+        '<div id="addTagDiv">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+        '</div>';
+    const expectedValue =
+        '<div id="addTagDiv">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<input type="text" class="tagInputOverview">' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.createTagInput('#addTagButton');
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
+
+    expect(receivedResult).toMatch(expectedValue);
+});
+
+// createTagInput
+it('Test if the tag input element has functions', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHtml =
+        '<div id="addTagDiv">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.createTagInput('#addTagButton');
+    const receivedResult = $('#addTagDiv .tagInputOverview');
+
+    expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
+});
+
 // GetCurrentTagList
 it('calls into $.ajax with the correct params', () => {
     const $ = require('jquery');
@@ -99,7 +134,6 @@ it('check if tags are joined', () => {
 
 // deleteTag
 it('Test if current tag span is correctly removed', () => {
-    const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHtml =
         '<li id="toTest">' +
