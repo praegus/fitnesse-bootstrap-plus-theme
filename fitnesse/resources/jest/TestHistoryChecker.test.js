@@ -2,7 +2,7 @@ jest.mock('jquery');
 
 beforeEach(() => jest.resetModules());
 
-describe('testHistoryCheck', function () {
+describe('testHistoryChecker', function () {
     // const $ = require('jquery');
     it('Test if $.ajax has the correct params', () => {
         const $ = require('jquery');

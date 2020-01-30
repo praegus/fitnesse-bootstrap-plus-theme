@@ -226,7 +226,7 @@ $( document ).ready(function() {
 
 function getPageHistory(url, callback ) {
     // Needed for unit testing
-    // const $ = require('jquery');
+    const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -240,6 +240,8 @@ function getPageHistory(url, callback ) {
 }
 
 function generateTestHistoryTable(data) {
+    // Needed for unit testing
+    const $ = require('jquery');
         var check = document.getElementById("testHistoryTable");
         if (check !== undefined){
             var parser = new DOMParser();
