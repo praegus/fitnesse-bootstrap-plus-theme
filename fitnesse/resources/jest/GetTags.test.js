@@ -42,3 +42,18 @@ it('calls the callback when $.ajax requests are finished', () => {
 
     expect(callback.mock.calls[0 /*first call*/][0 /*first arg*/]).toEqual(mockData);
 });
+
+// it('check input field styling if input is a duplicate', () => {
+//     const $ = require('jquery');
+//     const functions = require('../bootstrap-plus/js/bootstrap-plus');
+//
+//     document.body.innerHTML = '<input type="text" class="tagInputOverview">';
+//
+//     const mockData = require('./testData');
+//
+//     const testURL = "TestSuiteDemo.FrontEndTests.SuiteSetUp";
+//     const testTag = "Test1";
+//     functions.GetCurrentTagListAfterSuccess(mockData, testURL, testTag);
+//
+//     expect(functions.GetCurrentTagListAfterSuccess(mockData, testURL, testTag)).toEqual("same tag");
+// });
