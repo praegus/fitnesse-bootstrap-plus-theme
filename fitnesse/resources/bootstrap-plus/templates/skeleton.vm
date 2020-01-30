@@ -85,7 +85,7 @@
 
 <div id="contentDiv">
     ## Sidebar
-    #if(!$pageTitle.getTitle().contains("FrontPage"))
+    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
             <ul id="sidebarContent"></ul>
         </div>

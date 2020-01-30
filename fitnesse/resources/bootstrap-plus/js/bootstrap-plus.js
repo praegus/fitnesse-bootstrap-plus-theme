@@ -1,7 +1,10 @@
 // Needed for Jest
 try{
     module.exports = {
-        getSidebarContent: getSidebarContent
+        getSidebarContent: getSidebarContent,
+        getSidebarContentHtml: getSidebarContentHtml,
+        getCurrentWorkSpace: getMainWorkSpace,
+        placeSidebarContent: placeSidebarContent
     };
 }catch (e) {}
 
@@ -108,6 +111,11 @@ $( document ).ready(function() {
         $(this).wrap("<div class='addTagDiv'></div>");
         $(this).after('<i class="fas fa-plus-circle addTag"></i>');
     });
+
+    // Show sidebar
+    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+        getSidebarContent(placeSidebarContent);
+    }
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
 
@@ -250,12 +258,8 @@ $( document ).ready(function() {
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
-            getSidebarContent();
+            getSidebarContent(placeSidebarContent);
         }
-    }
-
-    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
-        getSidebarContent();
     }
 
     //Add hover function to type of page
@@ -286,35 +290,30 @@ $( document ).ready(function() {
     SIDEBAR FUNCTIONS START
 */
 // Sidebar content
-function getSidebarContent() {
-    let currentWorkspace = location.pathname;
-    if (currentWorkspace.includes('.')) {
-        const strIndex = location.pathname.indexOf(".");
-        console.log(strIndex);
-        currentWorkspace = currentWorkspace.slice(0, strIndex);
-    }
+function getSidebarContent(callback) {
+    // Needed for unit testing
+    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
-        url: "http://" + location.host + currentWorkspace + "?responder=tableOfContents",
+        url: "http://" + location.host + getMainWorkSpace(location.pathname) + "?responder=tableOfContents",
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (contentArray) {
-            placeSidebarContent(contentArray);
-
-            $('#sidebarContent .fa-cogs').click(function() {
-                $(this).parent().siblings('ul').toggle();
-            });
-        },
+        success: contentArray => callback(contentArray),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log("Error code: " + xhr.status);
-            console.log(xhr);
+            console.log("Error code: " + xhr.status, xhr);
         }
     });
 }
 
+function getMainWorkSpace(mainWorkspace) {
+    if (mainWorkspace.includes('.')) {
+        mainWorkspace = mainWorkspace.slice(0, mainWorkspace.indexOf("."));
+    }
+    return mainWorkspace;
+}
+
 function placeSidebarContent(contentArray) {
-    console.log(contentArray);
     // Empty sidebar content
     $('#sidebarContent').html("");
 
@@ -327,18 +326,20 @@ function placeSidebarContent(contentArray) {
             sidebarContentLayerLoop(layerOne.name.replace(/\s/g,''), layerOne.children);
         }
     });
+
+    $('#sidebarContent .fa-cogs').click(function() {
+        $(this).parent().siblings('ul').toggle();
+    });
 }
 
 function sidebarContentLayerLoop(suiteName, children) {
-    // Place new ul in the correct suite (li)
+    // Place new ul in the correct li
     $('#' + suiteName).append('<ul></ul>');
 
-    // Loop through the children
     children.forEach(content => {
         // Place new li in the new made ul
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
 
-        // If there are children
         if (content.children) {
             sidebarContentLayerLoop(content.name.replace(/\s/g,''), content.children)
         }
@@ -349,11 +350,11 @@ function sidebarContentLayerLoop(suiteName, children) {
 function getSidebarContentHtml(content) {
     const iconClass = content.type.includes('suite') ? "fa fa-cogs icon-test" : content.type.includes('test') ? "fa fa-cog icon-suite": "fa fa-file-o icon-static";
     const prunedClass = content.type.includes('pruned') ? " pruned": "";
-    const highlight = location.pathname == ('/' + content.path) ? 'id="highlight"' : '';
+    const highlight = location.pathname == ('/' + content.path) ? ' id="highlight"' : '';
 
     const htmlContent =
         '<li id="' + content.name.replace(/\s/g,'') + '">' +
-            '<div ' + highlight + '>' +
+            '<div' + highlight + '>' +
                 '<i class="' + iconClass + '" aria-hidden="true" title="show/hide"></i>' +
                 '&nbsp;' +
                 '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
