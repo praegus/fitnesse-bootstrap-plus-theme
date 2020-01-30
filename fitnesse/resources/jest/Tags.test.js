@@ -3,6 +3,32 @@ jest.mock('jquery');
 beforeEach(() => jest.resetModules());
 
 /*
+    BOTH ADD AND DELETE START
+*/
+// postTagRequest
+it('calls into $.ajax with the correct params', () => {
+    const $ = require('jquery');
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+
+    // Call into the function we want to test
+    const dummyCallback = () => {};
+    const url = "http://localhost:9090/TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas"
+    // fetchCurrentUser(dummyCallback);
+    functions.postTagRequest(dummyCallback, url, "", {});
+    // Now make sure that $.ajax was properly called during the previous
+    // 2 lines
+    expect($.ajax).toBeCalledWith({
+        type: 'POST',
+        url: expect.any(String),
+        contentType: 'application/json; charset=utf-8',
+        data: expect.stringContaining('responder=updateTags&suites='),
+        dataType: 'json',
+        success: expect.any(Function),
+        error: expect.any(Function)
+    });
+});
+
+/*
     ADD TAGS TESTS START
 */
 // GetCurrentTagList
@@ -51,27 +77,24 @@ it('calls the callback when $.ajax requests are finished', () => {
 /*
     DELETE TAGS TESTS START
 */
-// postTagRequest
-it('calls into $.ajax with the correct params', () => {
-    const $ = require('jquery');
-    const functions = require('../bootstrap-plus/js/bootstrap-plus');
-
-    // Call into the function we want to test
-    const dummyCallback = () => {};
-    const url = "http://localhost:9090/TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas"
-    // fetchCurrentUser(dummyCallback);
-    functions.postTagRequest(dummyCallback, url, "", {});
-    // Now make sure that $.ajax was properly called during the previous
-    // 2 lines
-    expect($.ajax).toBeCalledWith({
-        type: 'POST',
-        url: expect.any(String),
-        contentType: 'application/json; charset=utf-8',
-        data: expect.stringContaining('responder=updateTags&suites='),
-        dataType: 'json',
-        success: expect.any(Function),
-        error: expect.any(Function)
-    });
+// joinTagList
+it('check if tags are joined', () => {
+//     const functions = require('../bootstrap-plus/js/bootstrap-plus');
+//
+//     document.body.innerHTML =
+//         '<li>' +
+//         '<i class="fa fa-cog icon-suite" aria-hidden="true"></i>' +
+//         '<div class="addTagDiv">' +
+//         '<a href="TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas" class="test">T 002 Retrieve Data From Xas </a><i class="fas fa-plus-circle addTag" style="visibility: hidden;"></i>' +
+//         '</div>' +
+//         '<span class="tag">test2 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
+//         '<span class="tag">test4 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
+//         '<span class="tag">test1 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
+//         '</li>';
+//
+//     const chosenTag = "test2";
+//
+//     expect(functions.formDeleteTagList(chosenTag)).toEqual("test4, test1");
 });
 
 // deleteTag
@@ -96,22 +119,3 @@ it('Test if current tag span is correctly removed', () => {
     expect(receivedResult).toMatch(expectedValue);
 });
 
-// joinTagList
-// it('check if tags are joined', () => {
-//     const functions = require('../bootstrap-plus/js/bootstrap-plus');
-//
-//     document.body.innerHTML =
-//         '<li>' +
-//         '<i class="fa fa-cog icon-suite" aria-hidden="true"></i>' +
-//         '<div class="addTagDiv">' +
-//         '<a href="TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas" class="test">T 002 Retrieve Data From Xas </a><i class="fas fa-plus-circle addTag" style="visibility: hidden;"></i>' +
-//         '</div>' +
-//         '<span class="tag">test2 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
-//         '<span class="tag">test4 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
-//         '<span class="tag">test1 <i class="fas fa-times deleteTagButton" style="display: none;"></i></span>' +
-//         '</li>';
-//
-//     const chosenTag = "test2";
-//
-//     expect(functions.formDeleteTagList(chosenTag)).toEqual("test4, test1");
-// });

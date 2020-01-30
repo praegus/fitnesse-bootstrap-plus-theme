@@ -1,14 +1,14 @@
 try{
     module.exports = {
-        GetCurrentTagList : GetCurrentTagList,
-        addTagInput : createTagInput,
         postTagRequest : postTagRequest,
-        postTag : postTag,
-        deleteTag : deleteTag,
-        GetCurrentTagListAfterSuccess : GetCurrentTagListAfterSuccess,
-        deleteClickAndHover : deleteClickAndHover,
+        createTagInput : createTagInput,
+        GetCurrentTagList : GetCurrentTagList,
+        checkIfNewTagIsValid : checkIfNewTagIsValid,
+        postTagInHtml : postTagInHtml,
         inputBorderStyling : inputBorderStyling,
-        joinTagList : joinTagList
+        deleteClickAndHoverEvent : deleteClickAndHoverEvent,
+        joinTagList : joinTagList,
+        deleteTag : deleteTag
     }
 }catch (e) {}
 
@@ -260,12 +260,34 @@ $( document ).ready(function() {
     // Add delete button when page is loaded in
     $('.tag').append(' <i class="fas fa-times deleteTagButton"></i>');
 
-    deleteClickAndHover('.deleteTagButton');
+    deleteClickAndHoverEvent('.deleteTagButton');
 });
 
 /*
     ADD & DELETE TAGS FUNCTIONS START
 */
+function postTagRequest(callback, url, tagList, neededValues) {
+    // NEEDED FOR UNIT TESTING
+    const $ = require('jquery');
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+        data: 'responder=updateTags&suites=' + tagList,
+        dataType: 'json',
+        success: data => callback(data, neededValues),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+/*
+    ADD TAG START
+*/
+// When pressed an add new tag button create a input to make te new tag in
 function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();
@@ -291,12 +313,31 @@ function createTagInput(currentAddTagButton) {
             //Get href value of the a tag
             const currentURL = $(currentAddTagButton).siblings('a').attr('href');
             //Call get current tag list function
-            GetCurrentTagList(currentURL, inputValue, GetCurrentTagListAfterSuccess);
+            GetCurrentTagList(currentURL, inputValue, checkIfNewTagIsValid);
         }
     });
 }
 
-function GetCurrentTagListAfterSuccess(data, currentURL, newTags) {
+// Get current tag list from the parent where you want your new tag
+function GetCurrentTagList(currentURL, newTags, callback) {
+    const $ = require('jquery');
+    //Get current tag list
+    $.ajax({
+        type: 'GET',
+        url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: data => callback(data, currentURL, newTags),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+// Check if the tag meet the requirements
+function checkIfNewTagIsValid(data, currentURL, newTags) {
     const currentTagString = data[0].tags.join(", ");
     const lowerCaseTags = newTags.toLowerCase();
     //Check if error message is present and remove it when it's true
@@ -316,48 +357,12 @@ function GetCurrentTagListAfterSuccess(data, currentURL, newTags) {
         // Post tags
         const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
         const url = 'http://' + location.host + '/' + currentURL;
-        postTagRequest(postTag, url, tagList, {currentURL, newTags});
+        postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
     }
 }
 
-//Get current tag list function
-function GetCurrentTagList(currentURL, newTags, callback) {
-    const $ = require('jquery');
-    //Get current tag list
-    $.ajax({
-        type: 'GET',
-        url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: data => callback(data, currentURL, newTags),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log("Error code: " + xhr.status);
-            console.log(xhr);
-        }
-    });
-}
-
-function postTagRequest(callback, url, tagList, neededValues) {
-    // NEEDED FOR UNIT TESTING
-    const $ = require('jquery');
-    $.ajax({
-        type: 'POST',
-        url: url,
-        contentType: 'application/json; charset=utf-8',
-        data: 'responder=updateTags&suites=' + tagList,
-        dataType: 'json',
-        success: data => callback(data, neededValues),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log("Error code: " + xhr.status);
-            console.log(xhr);
-        }
-    });
-}
-
-// Post Tag
-function postTag(successData, neededValues) {
+// Post Tag in the html
+function postTagInHtml(successData, neededValues) {
     //Add new tag span layout to page
     $("a[href$='" + neededValues.currentURL + "']").parent().after("<span class='tag'>" + neededValues.newTags + " <i class=\"fas fa-times deleteTagButton\"></i></span>");
     //Remove input field
@@ -366,16 +371,24 @@ function postTag(successData, neededValues) {
     // Find new tag
     const newDeleteTagButton = $("a[href$='" + neededValues.currentURL + "']").parent().parent().find('.deleteTagButton').first();
     // Assign hover listener to new tag
-    deleteClickAndHover(newDeleteTagButton);
+    deleteClickAndHoverEvent(newDeleteTagButton);
 }
 
-// Delete tag
-function deleteTag(successData, neededValues) {
-    // Remove chosen tag from list/view
-    neededValues.currentTagSpan.remove();
+// Make the tag input border red
+function inputBorderStyling() {
+    $('.tagInputOverview').css({
+        "border-color": "red",
+        "outline": "0"
+    });
 }
-
-function deleteClickAndHover(deleteTagButton) {
+/*
+    ADD END
+*/
+/*
+    DELETE START
+*/
+// Place a Click and a hover event an the tags
+function deleteClickAndHoverEvent(deleteTagButton) {
     // Show delete tag button on hover
     $('.tag').hover(
         function () {
@@ -395,15 +408,7 @@ function deleteClickAndHover(deleteTagButton) {
     });
 }
 
-// Make the tag input border red
-function inputBorderStyling() {
-    $('.tagInputOverview').css({
-        "border-color": "red",
-        "outline": "0"
-    });
-}
-
-// Form new tag list
+// Delete the chosen tag from the current tag list
 function joinTagList(chosenTag, currentTagArray) {
     const newTagArray = [];
     // Loop through all found tags
@@ -418,6 +423,15 @@ function joinTagList(chosenTag, currentTagArray) {
     // Return joined array values
     return newTagArray.reverse().join(', ');
 }
+
+// Delete tag
+function deleteTag(successData, neededValues) {
+    // Remove chosen tag from list/view
+    neededValues.currentTagSpan.remove();
+}
+/*
+    DELETE END
+*/
 /*
     ADD & DELETE TAGS FUNCTIONS END
 */
