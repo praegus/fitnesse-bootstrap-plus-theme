@@ -350,7 +350,7 @@ function sidebarContentLayerLoop(suiteName, children) {
 function getSidebarContentHtml(content) {
     const iconClass = content.type.includes('suite') ? "fa fa-cogs icon-test" : content.type.includes('test') ? "fa fa-cog icon-suite": "fa fa-file-o icon-static";
     const prunedClass = content.type.includes('pruned') ? " pruned": "";
-    const highlight = location.pathname == ('/' + content.path) ? ' id="highlight"' : '';
+    const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
 
     const htmlContent =
         '<li id="' + content.name.replace(/\s/g,'') + '">' +
