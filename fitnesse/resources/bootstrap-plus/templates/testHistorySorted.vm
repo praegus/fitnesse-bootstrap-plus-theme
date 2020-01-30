@@ -32,7 +32,7 @@
                 #else #set ($failClass = "fail")
                 #end
 
-                <td><a href="/$page.pageName?pageHistory">$page.pageName</a></td>
+                <td><a href="/$page.pageName">$page.pageName</a></td>
                 <td class="$passClass">$page.numberOfTimesPassed</td>
                 <td class="$failClass">$page.numberOfTimesFailed</td>
                 <td>$page.MostRecentRunDate</td>
