@@ -63,6 +63,12 @@ function processSymbolData(str) {
 }
 
 $( document ).ready(function() {
+
+    //This is for testHistoryChecker
+    if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
+        getPageHistory('http://localhost:9090/?testHistory&format=sorted', generateTestHistoryTable);
+    }
+
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
@@ -216,16 +222,28 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
-        generateVersionTable("/?testHistory&format=sorted");
-    console.log("/?testHistor&format=sorted");
 });
 
-function generateVersionTable(url) {
-    $.get(url, function (data) {
+function getPageHistory(url, callback ) {
+    // Needed for unit testing
+    // const $ = require('jquery');
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status, xhr);
+        }
+    });
+}
+
+function generateTestHistoryTable(data) {
         var check = document.getElementById("testHistoryTable");
-        if (check != undefined){
+        if (check !== undefined){
             var parser = new DOMParser();
-            var parserhtml = parser.parseFromString(data, 'text/html');
+            var parserhtml = parser.parseFromString(data, 'text/xml');
             var table = parserhtml.getElementsByTagName("table")[0];
             var rows = table.getElementsByTagName("tr");
             var resultsReportTd = rows[0].childNodes[9];
@@ -237,25 +255,21 @@ function generateVersionTable(url) {
                 var rowNumberToSlice = rows.length - 5;
                 $(rows,"tr").slice(-rowNumberToSlice).remove();
             }
-            for (var i=1;i<rows.length;i++){
+            for (var i = 1; i < rows.length; i++){
                 var cells = rows[i].getElementsByTagName("td");
                 if (cells.length > 9){
                     var colNumberToSlice = cells.length - 9;
-                    $(cells,"td").slice(-colNumberToSlice).remove();
+                    $(cells, "td").slice(-colNumberToSlice).remove();
                 }
             }
-
-
             check.appendChild(table);
         }
         return table;
-
-
-    })
 }
 try {
     module.exports = {
-        generateVersionTable: generateVersionTable
+        generateTestHistoryTable: generateTestHistoryTable,
+        getPageHistory : getPageHistory
     };
 } catch (e) {
 }
