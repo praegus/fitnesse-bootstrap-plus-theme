@@ -109,6 +109,21 @@ it('calls the callback when $.ajax requests are finished', () => {
     expect(callback.mock.calls[0 /*first call*/][0 /*first arg*/]).toEqual(mockData);
 });
 
+// checkIfNewTagIsValid
+it('Test if the tag input element has functions', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHtml =
+        '<div id="addTagDiv">' +
+        '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.createTagInput('#addTagButton');
+    const receivedResult = $('#addTagDiv .tagInputOverview');
+
+    expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
+});
+
 /*
     DELETE TAGS TESTS START
 */

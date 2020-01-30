@@ -366,6 +366,15 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
     }
 }
 
+// function test(data, currentURL, newTags) {
+//     if (checkIfNewTagIsValid() === 'true') {
+//         // Post tags
+//         const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
+//         const url = 'http://' + location.host + '/' + currentURL;
+//         postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
+//     }
+// }
+
 // Post Tag in the html
 function postTagInHtml(successData, neededValues) {
     //Add new tag span layout to page
