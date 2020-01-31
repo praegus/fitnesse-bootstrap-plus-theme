@@ -340,37 +340,28 @@ function GetCurrentTagList(currentURL, newTags, callback) {
 
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentURL, newTags) {
-    const currentTagString = data[0].tags.join(", ");
+    // const currentTagString = data[0].tags.join(", ");
+    const currentTags = data[0].tags;
     const lowerCaseTags = newTags.toLowerCase();
+
     //Check if error message is present and remove it when it's true
     if ($('.tagErrorMessage').length) {
         $('.tagErrorMessage').remove();
     }
     // Check if tag already exist and if it has no special characters
-    if (currentTagString.length > 0 && currentTagString.includes(lowerCaseTags) === true) {
+    if (currentTags.length > 0 && currentTags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
+        $('.tagInputOverview').after('<div class="tagErrorMessage">Tag already exists on this element</div>');
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
         inputBorderStyling();
-        // Show tag error message if not exist
-        if ($('.tagErrorMessage').length === 0) {
-            $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+\\=?;:\'",.<>\\/ not allowed except for -_</div>');
-        }
+        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+=?;:\'",.<>\\/ not allowed except for -_</div>');
     } else {
         // Post tags
-        const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
+        const tagList = currentTags.length > 0 ? currentTags + ", " + lowerCaseTags : lowerCaseTags;
         const url = 'http://' + location.host + '/' + currentURL;
         postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
     }
 }
-
-// function test(data, currentURL, newTags) {
-//     if (checkIfNewTagIsValid() === 'true') {
-//         // Post tags
-//         const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
-//         const url = 'http://' + location.host + '/' + currentURL;
-//         postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
-//     }
-// }
 
 // Post Tag in the html
 function postTagInHtml(successData, neededValues) {
@@ -393,10 +384,7 @@ function inputBorderStyling() {
     });
 }
 /*
-    ADD END
-*/
-/*
-    DELETE START
+    ADD END | DELETE START
 */
 // Place a Click and a hover event an the tags
 function deleteClickAndHoverEvent(deleteTagButton) {
@@ -441,8 +429,5 @@ function deleteTag(successData, neededValues) {
     neededValues.currentTagSpan.remove();
 }
 /*
-    DELETE END
-*/
-/*
-    ADD & DELETE TAGS FUNCTIONS END
+    DELETE END | ADD & DELETE TAGS FUNCTIONS END
 */

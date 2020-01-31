@@ -110,18 +110,57 @@ it('calls the callback when $.ajax requests are finished', () => {
 });
 
 // checkIfNewTagIsValid
-it('Test if the tag input element has functions', () => {
+it('Test if the tag input is valid expect tag to already exists', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const newTags = 'test case';
+    const expectedValue = '<div class="tagErrorMessage">Tag';
     const neededHtml =
         '<div id="addTagDiv">' +
-        '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
-    functions.createTagInput('#addTagButton');
-    const receivedResult = $('#addTagDiv .tagInputOverview');
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', newTags);
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
 
-    expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
+    expect(receivedResult).toContain(expectedValue);
+});
+
+// checkIfNewTagIsValid
+it('Test if the tag input is valid expect tag to have special characters', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const newTags = 'testcase!';
+    const expectedValue = '<div class="tagErrorMessage">`~!';
+    const neededHtml =
+        '<div id="addTagDiv">' +
+        '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+        '<input type="text" class="tagInputOverview">' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', newTags);
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
+
+    expect(receivedResult).toContain(expectedValue);
+});
+
+// checkIfNewTagIsValid
+it('Test if the tag input is valid expect to be correct', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const newTags = 'test';
+    const expectedValue = '<div class="tagErrorMessage">';
+    const neededHtml =
+        '<div id="addTagDiv">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<input type="text" class="tagInputOverview">' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', newTags);
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
+
+    expect(receivedResult).not.toContain(expectedValue);
 });
 
 // postTagInHtml
@@ -131,16 +170,16 @@ it('Test if tag span & delete tag button has been added in the li', () => {
     const neededValues = {currentURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
     const neededHtml =
         '<li id="toTest">' +
-        '<div class="addTagDiv">' +
-        '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
-        '</div>' +
+            '<div class="addTagDiv">' +
+                '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+            '</div>' +
         '</li>';
     const expectedValue =
         '<li id="toTest">' +
-        '<div class="addTagDiv">' +
-        '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
-        '</div>' +
-        '<span class="tag">test1 <i class="fas fa-times deleteTagButton"></i></span>' +
+            '<div class="addTagDiv">' +
+                '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+            '</div>' +
+            '<span class="tag">test1 <i class="fas fa-times deleteTagButton"></i></span>' +
         '</li>';
 
     document.body.innerHTML = neededHtml;
