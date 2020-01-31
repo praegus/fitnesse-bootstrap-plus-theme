@@ -340,7 +340,6 @@ function GetCurrentTagList(currentURL, newTags, callback) {
 
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentURL, newTags) {
-    const currentTags = data[0].tags;
     const lowerCaseTags = newTags.toLowerCase();
 
     //Check if error message is present and remove it when it's true
@@ -348,7 +347,7 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
         $('.tagErrorMessage').remove();
     }
     // Check if tag already exist and if it has no special characters
-    if (currentTags.length > 0 && currentTags.includes(lowerCaseTags) === true) {
+    if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
         $('.tagInputOverview').after('<div class="tagErrorMessage">Tag already exists on this element</div>');
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
