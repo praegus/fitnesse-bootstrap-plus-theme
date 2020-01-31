@@ -254,9 +254,6 @@ $( document ).ready(function() {
 
     // Click add tag function
     $('.addTag').click(function () {
-        console.log($(this));
-        console.log($('.addTag'));
-
         createTagInput($(this));
     });
 

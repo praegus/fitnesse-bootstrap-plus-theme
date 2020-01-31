@@ -124,11 +124,37 @@ it('Test if the tag input element has functions', () => {
     expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
 });
 
+// inputBorderStyling
+it('Test if input element has red border', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHtml = '<input type="text" class="tagInputOverview">';
+    const expectedValue = '<input type="text" class="tagInputOverview" style="border-color: red; outline: 0;">';
+
+    document.body.innerHTML = neededHtml;
+    functions.inputBorderStyling();
+    const receivedResult = document.getElementsByClassName('tagInputOverview')[0].outerHTML;
+
+    expect(receivedResult).toMatch(expectedValue);
+});
+
 /*
     DELETE TAGS TESTS START
 */
+// deleteClickAndHoverEvent
+it('Test if delete tag button will have a click and hover function', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHtml = '<span class="tag">test1<i class="fas fa-times deleteTagButton" style="display: none;"></span>';
+
+    document.body.innerHTML = neededHtml;
+    const deleteTagButton = '.deleteTagButton';
+    functions.deleteClickAndHoverEvent(deleteTagButton);
+    const receivedResult = document.getElementsByClassName('deleteTagButton');
+
+    expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
+});
+
 // joinTagList
-it('check if chosen tag is removed out of the current tag list', () => {
+it('Test if chosen tag is removed out of the current tag list', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const chosenTag = 'test2';
     const neededHtml =
