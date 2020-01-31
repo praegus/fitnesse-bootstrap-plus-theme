@@ -124,6 +124,32 @@ it('Test if the tag input element has functions', () => {
     expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
 });
 
+// postTagInHtml
+it('Test if tag span & delete tag button has been added in the li', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const successData = '{status: "OK"}';
+    const neededValues = {currentURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
+    const neededHtml =
+        '<li id="toTest">' +
+        '<div class="addTagDiv">' +
+        '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+        '</div>' +
+        '</li>';
+    const expectedValue =
+        '<li id="toTest">' +
+        '<div class="addTagDiv">' +
+        '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+        '</div>' +
+        '<span class="tag">test1 <i class="fas fa-times deleteTagButton"></i></span>' +
+        '</li>';
+
+    document.body.innerHTML = neededHtml;
+    functions.postTagInHtml(successData, neededValues);
+    const receivedResult = document.getElementById('toTest').outerHTML;
+
+    expect(receivedResult).toMatch(expectedValue);
+});
+
 // inputBorderStyling
 it('Test if input element has red border', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
