@@ -340,7 +340,6 @@ function GetCurrentTagList(currentURL, newTags, callback) {
 
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentURL, newTags) {
-    // const currentTagString = data[0].tags.join(", ");
     const currentTags = data[0].tags;
     const lowerCaseTags = newTags.toLowerCase();
 
@@ -357,7 +356,8 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
         $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+=?;:\'",.<>\\/ not allowed except for -_</div>');
     } else {
         // Post tags
-        const tagList = currentTags.length > 0 ? currentTags + ", " + lowerCaseTags : lowerCaseTags;
+        const currentTagString = data[0].tags.join(", ");
+        const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
         const url = 'http://' + location.host + '/' + currentURL;
         postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
     }
