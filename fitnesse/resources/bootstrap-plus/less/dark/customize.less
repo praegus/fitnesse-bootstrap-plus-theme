@@ -1,6 +1,25 @@
+html {
+  height: 100%;
+}
+
 body {
-  padding-top: 100px;
-  padding-bottom: 100px;
+  height: 100%;
+}
+
+#contentDiv {
+  height: 100%;
+  display: flex;
+}
+
+#content {
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  padding: 55px 0 100px;
+}
+
+article {
+  padding-top: 15px;
 }
 
 header,
@@ -19,6 +38,7 @@ footer {
   background-color: @navbar-default-bg;
   min-height: @navbar-height;
   border-top: 1px solid @navbar-default-border;
+  z-index: 5;
 }
 
 input, select, textarea {
@@ -1022,4 +1042,52 @@ kbd {
 
 #bootstrap-help-list{
   float:right;
+}
+
+// SIDEBAR
+#sidebar {
+  width: 300px;
+  min-width: 300px;
+  max-width: 300px;
+  height: 100%;
+  padding: 65px 0 61px;
+  background-color: #464646;
+  border-right: 1px solid #292929;
+  overflow: auto;
+}
+
+#highlight {
+  background-color: #303030;
+}
+
+.displayNone {
+  display: none;
+}
+
+#sidebarContent {
+  padding: 0 15px;
+}
+
+#sidebarContent li {
+  list-style-type: none;
+}
+
+#sidebarContent ul {
+  padding-left: 18px;
+}
+
+#sidebarContent div {
+  padding: 1px 4px;
+}
+
+#sidebarContent a.suite {
+  font-weight: bold;
+}
+
+#sidebarContent a.static {
+  font-style: italic;
+}
+
+#sidebarContent a.pruned {
+  text-decoration: line-through;
 }
