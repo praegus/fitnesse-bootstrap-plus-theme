@@ -5,6 +5,9 @@ const dummyData = require('./mockup-data/versionCheck/defaultDummyData');
 const toolchainDummyData = require('./mockup-data/versionCheck/toolchainDummyData');
 
 it('Test if $.ajax has the correct params', () => {
+    //MAKE CONST URL
+    const $ = require('jquery');
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const dummyCallback = () => {
     };
     const expectedResult = {
@@ -14,9 +17,7 @@ it('Test if $.ajax has the correct params', () => {
         success: expect.any(Function),
         error: expect.any(Function)
     };
-    //MAKE CONST URL
-    const $ = require('jquery');
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+
     jsfile.getVersionData(dummyCallback, 'http://localhost:9090/?mavenVersions');
 
     // Now make sure that $.ajax was properly called
