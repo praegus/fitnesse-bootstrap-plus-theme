@@ -169,22 +169,26 @@ it('Test if tag span & delete tag button has been added in the li', () => {
     const successData = '{status: "OK"}';
     const neededValues = {currentURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
     const neededHtml =
-        '<li id="toTest">' +
-            '<div class="addTagDiv">' +
-                '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
-            '</div>' +
-        '</li>';
+        '<div class="contents">' +
+            '<li id="toTest">' +
+                '<div class="addTagDiv">' +
+                    '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+                '</div>' +
+            '</li>' +
+        '</div>';
     const expectedValue =
-        '<li id="toTest">' +
-            '<div class="addTagDiv">' +
-                '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
-            '</div>' +
-            '<span class="tag">test1 <i class="fas fa-times deleteTagButton"></i></span>' +
-        '</li>';
+        '<div class="contents">' +
+            '<li id="toTest">' +
+                '<div class="addTagDiv">' +
+                    '<a href="TestSuiteDemo.FrontEndTests.ScenarioLibrary" class="static">Scenario Library</a>' +
+                '</div>' +
+                '<span class="tag">test1 <i class="fas fa-times deleteTagButton"></i></span>' +
+            '</li>' +
+        '</div>';
 
     document.body.innerHTML = neededHtml;
     functions.postTagInHtml(successData, neededValues);
-    const receivedResult = document.getElementById('toTest').outerHTML;
+    const receivedResult = document.getElementsByClassName('contents')[0].outerHTML;
 
     expect(receivedResult).toMatch(expectedValue);
 });

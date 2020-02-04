@@ -258,7 +258,7 @@ $( document ).ready(function() {
     });
 
     // Add delete button when page is loaded in
-    $('.tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
 
     deleteClickAndHoverEvent('.deleteTagButton');
 });
@@ -365,7 +365,7 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
 // Post Tag in the html
 function postTagInHtml(successData, neededValues) {
     //Add new tag span layout to page
-    $("a[href$='" + neededValues.currentURL + "']").parent().after("<span class='tag'>" + neededValues.newTags + " <i class=\"fas fa-times deleteTagButton\"></i></span>");
+    $(".contents a[href$='" + neededValues.currentURL + "']").parent().after("<span class='tag'>" + neededValues.newTags + " <i class=\"fas fa-times deleteTagButton\"></i></span>");
     //Remove input field
     $('.tagInputOverview').remove();
 
