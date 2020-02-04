@@ -234,7 +234,7 @@ $( document ).ready(function() {
 
 function getPageHistory(url, callback ) {
     // Needed for unit testing
-    const $ = require('jquery');
+    //const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
