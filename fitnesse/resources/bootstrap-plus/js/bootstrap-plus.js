@@ -1,3 +1,11 @@
+// Needed for Jest
+try{
+    module.exports = {
+        displayToolTip: displayToolTip
+    };
+}catch (e) {}
+
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -24,13 +32,13 @@ var getCookie = function (name) {
 var parseCookies = function () {
 	var cookieData = (typeof document.cookie === 'string' ? document.cookie : '').trim();
 
-      return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
-              var cookiePair = cookieString.split('=');
+	return (cookieData ? cookieData.split(';') : []).reduce(function (cookies, cookieString) {
+		var cookiePair = cookieString.split('=');
 
-              cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
+		cookies[cookiePair[0].trim()] = cookiePair.length > 1 ? cookiePair[1].trim() : '';
 
-              return cookies;
-      }, {});
+		return cookies;
+	}, {});
 };
 
 
@@ -63,6 +71,9 @@ function processSymbolData(str) {
 }
 
 $( document ).ready(function() {
+   // Tooltips
+   getToolTips(displayToolTip);
+
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
@@ -244,6 +255,42 @@ $( document ).ready(function() {
     });
 });
 
+/*
+    FITNESSE TOOLTIPS
+*/
+// Get list of tooltips
+function getToolTips(callback){
+    // if the document has been loaded, then get data from toolTipData.txt
+    $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data){
+        const tooltips = data;
+        // Activate function displayToolTip
+        callback(tooltips);
+    });
+}
+
+// Picks random tooltip
+function displayToolTip(text) {
+    // Picks random tip
+    const tipsArray = text.split("\n");
+    const pickedTip = Math.floor(Math.random() * tipsArray.length);
+
+    placeToolTip(tipsArray, pickedTip);
+
+    // Returns chosen tip in string for jest
+    return pickedTip+","+tipsArray[pickedTip];
+}
+
+// Places picked tooltips on the page
+function placeToolTip(tipsArray, pickedTip) {
+    const textfield = document.getElementById("tooltip-text");
+    if (textfield) {
+        textfield.innerText = tipsArray[pickedTip];
+    }
+}
+
+/*
+    ADD TAG
+*/
 function addTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();

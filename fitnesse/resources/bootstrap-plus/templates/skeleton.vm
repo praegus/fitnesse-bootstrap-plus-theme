@@ -80,9 +80,40 @@
    #parse( $headerTemplate )
   </header>
 
+
   <article>
+   #if(!$bodyClass.equalsIgnoreCase("EditPage"))
+    ## Page Header
+    <a href="?testHistory">
+     <span class="btn btn-primary">Test History</span>
+    </a>
+    <a href="?pageHistory">
+     <span class="btn btn-primary">Page History</span>
+    </a>
+    <a href="?properties">
+     <span class="btn btn-secondary">Properties</span>
+    </a>
+    <br>
+    <hr>
+
+    #if($pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
+     ## Tooltips
+     <div id="tooltip-div">
+      <p id="tooltip-text"></p>
+     </div>
+
+    #end
+   #end
+
    #parse( $mainTemplate )
   </article>
+
+  ## Tooltips edit page
+  #if($bodyClass.equalsIgnoreCase("EditPage"))
+   <div id="tooltip-div-edit">
+    <p id="tooltip-text"></p>
+   </div>
+  #end
 
   #if( $!footerTemplate )
   <footer>
