@@ -1,3 +1,11 @@
+try {
+    module.exports = {
+        generateTestHistoryTable: generateTestHistoryTable,
+        getPageHistory : getPageHistory
+    };
+} catch (e) {
+}
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -240,38 +248,33 @@ function getPageHistory(url, callback ) {
 }
 
 function generateTestHistoryTable(data) {
-    // Needed for unit testing
-    const $ = require('jquery');
-        var check = document.getElementById("testHistoryTable");
-        if (check !== undefined){
-            var parser = new DOMParser();
-            var parserhtml = parser.parseFromString(data, 'text/xml');
-            var table = parserhtml.getElementsByTagName("table")[0];
-            var rows = table.getElementsByTagName("tr");
-            var resultsReportTd = rows[0].childNodes[9];
-            // set colspan
-            resultsReportTd.innerText = "Last 5 Results";
-            resultsReportTd.setAttribute("colspan",5);
+    var check = document.getElementById("testHistoryTable");
+    if (check !== undefined) {
+        var parser = new DOMParser();
+        var parserhtml = parser.parseFromString(data, 'text/html');
+        var table = parserhtml.getElementsByTagName("table")[0];
+        var rows = table.getElementsByTagName("tr");
 
-            if(rows.length > 5){
-                var rowNumberToSlice = rows.length - 5;
-                $(rows,"tr").slice(-rowNumberToSlice).remove();
-            }
-            for (var i = 1; i < rows.length; i++){
-                var cells = rows[i].getElementsByTagName("td");
-                if (cells.length > 9){
-                    var colNumberToSlice = cells.length - 9;
-                    $(cells, "td").slice(-colNumberToSlice).remove();
-                }
-            }
-            check.appendChild(table);
+        // Make row length no longer than 5
+        if (rows.length > 5) {
+            var rowNumberToSlice = rows.length - 5;
+            $(rows, "tr").slice(-rowNumberToSlice).remove();
         }
-        return table;
+
+        // Make new column named "last 5 results"
+        var resultsReportTd = rows[0].childNodes[9];
+        resultsReportTd.innerText = "Last 5 Results";
+        resultsReportTd.setAttribute("colspan", 5);
+        // Make cell length from column "last 5 results" no longer than 5
+        for (var i = 1; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+            // 4 columns + 5 cells
+            if (cells.length > 9) {
+                $(cells, "td").slice(9).remove();
+            }
+        }
+
+        check.appendChild(table);
+    }
 }
-try {
-    module.exports = {
-        generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory : getPageHistory
-    };
-} catch (e) {
-}
+
