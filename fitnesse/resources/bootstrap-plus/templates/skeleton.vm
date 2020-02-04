@@ -82,7 +82,7 @@
 
 
   <article>
-   #if(!$bodyClass.contains("edit"))
+   #if(!$bodyClass.equalsIgnoreCase("EditPage"))
     ## Page Header
     <a href="?testHistory">
      <span class="btn btn-primary">Test History</span>
@@ -109,7 +109,7 @@
   </article>
 
   ## Tooltips edit page
-  #if($bodyClass.contains("edit"))
+  #if($bodyClass.equalsIgnoreCase("EditPage"))
    <div id="tooltip-div-edit">
     <p id="tooltip-text"></p>
    </div>
