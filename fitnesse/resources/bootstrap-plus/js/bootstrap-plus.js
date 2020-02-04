@@ -1,3 +1,14 @@
+// Needed for Jest
+try {
+    module.exports = {
+        getSidebarContent: getSidebarContent,
+        getSidebarContentHtml: getSidebarContentHtml,
+        getCurrentWorkSpace: getMainWorkSpace,
+        placeSidebarContent: placeSidebarContent,
+        displayToolTip: displayToolTip
+    };
+} catch (e) {}
+
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -62,7 +73,13 @@ function processSymbolData(str) {
     return result.replace(/&lt;-|-&gt;/g, '');
 }
 
+/*
+    DOCUMENT READY START
+*/
 $( document ).ready(function() {
+   // Tooltips
+   getToolTips(displayToolTip);
+
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
@@ -92,6 +109,17 @@ $( document ).ready(function() {
                });
        }
    });
+
+    // Add hidden tag buttons upon entering overview page
+    $(".test, .suite, .static").each(function () {
+        $(this).wrap("<div class='addTagDiv'></div>");
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
+
+    // Show sidebar
+    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+        getSidebarContent(placeSidebarContent);
+    }
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
 
@@ -168,6 +196,12 @@ $( document ).ready(function() {
                }
           );
 
+    $('body').on('click', '#sidebar-switch', function(e) {
+            e.preventDefault();
+            switchSidebar();
+        }
+    );
+
 
     $('body').on('click', '.coll', function() {
                 if($(this).children("input").is(":checked")) {
@@ -216,5 +250,249 @@ $( document ).ready(function() {
                 $('#autoSave-switch').addClass('fa-toggle-on');
             }
         }
-});
 
+    function switchSidebar() {
+        if(getCookie('sidebar') == 'true') {
+            document.cookie = "sidebar=false";
+            $('#sidebar-switch').removeClass('fa-toggle-on');
+            $('#sidebar-switch').addClass('fa-toggle-off');
+            $('#sidebar').addClass('displayNone');
+        } else {
+            document.cookie = "sidebar=true";
+            $('#sidebar-switch').removeClass('fa-toggle-off');
+            $('#sidebar-switch').addClass('fa-toggle-on');
+            $('#sidebar').removeClass('displayNone');
+            getSidebarContent(placeSidebarContent);
+        }
+    }
+
+    //Add hover function to type of page
+    function tagButtonHover(pageType) {
+        $('.' + pageType).parent().hover(
+            function () {
+                $(this).find('.addTag:first').css("visibility", "visible");
+            }, function () {
+                $(this).find('.addTag:first').css("visibility", "hidden");
+            }
+        );
+    }
+
+    tagButtonHover("test");
+    tagButtonHover("static");
+    tagButtonHover("suite");
+
+    // Click add tag function
+    $('.addTag').click(function () {
+        addTagInput($(this));
+    });
+});
+/*
+    DOCUMENT READY END
+*/
+
+/*
+    SIDEBAR FUNCTIONS START
+*/
+// Sidebar content
+function getSidebarContent(callback) {
+    // Needed for unit testing
+    // const $ = require('jquery');
+    $.ajax({
+        type: 'GET',
+        url: "http://" + location.host + getMainWorkSpace(location.pathname) + "?responder=tableOfContents",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: contentArray => callback(contentArray),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status, xhr);
+        }
+    });
+}
+
+function getMainWorkSpace(mainWorkspace) {
+    if (mainWorkspace.includes('.')) {
+        mainWorkspace = mainWorkspace.slice(0, mainWorkspace.indexOf("."));
+    }
+    return mainWorkspace;
+}
+
+function placeSidebarContent(contentArray) {
+    // Empty sidebar content
+    $('#sidebarContent').html("");
+
+    contentArray.forEach(layerOne => {
+        // Place the li in the html
+        $('#sidebarContent').append(getSidebarContentHtml(layerOne));
+
+        // If there are children
+        if (layerOne.children) {
+            sidebarContentLayerLoop(layerOne.name.replace(/\s/g,''), layerOne.children);
+        }
+    });
+
+    $('#sidebarContent .fa-cogs').click(function() {
+        $(this).parent().siblings('ul').toggle();
+    });
+}
+
+function sidebarContentLayerLoop(suiteName, children) {
+    // Place new ul in the correct li
+    $('#' + suiteName).append('<ul></ul>');
+
+    children.forEach(content => {
+        // Place new li in the new made ul
+        $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
+
+        if (content.children) {
+            sidebarContentLayerLoop(content.name.replace(/\s/g,''), content.children)
+        }
+    });
+}
+
+// Generate the li for the html
+function getSidebarContentHtml(content) {
+    const iconClass = content.type.includes('suite') ? "fa fa-cogs icon-test" : content.type.includes('test') ? "fa fa-cog icon-suite": "fa fa-file-o icon-static";
+    const prunedClass = content.type.includes('pruned') ? " pruned": "";
+    const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
+
+    const htmlContent =
+        '<li id="' + content.name.replace(/\s/g,'') + '">' +
+            '<div' + highlight + '>' +
+                '<i class="' + iconClass + '" aria-hidden="true" title="show/hide"></i>' +
+                '&nbsp;' +
+                '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
+            '</div>' +
+        '</li>';
+    return htmlContent;
+}
+/*
+    SIDEBAR FUNCTIONS END
+*/
+
+/*
+    FITNESSE TOOLTIPS
+*/
+// Get list of tooltips
+function getToolTips(callback){
+    // if the document has been loaded, then get data from toolTipData.txt
+    $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data){
+        const tooltips = data;
+        // Activate function displayToolTip
+        callback(tooltips);
+    });
+}
+
+// Picks random tooltip
+function displayToolTip(text) {
+    // Picks random tip
+    const tipsArray = text.split("\n");
+    const pickedTip = Math.floor(Math.random() * tipsArray.length);
+
+    placeToolTip(tipsArray, pickedTip);
+
+    // Returns chosen tip in string for jest
+    return pickedTip+","+tipsArray[pickedTip];
+}
+
+// Places picked tooltips on the page
+function placeToolTip(tipsArray, pickedTip) {
+    const textfield = document.getElementById("tooltip-text");
+    if (textfield) {
+        textfield.innerText = tipsArray[pickedTip];
+    }
+}
+
+/*
+    ADD TAG
+*/
+function addTagInput(currentAddTagButton) {
+    //Remove all existing tag input fields
+    $('.tagInputOverview').remove();
+    //Add input field
+    $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
+
+    //Add focus after clicking button
+    $('.tagInputOverview').focus();
+
+    $('.tagInputOverview').focusout(function () {
+        $('.tagInputOverview').remove();
+    });
+
+    $('.tagInputOverview').keyup(function (event) {
+        //If "Enter" button is pressed
+        if (event.keyCode == 13) {
+            //Get current input value & replace empty spaces at the start/end of input
+            const inputValue = $('.tagInputOverview').val().trim();
+            //Get href value of the a tag
+            const currentURL = $(currentAddTagButton).siblings('a').attr('href');
+            //Call get current tag list function
+            GetCurrentTagList(currentURL, inputValue);
+        }
+    });
+}
+
+//Get current tag list function
+function GetCurrentTagList(currentURL, newTags) {
+    //Get current tag list
+    $.ajax({
+        type: 'GET',
+        url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function (data) {
+            //Convert data object to string
+            const currentTagList = data[0].tags.join(", ");
+            //Convert input tags to lowercase
+            const lowerCaseTags = newTags.toLowerCase();
+            //Check if there are any tags currently present
+            if (currentTagList.length > 0) {
+                //Check if input tag exists in current tag list
+                const checkIfExists = currentTagList.includes(lowerCaseTags);
+                //If tag doesn't exist yet, post it
+                if (checkIfExists === false) {
+                    //Combine the current tag list and the input tag(s) in 1 variable
+                    const newTagList = currentTagList + ", " + lowerCaseTags;
+                    //Send current href value, new tag list and input tag(s) to post tag function
+                    postTag(currentURL, newTagList, newTags);
+                } else {
+                    $('.tagInputOverview').css({
+                        "border-color": "red",
+                        "outline": "0"
+                    });
+                }
+            }
+            //If there are no tags present only post the input tags
+            else {
+                postTag(currentURL, lowerCaseTags, newTags);
+            }
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+//Post new tag list function
+function postTag(currentURL, tagList, inputTag) {
+    $.ajax({
+        type: 'POST',
+        url: "http://" + location.host + "/" + currentURL,
+        contentType: 'application/json; charset=utf-8',
+        data: 'responder=updateTags&suites=' + tagList,
+        dataType: 'json',
+        success: function (data) {
+            //Add new tag span layout to page
+            $("a[href$='" + currentURL + "']").parent().after("<span class='tag'>" + inputTag + "</span>");
+            //Remove input field
+            $('.tagInputOverview').remove();
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
