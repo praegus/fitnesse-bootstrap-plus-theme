@@ -74,7 +74,7 @@ $( document ).ready(function() {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
-        getPageHistory('http://localhost:9090/?testHistory&format=sorted', generateTestHistoryTable);
+        getPageHistory('http://localhost:' + window.location.port + '/?testHistory&format=sorted', generateTestHistoryTable);
     }
 
    //If the first row is hidden, don't use header row styling
@@ -248,26 +248,26 @@ function getPageHistory(url, callback ) {
 }
 
 function generateTestHistoryTable(data) {
-    var check = document.getElementById("testHistoryTable");
+    const check = document.getElementById("testHistoryTable");
     if (check !== undefined) {
-        var parser = new DOMParser();
-        var parserhtml = parser.parseFromString(data, 'text/html');
-        var table = parserhtml.getElementsByTagName("table")[0];
-        var rows = table.getElementsByTagName("tr");
+        const parser = new DOMParser();
+        let parserhtml = parser.parseFromString(data, 'text/html');
+        let table = parserhtml.getElementsByTagName("table")[0];
+        const rows = table.getElementsByTagName("tr");
 
         // Make row length no longer than 5
         if (rows.length > 5) {
-            var rowNumberToSlice = rows.length - 5;
+            let rowNumberToSlice = rows.length - 5;
             $(rows, "tr").slice(-rowNumberToSlice).remove();
         }
 
         // Make new column named "last 5 results"
-        var resultsReportTd = rows[0].childNodes[9];
+        let resultsReportTd = rows[0].childNodes[9];
         resultsReportTd.innerText = "Last 5 Results";
         resultsReportTd.setAttribute("colspan", 5);
         // Make cell length from column "last 5 results" no longer than 5
-        for (var i = 1; i < rows.length; i++) {
-            var cells = rows[i].getElementsByTagName("td");
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
             // 4 columns + 5 cells
             if (cells.length > 9) {
                 $(cells, "td").slice(9).remove();
