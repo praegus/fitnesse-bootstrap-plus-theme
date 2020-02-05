@@ -502,7 +502,7 @@ function postTag(currentURL, tagList, inputTag) {
 }
 
 function getVersionData(callback, url) {
-    //  const $ = require('jquery');
+     // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
