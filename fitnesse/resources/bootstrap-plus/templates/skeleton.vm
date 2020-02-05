@@ -147,6 +147,7 @@
             #end
     </div>
 </div>
+
   #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
