@@ -534,16 +534,16 @@ if(data != undefined){
             // checks if current version is lower than new version
             if (data[i].formatCurrentVersion < data[i].formatLatestVersion) {
                 //set status text
-                var status = 'Outdated';
+                const status = 'Outdated';
                 data[i]['status'] = status;
             } else if (data[i].formatCurrentVersion === data[i].formatLatestVersion) {
                 //set status text
-                var status = 'Up-to-date';
+                const status = 'Up-to-date';
                 data[i]['status'] = status;
             }
         } else {
             //set status text
-            var status = 'Ahead';
+            const status = 'Ahead';
             data[i]['status'] = status;
         }
         //append to generate content
