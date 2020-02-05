@@ -4,16 +4,24 @@
 #if($themeType == "")
     #set( $themeType = 'bootstrap-plus' )
 #end
+
 #set( $collapseCookieName = "collapseSymbols")
 #set ($collapseSymbols = $request.getCookie($collapseCookieName))
 #if($collapseSymbols == "")
     #set( $collapseSymbols = 'false' )
 #end
+
 #set( $autoSaveCookieName = "autoSave")
 #set ($autoSave = $request.getCookie($autoSaveCookieName))
 #if($autoSave == "")
     #set( $autoSave = 'false' )
 #end
+
+    #set( $sidebarCookieName = "sidebar")
+    #set ($sidebar = $request.getCookie($sidebarCookieName))
+    #if($sidebar == "")
+        #set( $sidebar = 'false' )
+    #end
 <html>
  <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -40,7 +48,6 @@
   #else
    <link rel="shortcut icon" type="image/png" href="${contextRoot}files/fitnesse/images/favicon.png" />
   #end
-  <link rel="csv file" type="text/csv" href="${contextRoot}files/fitnesse/bootstrap-plus/csv/bootstrap-version.csv">
 
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_wiki.css" />
   <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/css/fitnesse_pages.css" />
@@ -56,7 +63,7 @@
   <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
 
  </head>
- <body#if( $bodyClass ) class="$bodyClass"#end">
+ <body#if( $bodyClass ) class="$bodyClass"#end>
 
   <nav class="navbar-fixed-top " role="navigation">
    <div class="navbar navbar-default">
@@ -74,32 +81,73 @@
     #end
 
    </div>
-   #parse( 'breadcrumb.vm' )
   </nav>
 
-  <header>
-   #parse( $headerTemplate )
-  </header>
+<div id="contentDiv">
+    ## Sidebar
+    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
+        <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
+            <ul id="sidebarContent"></ul>
+        </div>
+    #end
 
-  <article>
-   #parse( $mainTemplate )
+    <div id="content">
+        #parse( 'breadcrumb.vm' )
+
+        <header>
+            #parse( $headerTemplate )
+        </header>
+
+        <article>
+           #if(!$bodyClass.equalsIgnoreCase("EditPage"))
+            ## Page Header
+            <a href="?testHistory">
+             <span class="btn btn-primary">Test History</span>
+            </a>
+            <a href="?pageHistory">
+             <span class="btn btn-primary">Page History</span>
+            </a>
+            <a href="?properties">
+             <span class="btn btn-secondary">Properties</span>
+            </a>
+            <br>
+            <hr>
+
+            #if($pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
+             ## Tooltips
+             <div id="tooltip-div">
+              <p id="tooltip-text"></p>
+             </div>
+
+            #end
+           #end
+
+           #parse( $mainTemplate )
+          </article>
+           ## Tooltips edit page
+            #if($bodyClass.equalsIgnoreCase("EditPage"))
+             <div id="tooltip-div-edit">
+              <p id="tooltip-text"></p>
+             </div>
+            #end
+    </div>
+</div>
    #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
-    <table id="versioncheck">
-     <tbody>
-     <td colspan="4">
-      <b>Versioncheck</b>
-     </td>
-     <tr>
-      <td><b>Name</b></td>
-      <td><b>Current Version</b></td>
-      <td><b>Newest version</b></td>
-      <td><b>Status</b></td>
-     </tr>
-     </tbody>
+   <table id="versioncheck">
+    <tbody>
+    <td colspan="4">
+     <b>Versioncheck</b>
+    </td>
+    <tr>
+     <td><b>Name</b></td>
+     <td><b>Current Version</b></td>
+     <td><b>Newest version</b></td>
+     <td><b>Status</b></td>
+    </tr>
+    </tbody>
    </table>
-  #end
+   #end
   </article>
-
   #if( $!footerTemplate )
   <footer>
    #parse( $footerTemplate )
