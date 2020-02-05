@@ -516,47 +516,43 @@ function getVersionData(callback, url) {
 }
 
 function versionCheck(data) {
-if(data != undefined){
-    let status;
-    for (let i = 0; i < data.length; i++) {
-        // the toolchain version data has irregular naming of current version, make it regular so the rest of the function can use it as normal
-        if (data[i].hasOwnProperty('version')) {
-            data[i]["currentVersion"] = data[i]['version'];
-            delete data[i]['version'];
-        }
-    //clean string so it can be used as an int for version comparison
-    data[i]['formatCurrentVersion'] = parseInt(data[i].currentVersion.replace(/\D/g, ''));
-    data[i]['formatLatestVersion'] = parseInt(data[i].latest.replace(/\D/g, ''));
-
-        //checks if the current version is equal or lower then the newest for error handling
-        if (data[i].formatCurrentVersion <= data[i].formatLatestVersion) {
-            // checks if current version is lower than new version
-            if (data[i].formatCurrentVersion < data[i].formatLatestVersion) {
-                //set status text
-                 status = 'Outdated';
-                data[i]['status'] = status;
-            } else if (data[i].formatCurrentVersion === data[i].formatLatestVersion) {
-                //set status text
-                 status = 'Up-to-date';
-                data[i]['status'] = status;
+    if (data != undefined) {
+        for (let i = 0; i < data.length; i++) {
+            // the toolchain version data has irregular naming of current version, make it regular so the rest of the function can use it as normal
+            if (data[i].hasOwnProperty('version')) {
+                data[i]["currentVersion"] = data[i]['version'];
+                delete data[i]['version'];
             }
-        } else {
-            //set status text
-             status = 'Ahead';
-            data[i]['status'] = status;
-        }
-        //append to generate content
-        $('#versioncheck').append(
-            "<tr class='check'>" +
+            //clean string so it can be used as an int for version comparison
+            data[i]['formatCurrentVersion'] = parseInt(data[i].currentVersion.replace(/\D/g, ''));
+            data[i]['formatLatestVersion'] = parseInt(data[i].latest.replace(/\D/g, ''));
+
+            //checks if the current version is equal or lower then the newest for error handling
+            if (data[i].formatCurrentVersion <= data[i].formatLatestVersion) {
+                // checks if current version is lower than new version
+                if (data[i].formatCurrentVersion < data[i].formatLatestVersion) {
+                    //set status text
+                    data[i]['status'] = 'Outdated';
+                } else if (data[i].formatCurrentVersion === data[i].formatLatestVersion) {
+                    //set status text
+                    data[i]['status'] = 'Up-to-date';
+                }
+            } else {
+                //set status text
+                data[i]['status'] = 'Ahead';
+            }
+            //append to generate content
+            $('#versioncheck').append(
+                "<tr class='check'>" +
                 "<td><p>" + data[i].artifactid.replace(/\-/g, ' ') + "</p></td>" +
                 "<td><p>" + data[i].currentVersion.replace('-SNAPSHOT', '') + "</p></td>" +
                 "<td><p>" + data[i].latest + "</p></td>" +
-                "<td class='" + status + "'><p>" + status + "</p></td>" +
-            "</tr>");
-        //return for unit testing
-}
-    return data[0];
+                "<td class='" + data[i].status + "'><p>" + data[i].status + "</p></td>" +
+                "</tr>");
 
+        }
+        //return for unit testing
+        return data[0];
     }
 
 }
