@@ -61,3 +61,9 @@ it('if version is ahead expect status to ahead', () => {
     expect(jsfile.versionCheck(dummyData).status).toBe("Ahead");
 
 });
+
+it('if data is null expect it to be undefined', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+
+    expect(jsfile.versionCheck()).toBe(undefined);
+});
