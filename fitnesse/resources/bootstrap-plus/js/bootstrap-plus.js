@@ -1,10 +1,3 @@
-try {
-    module.exports = {
-
-    };
-} catch (e) {
-}
-
 // Needed for Jest
 try {
     module.exports = {
@@ -88,8 +81,8 @@ function processSymbolData(str) {
     DOCUMENT READY START
 */
 $( document ).ready(function() {
-    // Tooltips
-    getToolTips(displayToolTip);
+   // Tooltips
+   getToolTips(displayToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
