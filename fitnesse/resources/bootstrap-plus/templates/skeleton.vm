@@ -121,6 +121,7 @@
 
             #end
            #end
+
            #parse( $mainTemplate )
             #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
                 <table id="versioncheck">
