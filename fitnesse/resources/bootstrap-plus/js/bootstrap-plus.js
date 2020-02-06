@@ -416,7 +416,7 @@ function getPageHistory(url, callback ) {
 }
 
 function generateTestHistoryTable(data) {
-    const check = document.getElementById("testHistoryTable");
+    const check = document.getElementById("recentTestHistoryTable");
     if (check !== undefined) {
         const parser = new DOMParser();
         let parserhtml = parser.parseFromString(data, 'text/html');
