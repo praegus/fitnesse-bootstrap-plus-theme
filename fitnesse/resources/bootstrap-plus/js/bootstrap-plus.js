@@ -100,7 +100,7 @@ $( document ).ready(function() {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
-        getPageHistory('http://localhost:' + window.location.port + '/?testHistory&format=sorted', generateTestHistoryTable);
+        getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
 
    //If the first row is hidden, don't use header row styling
