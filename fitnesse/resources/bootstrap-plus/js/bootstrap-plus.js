@@ -616,23 +616,25 @@ function versionCheck(data) {
                 delete versionData['version'];
             }
 
+            // split version strings by dot and parse them to ints
+            const semanticCurrentVersion = versionData.currentVersion.split('.').map(Number);
+            const semanticLatestVersion = versionData.latest.split('.').map(Number);
 
-    const semanticCurrentVersion = versionData.currentVersion.split('.').map( Number );
-    const semanticLatestVersion = versionData.latest.split('.').map( Number );
+            for (let i = 0; i < semanticLatestVersion.length; i++) {
+                // if current version is lower then the latest version OR the current version has a number less and the last current version number was less then the last latest version number then status is outdated
+                if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined || semanticCurrentVersion[i] === undefined && semanticLatestVersion[i - 1] > semanticCurrentVersion[i - 1]) {
+                    versionData['status'] = "Outdated";
+                }
 
-    for(let i = 0; i< semanticLatestVersion.length; i++){
-        console.log(semanticCurrentVersion[i]+semanticLatestVersion[i]);
-        if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined || semanticCurrentVersion[i] == undefined && semanticLatestVersion[i] != 0) {
-            versionData['status'] = "Outdated";
-        }
-
-        if (semanticCurrentVersion[i + 1] === undefined && semanticLatestVersion[i + 1] === undefined && versionData.status === undefined && semanticLatestVersion[i] == semanticCurrentVersion[i]) {
-            versionData['status'] = "Up-to-date";
-        }
-    }
-    if (versionData.status === undefined){
-        versionData['status'] = 'Ahead';
-    }
+                // if status hasnt been set yet and there are no more current or last version numbers after the current index and the current index latest and current version numbers equal then status is up-to-date
+                if (versionData.status === undefined && semanticCurrentVersion[i + 1] === undefined && semanticLatestVersion[i + 1] === undefined && semanticLatestVersion[i] === semanticCurrentVersion[i]) {
+                    versionData['status'] = "Up-to-date";
+                }
+            }
+            //if after the loop the status hasnt been set yet then status is ahead
+            if (versionData.status === undefined) {
+                versionData['status'] = 'Ahead';
+            }
 
             // Place in html
             $('#versioncheck').append(

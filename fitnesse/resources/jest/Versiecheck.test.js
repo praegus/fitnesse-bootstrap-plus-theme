@@ -92,7 +92,7 @@ it('if version is ahead expect status to ahead', () => {
     const neededHTML = '<table id="versioncheck"></table>';
 
     document.body.innerHTML = neededHTML;
-    dummyData[0].currentVersion = "1.20";
+    dummyData[0].currentVersion = '1.20';
 
 
     jsfile.versionCheck(dummyData);
@@ -119,5 +119,49 @@ it('if data is null expect table to be empty', () => {
 
     const receivedResult = document.getElementById('versioncheck').innerHTML;
 
-    expect(receivedResult).toBe("");
+    expect(receivedResult).toBe('');
+});
+
+it('currentversion only has a major version and is higher and should return ahead', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
+
+    document.body.innerHTML = neededHTML;
+    dummyData[0].currentVersion = '2';
+
+    jsfile.versionCheck(dummyData);
+
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>2</p></td>' +
+        '<td><p>1.19</p></td>' +
+        '<td class="Ahead"><p>Ahead</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
+});
+
+it('latestversion only has a major version and is higher and should return outdated', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
+
+    document.body.innerHTML = neededHTML;
+    dummyData[0].latest = '2';
+
+    jsfile.versionCheck(dummyData);
+
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>1.16</p></td>' +
+        '<td><p>2</p></td>' +
+        '<td class="Outdated"><p>Outdated</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
 });
