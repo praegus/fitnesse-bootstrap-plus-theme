@@ -123,6 +123,15 @@
            #end
 
            #parse( $mainTemplate )
+           #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
+               <div id="testHistoryDiv">
+               <h3>Recent Test History</h3>
+            <div id="recentTestHistoryTable">
+
+            </div>
+               <a href="/?recentTestHistory">More...</a>
+           </div>
+           #end
           </article>
            ## Tooltips edit page
             #if($bodyClass.equalsIgnoreCase("EditPage"))
