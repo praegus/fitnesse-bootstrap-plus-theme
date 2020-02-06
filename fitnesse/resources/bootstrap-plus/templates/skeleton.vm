@@ -123,7 +123,7 @@
 
            #parse( $mainTemplate )
            #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
-            <div id="Most recent tests"></div>
+            <div id="testHistoryTable"></div>
            #end
           </article>
 
