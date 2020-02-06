@@ -35,7 +35,7 @@ it('if currentversion property has an irregular key, expect corrected format', (
     const expectedResult =
         '<tr class="check">' +
         '<td><p>toolchain fitnesse plugin</p></td>' +
-        '<td><p>1.20</p></td>' +
+        '<td><p>1.20-SNAPSHOT</p></td>' +
         '<td><p>1.20</p></td>' +
         '<td class="Up-to-date"><p>Up-to-date</p></td>' +
         '</tr>';
@@ -92,7 +92,7 @@ it('if version is ahead expect status to ahead', () => {
     const neededHTML = '<table id="versioncheck"></table>';
 
     document.body.innerHTML = neededHTML;
-    dummyData[0].currentVersion = String(parseInt(dummyData[0].latest.replace(/\D/g, "")) + 1);
+    dummyData[0].currentVersion = "1.20";
 
 
     jsfile.versionCheck(dummyData);
@@ -101,7 +101,7 @@ it('if version is ahead expect status to ahead', () => {
     const expectedResult =
         '<tr class="check">' +
         '<td><p>toolchain fixtures</p></td>' +
-        '<td><p>120</p></td>' +
+        '<td><p>1.20</p></td>' +
         '<td><p>1.19</p></td>' +
         '<td class="Ahead"><p>Ahead</p></td>' +
         '</tr>';

@@ -616,21 +616,23 @@ function versionCheck(data) {
                 delete versionData['version'];
             }
 
-            // Make version status
-            // Clean string so it can be used as an int for version comparison
-            versionData['formatCurrentVersion'] = parseInt(versionData.currentVersion.replace(/\D/g, ''));
-            versionData['formatLatestVersion'] = parseInt(versionData.latest.replace(/\D/g, ''));
 
-            if (versionData.formatCurrentVersion <= versionData.formatLatestVersion) {
-                if (versionData.formatCurrentVersion < versionData.formatLatestVersion) {
-                    versionData['status'] = 'Outdated';
-                } else if (versionData.formatCurrentVersion === versionData.formatLatestVersion) {
-                    versionData['status'] = 'Up-to-date';
-                }
-            } else {
-                //set status text
-                versionData['status'] = 'Ahead';
-            }
+    const semanticCurrentVersion = versionData.currentVersion.split('.').map( Number );
+    const semanticLatestVersion = versionData.latest.split('.').map( Number );
+
+    for(let i = 0; i< semanticLatestVersion.length; i++){
+        console.log(semanticCurrentVersion[i]+semanticLatestVersion[i]);
+        if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined || semanticCurrentVersion[i] == undefined && semanticLatestVersion[i] != 0) {
+            versionData['status'] = "Outdated";
+        }
+
+        if (semanticCurrentVersion[i + 1] === undefined && semanticLatestVersion[i + 1] === undefined && versionData.status === undefined && semanticLatestVersion[i] == semanticCurrentVersion[i]) {
+            versionData['status'] = "Up-to-date";
+        }
+    }
+    if (versionData.status === undefined){
+        versionData['status'] = 'Ahead';
+    }
 
             // Place in html
             $('#versioncheck').append(
