@@ -1,7 +1,7 @@
 // Needed for Jest
 try {
     module.exports = {
-	// Sidebar.test
+	    // Sidebar.test
         getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
         getCurrentWorkSpace: getMainWorkSpace,
