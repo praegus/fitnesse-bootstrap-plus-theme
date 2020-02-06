@@ -5,10 +5,22 @@ try {
         getSidebarContentHtml: getSidebarContentHtml,
         getCurrentWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
+        // Tooltip.test
         displayToolTip: displayToolTip,
+        // Tags.test
+        postTagRequest : postTagRequest,
+        createTagInput : createTagInput,
+        GetCurrentTagList : GetCurrentTagList,
+        checkIfNewTagIsValid : checkIfNewTagIsValid,
+        postTagInHtml : postTagInHtml,
+        inputBorderStyling : inputBorderStyling,
+        deleteClickAndHoverEvent : deleteClickAndHoverEvent,
+        joinTagList : joinTagList,
+        deleteTag : deleteTag,
+        //version checker test
         versionCheck: versionCheck,
         getVersionData: getVersionData
-    };
+    }
 } catch (e) {}
 
 String.prototype.UcFirst = function() {
@@ -288,8 +300,13 @@ $( document ).ready(function() {
 
     // Click add tag function
     $('.addTag').click(function () {
-        addTagInput($(this));
+        createTagInput($(this));
     });
+
+    // Add delete button when page is loaded in
+    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+
+    deleteClickAndHoverEvent('.deleteTagButton');
 });
 /*
     DOCUMENT READY END
@@ -408,10 +425,33 @@ function placeToolTip(tipsArray, pickedTip) {
     }
 }
 
+
 /*
-    ADD TAG
+    ADD & DELETE TAGS FUNCTIONS START
 */
-function addTagInput(currentAddTagButton) {
+function postTagRequest(callback, url, tagList, neededValues) {
+    // NEEDED FOR UNIT TESTING
+    // const $ = require('jquery');
+    $.ajax({
+        type: 'POST',
+        url: url,
+        contentType: 'application/json; charset=utf-8',
+        data: 'responder=updateTags&suites=' + tagList,
+        dataType: 'json',
+        success: data => callback(data, neededValues),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status);
+            console.log(xhr);
+        }
+    });
+}
+
+/*
+    ADD TAG START
+*/
+// When pressed an add new tag button create a input to make te new tag in
+function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();
     //Add input field
@@ -420,8 +460,12 @@ function addTagInput(currentAddTagButton) {
     //Add focus after clicking button
     $('.tagInputOverview').focus();
 
+    //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
         $('.tagInputOverview').remove();
+        if ($('.tagErrorMessage').length) {
+            $('.tagErrorMessage').remove();
+        }
     });
 
     $('.tagInputOverview').keyup(function (event) {
@@ -432,46 +476,22 @@ function addTagInput(currentAddTagButton) {
             //Get href value of the a tag
             const currentURL = $(currentAddTagButton).siblings('a').attr('href');
             //Call get current tag list function
-            GetCurrentTagList(currentURL, inputValue);
+            GetCurrentTagList(currentURL, inputValue, checkIfNewTagIsValid);
         }
     });
 }
 
-//Get current tag list function
-function GetCurrentTagList(currentURL, newTags) {
+// Get current tag list from the parent where you want your new tag
+function GetCurrentTagList(currentURL, newTags, callback) {
+    // NEEDED FOR UNIT TESTING
+    // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',
         url: "http://" + location.host + "/" + currentURL + "?responder=tableOfContents",
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: function (data) {
-            //Convert data object to string
-            const currentTagList = data[0].tags.join(", ");
-            //Convert input tags to lowercase
-            const lowerCaseTags = newTags.toLowerCase();
-            //Check if there are any tags currently present
-            if (currentTagList.length > 0) {
-                //Check if input tag exists in current tag list
-                const checkIfExists = currentTagList.includes(lowerCaseTags);
-                //If tag doesn't exist yet, post it
-                if (checkIfExists === false) {
-                    //Combine the current tag list and the input tag(s) in 1 variable
-                    const newTagList = currentTagList + ", " + lowerCaseTags;
-                    //Send current href value, new tag list and input tag(s) to post tag function
-                    postTag(currentURL, newTagList, newTags);
-                } else {
-                    $('.tagInputOverview').css({
-                        "border-color": "red",
-                        "outline": "0"
-                    });
-                }
-            }
-            //If there are no tags present only post the input tags
-            else {
-                postTag(currentURL, lowerCaseTags, newTags);
-            }
-        },
+        success: data => callback(data, currentURL, newTags),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log("Error code: " + xhr.status);
@@ -480,26 +500,98 @@ function GetCurrentTagList(currentURL, newTags) {
     });
 }
 
-//Post new tag list function
-function postTag(currentURL, tagList, inputTag) {
-    $.ajax({
-        type: 'POST',
-        url: "http://" + location.host + "/" + currentURL,
-        contentType: 'application/json; charset=utf-8',
-        data: 'responder=updateTags&suites=' + tagList,
-        dataType: 'json',
-        success: function (data) {
-            //Add new tag span layout to page
-            $("a[href$='" + currentURL + "']").parent().after("<span class='tag'>" + inputTag + "</span>");
-            //Remove input field
-            $('.tagInputOverview').remove();
-        },
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log("Error code: " + xhr.status);
-        }
+// Check if the tag meet the requirements
+function checkIfNewTagIsValid(data, currentURL, newTags) {
+    const lowerCaseTags = newTags.toLowerCase();
+
+    //Check if error message is present and remove it when it's true
+    if ($('.tagErrorMessage').length) {
+        $('.tagErrorMessage').remove();
+    }
+    // Check if tag already exist and if it has no special characters
+    if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
+        inputBorderStyling();
+        $('.tagInputOverview').after('<div class="tagErrorMessage">Tag already exists on this element</div>');
+    } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
+        inputBorderStyling();
+        $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+=?;:\'",.<>\\/ not allowed except for -_</div>');
+    } else {
+        // Post tags
+        const currentTagString = data[0].tags.join(", ");
+        const tagList = currentTagString.length > 0 ? currentTagString + ", " + lowerCaseTags : lowerCaseTags;
+        const url = 'http://' + location.host + '/' + currentURL;
+        postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
+    }
+}
+
+// Post Tag in the html
+function postTagInHtml(successData, neededValues) {
+    //Add new tag span layout to page
+    $(".contents a[href$='" + neededValues.currentURL + "']").parent().after("<span class='tag'>" + neededValues.newTags + " <i class=\"fas fa-times deleteTagButton\"></i></span>");
+    //Remove input field
+    $('.tagInputOverview').remove();
+
+    // Find new tag
+    const newDeleteTagButton = $("a[href$='" + neededValues.currentURL + "']").parent().parent().find('.deleteTagButton').first();
+    // Assign hover listener to new tag
+    deleteClickAndHoverEvent(newDeleteTagButton);
+}
+
+// Make the tag input border red
+function inputBorderStyling() {
+    $('.tagInputOverview').css({
+        "border-color": "red",
+        "outline": "0"
     });
 }
+/*
+    ADD END | DELETE START
+*/
+// Place a Click and a hover event an the tags
+function deleteClickAndHoverEvent(deleteTagButton) {
+    // Show delete tag button on hover
+    $('.tag').hover(
+        function () {
+            $(this).find('.deleteTagButton').css({ "display": "inline-block"});
+        }, function () {
+            $(this).find('.deleteTagButton').css({ "display": "none"});
+        }
+    );
+
+    // Click delete tag function
+    $(deleteTagButton).click(function () {
+        const chosenTag = $(this).parent().text().trim();
+        const currentTagArray = $(this).parent().parent().find('.tag');
+        const currentTagSpan = $(this).parent();
+        const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
+        postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
+    });
+}
+
+// Delete the chosen tag from the current tag list
+function joinTagList(chosenTag, currentTagArray) {
+    const newTagArray = [];
+    // Loop through all found tags
+    $(currentTagArray).each(function() {
+        // Filter current tags from chosen tag
+        if ($(this).text().trim() !== chosenTag)
+        {
+            // Push remaining tags to the array
+            newTagArray.push($(this).text().trim());
+        }
+    });
+    // Return joined array values
+    return newTagArray.reverse().join(', ');
+}
+
+// Delete tag
+function deleteTag(successData, neededValues) {
+    // Remove chosen tag from list/view
+    neededValues.currentTagSpan.remove();
+}
+/*
+    DELETE END | ADD & DELETE TAGS FUNCTIONS END
+*/
 
 function getVersionData(callback, url) {
      // const $ = require('jquery');
