@@ -21,7 +21,7 @@ try {
         // for test history
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory : getPageHistory
-    };
+    }
 } catch (e) {}
 
 /**
@@ -34,7 +34,7 @@ String.prototype.UcFirst = function() {
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
-};
+}
 
 
 /**
