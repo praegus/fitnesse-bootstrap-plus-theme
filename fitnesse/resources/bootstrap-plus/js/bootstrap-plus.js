@@ -1,7 +1,7 @@
 // Needed for Jest
 try {
     module.exports = {
-	    // Sidebar.test
+        // Sidebar.test
         getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
         getCurrentWorkSpace: getMainWorkSpace,
@@ -20,13 +20,20 @@ try {
         deleteTag : deleteTag,
         //version checker test
         versionCheck: versionCheck,
-        getVersionData: getVersionData
+        getVersionData: getVersionData,
+        deleteTag : deleteTag,
+        // for test history
+        generateTestHistoryTable: generateTestHistoryTable,
+        getPageHistory : getPageHistory
     }
 } catch (e) {}
 
+/**
+ * @return {string}
+ */
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -37,7 +44,7 @@ String.prototype.replaceAll = function(search, replacement) {
 /**
  * [Gets the cookie value if the cookie key exists in the right format]
  * @param  {[string]} name [name of the cookie]
- * @return {[string]}      [value of the cookie]
+ * @return {Object|string}      [value of the cookie]
  */
 var getCookie = function (name) {
     return parseCookies()[name] || '';
@@ -94,6 +101,7 @@ function processSymbolData(str) {
 $( document ).ready(function() {
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
         getVersionData(versionCheck,location + "/?mavenVersions");
+        getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
    // Tooltips
    getToolTips(displayToolTip);
@@ -219,7 +227,6 @@ $( document ).ready(function() {
             switchSidebar();
         }
     );
-
 
     $('body').on('click', '.coll', function() {
                 if($(this).children("input").is(":checked")) {
@@ -391,6 +398,58 @@ function getSidebarContentHtml(content) {
 }
 /*
     SIDEBAR FUNCTIONS END
+*/
+
+/*
+    PAGE HISTORY START
+*/
+function getPageHistory(url, callback) {
+    // Needed for unit testing
+   // const $ = require('jquery');
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log("Error code: " + xhr.status, xhr);
+        }
+    });
+}
+
+function generateTestHistoryTable(data) {
+    const check = document.getElementById("recentTestHistoryTable");
+    if (check !== undefined) {
+        const parser = new DOMParser();
+        let parserhtml = parser.parseFromString(data, 'text/html');
+        let table = parserhtml.getElementsByTagName("table")[0];
+        const rows = table.getElementsByTagName("tr");
+
+        // Make row length no longer than 5
+        if (rows.length > 5) {
+            let rowNumberToSlice = rows.length - 5;
+            $(rows, "tr").slice(-rowNumberToSlice).remove();
+        }
+
+        // Make new column named "last 5 results"
+        let resultsReportTd = rows[0].childNodes[9];
+        resultsReportTd.innerText = "Last 5 Results";
+        resultsReportTd.setAttribute("colspan", 5);
+        // Make cell length from column "last 5 results" no longer than 5
+        for (let i = 1; i < rows.length; i++) {
+            let cells = rows[i].getElementsByTagName("td");
+            // 4 columns + 5 cells
+            if (cells.length > 9) {
+                $(cells, "td").slice(9).remove();
+            }
+        }
+
+        check.appendChild(table);
+    }
+}
+/*
+    PAGE HISTORY END
 */
 
 /*
@@ -593,6 +652,9 @@ function deleteTag(successData, neededValues) {
 /*
     DELETE END | ADD & DELETE TAGS FUNCTIONS END
 */
+/*
+START VERSIONCHECKER
+ */
 
 function getVersionData(callback, url) {
      // const $ = require('jquery');
@@ -647,3 +709,6 @@ function versionCheck(data) {
         });
     }
 }
+/*
+END VERSIONCHECKER
+ */
