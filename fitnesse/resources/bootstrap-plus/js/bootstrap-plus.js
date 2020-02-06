@@ -93,7 +93,7 @@ function processSymbolData(str) {
 */
 $( document ).ready(function() {
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
-        getVersionData(versionCheck,Window.location + "/?mavenVersions");
+        getVersionData(versionCheck,location + "/?mavenVersions");
     }
    // Tooltips
    getToolTips(displayToolTip);
