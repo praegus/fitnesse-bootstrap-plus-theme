@@ -22,75 +22,102 @@ it('Test if $.ajax has the correct params', () => {
     expect($.ajax).toBeCalledWith(expectedResult);
 });
 
-it('if currentversion property has an irregular key, correct it', () => {
+it('if currentversion property has an irregular key, expect corrected format', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const toolchainDummyData = require('./mockup-data/versionCheck/toolchainDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
 
-    const expectedResult = {currentVersion: '1.20-SNAPSHOT'};
-    const receivedResult = jsfile.versionCheck(toolchainDummyData);
+    document.body.innerHTML = neededHTML;
 
-    expect(receivedResult).toEqual(expect.objectContaining(expectedResult));
-});
+    jsfile.versionCheck(toolchainDummyData);
 
-it('parse current version string to int correctly', () => {
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fitnesse plugin</p></td>' +
+        '<td><p>1.20</p></td>' +
+        '<td><p>1.20</p></td>' +
+        '<td class="Up-to-date"><p>Up-to-date</p></td>' +
+        '</tr>';
 
-    const expectedResult = {formatCurrentVersion: 116};
-    const receivedResult = jsfile.versionCheck(dummyData);
-
-    expect(receivedResult).toEqual(expect.objectContaining(expectedResult));
-});
-
-it('parse latest version string to int correctly', () => {
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const dummyData = require('./mockup-data/versionCheck/defaultDummyData');
-
-    const expectedResult = {formatLatestVersion: 119};
-    const receivedResult = jsfile.versionCheck(dummyData);
-
-    expect(receivedResult).toEqual(expect.objectContaining(expectedResult));
+    expect(receivedResult).toMatch(expectedResult);
 });
 
 it('if version is outdated expect status to outdated', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
 
+    document.body.innerHTML = neededHTML;
 
-    const receivedResult = jsfile.versionCheck(dummyData);
+    jsfile.versionCheck(dummyData);
 
-    expect(receivedResult.status).toBe('Outdated');
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>1.16</p></td>' +
+        '<td><p>1.19</p></td>' +
+        '<td class="Outdated"><p>Outdated</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
 });
 
 it('if version is up to date expect status to up to date', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
 
-    // make current version equal latest version to create the "up-to-date" state
+    document.body.innerHTML = neededHTML;
     dummyData[0].currentVersion = dummyData[0].latest;
 
-    const receivedResult = jsfile.versionCheck(dummyData);
+    jsfile.versionCheck(dummyData);
 
-    expect(receivedResult.status).toBe('Up-to-date');
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>1.19</p></td>' +
+        '<td><p>1.19</p></td>' +
+        '<td class="Up-to-date"><p>Up-to-date</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
 });
 
 it('if version is ahead expect status to ahead', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
 
-    // take latest version, parse to int, add one, parse to string and send it to versioncheck to create the "ahead" state and check it
+    document.body.innerHTML = neededHTML;
     dummyData[0].currentVersion = String(parseInt(dummyData[0].latest.replace(/\D/g, "")) + 1);
 
-    const receivedResult = jsfile.versionCheck(dummyData);
 
-    expect(receivedResult.status).toBe("Ahead");
+    jsfile.versionCheck(dummyData);
+
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>120</p></td>' +
+        '<td><p>1.19</p></td>' +
+        '<td class="Ahead"><p>Ahead</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
 
 });
 
-it('if data is null expect it to be undefined', () => {
+it('if data is null expect table to be empty', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    const neededHTML = "<table id='versioncheck'></table>";
 
-    const receivedResult = jsfile.versionCheck();
+    document.body.innerHTML = neededHTML;
+    jsfile.versionCheck();
 
-    expect(receivedResult).toBe(undefined);
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+
+    expect(receivedResult).toBe("");
 });

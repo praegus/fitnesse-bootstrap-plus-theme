@@ -541,16 +541,12 @@ function versionCheck(data) {
 
             // Place in html
             $('#versioncheck').append(
-                "<tr class='check'>" +
-                "<td><p>" + versionData.artifactid.replace(/\-/g, ' ') + "</p></td>" +
-                "<td><p>" + versionData.currentVersion.replace('-SNAPSHOT', '') + "</p></td>" +
-                "<td><p>" + versionData.latest + "</p></td>" +
-                "<td class='" + versionData.status + "'><p>" + versionData.status + "</p></td>" +
-                "</tr>");
+                '<tr class="check">' +
+                '<td><p>' + versionData.artifactid.replace(/\-/g, ' ') + '</p></td>' +
+                '<td><p>' + versionData.currentVersion.replace('-SNAPSHOT', '') + '</p></td>' +
+                '<td><p>' + versionData.latest + '</p></td>' +
+                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
+                '</tr>');
         });
-
-        //return for unit testing
-        return data[0];
     }
-
 }
