@@ -17,16 +17,19 @@ try {
         inputBorderStyling : inputBorderStyling,
         deleteClickAndHoverEvent : deleteClickAndHoverEvent,
         joinTagList : joinTagList,
-        deleteTag : deleteTag
+        deleteTag : deleteTag,
         // for test history
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory : getPageHistory
     };
 } catch (e) {}
 
+/**
+ * @return {string}
+ */
 String.prototype.UcFirst = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
-}
+};
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
@@ -37,7 +40,7 @@ String.prototype.replaceAll = function(search, replacement) {
 /**
  * [Gets the cookie value if the cookie key exists in the right format]
  * @param  {[string]} name [name of the cookie]
- * @return {[string]}      [value of the cookie]
+ * @return {Object|string}      [value of the cookie]
  */
 var getCookie = function (name) {
     return parseCookies()[name] || '';
