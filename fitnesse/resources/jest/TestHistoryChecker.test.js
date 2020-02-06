@@ -9,7 +9,7 @@ it('Test if $.ajax has the correct params', () => {
     const dummyCallback = () => {};
     const expectedResult = {
         type: 'GET',
-        url: expect.stringContaining('recentTestHistory'),
+        url: expect.stringContaining('?recentTestHistory'),
         contentType: 'charset=utf-8',
         success: expect.any(Function),
         error: expect.any(Function)
