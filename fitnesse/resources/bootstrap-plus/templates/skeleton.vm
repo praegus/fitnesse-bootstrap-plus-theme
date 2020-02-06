@@ -123,6 +123,7 @@
 
            #parse( $mainTemplate )
            #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
+               <h3>Recent Test History</h3>
             <div id="recentTestHistoryTable"></div>
            #end
           </article>
