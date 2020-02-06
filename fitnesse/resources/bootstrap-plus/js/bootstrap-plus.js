@@ -34,7 +34,7 @@ String.prototype.UcFirst = function() {
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
-}
+};
 
 
 /**
@@ -400,7 +400,7 @@ function getSidebarContentHtml(content) {
 /*
     PAGE HISTORY START
 */
-function getPageHistory(url, callback ) {
+function getPageHistory(url, callback) {
     // Needed for unit testing
     const $ = require('jquery');
     $.ajax({
