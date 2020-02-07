@@ -101,7 +101,7 @@ function processSymbolData(str) {
 $( document ).ready(function() {
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
         getVersionData(versionCheck,location + "/?mavenVersions");
-        getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
+        getPageHistory('http://localhost:' + location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
    // Tooltips
    getToolTips(displayToolTip);
@@ -681,7 +681,7 @@ function versionCheck(data) {
             // split version strings by dot and parse them to ints
             let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT','').split('.');
             let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT','').split('.');
-            // make arrays equal in length if necessary
+            // make arrays equal in length if necessary so there wont be an undefined index
             if (semanticCurrentVersion.length < semanticLatestVersion.length && semanticCurrentVersion ||semanticLatestVersion.length < semanticCurrentVersion.length && semanticCurrentVersion ){
                 while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push('0');
                 while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push('0');
