@@ -21,7 +21,6 @@ try {
         //version checker test
         versionCheck: versionCheck,
         getVersionData: getVersionData,
-        deleteTag : deleteTag,
         // for test history
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory : getPageHistory
