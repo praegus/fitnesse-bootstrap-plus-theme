@@ -99,12 +99,13 @@ function processSymbolData(str) {
     DOCUMENT READY START
 */
 $( document ).ready(function() {
+    // Tooltips
+    getToolTips(displayToolTip);
+
     if ((location.pathname === '/FrontPage' || location.pathname === '/' ) && !location.search.includes('?')) {
+        getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
         getVersionData(versionCheck,location + "/?mavenVersions");
-        getPageHistory('http://localhost:' + location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
-   // Tooltips
-   getToolTips(displayToolTip);
 
    //If the first row is hidden, don't use header row styling
    $('tr.hidden').each(function() {
