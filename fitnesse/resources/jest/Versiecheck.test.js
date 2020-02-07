@@ -165,3 +165,48 @@ it('latestversion only has a major version and is higher and should return outda
 
     expect(receivedResult).toMatch(expectedResult);
 });
+
+it('if individual version number is to low it gets corrected correctly and returns up-to date', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
+
+    document.body.innerHTML = neededHTML;
+    dummyData[0].latest = '1.30';
+    dummyData[0].currentVersion = '1.3';
+    jsfile.versionCheck(dummyData);
+
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>1.3</p></td>' +
+        '<td><p>1.30</p></td>' +
+        '<td class="Up-to-date"><p>Up-to-date</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
+});
+
+it('if individual version number is to low it gets corrected correctly and returns Ahead', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    let dummyData = require('./mockup-data/versionCheck/defaultDummyData');
+    const neededHTML = '<table id="versioncheck"></table>';
+
+    document.body.innerHTML = neededHTML;
+    dummyData[0].currentVersion = '1.31';
+    dummyData[0].latest = '1.3';
+
+    jsfile.versionCheck(dummyData);
+
+    const receivedResult = document.getElementById('versioncheck').innerHTML;
+    const expectedResult =
+        '<tr class="check">' +
+        '<td><p>toolchain fixtures</p></td>' +
+        '<td><p>1.31</p></td>' +
+        '<td><p>1.3</p></td>' +
+        '<td class="Ahead"><p>Ahead</p></td>' +
+        '</tr>';
+
+    expect(receivedResult).toMatch(expectedResult);
+});

@@ -657,7 +657,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-     // const $ = require('jquery');
+    //  const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -679,52 +679,34 @@ function versionCheck(data) {
             }
 
             // split version strings by dot and parse them to ints
-            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT').split('.');
-            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT').split('.');
+            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT','').split('.');
+            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT','').split('.');
             // make arrays equal in length if necessary
-            if (semanticCurrentVersion.length < semanticLatestVersion.length ){
+            if (semanticCurrentVersion.length < semanticLatestVersion.length && semanticCurrentVersion ||semanticLatestVersion.length < semanticCurrentVersion.length && semanticCurrentVersion ){
                 while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push('0');
-            }
-            if (semanticLatestVersion.length < semanticCurrentVersion.length){
                 while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push('0');
             }
 
             for (let i = 0; i < semanticLatestVersion.length; i++) {
-
-                if (semanticCurrentVersion[i].length < semanticLatestVersion[i].length){
-                    while (semanticCurrentVersion[i].length < semanticLatestVersion[i].length){ semanticCurrentVersion[i] = semanticCurrentVersion[i] + '0';}
-                }
-                if (semanticLatestVersion[i] < semanticCurrentVersion[i]){
-                    console.log('trigger');
-                    while (semanticLatestVersion[i].length < semanticCurrentVersion[i].length){
-                        semanticLatestVersion[i] = semanticLatestVersion[i] + '10' ;
-                        console.log(semanticCurrentVersion[i]);
-                        console.log(semanticLatestVersion[i].length)
-                        }
-                }
+               //make versions numbers equal in length so that 2 against 15 will be considered as 20 against 15
+             if (semanticCurrentVersion[i].length < semanticLatestVersion[i].length ||semanticLatestVersion[i].length < semanticCurrentVersion[i].length){
+                     while (semanticCurrentVersion[i].length < semanticLatestVersion[i].length) semanticCurrentVersion[i] = semanticCurrentVersion[i].concat('0');
+                     while (semanticLatestVersion[i].length < semanticCurrentVersion[i].length) semanticLatestVersion[i] = semanticLatestVersion[i].concat('0');
+             }
 
                 semanticCurrentVersion[i] = parseInt(semanticCurrentVersion[i]);
                 semanticLatestVersion[i] = parseInt(semanticLatestVersion[i]);
 
              //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
+                if (semanticLatestVersion[i] < semanticCurrentVersion[i] && versionData.status === undefined ){
+                    versionData['status'] = 'Ahead';
+                }
                 if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined && i !== semanticLatestVersion.length) {
-                    console.log(i)
-                    console.log(semanticLatestVersion.length)
-                    console.log(semanticCurrentVersion[i])
-                    console.log(semanticLatestVersion[i]);
-
                     versionData['status'] = 'Outdated';
                 }else if (semanticCurrentVersion[i] === semanticLatestVersion[i] && i === semanticLatestVersion.length-1&& versionData.status === undefined){
-
                     versionData['status'] = 'Up-to-date';
-                    console.log("trigger2");
                 }
             }
-            //if after the loop the status hasnt been set yet then status is ahead
-            if (versionData.status === undefined) {
-                versionData['status'] = 'Ahead';
-            }
-
             // Place in html
             $('#versioncheck').append(
                 '<tr class="check">' +
