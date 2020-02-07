@@ -688,12 +688,6 @@ function versionCheck(data) {
             }
 
             for (let i = 0; i < semanticLatestVersion.length; i++) {
-               //make versions numbers equal in length so that 2 against 15 will be considered as 20 against 15
-             if (semanticCurrentVersion[i].length < semanticLatestVersion[i].length ||semanticLatestVersion[i].length < semanticCurrentVersion[i].length){
-                     while (semanticCurrentVersion[i].length < semanticLatestVersion[i].length) semanticCurrentVersion[i] = semanticCurrentVersion[i].concat('0');
-                     while (semanticLatestVersion[i].length < semanticCurrentVersion[i].length) semanticLatestVersion[i] = semanticLatestVersion[i].concat('0');
-             }
-
                 semanticCurrentVersion[i] = parseInt(semanticCurrentVersion[i]);
                 semanticLatestVersion[i] = parseInt(semanticLatestVersion[i]);
 
