@@ -679,18 +679,45 @@ function versionCheck(data) {
             }
 
             // split version strings by dot and parse them to ints
-            const semanticCurrentVersion = versionData.currentVersion.split('.').map(Number);
-            const semanticLatestVersion = versionData.latest.split('.').map(Number);
+            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT').split('.');
+            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT').split('.');
+            // make arrays equal in length if necessary
+            if (semanticCurrentVersion.length < semanticLatestVersion.length ){
+                while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push('0');
+            }
+            if (semanticLatestVersion.length < semanticCurrentVersion.length){
+                while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push('0');
+            }
 
             for (let i = 0; i < semanticLatestVersion.length; i++) {
-                // if current version is lower then the latest version OR the current version has a number less and the last current version number was less then the last latest version number then status is outdated
-                if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined || semanticCurrentVersion[i] === undefined && semanticLatestVersion[i - 1] > semanticCurrentVersion[i - 1]) {
-                    versionData['status'] = "Outdated";
+
+                if (semanticCurrentVersion[i].length < semanticLatestVersion[i].length){
+                    while (semanticCurrentVersion[i].length < semanticLatestVersion[i].length){ semanticCurrentVersion[i] = semanticCurrentVersion[i] + '0';}
+                }
+                if (semanticLatestVersion[i] < semanticCurrentVersion[i]){
+                    console.log('trigger');
+                    while (semanticLatestVersion[i].length < semanticCurrentVersion[i].length){
+                        semanticLatestVersion[i] = semanticLatestVersion[i] + '10' ;
+                        console.log(semanticCurrentVersion[i]);
+                        console.log(semanticLatestVersion[i].length)
+                        }
                 }
 
-                // if status hasnt been set yet and there are no more current or last version numbers after the current index and the current index latest and current version numbers equal then status is up-to-date
-                if (versionData.status === undefined && semanticCurrentVersion[i + 1] === undefined && semanticLatestVersion[i + 1] === undefined && semanticLatestVersion[i] === semanticCurrentVersion[i]) {
-                    versionData['status'] = "Up-to-date";
+                semanticCurrentVersion[i] = parseInt(semanticCurrentVersion[i]);
+                semanticLatestVersion[i] = parseInt(semanticLatestVersion[i]);
+
+             //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
+                if (semanticCurrentVersion[i] < semanticLatestVersion[i] && versionData.status === undefined && i !== semanticLatestVersion.length) {
+                    console.log(i)
+                    console.log(semanticLatestVersion.length)
+                    console.log(semanticCurrentVersion[i])
+                    console.log(semanticLatestVersion[i]);
+
+                    versionData['status'] = 'Outdated';
+                }else if (semanticCurrentVersion[i] === semanticLatestVersion[i] && i === semanticLatestVersion.length-1&& versionData.status === undefined){
+
+                    versionData['status'] = 'Up-to-date';
+                    console.log("trigger2");
                 }
             }
             //if after the loop the status hasnt been set yet then status is ahead
