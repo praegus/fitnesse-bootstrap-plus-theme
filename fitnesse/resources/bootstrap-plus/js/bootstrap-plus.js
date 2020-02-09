@@ -657,7 +657,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-   //  const $ = require('jquery');
+    //const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -679,29 +679,26 @@ function versionCheck(data) {
             }
 
             // split version strings by dot and parse them to ints
-            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT','').split('.');
-            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT','').split('.');
+            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT','').split('.').map(Number);
+            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT','').split('.').map(Number);
+
             // make arrays equal in length if necessary so there wont be an undefined index
             if (semanticCurrentVersion.length < semanticLatestVersion.length||semanticLatestVersion.length < semanticCurrentVersion.length){
-                while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push('0');
-                while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push('0');
+                while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
+                while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
             }
-
-            for (let i = 0; i < semanticLatestVersion.length; i++) {
-                semanticCurrentVersion[i] = parseInt(semanticCurrentVersion[i]);
-                semanticLatestVersion[i] = parseInt(semanticLatestVersion[i]);
-
-             //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
+            semanticLatestVersion.forEach(function (semanticLatestVersion, i) {
+                //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
                 if (versionData.status === undefined){
-                if (semanticLatestVersion[i] < semanticCurrentVersion[i]){
-                    versionData['status'] = 'Ahead';
-                }else if (semanticCurrentVersion[i] < semanticLatestVersion[i] && i !== semanticLatestVersion.length) {
-                    versionData['status'] = 'Outdated';
-                }else if (semanticCurrentVersion[i] === semanticLatestVersion[i] && i === semanticLatestVersion.length-1){
-                    versionData['status'] = 'Up-to-date';
-                }
-                }
-            }
+                       if (semanticLatestVersion < semanticCurrentVersion[i]){
+                           versionData['status'] = 'Ahead';
+                       }else if (semanticCurrentVersion[i] < semanticLatestVersion && i !== semanticLatestVersion.length) {
+                           versionData['status'] = 'Outdated';
+                       }else if (semanticCurrentVersion[i] === semanticLatestVersion && i === semanticLatestVersion.length-1){
+                           versionData['status'] = 'Up-to-date';
+                       }
+                       }
+            });
             // Place in html
             $('#versioncheck').append(
                 '<tr class="check">' +
