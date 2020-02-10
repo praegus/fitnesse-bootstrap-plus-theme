@@ -657,7 +657,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-    //const $ = require('jquery');
+    const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -687,14 +687,18 @@ function versionCheck(data) {
                 while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
                 while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
             }
-            semanticLatestVersion.forEach(function (semanticLatestVersion, i) {
+            semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
                 //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
                 if (versionData.status === undefined){
-                       if (semanticLatestVersion < semanticCurrentVersion[i]){
+                    console.log(semanticCurrentVersion);
+                    console.log(semanticLatestVersionNumber);
+                    console.log(semanticLatestVersionNumber.length);
+
+                       if (semanticLatestVersionNumber < semanticCurrentVersion[i]){
                            versionData['status'] = 'Ahead';
-                       }else if (semanticCurrentVersion[i] < semanticLatestVersion && i !== semanticLatestVersion.length) {
+                       }else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
                            versionData['status'] = 'Outdated';
-                       }else if (semanticCurrentVersion[i] === semanticLatestVersion && i === semanticLatestVersion.length-1){
+                       }else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length-1){
                            versionData['status'] = 'Up-to-date';
                        }
                        }
