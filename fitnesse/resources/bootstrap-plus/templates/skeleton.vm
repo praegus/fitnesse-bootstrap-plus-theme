@@ -131,6 +131,7 @@
             </div>
                <a href="/?recentTestHistory">More...</a>
            </div>
+               <h3>Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>
                     <td colspan="4">
