@@ -679,29 +679,26 @@ function versionCheck(data) {
             }
 
             // split version strings by dot and parse them to ints
-            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT','').split('.').map(Number);
-            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT','').split('.').map(Number);
+            let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT', '').split('.').map(Number);
+            let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT', '').split('.').map(Number);
 
             // make arrays equal in length if necessary so there wont be an undefined index
-            if (semanticCurrentVersion.length < semanticLatestVersion.length||semanticLatestVersion.length < semanticCurrentVersion.length){
+            if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
                 while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
                 while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
             }
             semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
                 //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
-                if (versionData.status === undefined){
-                    console.log(semanticCurrentVersion);
-                    console.log(semanticLatestVersionNumber);
-                    console.log(semanticLatestVersionNumber.length);
+                if (versionData.status === undefined) {
 
-                       if (semanticLatestVersionNumber < semanticCurrentVersion[i]){
-                           versionData['status'] = 'Ahead';
-                       }else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
-                           versionData['status'] = 'Outdated';
-                       }else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length-1){
-                           versionData['status'] = 'Up-to-date';
-                       }
-                       }
+                    if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
+                        versionData['status'] = 'Ahead';
+                    } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
+                        versionData['status'] = 'Outdated';
+                    } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
+                        versionData['status'] = 'Up-to-date';
+                    }
+                }
             });
             // Place in html
             $('#versioncheck').append(
@@ -714,6 +711,7 @@ function versionCheck(data) {
         });
     }
 }
+
 /*
 END VERSIONCHECKER
  */
