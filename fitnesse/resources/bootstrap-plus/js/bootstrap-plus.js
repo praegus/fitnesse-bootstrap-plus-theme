@@ -37,7 +37,6 @@ String.prototype.replaceAll = function (search, replacement) {
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-
 /**
  * [Gets the cookie value if the cookie key exists in the right format]
  * @param  {[string]} name [name of the cookie]
@@ -660,7 +659,7 @@ function deleteTag(successData, neededValues) {
  DELETE END
  |
  ADD & DELETE TAGS FUNCTIONS END
- */
+
     DELETE END | ADD & DELETE TAGS FUNCTIONS END
 */
 /*

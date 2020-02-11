@@ -154,22 +154,6 @@
                 <p id="tooltip-text"></p>
             </div>
         #end
-               <h3>Version Checker</h3>
-                <table id="versioncheck">
-                    <tbody>
-                    <td colspan="4">
-                        <b>Versioncheck</b>
-                    </td>
-                    <tr>
-                        <td><b>Name</b></td>
-                        <td><b>Current Version</b></td>
-                        <td><b>Newest version</b></td>
-                        <td><b>Status</b></td>
-                    </tr>
-                    </tbody>
-                </table>
-            #end
-          </article>
            ## Tooltips edit page
             #if($bodyClass.equalsIgnoreCase("EditPage"))
              <div id="tooltip-div-edit">
