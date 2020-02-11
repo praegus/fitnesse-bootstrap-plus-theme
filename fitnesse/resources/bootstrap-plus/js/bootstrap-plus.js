@@ -20,7 +20,12 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory
+        getPageHistory: getPageHistory,
+        // Versioncheck.test
+        getVersionData:getVersionData,
+        versionCheck:versionCheck
+
+
     };
 } catch (e) {
 }
