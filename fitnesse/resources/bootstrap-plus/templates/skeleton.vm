@@ -154,12 +154,6 @@
                 <p id="tooltip-text"></p>
             </div>
         #end
-           ## Tooltips edit page
-            #if($bodyClass.equalsIgnoreCase("EditPage"))
-             <div id="tooltip-div-edit">
-              <p id="tooltip-text"></p>
-             </div>
-            #end
     </div>
 </div>
 
