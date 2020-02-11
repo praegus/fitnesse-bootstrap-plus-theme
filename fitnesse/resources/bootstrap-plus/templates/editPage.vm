@@ -12,8 +12,8 @@
 <script src="${contextRoot}files/fitnesse/codemirror/addon/simple.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/codemirror/fitnesse.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/foldgutter.css" media="screen"/>
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/codemirror.css" media="screen"/>
 <link rel="stylesheet" href="${contextRoot}files/fitnesse/bootstrap-plus/css/codemirror/theme/darcula.css">
 <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/codemirror/addon/hint/show-hint.css">
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-editor.js" type="text/javascript"></script>
@@ -21,154 +21,158 @@
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/extended_anyword-hint.js" type="text/javascript"></script>
 
 <form method="post" action="$resource" name="f" class="mousetrap">
-#if($!editTime)
- <input type="hidden" name="editTime" value="$editTime"/>
- <input type="hidden" name="ticketId" value="$ticketId"/>
-#end
-#if($!redirect)
- <input type="hidden" name="redirect" value="#escape($redirect)"/>
-#end
-#if($!isNewPage)
- <input type="hidden" name="responder" value="addChild"/>
- <fieldset>
-  <label for="pagename">Page name:</label>
-  <input type="text" id="pagename" name="pageName" value="" class="wikiword" />
- </fieldset>
- #if($!pageTemplate)
- <input type="hidden" name="pageTemplate" value="#escape($pageTemplate)"/>
- #elseif( $!pageType )
- <input type="hidden" name="pageType" value="#escape($pageType)"/>
- #else
- <fieldset id="pagetypes">
-  #foreach( $pageType in $pageTypes )
-  <label for="pageType_$pageType"><input type="radio" name="pageType" value="$pageType" id="pageType_$pageType"/> $pageType</label>
-  #end
-  <label for="pageType_Default"><input type="radio" name="pageType" value="Default" id="pageType_Default" checked="checked" /> Default</label>
- </fieldset>
- #end
-#else
- <input type="hidden" name="responder" value="saveData"/>
-#end
- <fieldset>
-  <label for="helptext">Help text:</label>
-  <input type="text" class="mousetrap" id="helptext" name="helpText" value="#escape($!helpText)" />
- </fieldset>
- <fieldset>
-  <label for="suites">Tags:</label>
-  <input type="text" id="suites" title="Separate tags by a comma" name="suites" value="#escape($!suites)" />
- </fieldset>
+    #if($!editTime)
+        <input type="hidden" name="editTime" value="$editTime"/>
+        <input type="hidden" name="ticketId" value="$ticketId"/>
+    #end
+    #if($!redirect)
+        <input type="hidden" name="redirect" value="#escape($redirect)"/>
+    #end
+    #if($!isNewPage)
+        <input type="hidden" name="responder" value="addChild"/>
+        <fieldset>
+            <label for="pagename">Page name:</label>
+            <input type="text" id="pagename" name="pageName" value="" class="wikiword"/>
+        </fieldset>
+        #if($!pageTemplate)
+            <input type="hidden" name="pageTemplate" value="#escape($pageTemplate)"/>
+        #elseif( $!pageType )
+            <input type="hidden" name="pageType" value="#escape($pageType)"/>
+        #else
+            <fieldset id="pagetypes">
+                #foreach( $pageType in $pageTypes )
+                    <label for="pageType_$pageType"><input type="radio" name="pageType" value="$pageType" id="pageType_$pageType"/> $pageType
+                    </label>
+                #end
+                <label for="pageType_Default"><input type="radio" name="pageType" value="Default" id="pageType_Default" checked="checked"/>
+                    Default</label>
+            </fieldset>
+        #end
+    #else
+        <input type="hidden" name="responder" value="saveData"/>
+    #end
+    <fieldset>
+        <label for="helptext">Help text:</label>
+        <input type="text" class="mousetrap" id="helptext" name="helpText" value="#escape($!helpText)"/>
+    </fieldset>
+    <fieldset>
+        <label for="suites">Tags:</label>
+        <input type="text" id="suites" title="Separate tags by a comma" name="suites" value="#escape($!suites)"/>
+    </fieldset>
 
- <div id="backingData" class="hidden">
-  <select id="templateMap">
-   <option value=""></option>
-   #foreach ($templateEntry in $templateMap.entrySet())
-   <option value="#escape($templateEntry.value)">#escape($templateEntry.key)</option>
-   #end
-  </select>
- </div>
+    <div id="backingData" class="hidden">
+        <select id="templateMap">
+            <option value=""></option>
+            #foreach ($templateEntry in $templateMap.entrySet())
+                <option value="#escape($templateEntry.value)">#escape($templateEntry.key)</option>
+            #end
+        </select>
+    </div>
 
 
- <fieldset id="editor">
- <span id="editorMessage">&nbsp;</span>
-  <textarea class="wikitext no_wrap mousetrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
- </fieldset>
+    <fieldset id="editor">
+        <span id="editorMessage">&nbsp;</span>
+        <textarea class="wikitext no_wrap mousetrap" id="pageContent" name="pageContent" wrap="off">$pageContent</textarea>
+    </fieldset>
 
- <fieldset id="save_buttons">
-  <input type="submit" name="save" value="Save" accesskey="s"/>
-  <a class="button" id="cancelEdit" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
-  &nbsp;&nbsp;<a class="button validate">Validate</a>
- </fieldset>
+    <fieldset id="save_buttons">
+        <input type="submit" name="save" value="Save" accesskey="s"/>
+        <a class="button" id="cancelEdit" href="#if($!redirect)$redirect#else$resource#end">Cancel</a>
+        &nbsp;&nbsp;<a class="button validate">Validate</a>
+    </fieldset>
 </form>
 <div id="helper-bar" class="side-bar">&nbsp;</div>
 
-<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/editor.css" media="screen"/>
 <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/codemirror/wysiwyg.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/wysiwyg/wikitext.js" type="text/javascript"></script>
 <script src="${contextRoot}files/fitnesse/javascript/jquery.tagsinput.js" type="text/javascript"></script>
 <script type="text/javascript">
-$(function () {
+    $(function () {
 
-  var editor = Wysiwyg.initialize(document.getElementById('pageContent'));
-  if (editor) {
-    // On cancel button:
+        var editor = Wysiwyg.initialize(document.getElementById('pageContent'));
+        if (editor) {
+            // On cancel button:
 
-    function fieldValues () {
-      return $.map($('#pageContent,#helptext,#suites', document.f), function(e) { return $(e).val(); });
-    }
+            function fieldValues() {
+                return $.map($('#pageContent,#helptext,#suites', document.f), function (e) {
+                    return $(e).val();
+                });
+            }
 
-    var originalFieldValues = fieldValues();
+            var originalFieldValues = fieldValues();
 
-    var performingSubmit = false;
+            var performingSubmit = false;
 
-    $(document.f).submit(function () {
-      performingSubmit = true;
+            $(document.f).submit(function () {
+                performingSubmit = true;
+            });
+
+            window.onbeforeunload = function () {
+                if (performingSubmit) {
+                    return;
+                }
+
+                if (editor.activeEditor() === 'wysiwyg') {
+                    editor.loadWikiText();
+                } else {
+                    editor.codeMirrorEditor.save();
+                }
+
+                if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
+                    return 'The page content has been changed.\nDo you really want to leave this page?';
+                }
+            };
+
+            var rte = $(editor.frame);
+            var wrappedElement = $(editor.codeMirrorEditor.getWrapperElement());
+            $(window).resize(function () {
+                var h = $('#save_buttons').position().top;
+                rte.height(h - rte.position().top - 6);
+                wrappedElement.height(h - wrappedElement.position().top - 6);
+            }).resize();
+
+            #if($themeType == "bootstrap-plus-dark")
+                editor.codeMirrorEditor.setOption('theme', 'darcula');
+            #end
+        }
+
+        /* Tags */
+        $('#suites').tagsInput();
+
+        #if($!isNewPage)
+            document.f.pageName.focus();
+        #else
+            document.f.pageContent.focus();
+        #end
+
+        Mousetrap.bind('ctrl+s', function (e) {
+            performingSubmit = true;
+            $(document.f).submit();
+            return false;
+        });
+        Mousetrap.bind('esc', function (e) {
+            window.location.href = "#if($!redirect)$redirect#else$resource#end";
+            return false;
+        });
+
     });
-
-    window.onbeforeunload = function () {
-      if (performingSubmit) {
-        return;
-      }
-
-      if (editor.activeEditor() === "wysiwyg") {
-        editor.loadWikiText();
-      } else {
-        editor.codeMirrorEditor.save();
-      }
-
-      if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
-        return "The page content has been changed.\nDo you really want to leave this page?";
-      }
-    };
-
-    var rte = $(editor.frame);
-    var wrappedElement = $(editor.codeMirrorEditor.getWrapperElement());
-    $(window).resize(function () {
-      var h = $('#save_buttons').position().top;
-      rte.height(h - rte.position().top - 6);
-      wrappedElement.height(h - wrappedElement.position().top - 6);
-    }).resize();
-
-    #if($themeType == "bootstrap-plus-dark")
-        editor.codeMirrorEditor.setOption("theme", "darcula");
-    #end
-  }
-
-  /* Tags */
-  $('#suites').tagsInput();
-
-  #if($!isNewPage)
-    document.f.pageName.focus();
-  #else
-    document.f.pageContent.focus();
-  #end
-
-    Mousetrap.bind('ctrl+s', function(e) {
-    	performingSubmit = true;
-    	$(document.f).submit();
-    	return false;
-    });
-    Mousetrap.bind('esc', function(e) {
-    	window.location.href ="#if($!redirect)$redirect#else$resource#end";
-     	return false;
-    });
-
-});
 
 </script>
 
 <div id="insert-image" class="modal-dialog">
- <div>
-  <h2>Insert image</h2>
-  <fieldset>
-  <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
-  <pre></pre>
-  <ul class="select-box"></ul>
-  </fieldset>
-  <fieldset>
-  <p>2. Provide a URL:</p>
-  <input class="image-url" type="text" value=""></input><br/>
-  </fieldset>
-  <button class="btn-primary" value="Add">Add</button>
-  <a href="#" class="button">Cancel</a>
- </div>
+    <div>
+        <h2>Insert image</h2>
+        <fieldset>
+            <p>1. From the files section: <a href="/files" class="button" target="_blank">Manage</a></p>
+            <pre></pre>
+            <ul class="select-box"></ul>
+        </fieldset>
+        <fieldset>
+            <p>2. Provide a URL:</p>
+            <input class="image-url" type="text" value=""></input><br/>
+        </fieldset>
+        <button class="btn-primary" value="Add">Add</button>
+        <a href="#" class="button">Cancel</a>
+    </div>
 </div>

@@ -45,15 +45,15 @@
             <ul class="help-list">
                 <li><h4>Edit Mode</h4></li>
                 <li>
-                    <kbd>CTRL+s</kbd>
+                    <kbd>Ctrl + s</kbd>
                     <span class="help-key-def">Save page</span>
                 </li>
                 <li>
-                    <kbd>ESC</kbd>
+                    <kbd>Esc</kbd>
                     <span class="help-key-def">Cancel edit</span>
                 </li>
                 <li>
-                    <kbd>ALT+SHIFT+f</kbd>
+                    <kbd>Alt + Shift + f</kbd>
                     <span class="help-key-def">Format</span>
                 </li>
 
@@ -67,11 +67,11 @@
                     <span class="help-key-def">Where used?</span>
                 </li>
                 <li>
-                    <kbd>ALT+v</kbd>
+                    <kbd>Alt + v</kbd>
                     <span class="help-key-def">Versions</span>
                 </li>
                 <li>
-                    <kbd>ALT+h</kbd>
+                    <kbd>Alt + h</kbd>
                     <span class="help-key-def">Page History</span>
                 </li>
                 <li>
@@ -84,19 +84,19 @@
                 </li>
             </ul>
             <ul class="help-list" id="bootstrap-help-list">
-            <li><h4>Bootstrap-plus</h4></li>
-            <li>
-                <kbd>CTRL+space</kbd>
-                <span class="help-key-def">Autocomplete suggestions</span>
-            </li>
-            <li>
-                <kbd>CTRL+.</kbd>
-                <span class="help-key-def">Validate</span>
-            </li>
-            <li>
-                <kbd>CTRL+,</kbd>
-                <span class="help-key-def">Find current line in context help</span>
-            </li>
+                <li><h4>Bootstrap-plus</h4></li>
+                <li>
+                    <kbd>Ctrl + Space</kbd>
+                    <span class="help-key-def">Autocomplete suggestions</span>
+                </li>
+                <li>
+                    <kbd>Ctrl + .</kbd>
+                    <span class="help-key-def">Validate</span>
+                </li>
+                <li>
+                    <kbd>Ctrl + ,</kbd>
+                    <span class="help-key-def">Find current line in context help</span>
+                </li>
             </ul>
         </div>
         <a href="javascript:history.back()" class="button">Close</a>
@@ -110,40 +110,66 @@
         #set( $localPath = $actions.localPageName )
 
         ## View the current page (useful after testing)
-    Mousetrap.bind('v', function() { window.location.href ="$localPath"; });
+    Mousetrap.bind('v', function () {
+        window.location.href = "$localPath";
+    });
 
         #if( $actions.testPage )
-        Mousetrap.bind('t', function() { window.location.href ="$localPath?test"; });
+        Mousetrap.bind('t', function () {
+            window.location.href = "$localPath?test";
+        });
         #end
         #if( $actions.suitePage )
-        Mousetrap.bind('t', function() { window.location.href ="$localPath?suite"; });
+        Mousetrap.bind('t', function () {
+            window.location.href = "$localPath?suite";
+        });
         #end
         #if( $actions.withEdit && !$actions.imported)
-        Mousetrap.bind('e', function() { window.location.href ="$localPath?edit"; });
+        Mousetrap.bind('e', function () {
+            window.location.href = "$localPath?edit";
+        });
         #end
         #if( $actions.withEdit)
-        Mousetrap.bind('a', function() { window.location.href ="$localPath?new"; });
+        Mousetrap.bind('a', function () {
+            window.location.href = "$localPath?new";
+        });
         #end
         #if( $actions.withProperties )
-        Mousetrap.bind('p', function() { window.location.href ="$localPath?properties"; });
+        Mousetrap.bind('p', function () {
+            window.location.href = "$localPath?properties";
+        });
         #end
         #if( $actions.withWhereUsed )
-        Mousetrap.bind('w', function() { window.location.href ="$localPath?whereUsed"; });
+        Mousetrap.bind('w', function () {
+            window.location.href = "$localPath?whereUsed";
+        });
         #end
         #if( $actions.withSearch )
-        Mousetrap.bind('s', function() { window.location.href ="$localPath?searchForm"; });
-        Mousetrap.bind('/', function() {
+        Mousetrap.bind('s', function () {
+            window.location.href = "$localPath?searchForm";
+        });
+        Mousetrap.bind('/', function () {
             document.getElementById('searchString').focus();
             return false;  // stops the / character appearing in search box
         });
         #end
         #if( $actions.withUserGuide )
-        Mousetrap.bind('g u', function() { window.location.href =".FitNesse.UserGuide"; });
-        Mousetrap.bind('g q', function() { window.open(".FitNesse.UserGuide.QuickReferenceGuide", "_blank"); });
-        Mousetrap.bind('g f', function() { window.open(".FitNesse.FullReferenceGuide", "_blank"); });
-        Mousetrap.bind('g c', function() { window.location.href ="RecentChanges"; });
+        Mousetrap.bind('g u', function () {
+            window.location.href = '.FitNesse.UserGuide';
+        });
+        Mousetrap.bind('g q', function () {
+            window.open('.FitNesse.UserGuide.QuickReferenceGuide', '_blank');
+        });
+        Mousetrap.bind('g f', function () {
+            window.open('.FitNesse.FullReferenceGuide', '_blank');
+        });
+        Mousetrap.bind('g c', function () {
+            window.location.href = 'RecentChanges';
+        });
         #end
 
-    Mousetrap.bind('?', function() { window.location.hash = "-shortcut-keys"; });
+    Mousetrap.bind('?', function () {
+        window.location.hash = '-shortcut-keys';
+    });
 
 </script>
