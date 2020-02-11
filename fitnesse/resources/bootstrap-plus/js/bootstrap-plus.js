@@ -678,7 +678,7 @@ function versionCheck(data) {
                 delete versionData['version'];
             }
 
-            if (versionData.currentVersion !== versionData.latest){
+            if (versionData.currentVersion.replace('-SNAPSHOT','') !== versionData.latest){
                 versionData['status'] = 'Outdated';
             }else{
                 versionData['status'] = 'Up-to-date';
