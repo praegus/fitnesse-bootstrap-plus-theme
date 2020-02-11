@@ -657,7 +657,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-    //const $ = require('jquery');
+   //const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -670,7 +670,7 @@ function getVersionData(callback, url) {
 }
 
 function versionCheck(data) {
-    if (data != undefined) {
+    if (data !== undefined) {
         data.forEach(versionData => {
             // Replace property 'version' with 'currentVersion' to make al the property names alike
             if (versionData.hasOwnProperty('version')) {
@@ -703,7 +703,7 @@ function versionCheck(data) {
             // Place in html
             $('#versioncheck').append(
                 '<tr class="check">' +
-                '<td><p>' + versionData.artifactid.replace(/\-/g, ' ') + '</p></td>' +
+                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
                 '<td><p>' + versionData.currentVersion + '</p></td>' +
                 '<td><p>' + versionData.latest + '</p></td>' +
                 '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
