@@ -1307,7 +1307,6 @@ li.CodeMirror-hint:nth-child(odd) {
   width: 90px;
   font-size: 11px;
   background: #595959;
-  margin-right: 6px;
 }
 
 .tagErrorMessage {
@@ -1418,4 +1417,28 @@ kbd {
 }
 #testHistoryDiv > a {
   float:right;
+}
+#autocompleteTags {
+  color: #ffffff;
+  display: inline-block;
+  margin-right: 6px;
+}
+#autocompleteTagsItems {
+  position: absolute;
+  width: 90px;
+}
+.tagsOptions {
+  font-size: 12px;
+  margin: 0;
+  border:solid 1px #636464;
+  background-color: #3a3a3a;
+  border-top: none;
+  padding: 2px;
+}
+.tagsOptions:last-child{
+  border-bottom-right-radius:10px;
+  border-bottom-left-radius:10px;
+}
+.tagsOptions:hover{
+  background-color: #636464;
 }
