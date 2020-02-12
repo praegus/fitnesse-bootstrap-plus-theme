@@ -514,16 +514,16 @@ function postTagRequest(callback, url, tagList, neededValues) {
 // When pressed an add new tag button create a input to make te new tag in
 function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
-    $('.tagInputOverview').remove();
+    $('#autocompleteTags').remove();
     //Add input field
-    $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
+    $(currentAddTagButton).after('<div id="autocompleteTags"><input type="text" class="tagInputOverview"> <div id="autocompleteTagsItems"></div> </div>');
 
     //Add focus after clicking button
     $('.tagInputOverview').focus();
 
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
-        $('.tagInputOverview').remove();
+        $('#autocompleteTags').remove();
         if ($('.tagErrorMessage').length) {
             $('.tagErrorMessage').remove();
         }
@@ -590,20 +590,22 @@ function GetCurrentTagList(currentURL, callback) {
 //         }
 //     });
 
-function tagAutocomplete(data, currentURL){
-    $('.tagInputOverview').bind('input', function(){
+function tagAutocomplete(data, currentURL) {
+    $('.tagInputOverview').bind('input', function () {
         let typedInput = $('.tagInputOverview').val();
-        if(!typedInput) {
-            // console.log('false return');
+        $('#autocompleteTagsItems').html('');
+        if (!typedInput) {
             return false;
         }
-
         for (i = 0; i < data[0].tags.length; i++) {
             if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-                console.log(data[0].tags[i]);
+                $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + data[0].tags[i] + '</p>');
+                $('#autocompleteTagItems').click(function () {
+                    console.log("clicked"+[i]);
+                })
             }
         }
-    })
+    });
 }
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentURL, newTags) {
