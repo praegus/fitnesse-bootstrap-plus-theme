@@ -672,7 +672,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-   //const $ = require('jquery');
+   const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -693,11 +693,10 @@ function versionCheck(data) {
                 delete versionData['version'];
             }
 
-            //try to use semantic versioning as logic, if it runs into an error use litteral string comparison
-            try{
-                // split version strings by dot and parse them to ints
-                let semanticCurrentVersion = versionData.currentVersion.replace('-SNAPSHOT', '').split('.').map(Number);
-                let semanticLatestVersion = versionData.latest.replace('-SNAPSHOT', '').split('.').map(Number);
+                // split version strings by dot and line then parse them to ints
+                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
+                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
+
                 // make arrays equal in length if necessary so there wont be an undefined index
                 if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
                     while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
@@ -714,15 +713,8 @@ function versionCheck(data) {
                             versionData['status'] = 'Up-to-date';
                         }
                     }
-                })}
-            catch (e) {
-                //compare strings, Replace -SNAPSHOT if found
-                if (versionData.currentVersion.replace('-SNAPSHOT','') !== versionData.latest){
-                    versionData['status'] = 'Outdated';
-                }else{
-                    versionData['status'] = 'Up-to-date';
-                }
-            }
+                });
+
 
             // Place in html
             $('#versioncheck').append(
@@ -733,7 +725,7 @@ function versionCheck(data) {
                 '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
                 '</tr>');
         });
-    }
+   }
 }
 
 /*
