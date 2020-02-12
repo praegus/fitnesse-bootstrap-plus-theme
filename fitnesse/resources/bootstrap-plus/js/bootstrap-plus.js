@@ -598,7 +598,11 @@ function tagAutocomplete(data, currentURL){
             return false;
         }
 
-        console.log('jquery: ' + $('.tagInputOverview').val());
+        for (i = 0; i < data[0].tags.length; i++) {
+            if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+                console.log(data[0].tags[i]);
+            }
+        }
     })
 }
 // Check if the tag meet the requirements
