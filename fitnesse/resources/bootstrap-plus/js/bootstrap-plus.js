@@ -672,7 +672,7 @@ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
-   const $ = require('jquery');
+//   const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
