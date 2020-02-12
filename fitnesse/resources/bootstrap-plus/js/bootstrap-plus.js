@@ -661,14 +661,11 @@ function deleteTag(successData, neededValues) {
 }
 
 /*
- DELETE END
- |
- ADD & DELETE TAGS FUNCTIONS END
+ DELETE END | ADD & DELETE TAGS FUNCTIONS END
+ */
 
-    DELETE END | ADD & DELETE TAGS FUNCTIONS END
-*/
 /*
-START VERSIONCHECKER
+ START VERSIONCHECKER
  */
 
 function getVersionData(callback, url) {
