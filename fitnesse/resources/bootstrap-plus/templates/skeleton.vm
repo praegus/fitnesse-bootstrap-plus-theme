@@ -84,7 +84,7 @@
     </div>
 </nav>
 
-<div id="contentDiv">
+<div id="contentDiv" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentEditPage" #end>
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
@@ -92,7 +92,7 @@
         </div>
     #end
 
-    <div id="content" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentWithoutFooter" #end>
+    <div id="content" >
         #parse( 'breadcrumb.vm' )
 
         <header>
