@@ -528,22 +528,26 @@ function createTagInput(currentAddTagButton) {
             $('.tagErrorMessage').remove();
         }
     });
-
-    $('.tagInputOverview').keyup(function (event) {
-        //If "Enter" button is pressed
-        if (event.keyCode == 13) {
-            //Get current input value & replace empty spaces at the start/end of input
-            const inputValue = $('.tagInputOverview').val().trim();
-            //Get href value of the a tag
+            // Get href value of the a tag
             const currentURL = $(currentAddTagButton).siblings('a').attr('href');
             //Call get current tag list function
-            GetCurrentTagList(currentURL, inputValue, checkIfNewTagIsValid);
-        }
-    });
+            GetCurrentTagList(currentURL, tagAutocomplete);
+
+    // $('.tagInputOverview').keyup(function (event) {
+    //     //If "Enter" button is pressed
+    //     if (event.keyCode == 13) {
+    //         //Get current input value & replace empty spaces at the start/end of input
+    //         const inputValue = $('.tagInputOverview').val().trim();
+    //         //Get href value of the a tag
+    //         const currentURL = $(currentAddTagButton).siblings('a').attr('href');
+    //         //Call get current tag list function
+    //         GetCurrentTagList(currentURL, inputValue, tagAutocomplete);
+    //     }
+    // });
 }
 
 // Get current tag list from the parent where you want your new tag
-function GetCurrentTagList(currentURL, newTags, callback) {
+function GetCurrentTagList(currentURL, callback) {
     // NEEDED FOR UNIT TESTING
     // const $ = require('jquery');
     //Get current tag list
@@ -552,7 +556,7 @@ function GetCurrentTagList(currentURL, newTags, callback) {
         url: 'http://' + location.host + '/' + currentURL + '?responder=tableOfContents',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: data => callback(data, currentURL, newTags),
+        success: data => callback(data, currentURL),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
@@ -561,6 +565,42 @@ function GetCurrentTagList(currentURL, newTags, callback) {
     });
 }
 
+// function autocomplete(inp, arr) {
+//     var currentFocus;
+//     inp.addEventListener("input", function(e) {
+//         var optiondiv, matches, i, typedInput = this.value;
+//         closeAllLists();
+//         if (!typedInput) { return false;}
+//         currentFocus = -1;
+//         optiondiv = document.createElement("DIV");
+//         optiondiv.setAttribute("id", this.id + "autocomplete-list");
+//         optiondiv.setAttribute("class", "autocomplete-items");
+//         this.parentNode.appendChild(optiondiv);
+//         for (i = 0; i < arr.length; i++) {
+//             if (arr[i].substr(0, typedInput.length).toUpperCase() == typedInput.toUpperCase()) {
+//                 matches = document.createElement("DIV");
+//                 /* matches.innerHTML = arr[i]
+//                   matches.innerHTML += "<option type='hidden' value='" + arr[i] + "'>";
+//                   matches.addEventListener("click", function(e) {
+//                       inp.value = this.getElementsByTagName("option")[0].value;
+//                       closeAllLists();
+//                   });*/
+//                 optiondiv.appendChild(matches);
+//             }
+//         }
+//     });
+
+function tagAutocomplete(data, currentURL){
+    $('.tagInputOverview').bind('input', function(){
+        let typedInput = $('.tagInputOverview').val();
+        if(!typedInput) {
+            // console.log('false return');
+            return false;
+        }
+
+        console.log('jquery: ' + $('.tagInputOverview').val());
+    })
+}
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentURL, newTags) {
     const lowerCaseTags = newTags.toLowerCase();
