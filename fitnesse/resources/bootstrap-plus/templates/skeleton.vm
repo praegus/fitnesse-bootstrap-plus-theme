@@ -92,14 +92,14 @@
         </div>
     #end
 
-    <div id="content">
+    <div id="content" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentWithoutFooter" #end>
         #parse( 'breadcrumb.vm' )
 
         <header>
             #parse( $headerTemplate )
         </header>
 
-        <article>
+        <article #if( $sidebar == 'true' && !$bodyClass.equalsIgnoreCase("EditPage") ) id="articleWithSidebar" #end>
             #if(!$bodyClass.equalsIgnoreCase("EditPage"))
                 ## Page Header
                 <a href="?testHistory">
@@ -114,6 +114,7 @@
                 <br>
                 <hr>
 
+                ## Tooltips front page
                 #if($pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
                     ## Tooltips
                     <div id="tooltip-div">
@@ -123,7 +124,10 @@
                 #end
             #end
 
+            ## Main template
             #parse( $mainTemplate )
+
+            ## Test history table
             #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
                 <div id="testHistoryDiv">
                     <h3>Recent Test History</h3>
@@ -134,12 +138,14 @@
                 </div>
             #end
         </article>
+
         ## Tooltips edit page
         #if($bodyClass.equalsIgnoreCase("EditPage"))
             <div id="tooltip-div-edit">
                 <p id="tooltip-text"></p>
             </div>
         #end
+
     </div>
 </div>
 
