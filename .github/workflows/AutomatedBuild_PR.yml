@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run all jest testcases
-        run: jest
+          uses: stefanoeb/jest-action@1.0.2
