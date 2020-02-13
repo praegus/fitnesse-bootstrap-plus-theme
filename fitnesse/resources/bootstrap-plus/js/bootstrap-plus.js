@@ -4,8 +4,11 @@ try {
         // Sidebar.test
         getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
-        getCurrentWorkSpace: getMainWorkSpace,
+        getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
+        toggleIconClickEvent: toggleIconClickEvent,
+        collapseSidebarIcons: collapseSidebarIcons,
+        expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
         displayToolTip: displayToolTip,
         // Tags.test
@@ -142,8 +145,16 @@ $(document).ready(function () {
 
     // Show sidebar
     if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
-        getSidebarContent(placeSidebarContent);
+        getSidebarContent(placeEverythingForSidebar);
     }
+
+    $('.collapseAllSidebar').click(function () {
+        collapseSidebarIcons(location.pathname);
+    });
+
+    $('.expandAllSidebar').click(function () {
+        expandSidebarIcons();
+    });
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
 
@@ -285,7 +296,7 @@ $(document).ready(function () {
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
-            getSidebarContent(placeSidebarContent);
+            getSidebarContent(placeEverythingForSidebar);
         }
     }
 
@@ -345,6 +356,16 @@ function getMainWorkSpace(mainWorkspace) {
     return mainWorkspace;
 }
 
+function placeEverythingForSidebar(contentArray) {
+    console.log(contentArray);
+    placeSidebarContent(contentArray);
+    toggleIconClickEvent();
+    collapseSidebarIcons(location.pathname);
+
+    // Scroll to the highlight
+    document.getElementById("highlight").scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
+}
+
 function placeSidebarContent(contentArray) {
     // Empty sidebar content
     $('#sidebarContent').html('');
@@ -355,17 +376,9 @@ function placeSidebarContent(contentArray) {
 
         // If there are children
         if (layerOne.children) {
-            sidebarContentLayerLoop(layerOne.name.replace(/\s/g, ''), layerOne.children);
+            sidebarContentLayerLoop(layerOne.path.replace(/\./g, ''), layerOne.children);
         }
     });
-
-    toggleIconClickEvent();
-    collapseSidebarIcons();
-
-    // Scroll to the highlight
-    $('#sidebarContent').animate({
-        scrollTop: $('#highlight').offset().top
-    }, 'slow');
 }
 
 function sidebarContentLayerLoop(suiteName, children) {
@@ -377,7 +390,7 @@ function sidebarContentLayerLoop(suiteName, children) {
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
 
         if (content.children) {
-            sidebarContentLayerLoop(content.name.replace(/\s/g, ''), content.children);
+            sidebarContentLayerLoop(content.path.replace(/\./g, ''), content.children);
         }
     });
 }
@@ -390,7 +403,7 @@ function getSidebarContentHtml(content) {
     const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
 
     const htmlContent =
-        '<li id="' + content.name.replace(/\s/g, '') + '">' +
+        '<li id="' + content.path.replace(/\./g, '') + '">' +
             '<div' + highlight + '>' +
                 '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
                 '&nbsp;' +
@@ -418,13 +431,20 @@ function toggleIconClickEvent() {
 }
 
 // Collapse all sidebar icons expect the route you are in
-function collapseSidebarIcons() {
+function collapseSidebarIcons(path) {
     // Close all
     $('#sidebarContent .iconToggle').parent().siblings('ul').css({ 'display': 'none' });
+    $('#sidebarContent .iconToggle').removeClass('fa-angle-down');
+    $('#sidebarContent .iconToggle').addClass('fa-angle-right');
 
     // Expand the route you are in
-    const path = location.pathname.slice(1);
-    const idNames = path.split('.');
+    // Removes the / from the location.pathname
+    path = path.slice(1);
+    const names = path.split('.');
+    let idNames = [];
+    names.forEach(name => {
+        idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name);
+    });
     idNames.forEach(id => {
         $('#sidebarContent #' + id + ' ul').first().css({ 'display': 'block' });
         $('#sidebarContent #' + id + ' .iconToggle').first().removeClass('fa-angle-right');
@@ -435,8 +455,8 @@ function collapseSidebarIcons() {
 // Collapse all sidebar icons expect
 function expandSidebarIcons() {
     $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
-    $('#sidebarContent .iconToggle').first().removeClass('fa-angle-down');
-    $('#sidebarContent .iconToggle').first().addClass('fa-angle-right');
+    $('#sidebarContent .iconToggle').removeClass('fa-angle-right');
+    $('#sidebarContent .iconToggle').addClass('fa-angle-down');
 }
 
 /*

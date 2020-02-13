@@ -1199,12 +1199,30 @@ kbd {
 /* Sidebar */
 
 #sidebar {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   min-width: 300px;
   max-width: 300px;
   height: 100%;
   background-color: #f8f8f8;
   border-right: 1px solid #e7e7e7;
+}
+
+.buttonSidbarDiv {
+  display: flex;
+  padding: 10px 15px 0;
+
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
+.expandAllSidebar {
+  margin-left: auto !important;
 }
 
 #highlight {
@@ -1222,6 +1240,7 @@ kbd {
   overflow: auto;
   white-space: nowrap;
   display: flex;
+  margin-bottom: 0;
 }
 
 #sidebarContent li {
