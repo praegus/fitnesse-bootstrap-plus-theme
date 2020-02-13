@@ -20,6 +20,6 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
-      - name: Run tests
+      - name: Run Jest
         run: |
           yarn jest
