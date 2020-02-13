@@ -357,13 +357,12 @@ function getMainWorkSpace(mainWorkspace) {
 }
 
 function placeEverythingForSidebar(contentArray) {
-    console.log(contentArray);
     placeSidebarContent(contentArray);
     toggleIconClickEvent();
     collapseSidebarIcons(location.pathname);
 
     // Scroll to the highlight
-    document.getElementById("highlight").scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
+    document.getElementById('highlight').scrollIntoView({ block: 'center' });
 }
 
 function placeSidebarContent(contentArray) {
