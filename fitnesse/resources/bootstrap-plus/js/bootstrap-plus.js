@@ -517,10 +517,8 @@ function createTagInput(currentAddTagButton) {
     $('#autocompleteTags').remove();
     //Add input field
     $(currentAddTagButton).after('<div id="autocompleteTags"><input type="text" class="tagInputOverview"> <div id="autocompleteTagsItems"></div> </div>');
-
     //Add focus after clicking button
     $('.tagInputOverview').focus();
-
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
         $('#autocompleteTags').remove();
@@ -529,9 +527,14 @@ function createTagInput(currentAddTagButton) {
         }
     });
             // Get href value of the a tag
-            const currentURL = $(currentAddTagButton).siblings('a').attr('href');
+            const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
+            const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
+            const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
+            console.log("Main Suite: " + currentMainSuiteURL);
+            console.log("Page: "+ currentPageURL);
+            console.log(indexPointURl);
             //Call get current tag list function
-            GetCurrentTagList(currentURL, tagAutocomplete);
+            GetCurrentTagList(currentMainSuiteURL, tagAutocomplete);
 
     // $('.tagInputOverview').keyup(function (event) {
     //     //If "Enter" button is pressed
@@ -539,24 +542,24 @@ function createTagInput(currentAddTagButton) {
     //         //Get current input value & replace empty spaces at the start/end of input
     //         const inputValue = $('.tagInputOverview').val().trim();
     //         //Get href value of the a tag
-    //         const currentURL = $(currentAddTagButton).siblings('a').attr('href');
+    //         const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
     //         //Call get current tag list function
-    //         GetCurrentTagList(currentURL, inputValue, tagAutocomplete);
+    //         GetCurrentTagList(currentPageURL, inputValue, tagAutocomplete);
     //     }
     // });
 }
 
 // Get current tag list from the parent where you want your new tag
-function GetCurrentTagList(currentURL, callback) {
+function GetCurrentTagList(currentPageURL, callback) {
     // NEEDED FOR UNIT TESTING
     // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',
-        url: 'http://' + location.host + '/' + currentURL + '?responder=tableOfContents',
+        url: 'http://' + location.host + '/' + currentPageURL + '?responder=tableOfContents',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: data => callback(data, currentURL),
+        success: data => callback(data, currentPageURL),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
@@ -565,50 +568,65 @@ function GetCurrentTagList(currentURL, callback) {
     });
 }
 
-// function autocomplete(inp, arr) {
-//     var currentFocus;
-//     inp.addEventListener("input", function(e) {
-//         var optiondiv, matches, i, typedInput = this.value;
-//         closeAllLists();
-//         if (!typedInput) { return false;}
-//         currentFocus = -1;
-//         optiondiv = document.createElement("DIV");
-//         optiondiv.setAttribute("id", this.id + "autocomplete-list");
-//         optiondiv.setAttribute("class", "autocomplete-items");
-//         this.parentNode.appendChild(optiondiv);
-//         for (i = 0; i < arr.length; i++) {
-//             if (arr[i].substr(0, typedInput.length).toUpperCase() == typedInput.toUpperCase()) {
-//                 matches = document.createElement("DIV");
-//                 /* matches.innerHTML = arr[i]
-//                   matches.innerHTML += "<option type='hidden' value='" + arr[i] + "'>";
-//                   matches.addEventListener("click", function(e) {
-//                       inp.value = this.getElementsByTagName("option")[0].value;
-//                       closeAllLists();
-//                   });*/
-//                 optiondiv.appendChild(matches);
-//             }
-//         }
-//     });
-
-function tagAutocomplete(data, currentURL) {
+function tagAutocomplete(data, currentMainSuiteURL) {
     $('.tagInputOverview').bind('input', function () {
         let typedInput = $('.tagInputOverview').val();
         $('#autocompleteTagsItems').html('');
         if (!typedInput) {
             return false;
         }
-        for (i = 0; i < data[0].tags.length; i++) {
-            if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-                $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + data[0].tags[i] + '</p>');
-                $('#autocompleteTagItems').click(function () {
-                    console.log("clicked"+[i]);
-                })
-            }
-        }
+
+        // $.each(data.children, function (i, data) {
+        //     console.log(data);
+
+            // if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+            //     console.log("In if");
+            //     $('#autocompleteTagsItems').append('<p class="tagsOptions"' + i + '">' + data[0].tags[i] + '</p>');
+            //     console.log("After append: "+ $('#autocompleteTagsItems'));
+            // }
+        //})
+        // for (i = 0; i < data[0].tags.length; i++) {
+        //     if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+        //         $('#autocompleteTagsItems').append('<p class="tagsOptions"' + i + '">' + data[0].tags[i] + '</p>');
+        //     }
+        // }
+
+        // $('#autocompleteTagsItems .tagOptions').click(function() {
+        //     console.log("clicked"+[i]);
+        //     console.log("Inside click");
+        // });
+
     });
 }
+
+//Lisa's try:
+// function tagAutocomplete(data, currentPageURL) {
+//     $('.tagInputOverview').bind('input', function () {
+//         let typedInput = $('.tagInputOverview').val();
+//         $('#autocompleteTagsItems').html('');
+//         if (!typedInput) {
+//             return false;
+//         }
+//         for (i = 0; i < data[0].tags.length; i++) {
+//             if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+//                 console.log("Inside ready");
+//                 $('#autocompleteTagsItems').append('<p class="tagsOptions" id="' + i + '">' + data[0].tags[i] + '</p>');
+//
+//                 $('#autocompleteTagsItems #' + i).click(function() {
+//                     console.log("clicked"+[i]);
+//                     console.log("Inside click");
+//                 });
+//
+//                 console.log($('#autocompleteTagsItems').html());
+//                 console.log($('#autocompleteTagsItems #' + i));
+//             }
+//         }
+//     });
+//
+//
+// }
 // Check if the tag meet the requirements
-function checkIfNewTagIsValid(data, currentURL, newTags) {
+function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     const lowerCaseTags = newTags.toLowerCase();
 
     //Check if error message is present and remove it when it's true
@@ -626,20 +644,20 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
         // Post tags
         const currentTagString = data[0].tags.join(', ');
         const tagList = currentTagString.length > 0 ? currentTagString + ', ' + lowerCaseTags : lowerCaseTags;
-        const url = 'http://' + location.host + '/' + currentURL;
-        postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
+        const url = 'http://' + location.host + '/' + currentPageURL;
+        postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
 }
 
 // Post Tag in the html
 function postTagInHtml(successData, neededValues) {
     //Add new tag span layout to page
-    $('.contents a[href$=\'' + neededValues.currentURL + '\']').parent().after('<span class=\'tag\'>' + neededValues.newTags + ' <i class="fas fa-times deleteTagButton"></i></span>');
+    $('.contents a[href$=\'' + neededValues.currentPageURL + '\']').parent().after('<span class=\'tag\'>' + neededValues.newTags + ' <i class="fas fa-times deleteTagButton"></i></span>');
     //Remove input field
     $('.tagInputOverview').remove();
 
     // Find new tag
-    const newDeleteTagButton = $('a[href$=\'' + neededValues.currentURL + '\']').parent().parent().find('.deleteTagButton').first();
+    const newDeleteTagButton = $('a[href$=\'' + neededValues.currentPageURL + '\']').parent().parent().find('.deleteTagButton').first();
     // Assign hover listener to new tag
     deleteClickAndHoverEvent(newDeleteTagButton);
 }
