@@ -359,9 +359,13 @@ function placeSidebarContent(contentArray) {
         }
     });
 
-    $('#sidebarContent .fa-cogs').click(function () {
-        $(this).parent().siblings('ul').toggle();
-    });
+    toggleIconClickEvent();
+    collapseSidebarIcons();
+
+    // Scroll to the highlight
+    $('#sidebarContent').animate({
+        scrollTop: $('#highlight').offset().top
+    }, 'slow');
 }
 
 function sidebarContentLayerLoop(suiteName, children) {
@@ -383,16 +387,56 @@ function getSidebarContentHtml(content) {
     const iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     const prunedClass = content.type.includes('pruned') ? ' pruned' : '';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
+    const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
 
     const htmlContent =
         '<li id="' + content.name.replace(/\s/g, '') + '">' +
-        '<div' + highlight + '>' +
-        '<i class="' + iconClass + '" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
-        '</div>' +
+            '<div' + highlight + '>' +
+                '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+                '&nbsp;' +
+                '<i class="' + iconClass + '" aria-hidden="true"></i>' +
+                '&nbsp;' +
+                '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
+            '</div>' +
         '</li>';
     return htmlContent;
+}
+
+// Set a click event an the sidebar toggle icons
+function toggleIconClickEvent() {
+    $('#sidebarContent .iconToggle').click(function () {
+        $(this).parent().siblings('ul').toggle();
+
+        if ($(this)[0].className === 'iconToggle iconWidth fa fa-angle-down') {
+            $(this).removeClass('fa-angle-down');
+            $(this).addClass('fa-angle-right');
+        } else {
+            $(this).removeClass('fa-angle-right');
+            $(this).addClass('fa-angle-down');
+        }
+    });
+}
+
+// Collapse all sidebar icons expect the route you are in
+function collapseSidebarIcons() {
+    // Close all
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({ 'display': 'none' });
+
+    // Expand the route you are in
+    const path = location.pathname.slice(1);
+    const idNames = path.split('.');
+    idNames.forEach(id => {
+        $('#sidebarContent #' + id + ' ul').first().css({ 'display': 'block' });
+        $('#sidebarContent #' + id + ' .iconToggle').first().removeClass('fa-angle-right');
+        $('#sidebarContent #' + id + ' .iconToggle').first().addClass('fa-angle-down');
+    });
+}
+
+// Collapse all sidebar icons expect
+function expandSidebarIcons() {
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
+    $('#sidebarContent .iconToggle').first().removeClass('fa-angle-down');
+    $('#sidebarContent .iconToggle').first().addClass('fa-angle-right');
 }
 
 /*

@@ -1209,7 +1209,7 @@ kbd {
 
 #highlight {
   background-color: #e7e7e7;
-  box-shadow: -100px 0 0 0 #e7e7e7;
+  box-shadow: -100px 0 0 0 #e7e7e7, 100px 0 0 0 #e7e7e7;
 }
 
 .displayNone {
@@ -1226,10 +1226,11 @@ kbd {
 
 #sidebarContent li {
   list-style-type: none;
+  min-width: 200px;
 }
 
 #sidebarContent ul {
-  padding-left: 18px;
+  padding-left: 15px;
 }
 
 #sidebarContent div {
@@ -1248,6 +1249,17 @@ kbd {
   text-decoration: line-through;
 }
 
+#sidebarContent .iconToggle {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#sidebarContent .iconWidth {
+  display: inline-block;
+  width: 10px;
+}
+
 /* Test History */
 
 #testHistoryDiv{
@@ -1256,4 +1268,23 @@ kbd {
 
 #testHistoryDiv > a {
   float:right;
+}
+
+/* Scrollbar */
+
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888888;
 }
