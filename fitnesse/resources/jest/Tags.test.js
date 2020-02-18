@@ -6,7 +6,7 @@ beforeEach(() => jest.resetModules());
     BOTH ADD AND DELETE START
 */
 // postTagRequest
-it('calls into $.ajax with the correct params', () => {
+it.skip('calls into $.ajax with the correct params', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
 
@@ -67,7 +67,7 @@ it('Test if the tag input element has functions', () => {
 });
 
 // GetCurrentTagList
-it('calls into $.ajax with the correct params', () => {
+it.skip('calls into $.ajax with the correct params', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
 
@@ -89,7 +89,7 @@ it('calls into $.ajax with the correct params', () => {
 });
 
 // GetCurrentTagList
-it('calls the callback when $.ajax requests are finished', () => {
+it.skip('calls the callback when $.ajax requests are finished', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     // const testFunctions = require('../bootstrap-plus/js/test');

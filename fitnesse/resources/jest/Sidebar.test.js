@@ -2,7 +2,7 @@ jest.mock('jquery');
 
 beforeEach(() => jest.resetModules());
 
-it('Test if $.ajax has the correct params', () => {
+it.skip('Test if $.ajax has the correct params', () => {
     const $ = require('jquery');
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const dummyCallback = () => {
@@ -22,7 +22,7 @@ it('Test if $.ajax has the correct params', () => {
     expect($.ajax).toBeCalledWith(expectedResult);
 });
 
-it('Test the callback when $.ajax request is finished if the result is correct', () => {
+it.skip('Test the callback when $.ajax request is finished if the result is correct', () => {
     const $ = require('jquery');
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const callback = jest.fn();
