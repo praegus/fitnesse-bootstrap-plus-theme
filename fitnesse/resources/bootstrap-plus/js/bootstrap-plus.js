@@ -556,7 +556,7 @@ function GetCurrentTagList(currentPageURL, callback) {
     //Get current tag list
     $.ajax({
         type: 'GET',
-        url: 'http://' + location.host + '/' + currentPageURL + '?responder=tableOfContents',
+        url: 'http://' + location.host + '/' + currentPageURL + '?responder=allTags',
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: data => callback(data, currentPageURL),
@@ -574,6 +574,12 @@ function tagAutocomplete(data, currentMainSuiteURL) {
         $('#autocompleteTagsItems').html('');
         if (!typedInput) {
             return false;
+        }
+
+        const getFirstKey = data[Object.keys(data)[0]];
+
+        for (i = 0; i < getFirstKey.length; i++) {
+            console.log(getFirstKey[i]);
         }
 
         // $.each(data.children, function (i, data) {
