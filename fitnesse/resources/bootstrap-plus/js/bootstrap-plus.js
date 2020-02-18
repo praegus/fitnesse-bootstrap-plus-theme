@@ -478,6 +478,20 @@ function displayToolTip(text) {
 // Places picked tooltips on the page
 function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
+    if(tipsArray[pickedTip].contains('<a>') === true){
+        var domparser = new DOMParser();
+        var html = domparser.parseFromString(tipsArray[pickedTip],'text/html');
+        console.log(html);
+        for(var i = 0;i<html.body.childNodes.length;i++){
+            if(html.body.childNodes[i].tagName !="A"&& html.body.childNodes[i].nodeName !="#text"){
+                console.log("hey");
+                html.body.childNodes[i].remove();
+                console.log(html.body);
+            }
+
+        }
+
+    }
     if (textfield) {
         textfield.innerText = tipsArray[pickedTip];
     }
