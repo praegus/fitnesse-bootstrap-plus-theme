@@ -362,7 +362,7 @@ function placeEverythingForSidebar(contentArray) {
     collapseSidebarIcons(location.pathname);
 
     // Scroll to the highlight
-    document.getElementById('highlight').scrollIntoView({ block: 'center' });
+    document.getElementById('highlight').scrollIntoView({block: 'center'});
 }
 
 function placeSidebarContent(contentArray) {
@@ -403,13 +403,13 @@ function getSidebarContentHtml(content) {
 
     const htmlContent =
         '<li id="' + content.path.replace(/\./g, '') + '">' +
-            '<div' + highlight + '>' +
-                '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
-                '&nbsp;' +
-                '<i class="' + iconClass + '" aria-hidden="true"></i>' +
-                '&nbsp;' +
-                '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
-            '</div>' +
+        '<div' + highlight + '>' +
+        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+        '&nbsp;' +
+        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
+        '&nbsp;' +
+        '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
+        '</div>' +
         '</li>';
     return htmlContent;
 }
@@ -432,7 +432,7 @@ function toggleIconClickEvent() {
 // Collapse all sidebar icons expect the route you are in
 function collapseSidebarIcons(path) {
     // Close all
-    $('#sidebarContent .iconToggle').parent().siblings('ul').css({ 'display': 'none' });
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'none'});
     $('#sidebarContent .iconToggle').removeClass('fa-angle-down');
     $('#sidebarContent .iconToggle').addClass('fa-angle-right');
 
@@ -441,11 +441,9 @@ function collapseSidebarIcons(path) {
     path = path.slice(1);
     const names = path.split('.');
     let idNames = [];
-    names.forEach(name => {
-        idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name);
-    });
+    names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
     idNames.forEach(id => {
-        $('#sidebarContent #' + id + ' ul').first().css({ 'display': 'block' });
+        $('#sidebarContent #' + id + ' ul').first().css({'display': 'block'});
         $('#sidebarContent #' + id + ' .iconToggle').first().removeClass('fa-angle-right');
         $('#sidebarContent #' + id + ' .iconToggle').first().addClass('fa-angle-down');
     });
