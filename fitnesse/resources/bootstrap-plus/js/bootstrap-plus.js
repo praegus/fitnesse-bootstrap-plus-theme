@@ -324,7 +324,7 @@ $(document).ready(function () {
 // Sidebar content
 function getSidebarContent(callback) {
     // Needed for unit testing
-    //  const $ = require('jquery');
+    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
@@ -403,7 +403,7 @@ function getSidebarContentHtml(content) {
 
 function getPageHistory(url, callback) {
     // Needed for unit testing
-    //   const $ = require('jquery');
+    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
