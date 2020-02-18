@@ -521,7 +521,7 @@ function createTagInput(currentAddTagButton) {
     $('.tagInputOverview').focus();
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
-        $('#autocompleteTags').remove();
+        // $('#autocompleteTags').remove();
         if ($('.tagErrorMessage').length) {
             $('.tagErrorMessage').remove();
         }
@@ -536,17 +536,6 @@ function createTagInput(currentAddTagButton) {
             //Call get current tag list function
             GetCurrentTagList(currentMainSuiteURL, tagAutocomplete);
 
-    // $('.tagInputOverview').keyup(function (event) {
-    //     //If "Enter" button is pressed
-    //     if (event.keyCode == 13) {
-    //         //Get current input value & replace empty spaces at the start/end of input
-    //         const inputValue = $('.tagInputOverview').val().trim();
-    //         //Get href value of the a tag
-    //         const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
-    //         //Call get current tag list function
-    //         GetCurrentTagList(currentPageURL, inputValue, tagAutocomplete);
-    //     }
-    // });
 }
 
 // Get current tag list from the parent where you want your new tag
@@ -575,62 +564,19 @@ function tagAutocomplete(data, currentMainSuiteURL) {
         if (!typedInput) {
             return false;
         }
-
         const getFirstKey = data[Object.keys(data)[0]];
-
         for (i = 0; i < getFirstKey.length; i++) {
-            console.log(getFirstKey[i]);
+            if (getFirstKey[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+                $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + getFirstKey[i] + '</p>');
+            }
         }
-
-        // $.each(data.children, function (i, data) {
-        //     console.log(data);
-
-            // if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-            //     console.log("In if");
-            //     $('#autocompleteTagsItems').append('<p class="tagsOptions"' + i + '">' + data[0].tags[i] + '</p>');
-            //     console.log("After append: "+ $('#autocompleteTagsItems'));
-            // }
-        //})
-        // for (i = 0; i < data[0].tags.length; i++) {
-        //     if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-        //         $('#autocompleteTagsItems').append('<p class="tagsOptions"' + i + '">' + data[0].tags[i] + '</p>');
-        //     }
-        // }
-
-        // $('#autocompleteTagsItems .tagOptions').click(function() {
-        //     console.log("clicked"+[i]);
-        //     console.log("Inside click");
-        // });
-
+        $('.tagsOptions' ).click( function() {
+            $('.tagInputOverview').val($(this).text());
+        });
     });
 }
 
-//Lisa's try:
-// function tagAutocomplete(data, currentPageURL) {
-//     $('.tagInputOverview').bind('input', function () {
-//         let typedInput = $('.tagInputOverview').val();
-//         $('#autocompleteTagsItems').html('');
-//         if (!typedInput) {
-//             return false;
-//         }
-//         for (i = 0; i < data[0].tags.length; i++) {
-//             if (data[0].tags[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-//                 console.log("Inside ready");
-//                 $('#autocompleteTagsItems').append('<p class="tagsOptions" id="' + i + '">' + data[0].tags[i] + '</p>');
-//
-//                 $('#autocompleteTagsItems #' + i).click(function() {
-//                     console.log("clicked"+[i]);
-//                     console.log("Inside click");
-//                 });
-//
-//                 console.log($('#autocompleteTagsItems').html());
-//                 console.log($('#autocompleteTagsItems #' + i));
-//             }
-//         }
-//     });
-//
-//
-// }
+
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     const lowerCaseTags = newTags.toLowerCase();
