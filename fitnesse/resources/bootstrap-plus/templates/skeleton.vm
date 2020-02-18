@@ -97,7 +97,7 @@
         </div>
     #end
 
-    <div id="content" class="scrollbar">
+    <div id="content">
         #parse( 'breadcrumb.vm' )
 
         <header>
