@@ -521,34 +521,39 @@ function createTagInput(currentAddTagButton) {
     $('.tagInputOverview').focus();
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
-        // $('#autocompleteTags').remove();
         if ($('.tagErrorMessage').length) {
             $('.tagErrorMessage').remove();
         }
     });
-            // Get href value of the a tag
-            const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
-            const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
-            const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
-            console.log("Main Suite: " + currentMainSuiteURL);
-            console.log("Page: "+ currentPageURL);
-            console.log(indexPointURl);
-            //Call get current tag list function
-            GetCurrentTagList(currentMainSuiteURL, tagAutocomplete);
 
+     // Get href value of the a tag
+    const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
+    const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
+    const responderURL = '?responder=allTags';
+    //Call get current tag list function
+    GetCurrentTagList(tagAutocomplete, currentMainSuiteURL, responderURL);
+
+    $('.tagInputOverview').keyup(function (event){
+        if(event.keyCode === 13){
+            const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
+            const responderURL = '?responder=tableOfContents';
+            const inputValue = $('.tagInputOverview').val().trim();
+            GetCurrentTagList(checkIfNewTagIsValid, currentPageURL, responderURL, inputValue);
+        }
+    });
 }
 
 // Get current tag list from the parent where you want your new tag
-function GetCurrentTagList(currentPageURL, callback) {
+function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     // NEEDED FOR UNIT TESTING
     // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',
-        url: 'http://' + location.host + '/' + currentPageURL + '?responder=allTags',
+        url: 'http://' + location.host + '/' + currentPageURL + responderURL,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: data => callback(data, currentPageURL),
+        success: data => callback(data, currentPageURL, newTags),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
@@ -599,6 +604,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         const url = 'http://' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
+    $('#autocompleteTags').remove();
 }
 
 // Post Tag in the html
