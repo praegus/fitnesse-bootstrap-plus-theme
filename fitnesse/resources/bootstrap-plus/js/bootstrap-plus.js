@@ -596,7 +596,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     } else {
         // Post tags
         const currentTagString = data[0].tags.join(', ');
-        const tagList = currentTagString.length > 0 ? currentTagString + ', ' + lowerCaseTags : lowerCaseTags;
+        const tagList = currentTagString.length > 0 ? currentTagString + ', ' + newTags : newTags;
         const url = 'http://' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
