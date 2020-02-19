@@ -567,10 +567,17 @@ function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
 
 function tagAutocomplete(data) {
     $('.tagInputOverview').autocomplete({
-        source: data[Object.keys(data)]
+        source: function(request, response) {
+            const results = $.ui.autocomplete.filter(data[Object.keys(data)], request.term);
+            // Show the words in alphabetical order
+            results.sort();
+            // Show only up to 5 words
+            response(results.slice(0, 5));
+        }
     });
+    // Only show words that begin with the input value
     $.ui.autocomplete.filter = function (array, term) {
-        var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+        const matcher = new RegExp('^' + $.ui.autocomplete.escapeRegex(term), 'i');
         return $.grep(array, function (value) {
             return matcher.test(value.label || value.value || value);
         });
