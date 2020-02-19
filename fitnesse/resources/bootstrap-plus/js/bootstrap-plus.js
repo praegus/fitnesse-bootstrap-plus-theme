@@ -313,6 +313,25 @@ $(document).ready(function () {
     $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
 
     deleteClickAndHoverEvent('.deleteTagButton');
+
+    // $(function () {
+    //     const availableTags = [
+    //         'ActionScript',
+    //         'AppleScript',
+    //         'Asp',
+    //         'Scala',
+    //         'Scheme'
+    //     ];
+    //     $('#tags').autocomplete({
+    //         source: availableTags
+    //     });
+    //     $.ui.autocomplete.filter = function (array, term) {
+    //         var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+    //         return $.grep(array, function (value) {
+    //             return matcher.test(value.label || value.value || value);
+    //         });
+    //     };
+    // });
 });
 
 /*
@@ -514,9 +533,9 @@ function postTagRequest(callback, url, tagList, neededValues) {
 // When pressed an add new tag button create a input to make te new tag in
 function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
-    $('#autocompleteTags').remove();
+    $('.tagInputOverview').remove();
     //Add input field
-    $(currentAddTagButton).after('<div id="autocompleteTags"><input type="text" class="tagInputOverview"> <div id="autocompleteTagsItems"></div> </div>');
+    $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
     //Add focus after clicking button
     $('.tagInputOverview').focus();
     //Remove tag input (& tag error message) when focus is out of the input field
@@ -562,24 +581,37 @@ function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     });
 }
 
-function tagAutocomplete(data, currentMainSuiteURL) {
-    $('.tagInputOverview').bind('input', function () {
-        let typedInput = $('.tagInputOverview').val();
-        $('#autocompleteTagsItems').html('');
-        if (!typedInput) {
-            return false;
-        }
-        const getFirstKey = data[Object.keys(data)[0]];
-        for (i = 0; i < getFirstKey.length; i++) {
-            if (getFirstKey[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-                $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + getFirstKey[i] + '</p>');
-            }
-        }
-        $('.tagsOptions' ).click( function() {
-            $('.tagInputOverview').val($(this).text());
-        });
+function tagAutocomplete(data) {
+    $('.tagInputOverview').autocomplete({
+        source: data[Object.keys(data)]
     });
+    $.ui.autocomplete.filter = function (array, term) {
+        var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex(term), "i");
+        return $.grep(array, function (value) {
+            return matcher.test(value.label || value.value || value);
+        });
+    };
 }
+
+// function tagAutocomplete(data, currentMainSuiteURL) {
+//     $('.tagInputOverview').bind('input', function () {
+//         let typedInput = $('.tagInputOverview').val();
+//         $('#autocompleteTagsItems').html('');
+//         if (!typedInput) {
+//             return false;
+//         }
+//         const getFirstKey = data[Object.keys(data)[0]];
+//         for (i = 0; i < getFirstKey.length; i++) {
+//             if (getFirstKey[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
+//                 $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + getFirstKey[i] + '</p>');
+//             }
+//         }
+//         $('.tagsOptions' ).click( function() {
+//             $('.tagInputOverview').val($(this).text());
+//         });
+//     });
+// }
+
 
 
 // Check if the tag meet the requirements
@@ -604,7 +636,6 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         const url = 'http://' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
-    $('#autocompleteTags').remove();
 }
 
 // Post Tag in the html
