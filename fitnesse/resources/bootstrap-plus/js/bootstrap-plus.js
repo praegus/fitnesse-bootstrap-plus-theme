@@ -8,6 +8,7 @@ try {
         placeSidebarContent: placeSidebarContent,
         // Tooltip.test
         displayToolTip: displayToolTip,
+        placeToolTip:placeToolTip,
         // Tags.test
         postTagRequest: postTagRequest,
         createTagInput: createTagInput,
@@ -478,25 +479,12 @@ function displayToolTip(text) {
 // Places picked tooltips on the page
 function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
-    let tip = tipsArray[pickedTip];
-    if(tip.includes('<a') === true){
-    const parser = new DOMParser();
-    const linkbegin = tipsArray[pickedTip].indexOf('<a');
-    const linkend = tipsArray[pickedTip].indexOf('</a>')+4;
-    const link = tipsArray[pickedTip].substring(linkbegin,linkend);
-
-    const html = parser.parseFromString(link,"text/html");
-    tip = tip.replace(/<a.*?a>/m,', ,').split(',');
-    console.log(html.body.getElementsByTagName("a")[0]);
-    console.log(tip[0]+html.body.getElementsByTagName("a")[0]+tip[2]);
-
-    textfield.innerText += tip[0];
-    textfield.innerHTML += html.body.getElementsByTagName("a")[0];
-    textfield.innerText += tip[2];
-    console.log(textfield);
-    }
-    else{
-        textfield.innerText = tipsArray[pickedTip];
+    if (textfield) {
+        if (tipsArray[pickedTip].includes('</a>') === true && tipsArray[pickedTip].includes('<script>') === false) {
+            textfield.innerHTML = tipsArray[pickedTip];
+        } else {
+            textfield.innerText = tipsArray[pickedTip];
+        }
     }
 }
 
