@@ -98,7 +98,7 @@ function processSymbolData(str) {
 
 $(document).ready(function () {
     // Tooltips
-    getToolTips(displayToolTip);
+    getToolTips(placeToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
@@ -464,20 +464,13 @@ function getToolTips(callback) {
     });
 }
 
-// Picks random tooltip
-function displayToolTip(text) {
-    // Picks random tip
+
+// Places picked tooltips on the page
+function placeToolTip(text) {
+    //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
-    placeToolTip(tipsArray, pickedTip);
-
-    // Returns chosen tip in string for jest
-    return pickedTip + ',' + tipsArray[pickedTip];
-}
-
-// Places picked tooltips on the page
-function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
         // check if theres not a script tag in the tooltip if theres a link in it because we dont want to execute scripts from a tooltip
