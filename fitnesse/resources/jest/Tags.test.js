@@ -6,26 +6,27 @@ beforeEach(() => jest.resetModules());
     BOTH ADD AND DELETE START
 */
 // postTagRequest
-it('calls into $.ajax with the correct params', () => {
+it('Postrequest with the correct params', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
 
     // Call into the function we want to test
     const dummyCallback = () => {};
-    const url = "http://localhost:9090/TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas"
+    const url = "http://localhost:9090/TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas";
     // fetchCurrentUser(dummyCallback);
     functions.postTagRequest(dummyCallback, url, "", {});
     // Now make sure that $.ajax was properly called during the previous
     // 2 lines
-    expect($.ajax).toBeCalledWith({
+    const expectedResult = {
         type: 'POST',
         url: expect.any(String),
         contentType: 'application/json; charset=utf-8',
-        data: expect.stringContaining('responder=updateTags&suites='),
+        data: expect.stringContaining('responder=updateTags&suites=') ,
         dataType: 'json',
         success: expect.any(Function),
         error: expect.any(Function)
-    });
+    };
+    expect($.ajax).toBeCalledWith(expectedResult);
 });
 
 /*
@@ -67,25 +68,27 @@ it('Test if the tag input element has functions', () => {
 });
 
 // GetCurrentTagList
-it('calls into $.ajax with the correct params', () => {
+it('Get request with the correct params', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
-
+    const responder = '?responder=tableOfContents';
+    const currentMainSuiteURL = 'http://localhost:9090/TestSuiteDemo';
     // Call into the function we want to test
     const dummyCallback = () => {};
     // fetchCurrentUser(dummyCallback);
-    functions.GetCurrentTagList(dummyCallback);
+    functions.GetCurrentTagList(dummyCallback, currentMainSuiteURL, responder);
 
     // Now make sure that $.ajax was properly called during the previous
     // 2 lines
-    expect($.ajax).toBeCalledWith({
+    const expectedResult = {
         type: 'GET',
         url: expect.stringContaining('?responder=tableOfContents'),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: expect.any(Function),
         error: expect.any(Function)
-    });
+    };
+    expect($.ajax).toBeCalledWith(expectedResult);
 });
 
 // GetCurrentTagList
