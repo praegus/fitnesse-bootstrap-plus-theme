@@ -7,8 +7,8 @@ try {
         getCurrentWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         // Tooltip.test
-        displayToolTip: displayToolTip,
         placeToolTip:placeToolTip,
+        getToolTips:getToolTips,
         // Tags.test
         postTagRequest: postTagRequest,
         createTagInput: createTagInput,
@@ -457,16 +457,23 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data) {
-        const tooltips = data;
-        // Activate function displayToolTip
-        callback(tooltips);
+    //const $ = require('jquery');
+    $.ajax({
+        type: 'GET',
+        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log('Error code: ' + xhr.status, xhr);
+        }
     });
 }
 
 
 // Places picked tooltips on the page
 function placeToolTip(text) {
+    console.log(text);
     //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
