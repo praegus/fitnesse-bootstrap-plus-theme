@@ -1,16 +1,16 @@
 const tooltip = require('bootstrap-plus/js/bootstrap-plus');
 //checks if inputted CSV format data comes out correctly
 test('tooltip Correct data randomization test', () => {
-    document.body.innerHTML=
-        '<p id="tooltip">'+'</p>';
+    document.body.innerHTML =
+        '<p id="tooltip">' + '</p>';
 
     //init code
-    var text = "text1,text2,text3";
-    var textarray = text.split(",");
+    var text = 'text1,text2,text3';
+    var textarray = text.split(',');
     //splits off result from other test
-    var result = tooltip.displayToolTip(text)
+    var result = tooltip.displayToolTip(text);
     //splits usable result
-    var seperatedresult = result[2].split(",");
+    var seperatedresult = result[2].split(',');
     expect(textarray[seperatedresult[0]]).toBe(seperatedresult[1]);
 });
 
@@ -20,9 +20,9 @@ it('Check if links work correctly', () => {
     const expectedResult = 'A';
 
     document.body.innerHTML = neededHTML;
-    jsfile.placeToolTip(['this is a <a>Link</a>this is a <a>Link</a>'],0);
+    jsfile.placeToolTip(['this is a <a>Link</a>this is a <a>Link</a>'], 0);
 
-    const receivedResult = document.getElementById('tooltip-text').getElementsByTagName("a")[0].tagName;
+    const receivedResult = document.getElementById('tooltip-text').getElementsByTagName('a')[0].tagName;
 
     expect(receivedResult).toMatch(expectedResult);
 });
@@ -33,7 +33,7 @@ it('Check if other elements is not as element but as text', () => {
     const expectedResult = 'this is a <div>div</div>';
 
     document.body.innerHTML = neededHTML;
-    jsfile.placeToolTip(['this is a <div>div</div>'],0);
+    jsfile.placeToolTip(['this is a <div>div</div>'], 0);
     const receivedResult = document.getElementById('tooltip-text').innerText;
     const receivedResult2 = document.getElementById('tooltip-text').getElementsByTagName('div')[0];
 
@@ -47,22 +47,22 @@ it('Check if there is a script tag, tooltip will not be displayed as html', () =
     const expectedResult = 'this is a <a>Link</a>this is a <a>Link</a><script>';
 
     document.body.innerHTML = neededHTML;
-    jsfile.placeToolTip(['this is a <a>Link</a>this is a <a>Link</a><script>'],0);
+    jsfile.placeToolTip(['this is a <a>Link</a>this is a <a>Link</a><script>'], 0);
     const receivedResult = document.getElementById('tooltip-text').innerText;
     const receivedResult2 = document.getElementById('tooltip-text').getElementsByTagName('a')[0];
 
     expect(receivedResult).toMatch(expectedResult);
     expect(receivedResult2).toBe(undefined);
 });
+
 it('Check if null', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHTML = '<div id="tooltip-div"><p id="tooltip-text"></p></div>';
     const expectedResult = '';
 
     document.body.innerHTML = neededHTML;
-    jsfile.placeToolTip([''],0);
+    jsfile.placeToolTip([''], 0);
     const receivedResult = document.getElementById('tooltip-text').innerText;
 
     expect(receivedResult).toMatch(expectedResult);
-
 });
