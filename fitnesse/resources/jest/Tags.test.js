@@ -37,12 +37,14 @@ it('Test if the tag input element will show up', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHtml =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
         '</div>';
     const expectedValue =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -57,6 +59,7 @@ it('Test if the tag input element has functions', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHtml =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
         '</div>';
 
@@ -95,20 +98,14 @@ it('Get request with the correct params', () => {
 it('calls the callback when $.ajax requests are finished', () => {
     const $ = require('jquery');
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
-    // const testFunctions = require('../bootstrap-plus/js/test');
-
     // Create a mock function for our callback
     const callback = jest.fn();
-    // const testURL = "TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas";
-    const testURL = "TestSuiteDemo.FrontEndTests.SuiteSetUp";
-    const testTag = "Test7";
-    functions.GetCurrentTagList(testURL, testTag, callback);
-    // testFunctions.fetchCurrentUser(testURL, testTag, callback);
+    const testCurrentPageURL = "TestSuiteDemo.FrontEndTests.SuiteSetUp";
+    const testResponderURL = '?responder=tableOfContents';
+    functions.GetCurrentTagList(callback, testCurrentPageURL, testResponderURL);
 
     const mockData = require('./mockup-data/TagsData');
-
     $.ajax.mock.calls[0 /*first call*/][0 /*first argument*/].success(mockData);
-
     expect(callback.mock.calls[0 /*first call*/][0 /*first arg*/]).toEqual(mockData);
 });
 
@@ -118,9 +115,9 @@ it('Test if the tag input is valid expect tag to already exists', () => {
     const newTags = 'test case';
     const expectedValue = '<div class="tagErrorMessage">Tag';
     const neededHtml =
-        '<div id="addTagDiv">' +
+        '<div id="addTagDiv">'+
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -137,8 +134,8 @@ it('Test if the tag input is valid expect tag to have special characters', () =>
     const expectedValue = '<div class="tagErrorMessage">`~!';
     const neededHtml =
         '<div id="addTagDiv">' +
-        '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-        '<input type="text" class="tagInputOverview">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -156,7 +153,7 @@ it('Test if the tag input is valid expect to be correct', () => {
     const neededHtml =
         '<div id="addTagDiv">' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -170,7 +167,7 @@ it('Test if the tag input is valid expect to be correct', () => {
 it('Test if tag span & delete tag button has been added in the li', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const successData = '{status: "OK"}';
-    const neededValues = {currentURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
+    const neededValues = {currentPageURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
     const neededHtml =
         '<div class="contents">' +
             '<li id="toTest">' +
