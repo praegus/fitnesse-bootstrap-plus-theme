@@ -125,11 +125,6 @@
                 #end
             #end
 
-            <div class="ui-widget">
-                <label for="tags">Tags: </label>
-                <input id="tags">
-            </div>
-
             #parse( $mainTemplate )
             #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
                 <div id="testHistoryDiv">
