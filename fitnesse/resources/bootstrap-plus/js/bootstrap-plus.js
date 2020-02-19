@@ -534,10 +534,13 @@ function postTagRequest(callback, url, tagList, neededValues) {
 function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();
+
     //Add input field
     $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
+
     //Add focus after clicking button
     $('.tagInputOverview').focus();
+
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
         if ($('.tagErrorMessage').length) {
@@ -545,28 +548,27 @@ function createTagInput(currentAddTagButton) {
         }
     });
 
-     // Get href value of the a tag
-    const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
-    const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
-    const responderURL = '?responder=allTags';
-    //Call get current tag list function
-    GetCurrentTagList(tagAutocomplete, currentMainSuiteURL, responderURL);
-
-    $('.tagInputOverview').keyup(function (event){
-        if(event.keyCode === 13){
+    $('.tagInputOverview').keyup(function (event) {
+        if (event.keyCode === 13) {
             const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
             const responderURL = '?responder=tableOfContents';
             const inputValue = $('.tagInputOverview').val().trim();
             GetCurrentTagList(checkIfNewTagIsValid, currentPageURL, responderURL, inputValue);
         }
     });
+
+    // Get href value of the a tag
+    const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
+    const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
+    const responderURL = '?responder=allTags';
+    //Call get current tag list function
+    GetCurrentTagList(tagAutocomplete, currentMainSuiteURL, responderURL);
 }
 
 // Get current tag list from the parent where you want your new tag
 function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     // NEEDED FOR UNIT TESTING
     // const $ = require('jquery');
-    //Get current tag list
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + '/' + currentPageURL + responderURL,
@@ -593,27 +595,6 @@ function tagAutocomplete(data) {
     };
 }
 
-// function tagAutocomplete(data, currentMainSuiteURL) {
-//     $('.tagInputOverview').bind('input', function () {
-//         let typedInput = $('.tagInputOverview').val();
-//         $('#autocompleteTagsItems').html('');
-//         if (!typedInput) {
-//             return false;
-//         }
-//         const getFirstKey = data[Object.keys(data)[0]];
-//         for (i = 0; i < getFirstKey.length; i++) {
-//             if (getFirstKey[i].substr(0, typedInput.length).toUpperCase() === typedInput.toUpperCase()) {
-//                 $('#autocompleteTagsItems').append('<p class="tagsOptions" id="tagsOption' + i + '">' + getFirstKey[i] + '</p>');
-//             }
-//         }
-//         $('.tagsOptions' ).click( function() {
-//             $('.tagInputOverview').val($(this).text());
-//         });
-//     });
-// }
-
-
-
 // Check if the tag meet the requirements
 function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     const lowerCaseTags = newTags.toLowerCase();
@@ -622,6 +603,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     if ($('.tagErrorMessage').length) {
         $('.tagErrorMessage').remove();
     }
+
     // Check if tag already exist and if it has no special characters
     if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
