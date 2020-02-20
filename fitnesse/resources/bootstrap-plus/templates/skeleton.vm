@@ -88,9 +88,9 @@
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
-            <div class="buttonSidbarDiv btn-group">
-                <li class="expandAllSidebar btn btn-xs">Expand All</li>
-                <li class="collapseAllSidebar btn btn-xs">Collapse Expect Route</li>
+            <div class="buttonSidebarDiv btn-group">
+                <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
+                <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
             </div>
 
             <ul id="sidebarContent" class="scrollbar"></ul>

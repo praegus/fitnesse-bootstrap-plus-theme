@@ -154,11 +154,11 @@ $(document).ready(function () {
         getSidebarContent(placeEverythingForSidebar);
     }
 
-    $('.collapseAllSidebar').click(function () {
+    $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
     });
 
-    $('.expandAllSidebar').click(function () {
+    $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
     });
 

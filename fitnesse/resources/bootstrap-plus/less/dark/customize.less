@@ -1387,9 +1387,8 @@ kbd {
   border-right: 1px solid #292929;
 }
 
-.buttonSidbarDiv {
-  display: flex;
-  padding: 10px 15px 0;
+.buttonSidebarDiv {
+  padding: 10px 15px 5px;
 
   li {
     display: inline;
@@ -1397,6 +1396,10 @@ kbd {
     .btn-default;
     .btn-xs;
   }
+}
+
+.buttonSidebar {
+  font-size: 0.8em !important;
 }
 
 .expandAllSidebar {
@@ -1414,11 +1417,12 @@ kbd {
 
 #sidebarContent {
   height: 100%;
-  padding: 10px;
+  padding: 5px 10px 10px;
   overflow: auto;
   white-space: nowrap;
   display: flex;
   margin-bottom: 0;
+  font-size: 0.9em;
 }
 
 #sidebarContent li {
