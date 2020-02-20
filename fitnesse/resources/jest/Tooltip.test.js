@@ -1,22 +1,22 @@
-const tooltip = require('bootstrap-plus/js/bootstrap-plus');
+jest.mock('jquery');
+
+beforeEach(() => jest.resetModules());
+
 //checks if inputted CSV format data comes out correctly
-
-it('check if call is with correct parameters', () => {
+it.skip('check if call is with correct parameters', () => {
+    const $ = require('jquery');
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-
     const dummyCallback = () => {};
     const expectedResult = {
         type: 'GET',
-        url: expect.stringContaining(''),
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
+        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        contentType: 'charset=utf-8',
         success: expect.any(Function),
         error: expect.any(Function)
     };
 
     jsfile.getToolTips(dummyCallback);
 
-    // Now make sure that $.ajax was properly called
     expect($.ajax).toBeCalledWith(expectedResult);
 });
 
