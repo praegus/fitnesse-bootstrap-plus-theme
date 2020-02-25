@@ -1,23 +1,7 @@
 jest.mock('jquery');
 beforeEach(() => jest.resetModules());
 //define dummy data
-it('Test if $.ajax has the correct params', () => {
-    //MAKE CONST URL
-    const $ = require('jquery');
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const dummyCallback = () => {
-    };
-    const expectedResult = {
-        type: 'GET',
-        url: expect.stringContaining('?mavenVersions'),
-        contentType: 'charset=utf-8',
-        success: expect.any(Function),
-        error: expect.any(Function)
-    };
-    jsfile.getVersionData(dummyCallback, 'http://localhost:9090/?mavenVersions');
-    // Now make sure that $.ajax was properly called
-    expect($.ajax).toBeCalledWith(expectedResult);
-});
+
 it('if currentversion property has an irregular key, expect corrected format', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const toolchainDummyData = require('./mockup-data/versionCheck/toolchainDummyData');

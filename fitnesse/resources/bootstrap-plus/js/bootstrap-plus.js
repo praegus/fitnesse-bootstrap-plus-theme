@@ -669,7 +669,6 @@ function deleteTag(successData, neededValues) {
  */
 
 function getVersionData(callback, url) {
-//   const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
