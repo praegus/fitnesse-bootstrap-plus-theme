@@ -1,7 +1,6 @@
 jest.mock('jquery');
 
 beforeEach(() => jest.resetModules());
-
 /*
     ADD TAGS TESTS START
 */

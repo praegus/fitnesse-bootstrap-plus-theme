@@ -2,7 +2,6 @@ jest.mock('jquery');
 
 beforeEach(() => jest.resetModules());
 
-
 it('Test if data input returns the correct html code', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const sidebarData = require('./mockup-data/SidebarData');

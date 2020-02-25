@@ -15,7 +15,6 @@ it('Test if rows are no longer than 5', () => {
     expect(receivedResult).toEqual(expectedResult);
 });
 
-
 it('Test if "Last 5 Result" column has the correct 5 cells', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const dataFile = require('./mockup-data/TestHistoryData');
