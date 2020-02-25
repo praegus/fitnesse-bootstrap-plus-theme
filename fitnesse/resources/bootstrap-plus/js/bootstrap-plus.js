@@ -22,10 +22,7 @@ try {
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory: getPageHistory,
         // Versioncheck.test
-        getVersionData:getVersionData,
         versionCheck:versionCheck
-
-
     };
 } catch (e) {
 }
