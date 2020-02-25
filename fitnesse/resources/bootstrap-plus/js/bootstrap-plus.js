@@ -25,7 +25,6 @@ try {
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory: getPageHistory,
         // Versioncheck.test
-        getVersionData:getVersionData,
         versionCheck:versionCheck
 
 
@@ -730,7 +729,6 @@ function deleteTag(successData, neededValues) {
  */
 
 function getVersionData(callback, url) {
-//   const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
