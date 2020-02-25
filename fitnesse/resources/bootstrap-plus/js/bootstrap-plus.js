@@ -473,7 +473,6 @@ function getToolTips(callback) {
 
 // Places picked tooltips on the page
 function placeToolTip(text) {
-    console.log(text);
     //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
