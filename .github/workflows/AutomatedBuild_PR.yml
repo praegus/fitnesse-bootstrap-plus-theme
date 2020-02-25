@@ -1,6 +1,6 @@
 name: Run Jest testcases
 
-on: [pull_request]
+on: [push]
 
 jobs:
   build:
@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: |
           yarn install
+      - name: check if css compiles
+         run: |
+         mvn install
       - name: Run Jest
         run: |
           yarn jest
