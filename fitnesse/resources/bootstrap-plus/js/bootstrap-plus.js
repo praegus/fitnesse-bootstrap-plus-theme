@@ -8,7 +8,6 @@ try {
         placeSidebarContent: placeSidebarContent,
         // Tooltip.test
         placeToolTip:placeToolTip,
-        getToolTips:getToolTips,
         // Tags.test
         postTagRequest: postTagRequest,
         createTagInput: createTagInput,
@@ -457,7 +456,6 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',

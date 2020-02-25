@@ -3,22 +3,6 @@ jest.mock('jquery');
 beforeEach(() => jest.resetModules());
 
 //checks if inputted CSV format data comes out correctly
-it.skip('check if call is with correct parameters', () => {
-    const $ = require('jquery');
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const dummyCallback = () => {};
-    const expectedResult = {
-        type: 'GET',
-        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
-        contentType: 'charset=utf-8',
-        success: expect.any(Function),
-        error: expect.any(Function)
-    };
-
-    jsfile.getToolTips(dummyCallback);
-
-    expect($.ajax).toBeCalledWith(expectedResult);
-});
 
 it('Check if links work correctly', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
