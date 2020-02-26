@@ -2,7 +2,6 @@
 try {
     module.exports = {
         // Sidebar.test
-        getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
         getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
