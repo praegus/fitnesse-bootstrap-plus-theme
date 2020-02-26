@@ -2,6 +2,7 @@
 try {
     module.exports = {
         // Sidebar.test
+        getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
         getCurrentWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
@@ -16,7 +17,8 @@ try {
         joinTagList: joinTagList,
         deleteTag: deleteTag,
         // TestHistoryChecker.test
-        generateTestHistoryTable: generateTestHistoryTable
+        generateTestHistoryTable: generateTestHistoryTable,
+        getPageHistory: getPageHistory
     };
 } catch (e) {
 }
