@@ -2,16 +2,13 @@
 try {
     module.exports = {
         // Sidebar.test
-        getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
         getCurrentWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         // Tooltip.test
         displayToolTip: displayToolTip,
         // Tags.test
-        postTagRequest: postTagRequest,
         createTagInput: createTagInput,
-        GetCurrentTagList: GetCurrentTagList,
         checkIfNewTagIsValid: checkIfNewTagIsValid,
         postTagInHtml: postTagInHtml,
         inputBorderStyling: inputBorderStyling,
@@ -19,8 +16,7 @@ try {
         joinTagList: joinTagList,
         deleteTag: deleteTag,
         // TestHistoryChecker.test
-        generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory
+        generateTestHistoryTable: generateTestHistoryTable
     };
 } catch (e) {
 }
@@ -541,10 +537,6 @@ function createTagInput(currentAddTagButton) {
 
 // Get current tag list from the parent where you want your new tag
 function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
-    // NEEDED FOR UNIT TESTING
-    // const $ = require('jquery');
-function GetCurrentTagList(currentURL, newTags, callback) {
-    //Get current tag list
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + '/' + currentPageURL + responderURL,
