@@ -908,12 +908,6 @@ a.static {
   color: #c1c1c1;
 }
 
-.slimRowTitle {
-  background-color: #222;
-  font-weight: 500;
-  color: #eee;
-}
-
 article tr:not([class^='slim']):not([class^='hash_']):first-child, .slimRowTitle {
   background-color: #222 !important;
   font-weight: 500 !important;
@@ -928,7 +922,13 @@ tr[class^='slim']:nth-child(even) {
 
 article tr:not([class^='slim']):not([class^='hash_']):nth-child(2n+3),
 tr[class^='slim']:nth-child(odd) {
-  background-color: #6b6b6b !important;
+  background-color: #6b6b6b;
+  color: #eee;
+}
+
+.slimRowTitle {
+  background-color: #222;
+  font-weight: 500;
   color: #eee;
 }
 
@@ -1418,4 +1418,28 @@ kbd {
 }
 #testHistoryDiv > a {
   float:right;
+}
+//versionchecker css
+#versioncheck{
+  text-transform: capitalize;
+}
+
+#versioncheck > tbody > tr > td > p{
+  display:inline;
+}
+
+tr.check > td{
+  white-space: unset;
+}
+
+#versioncheck > tbody > tr:nth-child(1) > td{
+  white-space: normal;
+}
+
+.Outdated{
+  background-color: #8c6969;
+}
+
+.Up-to-date{
+  background-color: #516f51;
 }
