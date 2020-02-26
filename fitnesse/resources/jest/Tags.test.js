@@ -1,33 +1,6 @@
 jest.mock('jquery');
 
 beforeEach(() => jest.resetModules());
-
-/*
-    BOTH ADD AND DELETE START
-*/
-// postTagRequest
-it.skip('calls into $.ajax with the correct params', () => {
-    const $ = require('jquery');
-    const functions = require('../bootstrap-plus/js/bootstrap-plus');
-
-    // Call into the function we want to test
-    const dummyCallback = () => {};
-    const url = "http://localhost:9090/TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas"
-    // fetchCurrentUser(dummyCallback);
-    functions.postTagRequest(dummyCallback, url, "", {});
-    // Now make sure that $.ajax was properly called during the previous
-    // 2 lines
-    expect($.ajax).toBeCalledWith({
-        type: 'POST',
-        url: expect.any(String),
-        contentType: 'application/json; charset=utf-8',
-        data: expect.stringContaining('responder=updateTags&suites='),
-        dataType: 'json',
-        success: expect.any(Function),
-        error: expect.any(Function)
-    });
-});
-
 /*
     ADD TAGS TESTS START
 */
@@ -64,49 +37,6 @@ it('Test if the tag input element has functions', () => {
     const receivedResult = $('#addTagDiv .tagInputOverview');
 
     expect(Object.entries(receivedResult[0]).length).toBeGreaterThan(0);
-});
-
-// GetCurrentTagList
-it.skip('calls into $.ajax with the correct params', () => {
-    const $ = require('jquery');
-    const functions = require('../bootstrap-plus/js/bootstrap-plus');
-
-    // Call into the function we want to test
-    const dummyCallback = () => {};
-    // fetchCurrentUser(dummyCallback);
-    functions.GetCurrentTagList(dummyCallback);
-
-    // Now make sure that $.ajax was properly called during the previous
-    // 2 lines
-    expect($.ajax).toBeCalledWith({
-        type: 'GET',
-        url: expect.stringContaining('?responder=tableOfContents'),
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: expect.any(Function),
-        error: expect.any(Function)
-    });
-});
-
-// GetCurrentTagList
-it.skip('calls the callback when $.ajax requests are finished', () => {
-    const $ = require('jquery');
-    const functions = require('../bootstrap-plus/js/bootstrap-plus');
-    // const testFunctions = require('../bootstrap-plus/js/test');
-
-    // Create a mock function for our callback
-    const callback = jest.fn();
-    // const testURL = "TestSuiteDemo.BackEndTests.T002RetrieveDataFromXas";
-    const testURL = "TestSuiteDemo.FrontEndTests.SuiteSetUp";
-    const testTag = "Test7";
-    functions.GetCurrentTagList(testURL, testTag, callback);
-    // testFunctions.fetchCurrentUser(testURL, testTag, callback);
-
-    const mockData = require('./mockup-data/TagsData');
-
-    $.ajax.mock.calls[0 /*first call*/][0 /*first argument*/].success(mockData);
-
-    expect(callback.mock.calls[0 /*first call*/][0 /*first arg*/]).toEqual(mockData);
 });
 
 // checkIfNewTagIsValid
