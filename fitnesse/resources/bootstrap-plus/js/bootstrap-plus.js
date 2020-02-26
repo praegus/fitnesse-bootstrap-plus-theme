@@ -313,7 +313,6 @@ $(document).ready(function () {
     $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
 
     deleteClickAndHoverEvent('.deleteTagButton');
-
 });
 
 /*
@@ -324,8 +323,6 @@ $(document).ready(function () {
 
 // Sidebar content
 function getSidebarContent(callback) {
-    // Needed for unit testing
-    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
@@ -403,8 +400,6 @@ function getSidebarContentHtml(content) {
  */
 
 function getPageHistory(url, callback) {
-    // Needed for unit testing
-    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -491,8 +486,6 @@ function placeToolTip(tipsArray, pickedTip) {
  */
 
 function postTagRequest(callback, url, tagList, neededValues) {
-    // NEEDED FOR UNIT TESTING
-    // const $ = require('jquery');
     $.ajax({
         type: 'POST',
         url: url,
@@ -516,7 +509,6 @@ function postTagRequest(callback, url, tagList, neededValues) {
 function createTagInput(currentAddTagButton) {
     //Remove all existing tag input fields
     $('.tagInputOverview').remove();
-
     //Add input field
     $(currentAddTagButton).after('<input type="text" class="tagInputOverview">');
 
@@ -551,6 +543,8 @@ function createTagInput(currentAddTagButton) {
 function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     // NEEDED FOR UNIT TESTING
     // const $ = require('jquery');
+function GetCurrentTagList(currentURL, newTags, callback) {
+    //Get current tag list
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + '/' + currentPageURL + responderURL,
@@ -592,7 +586,6 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     if ($('.tagErrorMessage').length) {
         $('.tagErrorMessage').remove();
     }
-
     // Check if tag already exist and if it has no special characters
     if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
