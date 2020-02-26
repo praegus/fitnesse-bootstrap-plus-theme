@@ -474,7 +474,7 @@ function placeToolTip(text) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
         // check if theres not a script tag in the tooltip if theres a link in it because we dont want to execute scripts from a tooltip
-        if (tipsArray[pickedTip].includes('</a>') === true && tipsArray[pickedTip].includes('<script>') === false) {
+        if (tipsArray[pickedTip].includes('</a>') && !tipsArray[pickedTip].includes('<script>')) {
             textfield.innerHTML = tipsArray[pickedTip];
         } else {
             textfield.innerText = tipsArray[pickedTip];
