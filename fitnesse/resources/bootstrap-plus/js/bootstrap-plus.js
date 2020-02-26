@@ -323,8 +323,6 @@ $(document).ready(function () {
 
 // Sidebar content
 function getSidebarContent(callback) {
-    // Needed for unit testing
-    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
@@ -402,8 +400,6 @@ function getSidebarContentHtml(content) {
  */
 
 function getPageHistory(url, callback) {
-    // Needed for unit testing
-    // const $ = require('jquery');
     $.ajax({
         type: 'GET',
         url: url,
@@ -490,8 +486,6 @@ function placeToolTip(tipsArray, pickedTip) {
  */
 
 function postTagRequest(callback, url, tagList, neededValues) {
-    // NEEDED FOR UNIT TESTING
-    // const $ = require('jquery');
     $.ajax({
         type: 'POST',
         url: url,
@@ -544,8 +538,6 @@ function createTagInput(currentAddTagButton) {
 
 // Get current tag list from the parent where you want your new tag
 function GetCurrentTagList(currentURL, newTags, callback) {
-    // NEEDED FOR UNIT TESTING
-    // const $ = require('jquery');
     //Get current tag list
     $.ajax({
         type: 'GET',
