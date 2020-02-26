@@ -20,9 +20,7 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory,
-        // Versioncheck.test
-        versionCheck:versionCheck
+        getPageHistory: getPageHistory
     };
 } catch (e) {
 }
@@ -104,11 +102,6 @@ $(document).ready(function () {
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-        getVersionData(versionCheck,location + "/?mavenVersions");
-    }
-
-    if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        $('#versionCheckDiv').removeClass('displayNone');
     }
 
     //If the first row is hidden, don't use header row styling
@@ -232,11 +225,6 @@ $(document).ready(function () {
             switchSidebar();
         }
     );
-    $('body').on('click', '#versionCheck-switch', function (e) {
-            e.preventDefault();
-            switchVersionCheck();
-        }
-    );
 
     $('body').on('click', '.coll', function () {
         if ($(this).children('input').is(':checked')) {
@@ -300,19 +288,7 @@ $(document).ready(function () {
             getSidebarContent(placeSidebarContent);
         }
     }
-    function switchVersionCheck() {
-        if (getCookie('versionCheck') == 'true') {
-            document.cookie = 'versionCheck=false';
-            $('#versionCheck-switch').removeClass('fa-toggle-on');
-            $('#versionCheck-switch').addClass('fa-toggle-off');
-            $('#versionCheckDiv').addClass('displayNone');
-        } else {
-            document.cookie = 'versionCheck=true';
-            $('#versionCheck-switch').removeClass('fa-toggle-off');
-            $('#versionCheck-switch').addClass('fa-toggle-on');
-            $('#versionCheckDiv').removeClass('displayNone');
-        }
-    }
+
     //Add hover function to type of page
     function tagButtonHover(pageType) {
         $('.' + pageType).parent().hover(
@@ -671,69 +647,7 @@ function deleteTag(successData, neededValues) {
 }
 
 /*
- DELETE END | ADD & DELETE TAGS FUNCTIONS END
- */
-
-/*
- START VERSIONCHECKER
- */
-
-function getVersionData(callback, url) {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        contentType: 'charset=utf-8',
-        success: data => callback(data),
-        error: function (xhr) {
-            console.log('Error code for version checker: ' + xhr.status, xhr);
-        }
-    });
-}
-
-function versionCheck(data) {
-    if (data !== undefined) {
-        data.forEach(versionData => {
-            // Replace property 'version' with 'currentVersion' to make al the property names alike
-            if (versionData.hasOwnProperty('version')) {
-                versionData["currentVersion"] = versionData['version'];
-                delete versionData['version'];
-            }
-
-                // split version strings by dot and line then parse them to ints
-                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-
-                // make arrays equal in length if necessary so there wont be an undefined index
-                if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
-                    while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
-                    while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
-                }
-                semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
-                    //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
-                    if (versionData.status === undefined) {
-                        if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
-                            versionData['status'] = 'Ahead';
-                        } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
-                            versionData['status'] = 'Outdated';
-                        } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
-                            versionData['status'] = 'Up-to-date';
-                        }
-                    }
-                });
-
-
-            // Place in html
-            $('#versioncheck').append(
-                '<tr class="check">' +
-                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
-                '<td><p>' + versionData.currentVersion + '</p></td>' +
-                '<td><p>' + versionData.latest + '</p></td>' +
-                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
-                '</tr>');
-        });
-   }
-}
-
-/*
-END VERSIONCHECKER
+ DELETE END
+ |
+ ADD & DELETE TAGS FUNCTIONS END
  */

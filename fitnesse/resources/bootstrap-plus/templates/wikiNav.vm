@@ -68,16 +68,5 @@
                 <b>Experimental:</b> Sidebar
             </li>
         #end
-        #if ( $versionCheck == 'true' )
-            <li>
-                <button class="fa fa-toggle-on prefsbutton" id="versionCheck-switch" title="Toggle versionCheck"></button>
-                <b>Experimental:</b> VersionChecker
-            </li>
-        #else
-            <li>
-                <button class="fa fa-toggle-off prefsbutton" id="versionCheck-switch" title="Toggle versionCheck"></button>
-                <b>Experimental:</b> VersionChecker
-            </li>
-        #end
     </ul>
 </div>
