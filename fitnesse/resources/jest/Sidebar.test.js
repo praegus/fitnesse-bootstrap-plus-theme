@@ -3,25 +3,8 @@ jest.mock('jquery');
 beforeEach(() => jest.resetModules());
 
 /*
- getSidebarContent
+ getMainWorkSpace
  */
-it('Test if data input returns the correct html code', () => {
-    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const sidebarData = require('./mockup-data/SidebarData');
-    const expectedResult =
-        '<li id="TestSuiteDemo">' +
-        '<div>' +
-        '<i class="fa fa-cogs icon-test" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<a href="TestSuiteDemo" class="suite">Test Suite Demo</a>' +
-        '</div>' +
-        '</li>';
-
-    const receivedResult = jsfile.getSidebarContentHtml(sidebarData[0]);
-
-    expect(receivedResult).toEqual(expectedResult);
-});
-
 it('Test if input "TestSuiteDemo.FrontEndTests" will return main work space "TestSuiteDemo"', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const expectedResult = 'TestSuiteDemo';
