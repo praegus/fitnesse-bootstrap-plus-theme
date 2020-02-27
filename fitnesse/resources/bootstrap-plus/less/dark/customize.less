@@ -12,6 +12,7 @@ body {
 }
 
 #content {
+  background-color: #434343;
   height: 100%;
   width: 100%;
   overflow-y: auto;
@@ -151,6 +152,7 @@ a[name] {
 .breadcrumb {
   padding: 8px @page-margin-horizontal;
   margin: 0;
+  background-color: #434343;
   //#gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   //background-color: transparent;
   border-radius: 0;
@@ -1373,9 +1375,46 @@ kbd {
   max-width: 300px;
   height: 100%;
   padding: 65px 0 61px;
-  background-color: #464646;
+  background-color: #3a3a3a;
   border-right: 1px solid #292929;
   overflow: auto;
+}
+
+#closedSidebar {
+  width: 30px;
+  min-width: 30px;
+  max-width: 20px;
+  height: 100%;
+  // padding: 10px 15px 5px; // Deze is nodig als us 36 op master staat
+  padding: 65px 7px 61px;
+  background-color: #3a3a3a;
+  border-right: 1px solid #292929;
+}
+
+.buttonSidebarDiv {
+  // padding: 10px 15px 5px; // Deze is nodig als us 36 op master staat
+  padding: 0 15px 5px;
+  display: flex;
+
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
+#collapseSidebarIcon {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.buttonSidebar {
+  font-size: 0.8em !important;
+}
+
+#expandAllSidebar {
+  margin-left: auto !important;
 }
 
 #highlight {
