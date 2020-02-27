@@ -2,10 +2,12 @@
 try {
     module.exports = {
         // Sidebar.test
-        getSidebarContent: getSidebarContent,
         getSidebarContentHtml: getSidebarContentHtml,
-        getCurrentWorkSpace: getMainWorkSpace,
+        getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
+        toggleIconClickEvent: toggleIconClickEvent,
+        collapseSidebarIcons: collapseSidebarIcons,
+        expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
         displayToolTip: displayToolTip,
         // Tags.test
@@ -20,7 +22,11 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory
+        getPageHistory: getPageHistory,
+        // Versioncheck.test
+        versionCheck:versionCheck
+
+
     };
 } catch (e) {
 }
@@ -102,6 +108,7 @@ $(document).ready(function () {
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
+        getVersionData(versionCheck,location + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
@@ -142,8 +149,16 @@ $(document).ready(function () {
 
     // Show sidebar
     if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
-        getSidebarContent(placeSidebarContent);
+        getSidebarContent(placeEverythingForSidebar);
     }
+
+    $('#collapseAllSidebar').click(function () {
+        collapseSidebarIcons(location.pathname);
+    });
+
+    $('#expandAllSidebar').click(function () {
+        expandSidebarIcons();
+    });
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
 
@@ -293,7 +308,7 @@ $(document).ready(function () {
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
-            getSidebarContent(placeSidebarContent);
+            getSidebarContent(placeEverythingForSidebar);
         }
     }
 
@@ -364,6 +379,15 @@ function getMainWorkSpace(mainWorkspace) {
     return mainWorkspace;
 }
 
+function placeEverythingForSidebar(contentArray) {
+    placeSidebarContent(contentArray);
+    toggleIconClickEvent();
+    collapseSidebarIcons(location.pathname);
+
+    // Scroll to the highlight
+    document.getElementById('highlight').scrollIntoView({block: 'center'});
+}
+
 function placeSidebarContent(contentArray) {
     // Empty sidebar content
     $('#sidebarContent').html('');
@@ -374,12 +398,8 @@ function placeSidebarContent(contentArray) {
 
         // If there are children
         if (layerOne.children) {
-            sidebarContentLayerLoop(layerOne.name.replace(/\s/g, ''), layerOne.children);
+            sidebarContentLayerLoop(layerOne.path.replace(/\./g, ''), layerOne.children);
         }
-    });
-
-    $('#sidebarContent .fa-cogs').click(function () {
-        $(this).parent().siblings('ul').toggle();
     });
 }
 
@@ -392,7 +412,7 @@ function sidebarContentLayerLoop(suiteName, children) {
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
 
         if (content.children) {
-            sidebarContentLayerLoop(content.name.replace(/\s/g, ''), content.children);
+            sidebarContentLayerLoop(content.path.replace(/\./g, ''), content.children);
         }
     });
 }
@@ -402,16 +422,61 @@ function getSidebarContentHtml(content) {
     const iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     const prunedClass = content.type.includes('pruned') ? ' pruned' : '';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
+    const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
 
     const htmlContent =
-        '<li id="' + content.name.replace(/\s/g, '') + '">' +
+        '<li id="' + content.path.replace(/\./g, '') + '">' +
         '<div' + highlight + '>' +
-        '<i class="' + iconClass + '" aria-hidden="true" title="show/hide"></i>' +
+        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+        '&nbsp;' +
+        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
         '&nbsp;' +
         '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
         '</div>' +
         '</li>';
     return htmlContent;
+}
+
+// Set a click event an the sidebar toggle icons
+function toggleIconClickEvent() {
+    $('#sidebarContent .iconToggle').click(function () {
+        $(this).parent().siblings('ul').toggle();
+
+        if ($(this)[0].className === 'iconToggle iconWidth fa fa-angle-down') {
+            $(this).removeClass('fa-angle-down');
+            $(this).addClass('fa-angle-right');
+        } else {
+            $(this).removeClass('fa-angle-right');
+            $(this).addClass('fa-angle-down');
+        }
+    });
+}
+
+// Collapse all sidebar icons expect the route you are in
+function collapseSidebarIcons(path) {
+    // Close all
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'none'});
+    $('#sidebarContent .iconToggle').removeClass('fa-angle-down');
+    $('#sidebarContent .iconToggle').addClass('fa-angle-right');
+
+    // Expand the route you are in
+    // Removes the / from the location.pathname
+    path = path.slice(1);
+    const names = path.split('.');
+    let idNames = [];
+    names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
+    idNames.forEach(id => {
+        $('#sidebarContent #' + id + ' ul').first().css({'display': 'block'});
+        $('#sidebarContent #' + id + ' .iconToggle').first().removeClass('fa-angle-right');
+        $('#sidebarContent #' + id + ' .iconToggle').first().addClass('fa-angle-down');
+    });
+}
+
+// Collapse all sidebar icons expect
+function expandSidebarIcons() {
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
+    $('#sidebarContent .iconToggle').removeClass('fa-angle-right');
+    $('#sidebarContent .iconToggle').addClass('fa-angle-down');
 }
 
 /*
@@ -668,7 +733,69 @@ function deleteTag(successData, neededValues) {
 }
 
 /*
- DELETE END
- |
- ADD & DELETE TAGS FUNCTIONS END
+ DELETE END | ADD & DELETE TAGS FUNCTIONS END
+ */
+
+/*
+ START VERSIONCHECKER
+ */
+
+function getVersionData(callback, url) {
+    $.ajax({
+        type: 'GET',
+        url: url,
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            console.log('Error code for version checker: ' + xhr.status, xhr);
+        }
+    });
+}
+
+function versionCheck(data) {
+    if (data !== undefined) {
+        data.forEach(versionData => {
+            // Replace property 'version' with 'currentVersion' to make al the property names alike
+            if (versionData.hasOwnProperty('version')) {
+                versionData["currentVersion"] = versionData['version'];
+                delete versionData['version'];
+            }
+
+                // split version strings by dot and line then parse them to ints
+                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
+                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
+
+                // make arrays equal in length if necessary so there wont be an undefined index
+                if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
+                    while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
+                    while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
+                }
+                semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
+                    //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
+                    if (versionData.status === undefined) {
+                        if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
+                            versionData['status'] = 'Ahead';
+                        } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
+                            versionData['status'] = 'Outdated';
+                        } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
+                            versionData['status'] = 'Up-to-date';
+                        }
+                    }
+                });
+
+
+            // Place in html
+            $('#versioncheck').append(
+                '<tr class="check">' +
+                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
+                '<td><p>' + versionData.currentVersion + '</p></td>' +
+                '<td><p>' + versionData.latest + '</p></td>' +
+                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
+                '</tr>');
+        });
+   }
+}
+
+/*
+END VERSIONCHECKER
  */
