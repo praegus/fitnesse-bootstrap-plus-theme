@@ -168,14 +168,6 @@ $(document).ready(function () {
         minWidth: 150
     });
 
-    $('#collapseAllSidebar').click(function () {
-        collapseSidebarIcons(location.pathname);
-    });
-
-    $('#expandAllSidebar').click(function () {
-        expandSidebarIcons();
-    });
-
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
     [].forEach.call(document.getElementsByTagName('td'), cell => {
         if (cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
