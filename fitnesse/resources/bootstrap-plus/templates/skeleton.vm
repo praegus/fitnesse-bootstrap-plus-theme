@@ -22,6 +22,11 @@
     #if($sidebar == "")
         #set( $sidebar = 'false' )
     #end
+    #set( $versionCheckCookieName = "versionCheck")
+    #set ($versionCheck = $request.getCookie($versionCheckCookieName))
+    #if($versionCheck == "")
+        #set( $versionCheck = 'false' )
+    #end
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -141,6 +146,7 @@
                     </div>
                     <a href="/?recentTestHistory">More...</a>
                 </div>
+                <div id="versionCheckDiv" class="displayNone">
                 <h3>Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>
@@ -155,6 +161,7 @@
                     </tr>
                     </tbody>
                 </table>
+                </div>
             #end
         </article>
 

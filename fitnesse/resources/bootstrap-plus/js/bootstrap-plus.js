@@ -110,6 +110,9 @@ $(document).ready(function () {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
         getVersionData(versionCheck,location + "/?mavenVersions");
     }
+    if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
+        $('#versionCheckDiv').removeClass('displayNone');
+    }
 
     //If the first row is hidden, don't use header row styling
     $('tr.hidden').each(function () {
@@ -229,6 +232,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#versionCheck-switch', function (e) {
+            e.preventDefault();
+            switchVersionCheck();
+        }
+    );
+
     $('body').on('click', '#autoSave-switch', function (e) {
             e.preventDefault();
             switchAutoSave();
@@ -286,6 +295,20 @@ $(document).ready(function () {
             document.cookie = 'autoSave=true';
             $('#autoSave-switch').removeClass('fa-toggle-off');
             $('#autoSave-switch').addClass('fa-toggle-on');
+        }
+    }
+
+    function switchVersionCheck() {
+        if (getCookie('versionCheck') == 'true') {
+            document.cookie = 'versionCheck=false';
+            $('#versionCheck-switch').removeClass('fa-toggle-on');
+            $('#versionCheck-switch').addClass('fa-toggle-off');
+            $('#versionCheckDiv').addClass('displayNone');
+        } else {
+            document.cookie = 'versionCheck=true';
+            $('#versionCheck-switch').removeClass('fa-toggle-off');
+            $('#versionCheck-switch').addClass('fa-toggle-on');
+            $('#versionCheckDiv').removeClass('displayNone');
         }
     }
 
