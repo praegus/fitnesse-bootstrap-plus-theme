@@ -9,7 +9,7 @@ try {
         collapseSidebarIcons: collapseSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
-        displayToolTip: displayToolTip,
+        placeToolTip:placeToolTip,
         // Tags.test
         postTagRequest: postTagRequest,
         createTagInput: createTagInput,
@@ -22,11 +22,7 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory,
-        // Versioncheck.test
-        versionCheck:versionCheck
-
-
+        getPageHistory: getPageHistory
     };
 } catch (e) {
 }
@@ -103,12 +99,11 @@ function processSymbolData(str) {
 
 $(document).ready(function () {
     // Tooltips
-    getToolTips(displayToolTip);
+    getToolTips(placeToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-        getVersionData(versionCheck,location + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
@@ -517,30 +512,32 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data) {
-        const tooltips = data;
-        // Activate function displayToolTip
-        callback(tooltips);
+    $.ajax({
+        type: 'GET',
+        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log('Error code: ' + xhr.status, xhr);
+        }
     });
 }
 
-// Picks random tooltip
-function displayToolTip(text) {
-    // Picks random tip
+// Places picked tooltips on the page
+function placeToolTip(text) {
+    //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
-    placeToolTip(tipsArray, pickedTip);
-
-    // Returns chosen tip in string for jest
-    return pickedTip + ',' + tipsArray[pickedTip];
-}
-
-// Places picked tooltips on the page
-function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
-        textfield.innerText = tipsArray[pickedTip];
+        // check if there is not a script tag in the tooltip if there is a link in it because we dont want to execute scripts from a tooltip
+        if (tipsArray[pickedTip].includes('</a>') && !tipsArray[pickedTip].includes('<script>')) {
+            textfield.innerHTML = tipsArray[pickedTip];
+        } else {
+            textfield.innerText = tipsArray[pickedTip];
+        }
     }
 }
 
@@ -713,68 +710,4 @@ function deleteTag(successData, neededValues) {
 
 /*
  DELETE END | ADD & DELETE TAGS FUNCTIONS END
- */
-
-/*
- START VERSIONCHECKER
- */
-
-function getVersionData(callback, url) {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        contentType: 'charset=utf-8',
-        success: data => callback(data),
-        error: function (xhr) {
-            console.log('Error code for version checker: ' + xhr.status, xhr);
-        }
-    });
-}
-
-function versionCheck(data) {
-    if (data !== undefined) {
-        data.forEach(versionData => {
-            // Replace property 'version' with 'currentVersion' to make al the property names alike
-            if (versionData.hasOwnProperty('version')) {
-                versionData["currentVersion"] = versionData['version'];
-                delete versionData['version'];
-            }
-
-                // split version strings by dot and line then parse them to ints
-                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-
-                // make arrays equal in length if necessary so there wont be an undefined index
-                if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
-                    while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
-                    while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
-                }
-                semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
-                    //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
-                    if (versionData.status === undefined) {
-                        if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
-                            versionData['status'] = 'Ahead';
-                        } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
-                            versionData['status'] = 'Outdated';
-                        } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
-                            versionData['status'] = 'Up-to-date';
-                        }
-                    }
-                });
-
-
-            // Place in html
-            $('#versioncheck').append(
-                '<tr class="check">' +
-                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
-                '<td><p>' + versionData.currentVersion + '</p></td>' +
-                '<td><p>' + versionData.latest + '</p></td>' +
-                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
-                '</tr>');
-        });
-   }
-}
-
-/*
-END VERSIONCHECKER
  */
