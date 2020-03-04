@@ -102,6 +102,11 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
+    // Set padding for contentDiv based on footer
+    if ($('footer').height() !== 0) {
+        document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
+    }
+
     // Tooltips
     getToolTips(displayToolTip);
 
@@ -150,6 +155,12 @@ $(document).ready(function () {
     // Show sidebar
     if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
         getSidebarContent(placeEverythingForSidebar);
+
+        $( "#sidebar" ).resizable({
+            handles: 'e, w',
+            maxWidth: 700,
+            minWidth: 150
+        });
     }
 
     $('#collapseAllSidebar').click(function () {

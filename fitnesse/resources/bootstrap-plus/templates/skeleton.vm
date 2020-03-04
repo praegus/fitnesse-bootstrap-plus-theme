@@ -62,8 +62,10 @@
 
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/jquery-ui-1.12.1.min.css">
 
     <script src="${contextRoot}files/fitnesse/js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="${contextRoot}files/fitnesse/js/jquery-ui-1.12.1.min.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/javascript/fitnesse.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
@@ -90,7 +92,7 @@
     </div>
 </nav>
 
-<div id="contentDiv" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentEditPage" #end>
+<div id="contentDiv">
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div id="closedSidebar" #if( $sidebar == 'false' || $collapseSidebar == 'false' ) class="displayNone" #end>
@@ -98,10 +100,12 @@
         </div>
 
         <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone" #end>
-            <div class="buttonSidebarDiv btn-group">
+            <div class="buttonSidebarDiv">
                 <i id="collapseSidebarIcon" class="fa fa-bars"></i>
-                <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
-                <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
+                <div class="collapseButtonsDiv btn-group">
+                    <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
+                    <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
+                </div>
             </div>
 
             <ul id="sidebarContent" class="scrollbar">Sidebar is loading</ul>

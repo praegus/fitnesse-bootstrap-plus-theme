@@ -10,17 +10,13 @@ body {
   height: 100%;
   display: flex;
   overflow-y: hidden;
-  padding: 55px 0 51px;
-}
-
-.contentEditPage {
-  padding: 55px 0 0 !important;
+  padding-top: 55px;
 }
 
 #content {
-  background-color: #434343;
   height: 100%;
   width: 100%;
+  padding-bottom: 10px;
   overflow-y: auto;
 }
 
@@ -1382,19 +1378,17 @@ kbd {
   display: flex;
   flex-direction: column;
   width: 300px;
-  min-width: 300px;
-  max-width: 300px;
   height: 100%;
   background-color: #3a3a3a;
   border-right: 1px solid #292929;
 }
 
 #closedSidebar {
-  width: 30px;
-  min-width: 30px;
-  max-width: 20px;
+  width: 35px;
+  min-width: 35px;
+  max-width: 35px;
   height: 100%;
-  padding: 10px 7px 5px;
+  padding: 10px 10px 5px;
   background-color: #3a3a3a;
   border-right: 1px solid #292929;
 }
@@ -1402,6 +1396,14 @@ kbd {
 .buttonSidebarDiv {
   padding: 10px 10px 5px;
   display: flex;
+  flex-wrap: wrap;
+}
+
+.collapseButtonsDiv {
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 5px;
+  margin-left: auto !important;
 
   li {
     display: inline;
@@ -1413,15 +1415,12 @@ kbd {
 
 #collapseSidebarIcon {
   font-size: 18px;
+  padding-bottom: 5px;
   cursor: pointer;
 }
 
 .buttonSidebar {
   font-size: 0.8em !important;
-}
-
-#expandAllSidebar {
-  margin-left: auto !important;
 }
 
 #highlight {
