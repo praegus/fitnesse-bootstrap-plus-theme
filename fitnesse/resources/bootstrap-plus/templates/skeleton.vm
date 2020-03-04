@@ -84,11 +84,16 @@
     </div>
 </nav>
 
-<div id="contentDiv">
+<div id="contentDiv" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentEditPage" #end>
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
-            <ul id="sidebarContent"></ul>
+            <div class="buttonSidebarDiv btn-group">
+                <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
+                <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
+            </div>
+
+            <ul id="sidebarContent" class="scrollbar"></ul>
         </div>
     #end
 
@@ -99,7 +104,7 @@
             #parse( $headerTemplate )
         </header>
 
-        <article>
+        <article #if( $sidebar == 'true' && !$bodyClass.equalsIgnoreCase("EditPage") ) id="articleWithSidebar" #end>
             #if(!$bodyClass.equalsIgnoreCase("EditPage"))
                 ## Page Header
                 <a href="?testHistory">
@@ -114,6 +119,7 @@
                 <br>
                 <hr>
 
+                ## Tooltips front page
                 #if($pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
                     ## Tooltips
                     <div id="tooltip-div">
@@ -123,7 +129,10 @@
                 #end
             #end
 
+            ## Main template
             #parse( $mainTemplate )
+
+            ## Test history table
             #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
                 <div id="testHistoryDiv">
                     <h3>Recent Test History</h3>
@@ -132,14 +141,30 @@
                     </div>
                     <a href="/?recentTestHistory">More...</a>
                 </div>
+                <h3>Version Checker</h3>
+                <table id="versioncheck">
+                    <tbody>
+                    <td colspan="4">
+                        <b>Versioncheck</b>
+                    </td>
+                    <tr>
+                        <td><b>Name</b></td>
+                        <td><b>Current Version</b></td>
+                        <td><b>Newest version</b></td>
+                        <td><b>Status</b></td>
+                    </tr>
+                    </tbody>
+                </table>
             #end
         </article>
+
         ## Tooltips edit page
         #if($bodyClass.equalsIgnoreCase("EditPage"))
             <div id="tooltip-div-edit">
                 <p id="tooltip-text"></p>
             </div>
         #end
+
     </div>
 </div>
 

@@ -9,13 +9,18 @@ body {
 #contentDiv {
   height: 100%;
   display: flex;
+  overflow-y: hidden;
+  padding: 55px 0 51px;
+}
+
+.contentEditPage {
+  padding: 55px 0 0 !important;
 }
 
 #content {
   height: 100%;
   width: 100%;
   overflow-y: auto;
-  padding: 55px 0 100px;
 }
 
 article {
@@ -25,6 +30,10 @@ article {
 header,
 article {
   margin: 0 @page-margin-horizontal;
+}
+
+#articleWithSidebar {
+  margin: 0 25px;
 }
 
 footer {
@@ -1368,26 +1377,52 @@ kbd {
 /* Sidebar */
 
 #sidebar {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   min-width: 300px;
   max-width: 300px;
   height: 100%;
-  padding: 65px 0 61px;
   background-color: #464646;
   border-right: 1px solid #292929;
-  overflow: auto;
+}
+
+.buttonSidebarDiv {
+  padding: 10px 15px 5px;
+
+  li {
+    display: inline;
+    .btn;
+    .btn-default;
+    .btn-xs;
+  }
+}
+
+.buttonSidebar {
+  font-size: 0.8em !important;
+}
+
+.expandAllSidebar {
+  margin-left: auto !important;
 }
 
 #highlight {
   background-color: #303030;
+  box-shadow: -100px 0 0 0 #303030, 100px 0 0 0 #303030;
 }
 
 .displayNone {
-  display: none;
+  display: none !important;
 }
 
 #sidebarContent {
-  padding: 0 15px;
+  height: 100%;
+  padding: 5px 10px 10px;
+  overflow: auto;
+  white-space: nowrap;
+  display: flex;
+  margin-bottom: 0;
+  font-size: 0.9em;
 }
 
 #sidebarContent li {
@@ -1395,7 +1430,7 @@ kbd {
 }
 
 #sidebarContent ul {
-  padding-left: 18px;
+  padding-left: 15px;
 }
 
 #sidebarContent div {
@@ -1413,9 +1448,69 @@ kbd {
 #sidebarContent a.pruned {
   text-decoration: line-through;
 }
+
+#sidebarContent .iconToggle {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#sidebarContent .iconWidth {
+  display: inline-block;
+  width: 10px;
+}
+
+/* Test History */
+
 #testHistoryDiv{
   display:inline-block;
 }
+
 #testHistoryDiv > a {
   float:right;
 }
+
+/* Versionchecker */
+
+#versioncheck{
+  text-transform: capitalize;
+}
+#versioncheck > tbody > tr > td > p{
+  display:inline;
+}
+
+tr.check > td{
+  white-space: unset;
+}
+
+#versioncheck > tbody > tr:nth-child(1) > td{
+  white-space: normal;
+}
+
+.Outdated{
+  background-color: #8c6969;
+}
+
+.Up-to-date{
+  background-color: #516f51;
+}
+
+/* Scrollbar */
+
+.scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #595959;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #cccccc;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa;
+}
+
