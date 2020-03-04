@@ -319,6 +319,18 @@ $(document).ready(function () {
         }
     }
 
+    function switchCollapseSidebar() {
+        if (getCookie('collapseSidebar') == 'true') {
+            document.cookie = 'collapseSidebar=false';
+            $('#closedSidebar').addClass('displayNone');
+            $('#sidebar').removeClass('displayNone');
+        } else {
+            document.cookie = 'collapseSidebar=true';
+            $('#closedSidebar').removeClass('displayNone');
+            $('#sidebar').addClass('displayNone');
+        }
+    }
+
     //Add hover function to type of page
     function tagButtonHover(pageType) {
         $('.' + pageType).parent().hover(
@@ -350,19 +362,6 @@ $(document).ready(function () {
  |
  SIDEBAR FUNCTIONS START
  */
-
-// Collapse sidebar switch
-function switchCollapseSidebar() {
-    if (getCookie('collapseSidebar') == 'true') {
-        document.cookie = 'collapseSidebar=false';
-        $('#closedSidebar').addClass('displayNone');
-        $('#sidebar').removeClass('displayNone');
-    } else {
-        document.cookie = 'collapseSidebar=true';
-        $('#closedSidebar').removeClass('displayNone');
-        $('#sidebar').addClass('displayNone');
-    }
-}
 
 // Sidebar content
 function getSidebarContent(callback) {
