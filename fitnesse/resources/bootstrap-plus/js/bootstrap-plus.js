@@ -152,27 +152,23 @@ $(document).ready(function () {
         $(this).after('<i class="fas fa-plus-circle addTag"></i>');
     });
 
-    // Show sidebar
+    // For Sidebar
     if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
         getSidebarContent(placeEverythingForSidebar);
-
-        $( "#sidebar" ).resizable({
-            handles: 'e, w',
-            maxWidth: 700,
-            minWidth: 150
-        });
     }
-
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
     });
-
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
     });
+    $( "#sidebar" ).resizable({
+        handles: 'e, w',
+        maxWidth: 700,
+        minWidth: 150
+    });
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
-
     [].forEach.call(document.getElementsByTagName('td'), cell => {
         if (cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
             cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g, '<span class="page-variable">$1</span>');

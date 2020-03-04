@@ -108,7 +108,9 @@
                 </div>
             </div>
 
-            <ul id="sidebarContent" class="scrollbar">Sidebar is loading</ul>
+            <ul id="sidebarContent" class="scrollbar">
+                <div id="spinner" style="width: 42px; height:42px;"></div>
+            </ul>
         </div>
     #end
 
