@@ -146,8 +146,8 @@
                     </div>
                     <a href="/?recentTestHistory">More...</a>
                 </div>
-                <div id="versionCheckDiv" class="displayNone">
-                <h3>Version Checker</h3>
+                <div id="mavenVersions" class="displayNone">
+                <h3>Maven Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>
                     <td colspan="4">
