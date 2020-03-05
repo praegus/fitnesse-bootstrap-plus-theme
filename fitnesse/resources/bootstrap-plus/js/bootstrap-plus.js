@@ -163,7 +163,7 @@ $(document).ready(function () {
         expandSidebarIcons();
     });
     $( "#sidebar" ).resizable({
-        handles: 'e, w',
+        handles: 'e',
         maxWidth: 700,
         minWidth: 150
     });
