@@ -146,7 +146,7 @@
                     </div>
                     <a href="/?recentTestHistory">More...</a>
                 </div>
-                <div id="mavenVersions" class="displayNone">
+                <div id="mavenVersions" #if( $versionCheck == 'false' ) class="displayNone" #end>
                 <h3>Maven Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>

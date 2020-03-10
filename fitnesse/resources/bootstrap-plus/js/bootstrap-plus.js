@@ -108,10 +108,10 @@ $(document).ready(function () {
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-        getVersionData(versionCheck,location + "/?mavenVersions");
+
     }
     if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        $('#mavenVersions').removeClass('displayNone');
+        getVersionData(versionCheck,location + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
