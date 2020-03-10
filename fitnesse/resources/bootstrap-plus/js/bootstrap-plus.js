@@ -103,7 +103,7 @@ function processSymbolData(str) {
 
 $(document).ready(function () {
     // Tooltips
-    getToolTips(displayToolTip);
+    getToolTips(placeToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
@@ -517,30 +517,17 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data) {
+    $.get('http://localhost:' + window.location.port +"/?Tooltips", function (data) {
         const tooltips = data;
         // Activate function displayToolTip
         callback(tooltips);
     });
 }
-
-// Picks random tooltip
-function displayToolTip(text) {
-    // Picks random tip
-    const tipsArray = text.split('\n');
-    const pickedTip = Math.floor(Math.random() * tipsArray.length);
-
-    placeToolTip(tipsArray, pickedTip);
-
-    // Returns chosen tip in string for jest
-    return pickedTip + ',' + tipsArray[pickedTip];
-}
-
 // Places picked tooltips on the page
-function placeToolTip(tipsArray, pickedTip) {
+function placeToolTip(text) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
-        textfield.innerText = tipsArray[pickedTip];
+        textfield.innerText = text;
     }
 }
 
