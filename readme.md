@@ -57,4 +57,8 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 #### ToolTips
 * Tooltips now display on every page
 
-New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolTipData.txt and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets
+New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolTipData.txt and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets.
+
+* Tooltips will now also load in from fixtures.
+
+you can add tooltips to your fixture by adding Tooltips.txt(case insensitive) to the root off your fixture.
