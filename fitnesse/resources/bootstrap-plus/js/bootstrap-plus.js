@@ -9,7 +9,7 @@ try {
         collapseSidebarIcons: collapseSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
-        displayToolTip: displayToolTip,
+        placeToolTip:placeToolTip,
         // Tags.test
         postTagRequest: postTagRequest,
         createTagInput: createTagInput,
@@ -103,7 +103,7 @@ function processSymbolData(str) {
 
 $(document).ready(function () {
     // Tooltips
-    getToolTips(displayToolTip);
+    getToolTips(placeToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
@@ -544,16 +544,21 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data) {
-        const tooltips = data;
-        // Activate function displayToolTip
-        callback(tooltips);
+    $.ajax({
+        type: 'GET',
+        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log('Error code: ' + xhr.status, xhr);
+        }
     });
 }
 
-// Picks random tooltip
-function displayToolTip(text) {
-    // Picks random tip
+// Places picked tooltips on the page
+function placeToolTip(text) {
+    //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
@@ -567,7 +572,12 @@ function displayToolTip(text) {
 function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
-        textfield.innerText = tipsArray[pickedTip];
+        // check if there is not a script tag in the tooltip if there is a link in it because we dont want to execute scripts from a tooltip
+        if (tipsArray[pickedTip].includes('</a>') && !tipsArray[pickedTip].includes('<script>')) {
+            textfield.innerHTML = tipsArray[pickedTip];
+        } else {
+            textfield.innerText = tipsArray[pickedTip];
+        }
     }
 }
 
