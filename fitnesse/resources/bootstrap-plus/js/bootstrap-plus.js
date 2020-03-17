@@ -264,54 +264,54 @@ $(document).ready(function () {
         }
     });
 
-    function switchTheme() {
-        if (getCookie('themeType') == 'bootstrap-plus-dark') {
-            document.cookie = 'themeType=bootstrap-plus';
-            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
-            $('#theme-switch').removeClass('fa-toggle-on');
-            $('#theme-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'themeType=bootstrap-plus-dark';
-            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
-            $('#theme-switch').removeClass('fa-toggle-off');
-            $('#theme-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchTheme() {
+           if (getCookie('themeType') == 'bootstrap-plus-dark') {
+               setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
+               $('#theme-switch').removeClass('fa-toggle-on');
+               $('#theme-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus-dark');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
+               $('#theme-switch').removeClass('fa-toggle-off');
+               $('#theme-switch').addClass('fa-toggle-on');
+           }
+       }
 
-    function switchCollapse() {
-        if (getCookie('collapseSymbols') == 'true') {
-            document.cookie = 'collapseSymbols=false';
-            $('#collapse-switch').removeClass('fa-toggle-on');
-            $('#collapse-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'collapseSymbols=true';
-            $('#collapse-switch').removeClass('fa-toggle-off');
-            $('#collapse-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchCollapse() {
+           if (getCookie('collapseSymbols') == 'true') {
+               setBootstrapPlusConfigCookie('collapseSymbols', 'false');
+               $('#collapse-switch').removeClass('fa-toggle-on');
+               $('#collapse-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('collapseSymbols', 'true');
+               $('#collapse-switch').removeClass('fa-toggle-off');
+               $('#collapse-switch').addClass('fa-toggle-on');
+           }
+       }
 
-    function switchAutoSave() {
-        if (getCookie('autoSave') == 'true') {
-            document.cookie = 'autoSave=false';
-            $('#autoSave-switch').removeClass('fa-toggle-on');
-            $('#autoSave-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'autoSave=true';
-            $('#autoSave-switch').removeClass('fa-toggle-off');
-            $('#autoSave-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchAutoSave() {
+           if (getCookie('autoSave') == 'true') {
+               setBootstrapPlusConfigCookie('autoSave', 'false');
+               $('#autoSave-switch').removeClass('fa-toggle-on');
+               $('#autoSave-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('autoSave', 'true');
+               $('#autoSave-switch').removeClass('fa-toggle-off');
+               $('#autoSave-switch').addClass('fa-toggle-on');
+           }
+       }
 
     function switchSidebar() {
         if (getCookie('sidebar') == 'true') {
-            document.cookie = 'sidebar=false';
-            document.cookie = 'collapseSidebar=false';
+            setBootstrapPlusConfigCookie('sidebar', 'false');
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
             $('#sidebar-switch').removeClass('fa-toggle-on');
             $('#sidebar-switch').addClass('fa-toggle-off');
             $('#closedSidebar').addClass('displayNone');
             $('#sidebar').addClass('displayNone');
         } else {
-            document.cookie = 'sidebar=true';
+            setBootstrapPlusConfigCookie('sidebar', 'true');
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
@@ -321,15 +321,21 @@ $(document).ready(function () {
 
     function switchCollapseSidebar() {
         if (getCookie('collapseSidebar') == 'true') {
-            document.cookie = 'collapseSidebar=false';
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
             $('#closedSidebar').addClass('displayNone');
             $('#sidebar').removeClass('displayNone');
         } else {
-            document.cookie = 'collapseSidebar=true';
+            setBootstrapPlusConfigCookie('collapseSidebar', 'true');
             $('#closedSidebar').removeClass('displayNone');
             $('#sidebar').addClass('displayNone');
         }
     }
+
+       function setBootstrapPlusConfigCookie(name, value) {
+             var exp = new Date();
+             exp.setTime(exp.getTime() + 3600*1000*24*365);
+             document.cookie = name + '=' + value + ';expires=' + exp.toGMTString() + ';path=/';
+       }
 
     //Add hover function to type of page
     function tagButtonHover(pageType) {
