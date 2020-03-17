@@ -25,3 +25,8 @@ You can make a table of contents of the current page with '!headings -' in the e
 If you click 'Recent Changes' in the 'Tools' a history of changes to the page will be shown.
 If you click 'Versions' in the 'Tools' a list of old versions of the page will be shown.
 If you click on 'Where Used' in the 'Tools' a list of every page that references that page will be shown.
+You can turn on file logging by using -l as a command line argument, read more <a href="/FitNesse.UserGuide.AdministeringFitNesse.LogFiles">here</a>.
+You can use <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.WikiImport">Wiki Import</a> to import entire an Wiki or subwiki from another FitNesse site.
+You can use the <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.FilesSection">Files Section</a> to acces and manage all non "wiki" files.
+You can find a list of your recently executed test <a href="/?testHistory">here</a>.
+You can find information on how to use a Symbolic Link <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.SymbolicLinks">here</a>.
