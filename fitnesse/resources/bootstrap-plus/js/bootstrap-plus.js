@@ -9,7 +9,7 @@ try {
         collapseSidebarIcons: collapseSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
-        displayToolTip: displayToolTip,
+        placeToolTip:placeToolTip,
         // Tags.test
         createTagInput: createTagInput,
         checkIfNewTagIsValid: checkIfNewTagIsValid,
@@ -20,11 +20,7 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory,
-        // Versioncheck.test
-        versionCheck:versionCheck
-
-
+        getPageHistory: getPageHistory
     };
 } catch (e) {
 }
@@ -101,12 +97,11 @@ function processSymbolData(str) {
 
 $(document).ready(function () {
     // Tooltips
-    getToolTips(displayToolTip);
+    getToolTips(placeToolTip);
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-        getVersionData(versionCheck,location + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
@@ -249,58 +244,64 @@ $(document).ready(function () {
         }
     });
 
-    function switchTheme() {
-        if (getCookie('themeType') == 'bootstrap-plus-dark') {
-            document.cookie = 'themeType=bootstrap-plus';
-            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
-            $('#theme-switch').removeClass('fa-toggle-on');
-            $('#theme-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'themeType=bootstrap-plus-dark';
-            $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
-            $('#theme-switch').removeClass('fa-toggle-off');
-            $('#theme-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchTheme() {
+           if (getCookie('themeType') == 'bootstrap-plus-dark') {
+               setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
+               $('#theme-switch').removeClass('fa-toggle-on');
+               $('#theme-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus-dark');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
+               $('#theme-switch').removeClass('fa-toggle-off');
+               $('#theme-switch').addClass('fa-toggle-on');
+           }
+       }
 
-    function switchCollapse() {
-        if (getCookie('collapseSymbols') == 'true') {
-            document.cookie = 'collapseSymbols=false';
-            $('#collapse-switch').removeClass('fa-toggle-on');
-            $('#collapse-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'collapseSymbols=true';
-            $('#collapse-switch').removeClass('fa-toggle-off');
-            $('#collapse-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchCollapse() {
+           if (getCookie('collapseSymbols') == 'true') {
+               setBootstrapPlusConfigCookie('collapseSymbols', 'false');
+               $('#collapse-switch').removeClass('fa-toggle-on');
+               $('#collapse-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('collapseSymbols', 'true');
+               $('#collapse-switch').removeClass('fa-toggle-off');
+               $('#collapse-switch').addClass('fa-toggle-on');
+           }
+       }
 
-    function switchAutoSave() {
-        if (getCookie('autoSave') == 'true') {
-            document.cookie = 'autoSave=false';
-            $('#autoSave-switch').removeClass('fa-toggle-on');
-            $('#autoSave-switch').addClass('fa-toggle-off');
-        } else {
-            document.cookie = 'autoSave=true';
-            $('#autoSave-switch').removeClass('fa-toggle-off');
-            $('#autoSave-switch').addClass('fa-toggle-on');
-        }
-    }
+       function switchAutoSave() {
+           if (getCookie('autoSave') == 'true') {
+               setBootstrapPlusConfigCookie('autoSave', 'false');
+               $('#autoSave-switch').removeClass('fa-toggle-on');
+               $('#autoSave-switch').addClass('fa-toggle-off');
+           } else {
+               setBootstrapPlusConfigCookie('autoSave', 'true');
+               $('#autoSave-switch').removeClass('fa-toggle-off');
+               $('#autoSave-switch').addClass('fa-toggle-on');
+           }
+       }
 
-    function switchSidebar() {
-        if (getCookie('sidebar') == 'true') {
-            document.cookie = 'sidebar=false';
-            $('#sidebar-switch').removeClass('fa-toggle-on');
-            $('#sidebar-switch').addClass('fa-toggle-off');
-            $('#sidebar').addClass('displayNone');
-        } else {
-            document.cookie = 'sidebar=true';
-            $('#sidebar-switch').removeClass('fa-toggle-off');
-            $('#sidebar-switch').addClass('fa-toggle-on');
-            $('#sidebar').removeClass('displayNone');
-            getSidebarContent(placeEverythingForSidebar);
-        }
-    }
+       function switchSidebar() {
+           if (getCookie('sidebar') == 'true') {
+               setBootstrapPlusConfigCookie('sidebar', 'false');
+               $('#sidebar-switch').removeClass('fa-toggle-on');
+               $('#sidebar-switch').addClass('fa-toggle-off');
+               $('#sidebar').addClass('displayNone');
+           } else {
+               setBootstrapPlusConfigCookie('sidebar', 'true');
+               $('#sidebar-switch').removeClass('fa-toggle-off');
+               $('#sidebar-switch').addClass('fa-toggle-on');
+               $('#sidebar').removeClass('displayNone');
+               getSidebarContent(placeEverythingForSidebar);
+           }
+       }
+
+       function setBootstrapPlusConfigCookie(name, value) {
+             var exp = new Date();
+             exp.setTime(exp.getTime() + 3600*1000*24*365);
+             document.cookie = name + '=' + value + ';expires=' + exp.toGMTString() + ';path=/';
+       }
 
     //Add hover function to type of page
     function tagButtonHover(pageType) {
@@ -515,30 +516,32 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data) {
-        const tooltips = data;
-        // Activate function displayToolTip
-        callback(tooltips);
+    $.ajax({
+        type: 'GET',
+        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        contentType: 'charset=utf-8',
+        success: data => callback(data),
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log('Error code: ' + xhr.status, xhr);
+        }
     });
 }
 
-// Picks random tooltip
-function displayToolTip(text) {
-    // Picks random tip
+// Places picked tooltips on the page
+function placeToolTip(text) {
+    //split tooltips and pick a random tooltip
     const tipsArray = text.split('\n');
     const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
-    placeToolTip(tipsArray, pickedTip);
-
-    // Returns chosen tip in string for jest
-    return pickedTip + ',' + tipsArray[pickedTip];
-}
-
-// Places picked tooltips on the page
-function placeToolTip(tipsArray, pickedTip) {
     const textfield = document.getElementById('tooltip-text');
     if (textfield) {
-        textfield.innerText = tipsArray[pickedTip];
+        // check if there is not a script tag in the tooltip if there is a link in it because we dont want to execute scripts from a tooltip
+        if (tipsArray[pickedTip].includes('</a>') && !tipsArray[pickedTip].includes('<script>')) {
+            textfield.innerHTML = tipsArray[pickedTip];
+        } else {
+            textfield.innerText = tipsArray[pickedTip];
+        }
     }
 }
 
@@ -733,68 +736,4 @@ function deleteTag(successData, neededValues) {
 
 /*
  DELETE END | ADD & DELETE TAGS FUNCTIONS END
- */
-
-/*
- START VERSIONCHECKER
- */
-
-function getVersionData(callback, url) {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        contentType: 'charset=utf-8',
-        success: data => callback(data),
-        error: function (xhr) {
-            console.log('Error code for version checker: ' + xhr.status, xhr);
-        }
-    });
-}
-
-function versionCheck(data) {
-    if (data !== undefined) {
-        data.forEach(versionData => {
-            // Replace property 'version' with 'currentVersion' to make al the property names alike
-            if (versionData.hasOwnProperty('version')) {
-                versionData["currentVersion"] = versionData['version'];
-                delete versionData['version'];
-            }
-
-                // split version strings by dot and line then parse them to ints
-                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-
-                // make arrays equal in length if necessary so there wont be an undefined index
-                if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
-                    while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
-                    while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
-                }
-                semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
-                    //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
-                    if (versionData.status === undefined) {
-                        if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
-                            versionData['status'] = 'Ahead';
-                        } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
-                            versionData['status'] = 'Outdated';
-                        } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
-                            versionData['status'] = 'Up-to-date';
-                        }
-                    }
-                });
-
-
-            // Place in html
-            $('#versioncheck').append(
-                '<tr class="check">' +
-                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
-                '<td><p>' + versionData.currentVersion + '</p></td>' +
-                '<td><p>' + versionData.latest + '</p></td>' +
-                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
-                '</tr>');
-        });
-   }
-}
-
-/*
-END VERSIONCHECKER
  */
