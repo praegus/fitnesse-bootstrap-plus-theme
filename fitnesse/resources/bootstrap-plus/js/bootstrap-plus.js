@@ -111,7 +111,7 @@ $(document).ready(function () {
 
     }
     if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        getVersionData(versionCheck,location + "/?mavenVersions");
+        getVersionData(versionCheck,'http://localhost:' + window.location.port + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
