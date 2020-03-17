@@ -580,6 +580,7 @@ function createTagInput(currentAddTagButton) {
 
     //Remove tag input (& tag error message) when focus is out of the input field
     $('.tagInputOverview').focusout(function () {
+        $('.tagInputOverview').remove();
         if ($('.tagErrorMessage').length) {
             $('.tagErrorMessage').remove();
         }
