@@ -656,6 +656,9 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
         inputBorderStyling();
         $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+=?;:\'",.<>\\/ not allowed except for -_</div>');
+    } else if (!newTags) {
+        inputBorderStyling();
+        $('.tagInputOverview').after('<div class="tagErrorMessage">Please fill in a tag name</div>');
     } else {
         // Post tags
         const currentTagString = data[0].tags.join(', ');

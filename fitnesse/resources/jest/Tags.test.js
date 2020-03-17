@@ -79,6 +79,23 @@ it('Test if the tag input is valid expect tag to have special characters', () =>
 });
 
 // checkIfNewTagIsValid
+it('Test if the tag input is empty expect message to fill in', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const expectedValue = '<div class="tagErrorMessage">Please fill';
+    const neededHtml =
+        '<div id="addTagDiv">' +
+        '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+        '<input type="text" class="tagInputOverview">' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', '');
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
+
+    expect(receivedResult).toContain(expectedValue);
+});
+
+// checkIfNewTagIsValid
 it('Test if the tag input is valid expect to be correct', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const newTags = 'test';
