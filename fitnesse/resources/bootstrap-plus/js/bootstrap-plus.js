@@ -104,7 +104,6 @@ $(document).ready(function () {
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-        getVersionData(versionCheck,location + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling
@@ -527,9 +526,13 @@ function getToolTips(callback) {
 }
 // Places picked tooltips on the page
 function placeToolTip(text) {
-    const textfield = document.getElementById('tooltip-text');
-    if (textfield) {
-        textfield.innerText = text;
+    if ($('#tooltip-text')) {
+        if (text.includes('</a>') && !text.includes('<script>')) {
+            $('#tooltip-text').html(text);
+        }
+        else {
+            $('#tooltip-text').text(text);
+        }
     }
 }
 
