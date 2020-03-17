@@ -159,7 +159,6 @@ $(document).ready(function () {
     });
     $( "#sidebar" ).resizable({
         handles: 'e',
-        maxWidth: 700,
         minWidth: 150
     });
 
@@ -243,7 +242,7 @@ $(document).ready(function () {
         }
     );
 
-    $('body').on('click', '#collapseSidebarIcon', function (e) {
+    $('body').on('click', '#collapseSidebarDiv', function (e) {
             e.preventDefault();
             switchCollapseSidebar();
         }
@@ -303,7 +302,6 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie('collapseSidebar', 'false');
             $('#sidebar-switch').removeClass('fa-toggle-on');
             $('#sidebar-switch').addClass('fa-toggle-off');
-            $('#closedSidebar').addClass('displayNone');
             $('#sidebar').addClass('displayNone');
         } else {
             setBootstrapPlusConfigCookie('sidebar', 'true');
@@ -317,11 +315,11 @@ $(document).ready(function () {
     function switchCollapseSidebar() {
         if (getCookie('collapseSidebar') == 'true') {
             setBootstrapPlusConfigCookie('collapseSidebar', 'false');
-            $('#closedSidebar').addClass('displayNone');
+            $('#collapseSidebarDiv').addClass('collapseSidebarDivColor');
             $('#sidebar').removeClass('displayNone');
         } else {
             setBootstrapPlusConfigCookie('collapseSidebar', 'true');
-            $('#closedSidebar').removeClass('displayNone');
+            $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
             $('#sidebar').addClass('displayNone');
         }
     }
@@ -366,17 +364,19 @@ $(document).ready(function () {
 
 // Sidebar content
 function getSidebarContent(callback) {
-    $.ajax({
-        type: 'GET',
-        url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: contentArray => callback(contentArray),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log('Error code: ' + xhr.status, xhr);
-        }
-    });
+    try {
+        $.ajax({
+            type: 'GET',
+            url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: contentArray => callback(contentArray),
+            error: function (xhr) {
+                alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+                console.log('Error code: ' + xhr.status, xhr);
+            }
+        });
+    } catch(e) { }
 }
 
 function getMainWorkSpace(mainWorkspace) {
@@ -392,7 +392,10 @@ function placeEverythingForSidebar(contentArray) {
     collapseSidebarIcons(location.pathname);
 
     // Scroll to the highlight
-    document.getElementById('highlight').scrollIntoView({block: 'center'});
+    if (document.getElementById('highlight')) {
+        document.getElementById('highlight').scrollIntoView({block: 'center', inline: 'start'});
+        $('#sidebarContent').scrollLeft(0);
+    }
 }
 
 function placeSidebarContent(contentArray) {

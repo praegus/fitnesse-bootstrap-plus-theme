@@ -95,13 +95,15 @@
 <div id="contentDiv">
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
-        <div id="closedSidebar" #if( $sidebar == 'false' || $collapseSidebar == 'false' ) class="displayNone" #end>
-            <i id="collapseSidebarIcon" class="fa fa-bars"></i>
+        <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
+            <div id="collapseSidebarDiv" #if( $collapseSidebar == 'false' ) class="collapseSidebarDivColor" #end>
+                <p id="collapseSidebarText">Sidebar</p>
+                <i id="collapseSidebarIcon" class="fa fa-folder"></i>
+            </div>
         </div>
 
         <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
-                <i id="collapseSidebarIcon" class="fa fa-bars"></i>
                 <div class="collapseButtonsDiv btn-group">
                     <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
                     <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>

@@ -1378,21 +1378,37 @@ kbd {
 
 /* Sidebar */
 
+#closedSidebar {
+  padding: 0 0 5px;
+  background-color: #3a3a3a;
+  border-right: 1px solid #292929;
+}
+
+#collapseSidebarDiv {
+  padding: 10px 4px;
+  cursor: pointer;
+}
+
+.collapseSidebarDivColor {
+  background-color: #303030;
+}
+
+#collapseSidebarText {
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  font-size: 0.95em;
+}
+
+#collapseSidebarIcon {
+  transform: rotate(-90deg);
+  font-size: 18px;
+}
+
 #sidebar {
   display: flex;
   flex-direction: column;
   width: 300px;
   height: 100%;
-  background-color: #3a3a3a;
-  border-right: 1px solid #292929;
-}
-
-#closedSidebar {
-  width: 35px;
-  min-width: 35px;
-  max-width: 35px;
-  height: 100%;
-  padding: 10px 10px 5px;
   background-color: #3a3a3a;
   border-right: 1px solid #292929;
 }
@@ -1406,8 +1422,7 @@ kbd {
 .collapseButtonsDiv {
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: 5px;
-  margin-left: auto !important;
+  //margin-left: auto !important;
 
   li {
     display: inline;
@@ -1415,12 +1430,6 @@ kbd {
     .btn-default;
     .btn-xs;
   }
-}
-
-#collapseSidebarIcon {
-  font-size: 18px;
-  padding-bottom: 5px;
-  cursor: pointer;
 }
 
 .buttonSidebar {
@@ -1438,7 +1447,7 @@ kbd {
 
 #sidebarContent {
   height: 100%;
-  padding: 5px 10px 10px;
+  padding: 0 10px 10px;
   overflow: auto;
   white-space: nowrap;
   display: flex;
