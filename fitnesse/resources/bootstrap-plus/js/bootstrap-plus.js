@@ -297,7 +297,19 @@ $(document).ready(function () {
                $('#autoSave-switch').addClass('fa-toggle-on');
            }
        }
-
+    function switchVersionCheck() {
+        if (getCookie('versionCheck') == 'true') {
+            setBootstrapPlusConfigCookie('versionCheck','false')
+            $('#mavenVersionCheck-switch').removeClass('fa-toggle-on');
+            $('#mavenVersionCheck-switch').addClass('fa-toggle-off');
+            $('#mavenVersions').addClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('versionCheck','true')
+            $('#mavenVersionCheck-switch').removeClass('fa-toggle-off');
+            $('#mavenVersionCheck-switch').addClass('fa-toggle-on');
+            $('#mavenVersions').removeClass('displayNone');
+        }
+    }
        function switchSidebar() {
            if (getCookie('sidebar') == 'true') {
                setBootstrapPlusConfigCookie('sidebar', 'false');
