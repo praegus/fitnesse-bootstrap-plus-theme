@@ -104,10 +104,8 @@
 
         <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
-                <div class="collapseButtonsDiv btn-group">
-                    <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
-                    <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
-                </div>
+                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true"></i>
+                <i id="collapseAllSidebar" class="fa fa-compress buttonSidebar" aria-hidden="true"></i>
             </div>
 
             <ul id="sidebarContent" class="scrollbar">
