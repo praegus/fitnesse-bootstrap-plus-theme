@@ -109,6 +109,7 @@ $(document).ready(function () {
     //If the first row is hidden, don't use header row styling
     $('tr.hidden').each(function () {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
+        $(this).remove();
     });
     $('.test').each(function () {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
@@ -155,16 +156,12 @@ $(document).ready(function () {
         expandSidebarIcons();
     });
 
-    //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
-
-    [].forEach.call(document.getElementsByTagName('td'), cell => {
-        if (cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g, '<span class="page-variable">$1</span>');
+    if (getCookie('highlightSymbols') == 'true') {
+        $('table').html(function(index,html){
+               return html.replace(/((?![^<>]*>)\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
+                      .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
+           });
         }
-        if (cell.innerHTML.match(/(\$`.+`)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
-        }
-    });
 
     if (getCookie('collapseSymbols') == 'true') {
         $('td').contents().filter(function () {
@@ -218,6 +215,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#highlight-switch', function (e) {
+                e.preventDefault();
+                switchHighlight();
+            }
+        );
+
     $('body').on('click', '#collapse-switch', function (e) {
             e.preventDefault();
             switchCollapse();
@@ -259,6 +262,18 @@ $(document).ready(function () {
                $('#theme-switch').addClass('fa-toggle-on');
            }
        }
+
+       function switchHighlight() {
+          if (getCookie('highlightSymbols') == 'true') {
+              setBootstrapPlusConfigCookie('highlightSymbols', 'false');
+              $('#highlight-switch').removeClass('fa-toggle-on');
+              $('#highlight-switch').addClass('fa-toggle-off');
+          } else {
+              setBootstrapPlusConfigCookie('highlightSymbols', 'true');
+              $('#highlight-switch').removeClass('fa-toggle-off');
+              $('#highlight-switch').addClass('fa-toggle-on');
+          }
+      }
 
        function switchCollapse() {
            if (getCookie('collapseSymbols') == 'true') {
