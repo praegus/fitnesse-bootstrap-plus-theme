@@ -98,6 +98,10 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
+    if (getCookie('sidebarPosition')) {
+        $('#sidebar').width(getCookie('sidebarPosition'));
+    }
+
     // Set padding for contentDiv based on footer
     if ($('footer').height() !== 0) {
         document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
@@ -157,10 +161,17 @@ $(document).ready(function () {
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
     });
-    $( "#sidebar" ).resizable({
+    $( '#sidebar' ).resizable({
         handles: 'e',
-        minWidth: 150
+        minWidth: 150,
+        stop: function(event, ui) {
+            document.cookie = "sidebarPosition=" + ui.size.width;
+        }
     });
+
+    // $( '#sidebar' ).resize(function() {
+    //     document.cookie = "sidebarPosition=" + $( '#sidebar' ).width();
+    // });
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
     [].forEach.call(document.getElementsByTagName('td'), cell => {
