@@ -3,7 +3,7 @@ Bullet lists are created by prefixing a space a * to a line.
 Headers are created by prefixing a line with !1 or !2 or !3 or !4 or !5 or !6.
 Numbered lists are created by prefixing a space and a number to a line.
 A picture can be added by using the !img marker followed by a URL.
-Did you know there is a dark theme for the FitNesse toolchain?
+Did you know bootstrap-plus also has a dark theme for FitNesse?
 Did you know there is a contexthelper that contains all fixtures, methods, scenario's and slim symbols from your tests context?
 Did you know you add non-wiki files to the files section (Tools > Files)?
 Did you know you can add/edit templates when you go to /TemplateLibrary?
