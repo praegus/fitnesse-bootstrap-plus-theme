@@ -65,7 +65,19 @@
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
 
 </head>
-<body#if( $bodyClass ) class="$bodyClass"#end>
+#if ( $bodyClass )
+   #if ( $bodyClass.equals("testPage") ||
+        $actions.testPage ||
+        $pageTitle.getTitle().equals("SetUp") ||
+        $pageTitle.getTitle().equals("SuiteSetUp") ||
+        $pageTitle.getTitle().equals("TearDown") ||
+        $pageTitle.getTitle().equals("SuiteTearDown") ||
+        $pageTitle.getTitle().equals("ScenarioLibrary")
+        )
+        #set( $toolchainTables = true )
+   #end
+#end
+<body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
