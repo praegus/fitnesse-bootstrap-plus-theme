@@ -58,3 +58,7 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 * Tooltips now display on every page
 
 New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolTipData.txt and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets
+
+* Tooltips can now contain links
+
+you can add a link to your tooltip by adding a simple <a href="link">link text<a/> html tag to your tooltip.
