@@ -152,8 +152,12 @@ $(document).ready(function () {
     });
 
     // For Sidebar
-    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+    if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
         getSidebarContent(placeEverythingForSidebar);
+    }
+    else {
+        $('#sidebar').addClass('displayNone');
+        $('#closedSidebar').addClass('displayNone');
     }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
