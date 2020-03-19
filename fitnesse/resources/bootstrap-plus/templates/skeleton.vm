@@ -105,8 +105,8 @@
 
         <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
-                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true"></i>
-                <i id="collapseAllSidebar" class="fa fa-compress buttonSidebar" aria-hidden="true"></i>
+                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
+                <i id="collapseAllSidebar" class="fa fa-compress buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
             </div>
 
             <ul id="sidebarContent" class="scrollbar">
