@@ -161,17 +161,13 @@ $(document).ready(function () {
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
     });
-    $( '#sidebar' ).resizable({
+    $('#sidebar').resizable({
         handles: 'e',
         minWidth: 150,
         stop: function(event, ui) {
             document.cookie = "sidebarPosition=" + ui.size.width;
         }
     });
-
-    // $( '#sidebar' ).resize(function() {
-    //     document.cookie = "sidebarPosition=" + $( '#sidebar' ).width();
-    // });
 
     //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
     [].forEach.call(document.getElementsByTagName('td'), cell => {
@@ -314,11 +310,13 @@ $(document).ready(function () {
             $('#sidebar-switch').removeClass('fa-toggle-on');
             $('#sidebar-switch').addClass('fa-toggle-off');
             $('#sidebar').addClass('displayNone');
+            $('#closedSidebar').addClass('displayNone');
         } else {
             setBootstrapPlusConfigCookie('sidebar', 'true');
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
             $('#sidebar').removeClass('displayNone');
+            $('#closedSidebar').removeClass('displayNone');
             getSidebarContent(placeEverythingForSidebar);
         }
     }
