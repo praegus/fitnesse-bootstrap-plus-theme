@@ -575,7 +575,7 @@ function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
     $.ajax({
         type: 'GET',
-        url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        url: '/files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
         contentType: 'charset=utf-8',
         success: data => callback(data),
         error: function (xhr) {
