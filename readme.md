@@ -1,14 +1,21 @@
  [![Maven Central](https://img.shields.io/maven-central/v/nl.praegus/fitnesse-bootstrap-plus-theme.svg?maxAge=21600)](https://mvnrepository.com/artifact/com.github.tcnh/fitnesse-bootstrap-plus-theme)
 ## Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
+Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
 
 ### Features:
-* Light and dark version of the theme for the wiki and Codeirror editor
+* Improved styling for better readability and information density
+* Light and dark version of the theme for the wiki and CodeMirror editor
 * Different favicons for Tests, Suites, Static pages and Edit mode
 * Show the page name first in the page title (So different tabs have recognizable titles)
+* Optional sidebar to ease navigation
+* Visual identification of slim tables using icons
+* Failure navigator highlights current failure, eliminates scrolling - jumps to next
+* Adds a 'Recent pages' overview to the end of the frontpage
+* Optional maven version checker that shows current dependency versions and compares them to the latest version in maven central
 * Icons in Table of contents to distinguish between Tests, Suites and Static pages
 * Suites now have a 'run tags' input field in the navigation bar, so all tests containing any of the specified tags in this input field can be run immediately
-* If [Autocomplete responder](https://github.com/tcnh/FitNesseAutocompleteResponder) is also installed, ctrl-space suggestions are context-aware:
+* If Autocomplete responder is also installed, ctrl-space suggestions are context-aware:
   * All fixture methods available in the current test
   * All scenario's from include ScenarioLibraries
   * All slim symbols set by `$varName=` that are available
@@ -21,7 +28,7 @@ This is a FitNesse Theme that extends the default bootstrap theme for better usa
 
 ### Usage:
 Use Praegus' toolchain-plugin to use bootstrap-plus and enable all of it's features.
-See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
+See: https://github.com/praegus/toolchain-fitnesse-plugin
 
 ### Screenshots:
 
@@ -33,6 +40,9 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 
 #### Table of contents
 ![alt text](https://github.com/tcnh/binstore/raw/master/toc.png "Table of contents")
+
+#### Sidebar Navigation
+![alt text](https://github.com/tcnh/binstore/raw/master/sidebar_nav.png "Sidebar")
 
 #### Editor Linting
 ![alt text](https://github.com/tcnh/binstore/raw/master/linting.png "Editor linting")
@@ -46,6 +56,10 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 #### Context help
 ![alt text](https://github.com/tcnh/binstore/raw/master/context-help.png "Context help panel")
 
+#### Visual Slim table types
+![alt text](https://github.com/tcnh/binstore/raw/master/table_identification.png "Table icons")
+
+
 #### Style switch to toggle light/dark modes
 ![alt text](https://github.com/tcnh/binstore/raw/master/style-switch.png "Light/dark mode toggle")
 
@@ -53,6 +67,12 @@ See: https://gitlab.com/praegus/toolchain-fixtures/toolchain-fitnesse-plugin
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_1.png "Dark theme")
 ![alt text](https://github.com/tcnh/binstore/raw/master/dark_editor.PNG "Dark editor")
 ![alt text](https://github.com/tcnh/binstore/raw/master/darkmode_result.PNG "Test results in dark mode")
+
+#### Recent Tests
+![alt text](https://github.com/tcnh/binstore/raw/master/recent_pages.png "Recent test pages")
+
+#### Maven version checker
+![alt text](https://github.com/tcnh/binstore/raw/master/macen_versioncheck.png "Maven dependency versions")
 
 #### ToolTips
 * Tooltips now display on every page
