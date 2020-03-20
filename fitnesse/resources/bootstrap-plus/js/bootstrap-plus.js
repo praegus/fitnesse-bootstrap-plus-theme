@@ -98,10 +98,6 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
-    if (getCookie('sidebarPosition')) {
-        $('#sidebar').width(getCookie('sidebarPosition'));
-    }
-
     // Set padding for contentDiv based on footer
     if ($('footer').height() !== 0) {
         document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
@@ -115,7 +111,7 @@ $(document).ready(function () {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
 
-    //If the first row is hidden, don't use header row styling
+    //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
         $(this).remove();
@@ -170,7 +166,7 @@ $(document).ready(function () {
         handles: 'e',
         minWidth: 150,
         stop: function(event, ui) {
-            document.cookie = "sidebarPosition=" + ui.size.width;
+            setBootstrapPlusConfigCookie("sidebarPosition", ui.size.width);
         }
     });
 
