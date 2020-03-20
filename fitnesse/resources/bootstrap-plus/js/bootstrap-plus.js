@@ -98,6 +98,11 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
+    // Set padding for contentDiv based on footer
+    if ($('footer').height() !== 0) {
+        document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
+    }
+
     // Tooltips
     getToolTips(placeToolTip);
 
@@ -106,7 +111,7 @@ $(document).ready(function () {
         getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
     }
 
-    //If the first row is hidden, don't use header row styling
+    //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
         $(this).remove();
@@ -143,17 +148,26 @@ $(document).ready(function () {
         $(this).after('<i class="fas fa-plus-circle addTag"></i>');
     });
 
-    // Show sidebar
-    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+    // For Sidebar
+    if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
         getSidebarContent(placeEverythingForSidebar);
     }
-
+    else {
+        $('#sidebar').addClass('displayNone');
+        $('#closedSidebar').addClass('displayNone');
+    }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
     });
-
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
+    });
+    $('#sidebar').resizable({
+        handles: 'e',
+        minWidth: 150,
+        stop: function(event, ui) {
+            setBootstrapPlusConfigCookie("sidebarPosition", ui.size.width);
+        }
     });
 
     if (getCookie('highlightSymbols') == 'true') {
@@ -239,6 +253,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#collapseSidebarDiv', function (e) {
+            e.preventDefault();
+            switchCollapseSidebar();
+        }
+    );
+
     $('body').on('click', '.coll', function () {
         if ($(this).children('input').is(':checked')) {
             $(this).removeClass('closed');
@@ -299,20 +319,35 @@ $(document).ready(function () {
            }
        }
 
-       function switchSidebar() {
-           if (getCookie('sidebar') == 'true') {
-               setBootstrapPlusConfigCookie('sidebar', 'false');
-               $('#sidebar-switch').removeClass('fa-toggle-on');
-               $('#sidebar-switch').addClass('fa-toggle-off');
-               $('#sidebar').addClass('displayNone');
-           } else {
-               setBootstrapPlusConfigCookie('sidebar', 'true');
-               $('#sidebar-switch').removeClass('fa-toggle-off');
-               $('#sidebar-switch').addClass('fa-toggle-on');
-               $('#sidebar').removeClass('displayNone');
-               getSidebarContent(placeEverythingForSidebar);
-           }
-       }
+    function switchSidebar() {
+        if (getCookie('sidebar') == 'true') {
+            setBootstrapPlusConfigCookie('sidebar', 'false');
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
+            $('#sidebar-switch').removeClass('fa-toggle-on');
+            $('#sidebar-switch').addClass('fa-toggle-off');
+            $('#sidebar').addClass('displayNone');
+            $('#closedSidebar').addClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('sidebar', 'true');
+            $('#sidebar-switch').removeClass('fa-toggle-off');
+            $('#sidebar-switch').addClass('fa-toggle-on');
+            $('#sidebar').removeClass('displayNone');
+            $('#closedSidebar').removeClass('displayNone');
+            getSidebarContent(placeEverythingForSidebar);
+        }
+    }
+
+    function switchCollapseSidebar() {
+        if (getCookie('collapseSidebar') == 'true') {
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
+            $('#collapseSidebarDiv').addClass('collapseSidebarDivColor');
+            $('#sidebar').removeClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('collapseSidebar', 'true');
+            $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
+            $('#sidebar').addClass('displayNone');
+        }
+    }
 
        function setBootstrapPlusConfigCookie(name, value) {
              var exp = new Date();
@@ -354,17 +389,19 @@ $(document).ready(function () {
 
 // Sidebar content
 function getSidebarContent(callback) {
-    $.ajax({
-        type: 'GET',
-        url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: contentArray => callback(contentArray),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log('Error code: ' + xhr.status, xhr);
-        }
-    });
+    try {
+        $.ajax({
+            type: 'GET',
+            url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: contentArray => callback(contentArray),
+            error: function (xhr) {
+                alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+                console.log('Error code: ' + xhr.status, xhr);
+            }
+        });
+    } catch(e) { }
 }
 
 function getMainWorkSpace(mainWorkspace) {
@@ -380,7 +417,10 @@ function placeEverythingForSidebar(contentArray) {
     collapseSidebarIcons(location.pathname);
 
     // Scroll to the highlight
-    document.getElementById('highlight').scrollIntoView({block: 'center'});
+    if (document.getElementById('highlight')) {
+        document.getElementById('highlight').scrollIntoView({block: 'center', inline: 'start'});
+        $('#sidebarContent').scrollLeft(0);
+    }
 }
 
 function placeSidebarContent(contentArray) {

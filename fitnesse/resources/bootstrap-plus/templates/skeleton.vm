@@ -28,6 +28,20 @@
     #if($sidebar == "")
         #set( $sidebar = 'false' )
     #end
+
+    #set( $collapseSidebarCookieName = "collapseSidebar")
+    #set ($collapseSidebar = $request.getCookie($collapseSidebarCookieName))
+    #if($collapseSidebar == "")
+        #set( $collapseSidebar = 'false' )
+    #end
+
+    #set ($sidebarWidthCookieName = "sidebarPosition")
+    #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
+    #if($sidebarWidth == "")
+        #set( $sidebarWidth = '15vw' )
+    #else
+        #set( $sidebarWidth = $sidebarWidth + 'px' )
+    #end
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -62,8 +76,10 @@
 
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/wysiwyg/wysiwyg.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/jquery-ui-1.12.1.min.css">
 
     <script src="${contextRoot}files/fitnesse/js/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="${contextRoot}files/fitnesse/js/jquery-ui-1.12.1.min.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/fitnesse.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus-error-nav.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
@@ -84,7 +100,6 @@
    #end
 #end
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
-
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
         <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
@@ -103,16 +118,25 @@
     </div>
 </nav>
 
-<div id="contentDiv" #if( $bodyClass.equalsIgnoreCase("EditPage") ) class="contentEditPage" #end>
+<div id="contentDiv">
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
-        <div #if( $sidebar == 'false' ) class="displayNone" #end id="sidebar">
-            <div class="buttonSidebarDiv btn-group">
-                <li id="expandAllSidebar" class="buttonSidebar btn btn-xs">Expand All</li>
-                <li id="collapseAllSidebar" class="buttonSidebar btn btn-xs">Collapse Except Current</li>
+        <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
+            <div id="collapseSidebarDiv" #if( $collapseSidebar == 'false' ) class="collapseSidebarDivColor" #end>
+                <p id="collapseSidebarText">Sidebar</p>
+                <i id="collapseSidebarIcon" class="fa fa-folder"></i>
+            </div>
+        </div>
+
+        <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone"#end style="width: $sidebarWidth;">
+            <div class="buttonSidebarDiv">
+                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
+                <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
             </div>
 
-            <ul id="sidebarContent" class="scrollbar"></ul>
+            <ul id="sidebarContent" class="scrollbar">
+                <div id="spinner" style="width: 42px; height:42px;"></div>
+            </ul>
         </div>
     #end
 
