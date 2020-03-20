@@ -143,10 +143,10 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-    $('.test, .suite, .static').each(function () {
-        $(this).wrap('<div class=\'addTagDiv\'></div>');
-        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-    });
+//    $('.test, .suite, .static').each(function () {
+//        $(this).wrap('<div class=\'addTagDiv\'></div>');
+//        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+//    });
 
     // For Sidebar
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
@@ -366,19 +366,19 @@ $(document).ready(function () {
         );
     }
 
-    tagButtonHover('test');
-    tagButtonHover('static');
-    tagButtonHover('suite');
+    //tagButtonHover('test');
+    //tagButtonHover('static');
+    //tagButtonHover('suite');
 
     // Click add tag function
-    $('.addTag').click(function () {
-        createTagInput($(this));
-    });
+//    $('.addTag').click(function () {
+//        createTagInput($(this));
+//    });
 
     // Add delete button when page is loaded in
-    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
-
-    deleteClickAndHoverEvent('.deleteTagButton');
+//    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+//
+//    deleteClickAndHoverEvent('.deleteTagButton');
 });
 
 /*
