@@ -1367,6 +1367,57 @@ tr.check > td{
 }
 
 .selected-error {
-     box-shadow: 0 0 5px 2px #ff0000;
-     padding: 2px;
+  box-shadow: 0 0 5px 2px #ff0000;
+  padding: 2px;
  }
+
+.toolchainTable {
+  position: relative;
+ }
+tr.scenario-detail > td {
+  padding: 18px 18px 5px 5px;
+ }
+
+.toolchainTable tr:first-child > td:first-child {
+    padding-left: 30px;
+}
+.toolchainTable tr:first-child > td:first-child:before {
+    text-align: center;
+    font: normal normal normal 16px/1 FontAwesome;
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    color: #5f5f5f;
+    padding: 1px 2px 2px 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+}
+
+.scriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f120";
+ }
+.storyboardTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f030";
+ }
+.scenarioTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f00a";
+ }
+.tableTemplate > tbody > tr:first-child > td:first-child:before {
+  content: "\f022";
+ }
+.debugScriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f188";
+}
+.importTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f019";
+}
+.libraryTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f212";
+}
+.commentTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f292";
+}
+.toolchainTest .decisionTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f0ce";
+}

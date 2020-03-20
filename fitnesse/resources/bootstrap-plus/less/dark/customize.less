@@ -685,7 +685,7 @@ fieldset {
 }
 
 .collapse_rim {
-  background: #ff0 !important;
+  background: #b5b500 !important;
 }
 
 .side-bar {
@@ -1549,3 +1549,56 @@ tr.check > td{
      border-radius: 4px;
      padding: 2px;
  }
+
+.toolchainTable {
+  position: relative;
+ }
+
+tr.scenario-detail > td {
+  padding: 18px 18px 5px 5px;
+ }
+
+.toolchainTable tr:first-child > td:first-child {
+    padding-left: 30px;
+}
+
+.toolchainTable tr:first-child > td:first-child:before {
+    text-align: center;
+    font: normal normal normal 16px/1 FontAwesome;
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    color: #eee;
+    padding: 1px 2px 2px 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+}
+
+.scriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f120";
+ }
+.storyboardTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f030";
+ }
+.scenarioTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f00a";
+ }
+.tableTemplate > tbody > tr:first-child > td:first-child:before {
+  content: "\f022";
+ }
+.debugScriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f188";
+}
+.importTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f019";
+}
+.libraryTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f212";
+}
+.commentTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f292";
+}
+.toolchainTest .decisionTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f0ce";
+}
