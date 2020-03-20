@@ -102,6 +102,11 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
+    // Set padding for contentDiv based on footer
+    if ($('footer').height() !== 0) {
+        document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
+    }
+
     // Tooltips
     getToolTips(placeToolTip);
 
@@ -114,9 +119,10 @@ $(document).ready(function () {
         getVersionData(versionCheck,'http://localhost:' + window.location.port + "/?mavenVersions");
     }
 
-    //If the first row is hidden, don't use header row styling
+    //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
+        $(this).remove();
     });
     $('.test').each(function () {
         $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
@@ -145,34 +151,39 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-    $('.test, .suite, .static').each(function () {
-        $(this).wrap('<div class=\'addTagDiv\'></div>');
-        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-    });
+//    $('.test, .suite, .static').each(function () {
+//        $(this).wrap('<div class=\'addTagDiv\'></div>');
+//        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+//    });
 
-    // Show sidebar
-    if (!location.pathname.includes('FrontPage') && getCookie('sidebar') == 'true') {
+    // For Sidebar
+    if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
         getSidebarContent(placeEverythingForSidebar);
     }
-
+    else {
+        $('#sidebar').addClass('displayNone');
+        $('#closedSidebar').addClass('displayNone');
+    }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
     });
-
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
     });
-
-    //Do not use jQuery, as it rebuilds dom elements, breaking the failure nav
-
-    [].forEach.call(document.getElementsByTagName('td'), cell => {
-        if (cell.innerHTML.match(/((?![^<>]*>)\$[\w]+=?)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/((?![^<>]*>)\$[\w]+=?)/g, '<span class="page-variable">$1</span>');
-        }
-        if (cell.innerHTML.match(/(\$`.+`)/g)) {
-            cell.innerHTML = cell.innerHTML.replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
+    $('#sidebar').resizable({
+        handles: 'e',
+        minWidth: 150,
+        stop: function(event, ui) {
+            setBootstrapPlusConfigCookie("sidebarPosition", ui.size.width);
         }
     });
+
+    if (getCookie('highlightSymbols') == 'true') {
+        $('table').html(function(index,html){
+               return html.replace(/((?![^<>]*>)\$[\w]+=?)/g,'<span class="page-variable">$1</span>')
+                      .replace(/(\$`.+`)/g, '<span class="page-expr">$1</span>');
+           });
+        }
 
     if (getCookie('collapseSymbols') == 'true') {
         $('td').contents().filter(function () {
@@ -226,6 +237,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#highlight-switch', function (e) {
+                e.preventDefault();
+                switchHighlight();
+            }
+        );
+
     $('body').on('click', '#collapse-switch', function (e) {
             e.preventDefault();
             switchCollapse();
@@ -247,6 +264,12 @@ $(document).ready(function () {
     $('body').on('click', '#sidebar-switch', function (e) {
             e.preventDefault();
             switchSidebar();
+        }
+    );
+
+    $('body').on('click', '#collapseSidebarDiv', function (e) {
+            e.preventDefault();
+            switchCollapseSidebar();
         }
     );
 
@@ -273,6 +296,18 @@ $(document).ready(function () {
                $('#theme-switch').addClass('fa-toggle-on');
            }
        }
+
+       function switchHighlight() {
+          if (getCookie('highlightSymbols') == 'true') {
+              setBootstrapPlusConfigCookie('highlightSymbols', 'false');
+              $('#highlight-switch').removeClass('fa-toggle-on');
+              $('#highlight-switch').addClass('fa-toggle-off');
+          } else {
+              setBootstrapPlusConfigCookie('highlightSymbols', 'true');
+              $('#highlight-switch').removeClass('fa-toggle-off');
+              $('#highlight-switch').addClass('fa-toggle-on');
+          }
+      }
 
        function switchCollapse() {
            if (getCookie('collapseSymbols') == 'true') {
@@ -325,6 +360,36 @@ $(document).ready(function () {
            }
        }
 
+    function switchSidebar() {
+        if (getCookie('sidebar') == 'true') {
+            setBootstrapPlusConfigCookie('sidebar', 'false');
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
+            $('#sidebar-switch').removeClass('fa-toggle-on');
+            $('#sidebar-switch').addClass('fa-toggle-off');
+            $('#sidebar').addClass('displayNone');
+            $('#closedSidebar').addClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('sidebar', 'true');
+            $('#sidebar-switch').removeClass('fa-toggle-off');
+            $('#sidebar-switch').addClass('fa-toggle-on');
+            $('#sidebar').removeClass('displayNone');
+            $('#closedSidebar').removeClass('displayNone');
+            getSidebarContent(placeEverythingForSidebar);
+        }
+    }
+
+    function switchCollapseSidebar() {
+        if (getCookie('collapseSidebar') == 'true') {
+            setBootstrapPlusConfigCookie('collapseSidebar', 'false');
+            $('#collapseSidebarDiv').addClass('collapseSidebarDivColor');
+            $('#sidebar').removeClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('collapseSidebar', 'true');
+            $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
+            $('#sidebar').addClass('displayNone');
+        }
+    }
+
        function setBootstrapPlusConfigCookie(name, value) {
              var exp = new Date();
              exp.setTime(exp.getTime() + 3600*1000*24*365);
@@ -342,19 +407,19 @@ $(document).ready(function () {
         );
     }
 
-    tagButtonHover('test');
-    tagButtonHover('static');
-    tagButtonHover('suite');
+    //tagButtonHover('test');
+    //tagButtonHover('static');
+    //tagButtonHover('suite');
 
     // Click add tag function
-    $('.addTag').click(function () {
-        createTagInput($(this));
-    });
+//    $('.addTag').click(function () {
+//        createTagInput($(this));
+//    });
 
     // Add delete button when page is loaded in
-    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
-
-    deleteClickAndHoverEvent('.deleteTagButton');
+//    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+//
+//    deleteClickAndHoverEvent('.deleteTagButton');
 });
 
 /*
@@ -365,17 +430,19 @@ $(document).ready(function () {
 
 // Sidebar content
 function getSidebarContent(callback) {
-    $.ajax({
-        type: 'GET',
-        url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: contentArray => callback(contentArray),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-            console.log('Error code: ' + xhr.status, xhr);
-        }
-    });
+    try {
+        $.ajax({
+            type: 'GET',
+            url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: contentArray => callback(contentArray),
+            error: function (xhr) {
+                alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+                console.log('Error code: ' + xhr.status, xhr);
+            }
+        });
+    } catch(e) { }
 }
 
 function getMainWorkSpace(mainWorkspace) {
@@ -391,7 +458,10 @@ function placeEverythingForSidebar(contentArray) {
     collapseSidebarIcons(location.pathname);
 
     // Scroll to the highlight
-    document.getElementById('highlight').scrollIntoView({block: 'center'});
+    if (document.getElementById('highlight')) {
+        document.getElementById('highlight').scrollIntoView({block: 'center', inline: 'start'});
+        $('#sidebarContent').scrollLeft(0);
+    }
 }
 
 function placeSidebarContent(contentArray) {
