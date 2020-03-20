@@ -5,6 +5,12 @@
         #set( $themeType = 'bootstrap-plus' )
     #end
 
+     #set( $highlightCookieName = "highlightSymbols")
+     #set ($highlightSymbols = $request.getCookie($highlightCookieName))
+     #if($highlightSymbols == "")
+        #set( $highlightSymbols = 'false' )
+     #end
+
     #set( $collapseCookieName = "collapseSymbols")
     #set ($collapseSymbols = $request.getCookie($collapseCookieName))
     #if($collapseSymbols == "")
