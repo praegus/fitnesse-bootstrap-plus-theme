@@ -154,18 +154,6 @@
 
         <article #if( $sidebar == 'true' && !$bodyClass.equalsIgnoreCase("EditPage") ) id="articleWithSidebar" #end>
             #if(!$bodyClass.equalsIgnoreCase("EditPage"))
-                ## Page Header
-                <a href="?testHistory">
-                    <span class="btn btn-primary">Test History</span>
-                </a>
-                <a href="?pageHistory">
-                    <span class="btn btn-primary">Page History</span>
-                </a>
-                <a href="?properties">
-                    <span class="btn btn-secondary">Properties</span>
-                </a>
-                <br>
-                <hr>
 
                 ## Tooltips front page
                 #if($pageTitle.getTitle().equalsIgnoreCase("FrontPage"))

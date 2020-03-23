@@ -166,9 +166,12 @@ $(document).ready(function () {
     }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
+        setBootstrapPlusConfigCookie("sidebarTreeState", "");
     });
     $('#expandAllSidebar').click(function () {
         expandSidebarIcons();
+        scrollSideBarToHighlight();
+        setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
     });
     $('#sidebar').resizable({
         handles: 'e',
@@ -455,8 +458,15 @@ function getMainWorkSpace(mainWorkspace) {
 function placeEverythingForSidebar(contentArray) {
     placeSidebarContent(contentArray);
     toggleIconClickEvent();
-    collapseSidebarIcons(location.pathname);
+    if(getCookie("sidebarTreeState") != "expanded") {
+        collapseSidebarIcons(location.pathname);
+    } else {
+        expandSidebarIcons();
+    }
+    scrollSideBarToHighlight();
+}
 
+function scrollSideBarToHighlight() {
     // Scroll to the highlight
     if (document.getElementById('highlight')) {
         document.getElementById('highlight').scrollIntoView({block: 'center', inline: 'start'});
