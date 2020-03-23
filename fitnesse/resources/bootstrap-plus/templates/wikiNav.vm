@@ -78,6 +78,16 @@
                 <b>Experimental:</b> Sidebar
             </li>
         #end
-
+        #if ( $versionCheck == 'true' )
+            <li>
+                <button class="fa fa-toggle-on prefsbutton" id="mavenVersionCheck-switch" title="Toggle mavenVersionCheck"></button>
+                <b>Experimental:</b> Maven Version Checker
+            </li>
+        #else
+            <li>
+                <button class="fa fa-toggle-off prefsbutton" id="mavenVersionCheck-switch" title="Toggle mavenVersionCheck"></button>
+                <b>Experimental:</b> Maven Version Checker
+            </li>
+        #end
     </ul>
 </div>
