@@ -149,10 +149,10 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-//    $('.test, .suite, .static').each(function () {
-//        $(this).wrap('<div class=\'addTagDiv\'></div>');
-//        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-//    });
+   $('.test, .suite, .static').each(function () {
+       $(this).wrap('<div class=\'addTagDiv\'></div>');
+       $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+   });
 
     // For Sidebar
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
@@ -394,19 +394,19 @@ $(document).ready(function () {
         );
     }
 
-    //tagButtonHover('test');
-    //tagButtonHover('static');
-    //tagButtonHover('suite');
+    tagButtonHover('test');
+    tagButtonHover('static');
+    tagButtonHover('suite');
 
     // Click add tag function
-//    $('.addTag').click(function () {
-//        createTagInput($(this));
-//    });
+   $('.addTag').click(function () {
+       createTagInput($(this));
+   });
 
     // Add delete button when page is loaded in
-//    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
-//
-//    deleteClickAndHoverEvent('.deleteTagButton');
+   $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+
+   deleteClickAndHoverEvent('.deleteTagButton');
 });
 
 /*
@@ -801,7 +801,7 @@ function deleteClickAndHoverEvent(deleteTagButton) {
     // Click delete tag function
     $(deleteTagButton).click(function () {
         const chosenTag = $(this).parent().text().trim();
-        const currentTagArray = $(this).parent().parent().find('.tag');
+        const currentTagArray = $(this).parent().find('.tag');
         const currentTagSpan = $(this).parent();
         const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
         postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
