@@ -348,20 +348,6 @@ $(document).ready(function () {
             $('#mavenVersions').removeClass('displayNone');
         }
     }
-       function switchSidebar() {
-           if (getCookie('sidebar') == 'true') {
-               setBootstrapPlusConfigCookie('sidebar', 'false');
-               $('#sidebar-switch').removeClass('fa-toggle-on');
-               $('#sidebar-switch').addClass('fa-toggle-off');
-               $('#sidebar').addClass('displayNone');
-           } else {
-               setBootstrapPlusConfigCookie('sidebar', 'true');
-               $('#sidebar-switch').removeClass('fa-toggle-off');
-               $('#sidebar-switch').addClass('fa-toggle-on');
-               $('#sidebar').removeClass('displayNone');
-               getSidebarContent(placeEverythingForSidebar);
-           }
-       }
 
     function switchSidebar() {
         if (getCookie('sidebar') == 'true') {
