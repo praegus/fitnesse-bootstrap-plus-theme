@@ -444,11 +444,7 @@ function getMainWorkSpace(mainWorkspace) {
 function placeEverythingForSidebar(contentArray) {
     placeSidebarContent(contentArray);
     toggleIconClickEvent();
-    if(getCookie("sidebarTreeState") != "expanded") {
-        collapseSidebarIcons(location.pathname);
-    } else {
-        expandSidebarIcons();
-    }
+    getCookie('sidebarTreeState') !== 'expanded' ? collapseSidebarIcons(location.pathname) : expandSidebarIcons();
     scrollSideBarToHighlight();
 }
 
@@ -465,6 +461,9 @@ function placeSidebarContent(contentArray) {
     $('#sidebarContent').html('');
 
     contentArray.forEach(layerOne => {
+        // If path name doesn't exist and location.path is root
+        layerOne.path === '' && location.pathname === '/root' ? layerOne.path = 'root' : layerOne.path = layerOne.path;
+
         // Place the li in the html
         $('#sidebarContent').append(getSidebarContentHtml(layerOne));
 
