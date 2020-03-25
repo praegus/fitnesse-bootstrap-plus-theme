@@ -10,16 +10,14 @@ body {
   height: 100%;
   display: flex;
   overflow-y: hidden;
-  padding: 55px 0 51px;
-}
-
-.contentEditPage {
-  padding: 55px 0 0 !important;
+  padding-top: 55px;
 }
 
 #content {
+  background-color: #434343;
   height: 100%;
   width: 100%;
+  padding-bottom: 10px;
   overflow-y: auto;
 }
 
@@ -160,6 +158,7 @@ a[name] {
 .breadcrumb {
   padding: 8px @page-margin-horizontal;
   margin: 0;
+  background-color: #434343;
   //#gradient > .vertical-three-colors(#ffffff, #ffffff, 80%, rgba(255, 255, 255, 0.0));
   //background-color: transparent;
   border-radius: 0;
@@ -686,7 +685,7 @@ fieldset {
 }
 
 .collapse_rim {
-  background: #ff0 !important;
+  background: #b5b500 !important;
 }
 
 .side-bar {
@@ -1343,6 +1342,9 @@ li.CodeMirror-hint:nth-child(odd) {
 
 #-shortcut-keys > div {
   background-color: #333333;
+  margin: 0;
+  top: 50%;
+  left: 50%;
 }
 
 kbd {
@@ -1376,34 +1378,62 @@ kbd {
 
 /* Sidebar */
 
+#closedSidebar {
+  padding: 0 0 5px;
+  background-color: #3a3a3a;
+  border-right: 1px solid #292929;
+}
+
+#collapseSidebarDiv {
+  padding: 10px 4px;
+  cursor: pointer;
+}
+
+.collapseSidebarDivColor {
+  background-color: #303030;
+}
+
+#collapseSidebarText {
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+  font-size: 0.95em;
+}
+
+#collapseSidebarIcon {
+  transform: rotate(-90deg);
+  font-size: 18px;
+}
+
 #sidebar {
   display: flex;
   flex-direction: column;
   width: 300px;
-  min-width: 300px;
-  max-width: 300px;
   height: 100%;
-  background-color: #464646;
+  background-color: #3a3a3a;
   border-right: 1px solid #292929;
 }
 
 .buttonSidebarDiv {
-  padding: 10px 15px 5px;
-
-  li {
-    display: inline;
-    .btn;
-    .btn-default;
-    .btn-xs;
-  }
+  padding: 2px 10px 2px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  border-bottom: 1px solid #292929;
 }
 
 .buttonSidebar {
-  font-size: 0.8em !important;
-}
-
-.expandAllSidebar {
-  margin-left: auto !important;
+  display: inline-block !important;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  line-height: 1.42857143 !important;
+  user-select: none;
+  font-weight: 600 !important;
+  text-decoration: none;
+  margin: 2px;
+  padding: 1px 5px;
+  font-size: 13px !important;
 }
 
 #highlight {
@@ -1417,7 +1447,7 @@ kbd {
 
 #sidebarContent {
   height: 100%;
-  padding: 5px 10px 10px;
+  padding: 0 10px 10px;
   overflow: auto;
   white-space: nowrap;
   display: flex;
@@ -1519,3 +1549,57 @@ tr.check > td{
      border-radius: 4px;
      padding: 2px;
  }
+
+.toolchainTable {
+  position: relative;
+ }
+
+tr.scenario-detail > td {
+  padding: 18px 18px 5px 5px;
+ }
+
+.toolchainTable tr:first-child > td:first-child {
+    padding-left: 30px;
+}
+
+.toolchainTable tr:first-child > td:first-child:before {
+    text-align: center;
+    font: normal normal normal 16px/1 FontAwesome;
+    position: absolute;
+    left: 6px;
+    top: 4px;
+    color: #eee;
+    padding: 1px 2px 2px 2px;
+    width: 20px;
+    height: 20px;
+    line-height: 18px;
+    content: "\f05a";
+}
+
+.scriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f120";
+ }
+.storyboardTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f030";
+ }
+.scenarioTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f00a";
+ }
+.tableTemplate > tbody > tr:first-child > td:first-child:before {
+  content: "\f022";
+ }
+.debugScriptTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f188";
+}
+.importTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f019";
+}
+.libraryTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f212";
+}
+.commentTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f292";
+}
+.toolchainTest .decisionTable > tbody > tr:first-child > td:first-child:before {
+  content: "\f0ce";
+}

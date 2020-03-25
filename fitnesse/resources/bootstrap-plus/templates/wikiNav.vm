@@ -32,7 +32,17 @@
                 Come to the dark side
             </li>
         #end
-
+        #if ( $highlightSymbols == 'true' )
+                    <li>
+                        <button class="fa fa-toggle-on prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
+                        Highlight Slim Symbols &amp; Expressionsh
+                    </li>
+                #else
+                    <li>
+                        <button class="fa fa-toggle-off prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
+                        Highlight Slim Symbols &amp; Expressions
+                    </li>
+                #end
         #if ( $collapseSymbols == 'true' )
             <li>
                 <button class="fa fa-toggle-on prefsbutton" id="collapse-switch" title="Toggle symbol collapse on result pages"></button>
@@ -68,6 +78,16 @@
                 <b>Experimental:</b> Sidebar
             </li>
         #end
-
+        #if ( $versionCheck == 'true' )
+            <li>
+                <button class="fa fa-toggle-on prefsbutton" id="mavenVersionCheck-switch" title="Toggle mavenVersionCheck"></button>
+                <b>Experimental:</b> Maven Version Checker
+            </li>
+        #else
+            <li>
+                <button class="fa fa-toggle-off prefsbutton" id="mavenVersionCheck-switch" title="Toggle mavenVersionCheck"></button>
+                <b>Experimental:</b> Maven Version Checker
+            </li>
+        #end
     </ul>
 </div>
