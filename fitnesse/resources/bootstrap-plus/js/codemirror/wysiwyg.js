@@ -18,6 +18,28 @@ var Wysiwyg = function (textarea, options) {
         cm.showHint({hint: CodeMirror.hint.fitnesse_anyword});
     };
 
+    CodeMirror.commands.comment = function (cm) {
+        $(this).removeClass('cm-variable-3');
+        $(this).addClass('cm-comment');
+
+        // let cm = $('.CodeMirror')[0].CodeMirror;
+        let doc = cm.getDoc();
+        let cursor = doc.getCursor(); // gets the line number in the cursor position
+        let line = doc.getLine(cursor.line); // get the line contents
+        console.log(line);
+        let fromPos = { // create a new object to avoid mutation of the original selection
+            line: cursor.line,
+            ch: 0 // set the character position to the end of the line
+        };
+
+        let toPos = { // create a new object to avoid mutation of the original selection
+            line: cursor.line,
+            ch: line.length // set the character position to the end of the line
+        };
+        doc.replaceRange('#' + line, fromPos, toPos); // adds a new line
+    };
+
+    //pre.CodeMirrorLine
     CodeMirror.commands.save = function (cm) {
         $(document.f).submit();
         return false;
@@ -31,7 +53,8 @@ var Wysiwyg = function (textarea, options) {
         viewportMargin: Infinity,
         gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
         extraKeys: {
-            'Ctrl-Space': 'autocomplete'
+            'Ctrl-Space': 'autocomplete',
+            'Ctrl-/': 'comment'
         }
     });
 
