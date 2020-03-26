@@ -102,7 +102,8 @@ function processSymbolData(str) {
  */
 
 $(document).ready(function () {
-    // Set padding for contentDiv based on footer
+    // Set padding for contentDiv based on header and footer
+    document.getElementById('contentDiv').style.paddingTop = $('nav').height() + 'px';
     if ($('footer').height() !== 0) {
         document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
     }
@@ -482,7 +483,7 @@ function sidebarContentLayerLoop(suiteName, children) {
         // Place new li in the new made ul
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
 
-        if (content.children) {
+        if (content.children && content.path !== 'files') {
             sidebarContentLayerLoop(content.path.replace(/\./g, ''), content.children);
         }
     });
@@ -490,13 +491,16 @@ function sidebarContentLayerLoop(suiteName, children) {
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
-    const iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
+    let iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     const prunedClass = content.type.includes('pruned') ? ' pruned' : '';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
-    const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
+    let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
+    if (content.path.slice(0, 5) === 'files') {
+        iconClass = content.type.includes('suite') ? 'fa fa-folder' : iconClass;
+        toggleClass = 'iconWidth';
+    }
 
-    const htmlContent =
-        '<li id="' + content.path.replace(/\./g, '') + '">' +
+    return '<li id="' + content.path.replace(/\./g, '') + '">' +
         '<div' + highlight + '>' +
         '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
         '&nbsp;' +
@@ -505,7 +509,6 @@ function getSidebarContentHtml(content) {
         '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
         '</div>' +
         '</li>';
-    return htmlContent;
 }
 
 // Set a click event an the sidebar toggle icons
