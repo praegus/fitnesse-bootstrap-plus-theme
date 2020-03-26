@@ -491,10 +491,9 @@ function sidebarContentLayerLoop(suiteName, children) {
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
-    const iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
-    const prunedClass = content.type.includes('pruned') ? ' pruned' : '';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
+    const iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicText = content.type.includes('symbolic') ? ' >' : '';
 
@@ -505,7 +504,7 @@ function getSidebarContentHtml(content) {
         '&nbsp;' +
         '<i class="' + iconClass + '" aria-hidden="true"></i>' +
         '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + linkedText + symbolicText + '</a>' +
+        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + symbolicText + '</a>' +
         '</div>' +
         '</li>';
     return htmlContent;
