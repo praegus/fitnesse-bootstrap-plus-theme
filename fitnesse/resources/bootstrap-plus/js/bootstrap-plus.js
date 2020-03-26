@@ -495,6 +495,8 @@ function getSidebarContentHtml(content) {
     const prunedClass = content.type.includes('pruned') ? ' pruned' : '';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
+    const linkedText = content.type.includes('linked') ? ' @' : '';
+    const symbolicText = content.type.includes('symbolic') ? ' >' : '';
 
     const htmlContent =
         '<li id="' + content.path.replace(/\./g, '') + '">' +
@@ -503,7 +505,7 @@ function getSidebarContentHtml(content) {
         '&nbsp;' +
         '<i class="' + iconClass + '" aria-hidden="true"></i>' +
         '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + '</a>' +
+        '<a href="' + content.path + '" class="' + content.type + prunedClass + '">' + content.name + linkedText + symbolicText + '</a>' +
         '</div>' +
         '</li>';
     return htmlContent;
