@@ -140,7 +140,7 @@
             </div>
 
             <ul id="sidebarContent" class="scrollbar">
-                <div id="spinner" style="width: 42px; height:42px;"></div>
+                <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
             </ul>
         </div>
     #end
