@@ -11,9 +11,7 @@ try {
         // Tooltip.test
         placeToolTip:placeToolTip,
         // Tags.test
-        postTagRequest: postTagRequest,
         createTagInput: createTagInput,
-        GetCurrentTagList: GetCurrentTagList,
         checkIfNewTagIsValid: checkIfNewTagIsValid,
         postTagInHtml: postTagInHtml,
         inputBorderStyling: inputBorderStyling,
@@ -152,10 +150,10 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-//    $('.test, .suite, .static').each(function () {
-//        $(this).wrap('<div class=\'addTagDiv\'></div>');
-//        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-//    });
+   $('.test, .suite, .static').each(function () {
+       $(this).wrap('<div class=\'addTagDiv\'></div>');
+       $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+   });
 
     // For Sidebar
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
@@ -398,19 +396,19 @@ $(document).ready(function () {
         );
     }
 
-    //tagButtonHover('test');
-    //tagButtonHover('static');
-    //tagButtonHover('suite');
+    tagButtonHover('test');
+    tagButtonHover('static');
+    tagButtonHover('suite');
 
     // Click add tag function
-//    $('.addTag').click(function () {
-//        createTagInput($(this));
-//    });
+   $('.addTag').click(function () {
+       createTagInput($(this));
+   });
 
     // Add delete button when page is loaded in
-//    $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
-//
-//    deleteClickAndHoverEvent('.deleteTagButton');
+   $('.contents .tag').append(' <i class="fas fa-times deleteTagButton"></i>');
+
+   deleteClickAndHoverEvent('.deleteTagButton');
 });
 
 /*
@@ -687,27 +685,30 @@ function createTagInput(currentAddTagButton) {
     });
 
     $('.tagInputOverview').keyup(function (event) {
-        //If "Enter" button is pressed
-        if (event.keyCode == 13) {
-            //Get current input value & replace empty spaces at the start/end of input
+        if (event.keyCode === 13) {
+            const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
+            const responderURL = '?responder=tableOfContents';
             const inputValue = $('.tagInputOverview').val().trim();
-            //Get href value of the a tag
-            const currentURL = $(currentAddTagButton).siblings('a').attr('href');
-            //Call get current tag list function
-            GetCurrentTagList(currentURL, inputValue, checkIfNewTagIsValid);
+            GetCurrentTagList(checkIfNewTagIsValid, currentPageURL, responderURL, inputValue);
         }
     });
+
+    // Get href value of the a tag
+    const indexPointURl = $(currentAddTagButton).siblings('a').attr('href').indexOf('.');
+    const currentMainSuiteURL = $(currentAddTagButton).siblings('a').attr('href').slice(0, indexPointURl);
+    const responderURL = '?responder=allTags';
+    //Call get current tag list function
+    GetCurrentTagList(tagAutocomplete, currentMainSuiteURL, responderURL);
 }
 
 // Get current tag list from the parent where you want your new tag
-function GetCurrentTagList(currentURL, newTags, callback) {
-    //Get current tag list
+function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     $.ajax({
         type: 'GET',
-        url: 'http://' + location.host + '/' + currentURL + '?responder=tableOfContents',
+        url: 'http://' + location.host + '/' + currentPageURL + responderURL,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
-        success: data => callback(data, currentURL, newTags),
+        success: data => callback(data, currentPageURL, newTags),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
@@ -716,8 +717,27 @@ function GetCurrentTagList(currentURL, newTags, callback) {
     });
 }
 
+function tagAutocomplete(data) {
+    $('.tagInputOverview').autocomplete({
+        source: function(request, response) {
+            const results = $.ui.autocomplete.filter(data[Object.keys(data)], request.term);
+            // Show the words in alphabetical order
+            results.sort();
+            // Show only up to 5 words
+            response(results.slice(0, 5));
+        }
+    });
+    // Only show words that begin with the input value
+    $.ui.autocomplete.filter = function (array, term) {
+        const matcher = new RegExp('^' + $.ui.autocomplete.escapeRegex(term), 'i');
+        return $.grep(array, function (value) {
+            return matcher.test(value.label || value.value || value);
+        });
+    };
+}
+
 // Check if the tag meet the requirements
-function checkIfNewTagIsValid(data, currentURL, newTags) {
+function checkIfNewTagIsValid(data, currentPageURL, newTags) {
     const lowerCaseTags = newTags.toLowerCase();
 
     //Check if error message is present and remove it when it's true
@@ -731,24 +751,27 @@ function checkIfNewTagIsValid(data, currentURL, newTags) {
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
         inputBorderStyling();
         $('.tagInputOverview').after('<div class="tagErrorMessage">`~!@#$%^&*()|+=?;:\'",.<>\\/ not allowed except for -_</div>');
+    } else if (!newTags) {
+        inputBorderStyling();
+        $('.tagInputOverview').after('<div class="tagErrorMessage">Please fill in a tag name</div>');
     } else {
         // Post tags
         const currentTagString = data[0].tags.join(', ');
-        const tagList = currentTagString.length > 0 ? currentTagString + ', ' + lowerCaseTags : lowerCaseTags;
-        const url = 'http://' + location.host + '/' + currentURL;
-        postTagRequest(postTagInHtml, url, tagList, {currentURL, newTags});
+        const tagList = currentTagString.length > 0 ? currentTagString + ', ' + newTags : newTags;
+        const url = 'http://' + location.host + '/' + currentPageURL;
+        postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
 }
 
 // Post Tag in the html
 function postTagInHtml(successData, neededValues) {
     //Add new tag span layout to page
-    $('.contents a[href$=\'' + neededValues.currentURL + '\']').parent().after('<span class=\'tag\'>' + neededValues.newTags + ' <i class="fas fa-times deleteTagButton"></i></span>');
+    $('.contents a[href$=\'' + neededValues.currentPageURL + '\']').parent().after('<span class=\'tag\'>' + neededValues.newTags + ' <i class="fas fa-times deleteTagButton"></i></span>');
     //Remove input field
     $('.tagInputOverview').remove();
 
     // Find new tag
-    const newDeleteTagButton = $('a[href$=\'' + neededValues.currentURL + '\']').parent().parent().find('.deleteTagButton').first();
+    const newDeleteTagButton = $('a[href$=\'' + neededValues.currentPageURL + '\']').parent().parent().find('.deleteTagButton').first();
     // Assign hover listener to new tag
     deleteClickAndHoverEvent(newDeleteTagButton);
 }
@@ -781,7 +804,7 @@ function deleteClickAndHoverEvent(deleteTagButton) {
     // Click delete tag function
     $(deleteTagButton).click(function () {
         const chosenTag = $(this).parent().text().trim();
-        const currentTagArray = $(this).parent().parent().find('.tag');
+        const currentTagArray = $(this).parent().find('.tag');
         const currentTagSpan = $(this).parent();
         const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
         postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
