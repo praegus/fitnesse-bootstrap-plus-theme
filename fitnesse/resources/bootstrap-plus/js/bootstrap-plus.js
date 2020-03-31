@@ -611,7 +611,7 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('http://localhost:' + window.location.port +"/?Tooltips", function (data) {
+    $.get('http://' + window.location.hostname + ':' + window.location.port +"/?Tooltips", function (data) {
         const tooltips = data;
         // Activate function displayToolTip
         callback(tooltips);
