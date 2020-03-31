@@ -496,7 +496,7 @@ function getSidebarContentHtml(content) {
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
     if (content.path.slice(0, 5) === 'files') {
-        iconClass = content.type.includes('suite') ? 'fa fa-folder' : iconClass;
+        iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
         toggleClass = 'iconWidth';
     }
 
