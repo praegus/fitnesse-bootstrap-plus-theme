@@ -61,7 +61,7 @@ var Wysiwyg = function (textarea, options) {
     // Hide both editors, so the current one gets properly shown:
     this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = 'none';
 
-    textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
+    //textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
     textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
 
@@ -166,6 +166,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 }
                 self.focusTextarea();
             };
+            /*
         case 'wysiwyg':
             return function (event) {
                 var frame = self.frame;
@@ -187,6 +188,8 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 }
                 self.focusWysiwyg();
             };
+
+             */
     }
 };
 
@@ -928,7 +931,9 @@ Wysiwyg.prototype.focusTextarea = function () {
 };
 
 Wysiwyg.prototype.setupToggleEditorButtons = function () {
+    /*
     var div = document.createElement('div');
+
     var mode = Wysiwyg.editorMode;
     var html = '<label for="editor-wysiwyg-@">'
         + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
@@ -940,14 +945,16 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
         + 'plain text</label> '
         + '&nbsp; ';
     var buttons;
-    var i;
+     var i;
 
     div.className = 'editor-toggle';
     //noinspection JSCheckFunctionSignatures,JSCheckFunctionSignatures
     div.innerHTML = html.replace(/@/g, ++Wysiwyg.count);
+
     this.toggleEditorButtons = div;
 
     buttons = div.getElementsByTagName('input');
+
     for (i = 0; i < buttons.length; i++) {
         var button = buttons[i];
         var token = button.id.replace(/[0-9]+$/, '@');
@@ -958,6 +965,7 @@ Wysiwyg.prototype.setupToggleEditorButtons = function () {
                 break;
         }
     }
+    */
 };
 
 Wysiwyg.prototype.syncTextAreaHeight = function () {
