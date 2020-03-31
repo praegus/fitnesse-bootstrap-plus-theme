@@ -53,7 +53,7 @@ var Wysiwyg = function (textarea, options) {
     this.toolbarButtons = this.setupWysiwygMenuEvents();
     this.setupTextareaMenuEvents();
 
-    this.toggleEditorButtons = null;
+  //  this.toggleEditorButtons = null;
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
@@ -88,6 +88,7 @@ var Wysiwyg = function (textarea, options) {
         self.execCommand('styleWithCSS', false);
     } catch (e2) {
     }
+    /*
     if (editorMode === 'wysiwyg') {
         try {
             self.loadWysiwygDocument();
@@ -95,6 +96,8 @@ var Wysiwyg = function (textarea, options) {
             exception = e3;
         }
     }
+
+     */
     self.setupEditorEvents();
     self.setupFormEvent();
     if (exception) {
@@ -137,17 +140,11 @@ Wysiwyg.getValidateOnSave = function () {
 };
 
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
-    var self = this;
-    var setEditorMode = function (mode) {
-        if (mode !== 'wysiwyg') {
-            mode = 'textarea';
-        }
-        Wysiwyg.editorMode = mode;
-        Wysiwyg.setCookie('wysiwyg', mode);
-    };
 
-    switch (type) {
-        case 'textarea':
+        Wysiwyg.editorMode = 'textarea';
+        Wysiwyg.setCookie('wysiwyg', 'textarea');
+
+
             return function (event) {
                 var wrappedElement = self.codeMirrorEditor.getWrapperElement();
                 if (wrappedElement.style.display === 'none') {
@@ -166,31 +163,8 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 }
                 self.focusTextarea();
             };
-            /*
-        case 'wysiwyg':
-            return function (event) {
-                var frame = self.frame;
-                var wrappedElement = self.codeMirrorEditor.getWrapperElement();
-                if (frame.style.display === 'none') {
-                    try {
-                        self.loadWysiwygDocument();
-                    } catch (e) {
-                        Wysiwyg.stopEvent(event || window.event);
-                        alert('Failed to activate the wysiwyg editor.');
-                        throw e;
-                    }
-                    wrappedElement.style.display = 'none';
-                    wrappedElement.setAttribute('tabIndex', '-1');
-                    frame.style.display = self.wysiwygToolbar.style.display = '';
-                    frame.setAttribute('tabIndex', '');
-                    self.textareaToolbar.style.display = 'none';
-                    setEditorMode(type);
-                }
-                self.focusWysiwyg();
-            };
 
-             */
-    }
+
 };
 
 Wysiwyg.prototype.activeEditor = function () {
