@@ -112,11 +112,11 @@ $(document).ready(function () {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
-        getPageHistory('http://localhost:' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
+        getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
 
     }
     if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        getVersionData(versionCheck,'http://localhost:' + window.location.port + "/?mavenVersions");
+        getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
@@ -342,6 +342,7 @@ $(document).ready(function () {
             $('#mavenVersionCheck-switch').addClass('fa-toggle-off');
             $('#mavenVersions').addClass('displayNone');
         } else {
+            getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
             setBootstrapPlusConfigCookie('versionCheck','true')
             $('#mavenVersionCheck-switch').removeClass('fa-toggle-off');
             $('#mavenVersionCheck-switch').addClass('fa-toggle-on');
