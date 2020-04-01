@@ -494,7 +494,7 @@ function getSidebarContentHtml(content) {
     let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
-    const symbolicText = content.isSymlink === true ? ' >' : '';
+    const symbolicIcon = content.isSymlink === true ? '&nbsp; <i class="fa fa-link" aria-hidden="true"></i>' : '';
 
     if (content.path.slice(0, 5) === 'files') {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
@@ -507,7 +507,8 @@ function getSidebarContentHtml(content) {
         '&nbsp;' +
         '<i class="' + iconClass + '" aria-hidden="true"></i>' +
         '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + symbolicText + '</a>' +
+        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
+        symbolicIcon +
         '</div>' +
         '</li>';
 }
