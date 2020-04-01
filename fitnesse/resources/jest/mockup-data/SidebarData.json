@@ -11,7 +11,7 @@
             "help": "",
             "path": "TestSuiteDemo.BackEndTests.T001AddCoursesByServiceCall",
             "name": "T 001 Add Courses By Service Call",
-            "type": "test",
+            "type": "test linked pruned",
             "tags": [""]
           }
         ],
@@ -33,6 +33,7 @@
         ],
         "name": "Front End Tests",
         "type": "suite",
+        "isSymlink": true,
         "tags": [""]
       },
       {
