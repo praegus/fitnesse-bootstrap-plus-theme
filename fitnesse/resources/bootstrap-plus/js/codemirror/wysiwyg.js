@@ -21,23 +21,50 @@ var Wysiwyg = function (textarea, options) {
     CodeMirror.commands.comment = function (cm) {
         $(this).removeClass('cm-variable-3');
         $(this).addClass('cm-comment');
-
-        // let cm = $('.CodeMirror')[0].CodeMirror;
         let doc = cm.getDoc();
-        let cursor = doc.getCursor(); // gets the line number in the cursor position
-        let line = doc.getLine(cursor.line); // get the line contents
-        console.log(line);
-        let fromPos = { // create a new object to avoid mutation of the original selection
-            line: cursor.line,
-            ch: 0 // set the character position to the end of the line
-        };
+        let pattern1 = /\n/;
+        let selectionRange = doc.getSelection().toString();
+        let cursor = doc.getCursor();
+        let line = doc.getLine(cursor.line);
 
-        let toPos = { // create a new object to avoid mutation of the original selection
-            line: cursor.line,
-            ch: line.length // set the character position to the end of the line
-        };
-        doc.replaceRange('#' + line, fromPos, toPos); // adds a new line
+        if(selectionRange.match(pattern1) && selectionRange !== ""){
+            let beginLine =(doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line : doc.listSelections()[0].anchor.line ;
+            let endLine =(doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line+1 : doc.listSelections()[0].anchor.line+1 ;
+            for(let i = beginLine; i < endLine; i++ ){
+                let line = doc.getLine(i);
+
+                if(line !== ""){
+                    line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
+                    let fromPos = {
+                        line: i,
+                        ch: 1
+                    };
+                    let toPos = {
+                        line: i,
+                        ch: line.length+2
+                    };
+                    doc.replaceRange(line, fromPos, toPos);
+                }
+            }
+        }
+        else if(!line.match(pattern1) && line !== ""){
+            line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
+            let fromPos = {
+                line: cursor.line,
+                ch: 1
+            };
+            let toPos = {
+                line: cursor.line,
+                ch: line.length+2
+            };
+            doc.replaceRange(line, fromPos, toPos);
+        }
+        else if(!line.match(pattern1) && line === "") {
+        }
     };
+
+
+
 
     //pre.CodeMirrorLine
     CodeMirror.commands.save = function (cm) {
