@@ -14,6 +14,7 @@ body {
 }
 
 #content {
+  flex: 1;
   background-color: #434343;
   height: 100%;
   width: 100%;
@@ -1315,7 +1316,7 @@ li.CodeMirror-hint:nth-child(odd) {
   width: 90px;
   font-size: 11px;
   background: #595959;
-  margin-right: 6px;
+  margin-right: 5px;
 }
 
 .tagErrorMessage {
@@ -1495,10 +1496,10 @@ kbd {
 #testHistoryDiv{
   display:inline-block;
 }
-
 #testHistoryDiv > a {
   float:right;
 }
+
 
 /* Versionchecker */
 
@@ -1558,11 +1559,11 @@ tr.scenario-detail > td {
   padding: 18px 18px 5px 5px;
  }
 
-.toolchainTable tr:first-child > td:first-child {
+.toolchainTable > tbody > tr:first-child > td:first-child {
     padding-left: 30px;
 }
 
-.toolchainTable tr:first-child > td:first-child:before {
+.toolchainTable > tbody > tr:first-child > td:first-child:before {
     text-align: center;
     font: normal normal normal 16px/1 FontAwesome;
     position: absolute;
