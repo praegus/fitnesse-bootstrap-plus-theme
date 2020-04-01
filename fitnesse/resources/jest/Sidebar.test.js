@@ -68,7 +68,7 @@ it('Test if data input types returns the correct html', () => {
     const neededHtml = '<ul id="sidebarContent"></ul>';
     const expected = {
         contain1: 'class="test linked pruned">T 001 Add Courses By Service Call @</a>',
-        contain2: 'class="suite">Front End Tests &gt;</a>',
+        contain2: 'class="suite">Front End Tests</a>&nbsp;<i class="fa fa-link" aria-hidden="true"></i>',
     };
 
     document.body.innerHTML = neededHtml;
