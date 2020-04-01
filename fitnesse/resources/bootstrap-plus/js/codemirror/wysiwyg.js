@@ -32,38 +32,25 @@ var Wysiwyg = function (textarea, options) {
             let endLine =(doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line+1 : doc.listSelections()[0].anchor.line+1 ;
             for(let i = beginLine; i < endLine; i++ ){
                 let line = doc.getLine(i);
-
                 if(line !== ""){
                     line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
-                    let fromPos = {
-                        line: i,
-                        ch: 1
-                    };
-                    let toPos = {
-                        line: i,
-                        ch: line.length+2
-                    };
-                    doc.replaceRange(line, fromPos, toPos);
+                    doc.replaceRange(line, createPosition("from", i), createPosition("to", i, line));
                 }
             }
         }
         else if(!line.match(pattern1) && line !== ""){
             line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
-            let fromPos = {
-                line: cursor.line,
-                ch: 1
-            };
-            let toPos = {
-                line: cursor.line,
-                ch: line.length+2
-            };
-            doc.replaceRange(line, fromPos, toPos);
+            doc.replaceRange(line, createPosition("from", cursor.line), createPosition("to", cursor.line, line));
         }
-        else if(!line.match(pattern1) && line === "") {
-        }
+        else if(!line.match(pattern1) && line === "") {}
     };
 
-
+    function createPosition(direction, iteration, line) {
+        return {
+            line: iteration,
+            ch: (direction === "from") ? 1 : line.length + 2
+        };
+    }
 
 
     //pre.CodeMirrorLine
