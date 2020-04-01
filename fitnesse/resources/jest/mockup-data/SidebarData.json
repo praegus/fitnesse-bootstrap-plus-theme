@@ -32,7 +32,8 @@
           }
         ],
         "name": "Front End Tests",
-        "type": "suite symbolic",
+        "type": "suite",
+        "isSymlink": true,
         "tags": [""]
       },
       {

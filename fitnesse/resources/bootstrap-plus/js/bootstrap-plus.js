@@ -494,7 +494,7 @@ function getSidebarContentHtml(content) {
     let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
     const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
-    const symbolicText = content.type.includes('symbolic') ? ' >' : '';
+    const symbolicText = content.isSymlink === true ? ' >' : '';
 
     if (content.path.slice(0, 5) === 'files') {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
