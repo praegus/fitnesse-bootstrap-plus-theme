@@ -66,6 +66,17 @@ var parseCookies = function () {
     }, {});
 };
 
+function copyToClipboard (str) {
+   var el = document.createElement('textarea');
+   el.value = str;
+   el.setAttribute('readonly', '');
+   el.style = {position: 'absolute', left: '-9999px'};
+   document.body.appendChild(el);
+   el.select();
+   document.execCommand('copy');
+   document.body.removeChild(el);
+}
+
 function processSymbolData(str) {
     var result = '';
     var inSymbol = false;
@@ -553,6 +564,96 @@ function expandSidebarIcons() {
     $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
     $('#sidebarContent .iconToggle').removeClass('fa-angle-right');
     $('#sidebarContent .iconToggle').addClass('fa-angle-down');
+}
+
+$(function(){
+    $('#sidebarContent').contextMenu({
+        selector: 'a',
+        callback: function(key, options) {
+            handleContextMenuClick(key, this);
+        },
+        items: {
+            "run": {name: "Run",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) {
+                        return showRunnablePageItems(opt);
+                     }},
+
+            "edit": {name: "Edit", icon: "fa-edit"},
+            "rename": {name: "Rename", icon: "fa-pencil"},
+            "move": {name: "Move", icon: "fa-long-arrow-right"},
+            "delete": {name: "Delete", icon: "fa-trash-o"},
+            "sep1": "---------",
+            "fold1": {
+                "name": "Add",
+                "icon": "fa-plus",
+                "items": {
+                    "addStatic": {name: "Static Page", icon: "fa-file-o"},
+                    "addSuite": {name: "Suite Page", icon: "fa-cogs"},
+                    "addTest": {name: "Test Page", icon: "fa-cog"}
+                }
+            },
+            "sep2": "---------",
+            "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
+            "testhistory": {name: "Test History",
+                            icon: "fa-history",
+                            visible: function(key, opt) {
+                                return showRunnablePageItems(opt);
+                             }},
+            "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
+        }
+    });
+});
+
+function showRunnablePageItems(opt) {
+    if (opt.$trigger[0].classList.contains('test') === false&& opt.$trigger[0].classList.contains('suite') === false) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function handleContextMenuClick(key, element) {
+    var el = element[0];
+    switch(key) {
+      case "run":
+          if(el.classList.contains('test')) {
+              window.location.href = el.pathname + '?test';
+          } else if (el.classList.contains('suite')) {
+              window.location.href = el.pathname + '?suite';
+          }
+          break;
+      case "edit":
+          window.location.href = el.pathname + '?edit';
+          break;
+      case "rename":
+          window.location.href = el.pathname + '?refactor&type=rename'
+          break;
+      case "move":
+          window.location.href = el.pathname + '?refactor&type=move'
+          break;
+      case "delete":
+          window.location.href = el.pathname + '?deletePage'
+          break;
+      case "copypath":
+          copyToClipboard(el.pathname.replace('/', '.'));
+          break;
+      case "testhistory":
+          window.location.href = el.pathname + '?testHistory'
+          break;
+      case "properties":
+          window.location.href = el.pathname + '?properties'
+          break;
+      case "addStatic":
+          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.StaticPage'
+          break;
+      case "addSuite":
+          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.SuitePage'
+          break;
+      case "addTest":
+          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.TestPage'
+          break;
+    }
 }
 
 /*
