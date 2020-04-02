@@ -22,38 +22,112 @@ var Wysiwyg = function (textarea, options) {
         $(this).removeClass('cm-variable-3');
         $(this).addClass('cm-comment');
         let doc = cm.getDoc();
-        let pattern1 = /\n/;
+
+        // Function 1
+        let beginLine = (doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
+        let endLine = (doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
         let selectionRange = doc.getSelection().toString();
         let cursor = doc.getCursor();
-        let line = doc.getLine(cursor.line);
+        let lineArray = [];
 
-        if(selectionRange.match(pattern1) && selectionRange !== ""){
-            let beginLine =(doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line : doc.listSelections()[0].anchor.line ;
-            let endLine =(doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line+1 : doc.listSelections()[0].anchor.line+1 ;
-            for(let i = beginLine; i < endLine; i++ ){
-                let line = doc.getLine(i);
-                if(line !== ""){
-                    line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
-                    doc.replaceRange(line, createPosition("from", i), createPosition("to", i, line));
-                }
+        if (selectionRange !== "") {
+            for (let i = beginLine; i <= endLine ; i++) {
+                let line = doc.getLine(i - 1);
+                lineArray.push({index: i, lineText: line});
             }
         }
-        else if(!line.match(pattern1) && line !== ""){
-            line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
-            doc.replaceRange(line, createPosition("from", cursor.line), createPosition("to", cursor.line, line));
+        else if(cursor.line) {
+            lineArray.push({index: cursor.line+1, lineText: doc.getLine(cursor.line)});
         }
-        else if(!line.match(pattern1) && line === "") {}
+        console.log('B',beginLine);
+        console.log('E',endLine);
+        console.log(lineArray);
+
+        // Function 2
+        if(lineArray.length !== 0){
+            let amountLines = (endLine - beginLine) + 1;
+            let amountHashes = 0;
+            lineArray.forEach(object => {
+                if(object.lineText.match('#')){
+                    amountHashes++;
+                }
+            });
+            console.log('amoutnline',amountLines);
+            console.log('amountHashes', amountHashes);
+
+            if(amountHashes === amountLines){
+                lineArray.forEach(object => {
+                    const newLine = object.lineText.substring(0, object.lineText.length).replace('#','');
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1), 0, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+            else {
+                lineArray.forEach(object => {
+                    const newLine = '#' + object.lineText.substring(1, object.lineText.length);
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1), 1, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+        }
+
+        function createPosition(direction, iteration, beginPlacement, endPlacement) {
+            return {
+                line: iteration,
+                ch: (direction === "from") ? beginPlacement : endPlacement+2
+            };
+        }
+
     };
 
-    function createPosition(direction, iteration, line) {
-        return {
-            line: iteration,
-            ch: (direction === "from") ? 1 : line.length + 2
-        };
-    }
+//         let pattern1 = /\n/;
+
+//         let cursor = doc.getCursor();
+//         let line = doc.getLine(cursor.line);
+
+//         if(selectionRange.match(pattern1) && selectionRange !== ""){
+
+//             everyLine(true, doc);
+//             // if (selectionRange.match('#')) {
+//             //     // everyLine(true, doc);
+//             //     console.log("SAAAYYYY SOOOOOO");
+//             // }
+//             // else if (selectionRange.match('##')) {
+//             //     // everyLine(false, doc);
+//             //     console.log("MMMMMOOOOOOOO");
+//             // }
+//             // else {
+//             //     // everyLine(true, doc);
+//             //     console.log("JUICY");
+//             // }
+//         }
+//         else if(!line.match(pattern1) && line !== ""){
+//             line = (line.match('#')) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
+//             doc.replaceRange(line, createPosition("from", cursor.line), createPosition("to", cursor.line, line));
+//         }
+//         else if(!line.match(pattern1) && line === "") {}
+//     };
+
+//     function createPosition(direction, iteration, line) {
+//         return {
+//             line: iteration,
+//             ch: (direction === "from") ? 1 : line.length + 2
+//         };
+//     }
+
+//     function everyLine(booleen, doc) {
+//         // for(let i = beginLine; i < endLine; i++ ){
+//         //     let line = doc.getLine(i);
+//         //     if(line !== ""){
+//         //         line = (booleen === true) ? line.substring(1, line.length).replace('#','') : '#' + line.substring(1, line.length);
+//         //         doc.replaceRange(line, createPosition("from", i), createPosition("to", i, line));
+//         //     }
+//         // }
 
 
-    //pre.CodeMirrorLine
+
+//     }
+
+
+//pre.CodeMirrorLine
     CodeMirror.commands.save = function (cm) {
         $(document.f).submit();
         return false;
