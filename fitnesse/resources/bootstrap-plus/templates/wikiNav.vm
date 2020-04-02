@@ -35,7 +35,7 @@
         #if ( $highlightSymbols == 'true' )
                     <li>
                         <button class="fa fa-toggle-on prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
-                        Highlight Slim Symbols &amp; Expressionsh
+                        Highlight Slim Symbols &amp; Expressions
                     </li>
                 #else
                     <li>
