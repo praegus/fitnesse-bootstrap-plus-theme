@@ -82,3 +82,7 @@ New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolT
 * Tooltips will now also load in from fixtures.
 
 you can add tooltips to your fixture by adding Tooltips.txt(case insensitive) to the root off your fixture.
+
+* Tooltips can now contain links
+
+You can add a link to your tooltip by adding a simple link html tag to your tooltip.
