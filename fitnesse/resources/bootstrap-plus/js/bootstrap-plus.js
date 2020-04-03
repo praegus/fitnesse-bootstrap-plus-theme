@@ -176,6 +176,7 @@ $(document).ready(function () {
     }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
+        scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "");
     });
     $('#expandAllSidebar').click(function () {
