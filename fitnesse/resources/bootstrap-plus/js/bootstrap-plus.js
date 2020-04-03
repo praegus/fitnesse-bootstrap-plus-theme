@@ -607,6 +607,7 @@ $(function(){
                             visible: function(key, opt) {
                                 return showRunnablePageItems(opt);
                              }},
+            "search": {name: "Search from here", icon: "fa-search"},
             "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
         }
     });
@@ -642,21 +643,23 @@ function getResponder(key, element) {
           case "editNewTab":
               return 'edit';
           case "rename":
-              return 'refactor&type=rename'
+              return 'refactor&type=rename';
           case "move":
-              return 'refactor&type=move'
+              return 'refactor&type=move';
           case "delete":
-              return 'deletePage'
+              return 'deletePage';
           case "testhistory":
-              return 'testHistory'
+              return 'testHistory';
+          case "search":
+              return 'search';
           case "properties":
-              return 'properties'
+              return 'properties';
           case "addStatic":
-              return 'new&pageTemplate=.TemplateLibrary.StaticPage'
+              return 'new&pageTemplate=.TemplateLibrary.StaticPage';
           case "addSuite":
-              return 'new&pageTemplate=.TemplateLibrary.SuitePage'
+              return 'new&pageTemplate=.TemplateLibrary.SuitePage';
           case "addTest":
-              return 'new&pageTemplate=.TemplateLibrary.TestPage'
+              return 'new&pageTemplate=.TemplateLibrary.TestPage';
         }
 }
 

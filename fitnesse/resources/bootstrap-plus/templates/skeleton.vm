@@ -131,7 +131,7 @@
     #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
         <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
             <div id="collapseSidebarDiv" #if( $collapseSidebar == 'false' ) class="collapseSidebarDivColor" #end>
-                <p id="collapseSidebarText">Sidebar</p>
+                <p id="collapseSidebarText">Project</p>
                 <i id="collapseSidebarIcon" class="fa fa-folder"></i>
             </div>
         </div>
