@@ -578,19 +578,29 @@ $(function(){
                     visible: function(key, opt) {
                         return showRunnablePageItems(opt);
                      }},
-
+            "runNewTab": {name: "Run in new tab",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) {
+                        return showRunnablePageItems(opt);
+                     },
+                     className: "contextmenu-newtab"
+                     },
+            "sep0": {type: "cm_separator", visible: function(key, opt) {
+                       return showRunnablePageItems(opt);
+                    }},
             "edit": {name: "Edit", icon: "fa-edit"},
+            "editNewTab": {name: "Edit in new tab", icon: "fa-edit", className: "contextmenu-newtab"},
             "rename": {name: "Rename", icon: "fa-pencil"},
             "move": {name: "Move", icon: "fa-long-arrow-right"},
             "delete": {name: "Delete", icon: "fa-trash-o"},
             "sep1": "---------",
             "fold1": {
-                "name": "Add",
-                "icon": "fa-plus",
-                "items": {
-                    "addStatic": {name: "Static Page", icon: "fa-file-o"},
-                    "addSuite": {name: "Suite Page", icon: "fa-cogs"},
-                    "addTest": {name: "Test Page", icon: "fa-cog"}
+                name: "Add",
+                icon: "fa-plus",
+                items: {
+                    addStatic: {name: "Static Page", icon: "fa-file-o"},
+                    addSuite: {name: "Suite Page", icon: "fa-cogs"},
+                    addTest: {name: "Test Page", icon: "fa-cog"}
                 }
             },
             "sep2": "---------",
@@ -606,54 +616,51 @@ $(function(){
 });
 
 function showRunnablePageItems(opt) {
-    if (opt.$trigger[0].classList.contains('test') === false&& opt.$trigger[0].classList.contains('suite') === false) {
+    if (opt.$trigger[0].classList.contains('test') === false && opt.$trigger[0].classList.contains('suite') === false) {
         return false;
-    } else {
-        return true;
     }
+    return true;
 }
 
 function handleContextMenuClick(key, element) {
-    var el = element[0];
-    switch(key) {
-      case "run":
-          if(el.classList.contains('test')) {
-              window.location.href = el.pathname + '?test';
-          } else if (el.classList.contains('suite')) {
-              window.location.href = el.pathname + '?suite';
-          }
-          break;
-      case "edit":
-          window.location.href = el.pathname + '?edit';
-          break;
-      case "rename":
-          window.location.href = el.pathname + '?refactor&type=rename'
-          break;
-      case "move":
-          window.location.href = el.pathname + '?refactor&type=move'
-          break;
-      case "delete":
-          window.location.href = el.pathname + '?deletePage'
-          break;
-      case "copypath":
-          copyToClipboard(el.pathname.replace('/', '.'));
-          break;
-      case "testhistory":
-          window.location.href = el.pathname + '?testHistory'
-          break;
-      case "properties":
-          window.location.href = el.pathname + '?properties'
-          break;
-      case "addStatic":
-          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.StaticPage'
-          break;
-      case "addSuite":
-          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.SuitePage'
-          break;
-      case "addTest":
-          window.location.href = el.pathname + '?new&pageTemplate=.TemplateLibrary.TestPage'
-          break;
+    if (key === 'copypath') {
+        copyToClipboard(element[0].pathname.replace('/', '.'));
+    } else {
+        var responder = getResponder(key, element);
+        if (key.includes('NewTab')) {
+            window.open(element[0].pathname + '?' +responder, '_blank');
+        } else {
+            window.location.href = element[0].pathname + '?' + responder;
+        }
     }
+}
+
+function getResponder(key, element) {
+    var el = element[0];
+        switch(key) {
+          case "run":
+          case "runNewTab":
+              return el.classList.contains('suite') ? 'suite' : 'test';
+          case "edit":
+          case "editNewTab":
+              return 'edit';
+          case "rename":
+              return 'refactor&type=rename'
+          case "move":
+              return 'refactor&type=move'
+          case "delete":
+              return 'deletePage'
+          case "testhistory":
+              return 'testHistory'
+          case "properties":
+              return 'properties'
+          case "addStatic":
+              return 'new&pageTemplate=.TemplateLibrary.StaticPage'
+          case "addSuite":
+              return 'new&pageTemplate=.TemplateLibrary.SuitePage'
+          case "addTest":
+              return 'new&pageTemplate=.TemplateLibrary.TestPage'
+        }
 }
 
 /*
