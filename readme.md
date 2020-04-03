@@ -38,11 +38,14 @@ See: https://github.com/praegus/toolchain-fitnesse-plugin
 #### Browser Tabs
 ![alt text](https://github.com/tcnh/binstore/raw/master/tabs.png "Tab bar")
 
-#### Table of contents
-![alt text](https://github.com/tcnh/binstore/raw/master/toc.png "Table of contents")
+#### Table of contents with tag management
+![image](https://user-images.githubusercontent.com/2232710/78379015-0ecb2e00-75d2-11ea-8e1e-c46c1b3a6683.png)
 
 #### Sidebar Navigation
 ![alt text](https://github.com/tcnh/binstore/raw/master/sidebar_nav.png "Sidebar")
+
+#### Sidebar Context Menu
+![image](https://user-images.githubusercontent.com/2232710/78378675-9bc1b780-75d1-11ea-91ac-22f7929a643a.png)
 
 #### Editor Linting
 ![alt text](https://github.com/tcnh/binstore/raw/master/linting.png "Editor linting")
