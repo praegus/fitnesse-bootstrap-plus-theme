@@ -1,3 +1,4 @@
 theme: jekyll-theme-cayman
 title: The home of Bootstrap+ by Praegus
 description: A new UI for FitNesse that feels familiar but much more productive
+show_downloads: true
