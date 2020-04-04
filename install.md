@@ -23,7 +23,8 @@ To be able to use `debug script` tables, you'll need to also add [Toolchain-fixt
 ##### Option 2 - Maven dependency plugin
 * Add the following plugin (or just the executon if you're already using the dependency-plugin)to your pom.xml:
 
-```<plugin>
+```
+   <plugin>
        <artifactId>maven-dependency-plugin</artifactId>
        <version>3.0.0</version>
        <configuration>
