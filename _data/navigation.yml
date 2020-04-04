@@ -1,5 +1,5 @@
-- name: Plugin
-  link: /plugin/
+- name: Installation
+  link: /install/
   new_window: false
   highlight: false
 - name: Features
