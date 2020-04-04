@@ -1,4 +1,3 @@
-## Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
 Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
 
