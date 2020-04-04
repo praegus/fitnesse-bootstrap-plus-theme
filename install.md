@@ -23,38 +23,38 @@ To be able to use `debug script` tables, you'll need to also add [Toolchain-fixt
 ##### Option 2 - Maven dependency plugin
 * Add the following plugin (or just the executon if you're already using the dependency-plugin)to your pom.xml:
 
-```&lt;plugin&gt;
-    &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;
-    &lt;version&gt;3.0.0&lt;/version&gt;
-    &lt;configuration&gt;
-        &lt;includes&gt;**/*&lt;/includes&gt;
-        &lt;excludes&gt;META-INF,META-INF/**&lt;/excludes&gt;
-        &lt;includeScope&gt;runtime&lt;/includeScope&gt;
-        &lt;excludeArtifactIds&gt;fitnesse,junit&lt;/excludeArtifactIds&gt;
-        &lt;outputDirectory&gt;${standalone.classpath}&lt;/outputDirectory&gt;
-    &lt;/configuration&gt;
-    &lt;executions&gt;
-        &lt;execution&gt;
-            &lt;id&gt;copy-plugins&lt;/id&gt;
-            &lt;phase&gt;generate-resources&lt;/phase&gt;
-            &lt;goals&gt;
-                &lt;goal&gt;copy&lt;/goal&gt;
-            &lt;/goals&gt;
-            &lt;configuration&gt;
-                &lt;artifactItems&gt;
-                    &lt;artifactItem&gt;
-                        &lt;groupId&gt;nl.praegus&lt;/groupId&gt;
-                        &lt;artifactId&gt;toolchain-fitnesse-plugin&lt;/artifactId&gt;
-                        &lt;version&gt;${toolchain-plugin.version}&lt;/version&gt;
-                        &lt;classifier&gt;jar-with-dependencies&lt;/classifier&gt;
-                        &lt;overWrite&gt;true&lt;/overWrite&gt;
-                    &lt;/artifactItem&gt;
-                &lt;/artifactItems&gt;
-                &lt;outputDirectory&gt;${project.basedir}/wiki/plugins&lt;/outputDirectory&gt;
-            &lt;/configuration&gt;
-        &lt;/execution&gt;
-    &lt;/executions&gt;
-&lt;/plugin&gt;
+```<plugin>
+       <artifactId>maven-dependency-plugin</artifactId>
+       <version>3.0.0</version>
+       <configuration>
+           <includes>**/*</includes>
+           <excludes>META-INF,META-INF/**</excludes>
+           <includeScope>runtime</includeScope>
+           <excludeArtifactIds>fitnesse,junit</excludeArtifactIds>
+           <outputDirectory>${standalone.classpath}</outputDirectory>
+       </configuration>
+       <executions>
+           <execution>
+               <id>copy-plugins</id>
+               <phase>generate-resources</phase>
+               <goals>
+                   <goal>copy</goal>
+               </goals>
+               <configuration>
+                   <artifactItems>
+                       <artifactItem>
+                           <groupId>nl.praegus</groupId>
+                           <artifactId>toolchain-fitnesse-plugin</artifactId>
+                           <version>${toolchain-plugin.version}</version>
+                           <classifier>jar-with-dependencies</classifier>
+                           <overWrite>true</overWrite>
+                       </artifactItem>
+                   </artifactItems>
+                   <outputDirectory>${project.basedir}/wiki/plugins</outputDirectory>
+               </configuration>
+           </execution>
+       </executions>
+   </plugin>
 ```
 
 ##### Option 3 - Use Hsac-fitnesse-fixtures boilerplate
