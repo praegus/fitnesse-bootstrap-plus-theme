@@ -1,39 +1,21 @@
 - links:
-  - name: Pricing
-    link: /pricing/
-  - name: Blog
-    link: /blog/
-  - name: About
-    link: /about/
-  - name: Contact
-    link: /contact/
+  - name: Installation
+    link: /install/
+  - name: Features
+    link: /features/
 - links:
-  - name: Login
-    link: /
+  - name: Praegus
+    link: https://www.praegus.nl
     new_window: true
-  - name: Sign Up
-    link: /
-    new_window: true
-  - name: Docs
-    link: /
-    new_window: true
-  - name: Status
-    link: /
+  - name: Fitnesse
+    link: https://www.fitnesse.org
     new_window: true
 - links:
-  - name: Facebook
-    link: https://facebook.com/cloudcannon/
-    new_window: true
-    social_icon: Facebook
   - name: Twitter
-    link: https://twitter.com/cloudcannon/
+    link: https://twitter.com/PraegusSolution/
     social_icon: Twitter
     new_window: true
-  - name: YouTube
-    link: https://youtube.com/cloudcannon/
-    social_icon: YouTube
+  - name: Github
+    link: https://github.com/praegus
+    social_icon: Github
     new_window: true
-  - name: RSS
-    link: /feed.xml
-    social_icon: RSS
-    new_window: false
