@@ -66,6 +66,17 @@ var parseCookies = function () {
     }, {});
 };
 
+function copyToClipboard (str) {
+   var el = document.createElement('textarea');
+   el.value = str;
+   el.setAttribute('readonly', '');
+   el.style = {position: 'absolute', left: '-9999px'};
+   document.body.appendChild(el);
+   el.select();
+   document.execCommand('copy');
+   document.body.removeChild(el);
+}
+
 function processSymbolData(str) {
     var result = '';
     var inSymbol = false;
@@ -165,6 +176,7 @@ $(document).ready(function () {
     }
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
+        scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "");
     });
     $('#expandAllSidebar').click(function () {
@@ -553,6 +565,102 @@ function expandSidebarIcons() {
     $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
     $('#sidebarContent .iconToggle').removeClass('fa-angle-right');
     $('#sidebarContent .iconToggle').addClass('fa-angle-down');
+}
+
+$(function(){
+    $('#sidebarContent').contextMenu({
+        selector: 'a',
+        callback: function(key, options) {
+            handleContextMenuClick(key, this);
+        },
+        items: {
+            "run": {name: "Run",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) { return showRunnablePageItems(opt); }
+                    },
+            "runNewTab": {name: "Run in new tab",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) { return showRunnablePageItems(opt); },
+                    className: "contextmenu-newtab"
+                    },
+            "sep0": {type: "cm_separator", visible: function(key, opt) { return showRunnablePageItems(opt); }
+                    },
+            "edit": {name: "Edit", icon: "fa-edit"},
+            "editNewTab": {name: "Edit in new tab", icon: "fa-edit", className: "contextmenu-newtab"},
+            "rename": {name: "Rename", icon: "fa-pencil"},
+            "move": {name: "Move", icon: "fa-long-arrow-right"},
+            "delete": {name: "Delete", icon: "fa-trash-o"},
+            "sep1": {type: "cm_separator"},
+            "fold1": {
+                name: "Add",
+                icon: "fa-plus",
+                items: {
+                    addStatic: {name: "Static Page", icon: "fa-file-o"},
+                    addSuite: {name: "Suite Page", icon: "fa-cogs"},
+                    addTest: {name: "Test Page", icon: "fa-cog"}
+                }
+            },
+            "sep2": {type: "cm_separator"},
+            "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
+            "testhistory": {name: "Test History",
+                            icon: "fa-history",
+                            visible: function(key, opt) {
+                                return showRunnablePageItems(opt);
+                             }},
+            "search": {name: "Search from here", icon: "fa-search"},
+            "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
+        }
+    });
+});
+
+function showRunnablePageItems(opt) {
+    if (opt.$trigger[0].classList.contains('test') === false && opt.$trigger[0].classList.contains('suite') === false) {
+        return false;
+    }
+    return true;
+}
+
+function handleContextMenuClick(key, element) {
+    if (key === 'copypath') {
+        copyToClipboard(element[0].pathname.replace('/', '.'));
+    } else {
+        var responder = getResponder(key, element);
+        if (key.includes('NewTab')) {
+            window.open(element[0].pathname + '?' +responder, '_blank');
+        } else {
+            window.location.href = element[0].pathname + '?' + responder;
+        }
+    }
+}
+
+function getResponder(key, element) {
+    var el = element[0];
+        switch(key) {
+          case "run":
+          case "runNewTab":
+              return el.classList.contains('suite') ? 'suite' : 'test';
+          case "edit":
+          case "editNewTab":
+              return 'edit';
+          case "rename":
+              return 'refactor&type=rename';
+          case "move":
+              return 'refactor&type=move';
+          case "delete":
+              return 'deletePage';
+          case "testhistory":
+              return 'testHistory';
+          case "search":
+              return 'search';
+          case "properties":
+              return 'properties';
+          case "addStatic":
+              return 'new&pageTemplate=.TemplateLibrary.StaticPage';
+          case "addSuite":
+              return 'new&pageTemplate=.TemplateLibrary.SuitePage';
+          case "addTest":
+              return 'new&pageTemplate=.TemplateLibrary.TestPage';
+        }
 }
 
 /*
