@@ -53,7 +53,7 @@ var Wysiwyg = function (textarea, options) {
     this.toolbarButtons = this.setupWysiwygMenuEvents();
     this.setupTextareaMenuEvents();
 
-  //  this.toggleEditorButtons = null;
+    this.toggleEditorButtons = null;
     this.savedWysiwygHTML = null;
 
     this.setupToggleEditorButtons();
@@ -61,7 +61,6 @@ var Wysiwyg = function (textarea, options) {
     // Hide both editors, so the current one gets properly shown:
     this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = 'none';
 
-    //textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
     textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
 
@@ -88,7 +87,6 @@ var Wysiwyg = function (textarea, options) {
         self.execCommand('styleWithCSS', false);
     } catch (e2) {
     }
-    /*
     if (editorMode === 'wysiwyg') {
         try {
             self.loadWysiwygDocument();
@@ -96,8 +94,6 @@ var Wysiwyg = function (textarea, options) {
             exception = e3;
         }
     }
-
-     */
     self.setupEditorEvents();
     self.setupFormEvent();
     if (exception) {
@@ -140,11 +136,12 @@ Wysiwyg.getValidateOnSave = function () {
 };
 
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
+    var self = this;
+        Wysiwyg.setCookie('textarea', 'textarea');
 
-        Wysiwyg.editorMode = 'textarea';
-        Wysiwyg.setCookie('wysiwyg', 'textarea');
 
-
+    switch (type) {
+        case 'textarea':
             return function (event) {
                 var wrappedElement = self.codeMirrorEditor.getWrapperElement();
                 if (wrappedElement.style.display === 'none') {
@@ -163,8 +160,7 @@ Wysiwyg.prototype.listenerToggleEditor = function (type) {
                 }
                 self.focusTextarea();
             };
-
-
+    }
 };
 
 Wysiwyg.prototype.activeEditor = function () {
@@ -905,41 +901,8 @@ Wysiwyg.prototype.focusTextarea = function () {
 };
 
 Wysiwyg.prototype.setupToggleEditorButtons = function () {
-    /*
-    var div = document.createElement('div');
 
-    var mode = Wysiwyg.editorMode;
-    var html = '<label for="editor-wysiwyg-@">'
-        + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
-        + (mode === 'wysiwyg' ? 'checked="checked"' : '') + ' />'
-        + 'rich text</label> '
-        + '<label for="editor-textarea-@">'
-        + '<input type="radio" name="__EDITOR__@" value="textarea" id="editor-textarea-@" '
-        + (mode === 'textarea' ? 'checked="checked"' : '') + ' />'
-        + 'plain text</label> '
-        + '&nbsp; ';
-    var buttons;
-     var i;
 
-    div.className = 'editor-toggle';
-    //noinspection JSCheckFunctionSignatures,JSCheckFunctionSignatures
-    div.innerHTML = html.replace(/@/g, ++Wysiwyg.count);
-
-    this.toggleEditorButtons = div;
-
-    buttons = div.getElementsByTagName('input');
-
-    for (i = 0; i < buttons.length; i++) {
-        var button = buttons[i];
-        var token = button.id.replace(/[0-9]+$/, '@');
-        switch (token) {
-            case 'editor-wysiwyg-@':
-            case 'editor-textarea-@':
-                $(button).click(this.listenerToggleEditor(button.value));
-                break;
-        }
-    }
-    */
 };
 
 Wysiwyg.prototype.syncTextAreaHeight = function () {
