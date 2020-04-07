@@ -856,7 +856,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         $('.tagErrorMessage').remove();
     }
     // Check if tag already exist and if it has no special characters
-    if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
+    if (typeof data[0].tags !== 'undefined' && data[0].tags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
         $('.tagInputOverview').after('<div class="tagErrorMessage">Tag already exists on this element</div>');
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
@@ -867,7 +867,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         $('.tagInputOverview').after('<div class="tagErrorMessage">Please fill in a tag name</div>');
     } else {
         // Post tags
-        const currentTagString = data[0].tags.join(', ');
+        const currentTagString = (typeof data[0].tags !== 'undefined') ? data[0].tags.join(', ') : '';
         const tagList = currentTagString.length > 0 ? currentTagString + ', ' + newTags : newTags;
         const url = 'http://' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
