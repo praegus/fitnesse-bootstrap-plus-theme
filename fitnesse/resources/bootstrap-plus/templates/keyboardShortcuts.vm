@@ -97,6 +97,10 @@
                     <kbd>Ctrl + ,</kbd>
                     <span class="help-key-def">Find current line in context help</span>
                 </li>
+                <li>
+                    <kbd>Ctrl + /</kbd>
+                    <span class="help-key-def">Comment</span>
+                </li>
             </ul>
         </div>
         <a href="javascript:history.back()" class="button">Close</a>
