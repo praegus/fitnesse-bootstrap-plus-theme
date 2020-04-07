@@ -15,7 +15,7 @@
 var Wysiwyg = function (textarea, options) {
 
     CodeMirror.commands.autocomplete = function (cm) {
-        cm.showHint({hint: CodeMirror.hint.fitnesse_anyword});
+        cm.showHint({hint: CodeMirror.hint.fitnesse_anyword, closeCharacters: /[()\|\[\]{};:>,]/ });
     };
 
     CodeMirror.commands.comment = function (cm) {

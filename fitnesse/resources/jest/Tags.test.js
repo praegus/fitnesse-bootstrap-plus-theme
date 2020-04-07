@@ -9,12 +9,14 @@ it('Test if the tag input element will show up', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHtml =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
         '</div>';
     const expectedValue =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -29,6 +31,7 @@ it('Test if the tag input element has functions', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const neededHtml =
         '<div id="addTagDiv">' +
+            '<a href="TestSuiteDemo.FrontEndTests.SuiteTearDown" class="static">Suite Tear Down </a>' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
         '</div>';
 
@@ -45,9 +48,9 @@ it('Test if the tag input is valid expect tag to already exists', () => {
     const newTags = 'test case';
     const expectedValue = '<div class="tagErrorMessage">Tag';
     const neededHtml =
-        '<div id="addTagDiv">' +
+        '<div id="addTagDiv">'+
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -64,12 +67,29 @@ it('Test if the tag input is valid expect tag to have special characters', () =>
     const expectedValue = '<div class="tagErrorMessage">`~!';
     const neededHtml =
         '<div id="addTagDiv">' +
+            '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
+            '<input type="text" class="tagInputOverview">' +
+        '</div>';
+
+    document.body.innerHTML = neededHtml;
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', newTags);
+    const receivedResult = document.getElementById('addTagDiv').outerHTML;
+
+    expect(receivedResult).toContain(expectedValue);
+});
+
+// checkIfNewTagIsValid
+it('Test if the tag input is empty expect message to fill in', () => {
+    const functions = require('../bootstrap-plus/js/bootstrap-plus');
+    const expectedValue = '<div class="tagErrorMessage">Please fill';
+    const neededHtml =
+        '<div id="addTagDiv">' +
         '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
         '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
-    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', newTags);
+    functions.checkIfNewTagIsValid([{ tags: [ "test case", 'testing' ] }], 'TestSuiteDemo.BackEndTests', '');
     const receivedResult = document.getElementById('addTagDiv').outerHTML;
 
     expect(receivedResult).toContain(expectedValue);
@@ -83,7 +103,7 @@ it('Test if the tag input is valid expect to be correct', () => {
     const neededHtml =
         '<div id="addTagDiv">' +
             '<i id="addTagButton" class="fas fa-plus-circle addTag"></i>' +
-            '<input type="text" class="tagInputOverview">' +
+                '<input type="text" class="tagInputOverview">' +
         '</div>';
 
     document.body.innerHTML = neededHtml;
@@ -97,7 +117,7 @@ it('Test if the tag input is valid expect to be correct', () => {
 it('Test if tag span & delete tag button has been added in the li', () => {
     const functions = require('../bootstrap-plus/js/bootstrap-plus');
     const successData = '{status: "OK"}';
-    const neededValues = {currentURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
+    const neededValues = {currentPageURL: "TestSuiteDemo.FrontEndTests.ScenarioLibrary", newTags: "test1"};
     const neededHtml =
         '<div class="contents">' +
             '<li id="toTest">' +

@@ -61,6 +61,24 @@ it('Test if the recursion will return the correct html structure', () => {
     expect(receivedResult).not.toContain(expected.notContain2);
 });
 
+
+it('Test if data input types returns the correct html', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    const sidebarData = require('./mockup-data/SidebarData');
+    const neededHtml = '<ul id="sidebarContent"></ul>';
+    const expected = {
+        contain1: 'class="test linked pruned">T 001 Add Courses By Service Call @</a>',
+        contain2: 'class="suite">Front End Tests</a>&nbsp;<i class="fa fa-link" aria-hidden="true"></i>',
+    };
+
+    document.body.innerHTML = neededHtml;
+    jsfile.placeSidebarContent(sidebarData);
+    const receivedResult = document.getElementById('TestSuiteDemo').innerHTML;
+
+    expect(receivedResult).toContain(expected.contain1);
+    expect(receivedResult).toContain(expected.contain2);
+});
+
 /*
  getSidebarContentHtml
  */
@@ -82,7 +100,6 @@ it('Test if data input returns the correct html code', () => {
 
     expect(receivedResult).toEqual(expectedResult);
 });
-
 
 /*
  toggleIconClickEvent
