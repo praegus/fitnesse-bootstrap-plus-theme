@@ -915,7 +915,8 @@ function deleteClickAndHoverEvent(deleteTagButton) {
     // Click delete tag function
     $(deleteTagButton).click(function () {
         const chosenTag = $(this).parent().text().trim();
-        const currentTagArray = $(this).parent().find('.tag');
+        const getCurrentPage = $(this).parent().parent().find('.addTagDiv').find('a')[0];
+        const currentTagArray = ($(getCurrentPage).hasClass('suite') === true) ? $(this).parent().parent().children('.tag') : $(this).parent().parent().find('.tag');
         const currentTagSpan = $(this).parent();
         const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
         postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
@@ -933,6 +934,7 @@ function joinTagList(chosenTag, currentTagArray) {
             newTagArray.push($(this).text().trim());
         }
     });
+
     // Return joined array values
     return newTagArray.reverse().join(', ');
 }
