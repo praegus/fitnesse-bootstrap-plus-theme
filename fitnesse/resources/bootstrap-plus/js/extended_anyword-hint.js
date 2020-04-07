@@ -80,76 +80,66 @@ function loadAutoCompletesFromResponder() {
 
     loadAutoCompletesFromResponder();
 
+    autonames.forEach(function (item, index, array) {
+        autocompletes.push('>' + item);
+    });
+
+    autocompletes.push('script');
+    autocompletes.push('debug script');
+    autocompletes.push('storyboard');
+    autocompletes.push('table template');
+    autocompletes.push('conditional script');
+    autocompletes.push('conditional scenario');
+    autocompletes.push('looping scenario');
+    autocompletes.push('!today');
+    autocompletes.push('!today (dd-MM-yyyy)');
+    autocompletes.push('!monday');
+    autocompletes.push('!tuesday');
+    autocompletes.push('!wednesday');
+    autocompletes.push('!thursday');
+    autocompletes.push('!friday');
+    autocompletes.push('!saturday');
+    autocompletes.push('!sunday');
+    autocompletes.push('!randomBSN');
+    autocompletes.push('!randomInt');
+    autocompletes.push('!randomString');
+    autocompletes.push('!randomEmail');
+    autocompletes.push('!monthsFromToday');
+    autocompletes.push('!lastDayOfMonth');
+    autocompletes.push('!weekDaysFromToday');
+    autocompletes.push('!define');
+    autocompletes.push('!defineDefault');
+    autocompletes.push('!defineFromProperties');
+    autocompletes.push('!defineDefaultFromProperties');
+    autocompletes.push('!randomIBAN');
+    autocompletes.push('!randomPostalCode');
+    autocompletes.push('!randomDutchLicensePlate');
+    autocompletes.push('!randomUuid ');
+
     CodeMirror.registerHelper('hint', 'fitnesse_anyword', function (editor, options) {
         var word = options && options.word || WORD;
         var range = options && options.range || RANGE;
         var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
         var end = cur.ch, start = end;
-        while (start && word.test(curLine.charAt(start - 1))) --start;
+        while (start && "|".indexOf(curLine.charAt(start - 1)) <0) --start;
         var curWord = start != end && curLine.slice(start, end).toLocaleLowerCase();
 
-        var list = options && options.list || [], seen = {};
+        var matches = new Set();
 
-        function addIfMatch(newWord) {
-            if ((!curWord || newWord.toLocaleLowerCase().lastIndexOf(curWord, 0) == 0) && !seen.hasOwnProperty(newWord)) {
-                seen[newWord] = true;
-                list.push(newWord);
+        function populateAutoCompletes() {
+            const fuse = new Fuse(autocompletes);
+            const options = {
+              threshold: 0.0
             }
-        }
+            const results = fuse.search(curWord, options);
 
-        var re = new RegExp(word.source, 'g');
-        for (var dir = -1; dir <= 1; dir += 2) {
-            var line = cur.line,
-                endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
-            for (; line != endLine; line += dir) {
-                var text = editor.getLine(line), m;
-                while (m = re.exec(text)) {
-                    //Don't match myself
-                    if (line == cur.line && m.index == start) continue;
-                    addIfMatch(m[0]);
-                }
+            results.forEach(function (result) {
+                matches.add(result.item);
+                });
             }
-        }
 
-        autonames.forEach(function (item, index, array) {
-            addIfMatch('>' + item);
-        });
-        autocompletes.forEach(function (item, index, array) {
-            addIfMatch(item);
-        });
-
-        addIfMatch('script');
-        addIfMatch('debug script');
-        addIfMatch('storyboard');
-        addIfMatch('table template');
-        addIfMatch('conditional script');
-        addIfMatch('!today');
-        addIfMatch('!today (dd-MM-yyyy)');
-        addIfMatch('!monday');
-        addIfMatch('!tuesday');
-        addIfMatch('!wednesday');
-        addIfMatch('!thursday');
-        addIfMatch('!friday');
-        addIfMatch('!saturday');
-        addIfMatch('!sunday');
-        addIfMatch('!randomBSN');
-        addIfMatch('!randomInt');
-        addIfMatch('!randomString');
-        addIfMatch('!randomEmail');
-        addIfMatch('!monthsFromToday');
-        addIfMatch('!lastDayOfMonth');
-        addIfMatch('!weekDaysFromToday');
-        addIfMatch('!define');
-        addIfMatch('!defineDefault');
-        addIfMatch('!defineFromProperties');
-        addIfMatch('!defineDefaultFromProperties');
-        addIfMatch('!randomIBAN');
-        addIfMatch('!randomPostalCode');
-        addIfMatch('!randomDutchLicensePlate');
-
-        list.sort();
-
-        return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+        populateAutoCompletes();
+        var searchResults = Array.from(matches);
+        return {list: searchResults, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
     });
-
 });

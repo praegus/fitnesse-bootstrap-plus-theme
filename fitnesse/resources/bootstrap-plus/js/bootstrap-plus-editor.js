@@ -250,7 +250,10 @@ function populateContext() {
         $.each(c.constructors, function (index, cstr) {
             signatureList.push(cstr.readableName.toLowerCase() + '#' + cstr.parameters.length);
 
-            helpList += '<li class="docItem"><b>' + cstr.usage + '</b><br />';
+            helpList += '<li class="docItem">';
+            helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="' + cstr.usage + '" title="' + c.readableName + '"></i>';
+            helpList += '<b>' + cstr.usage + '</b><br />';
+
             if (cstr.hasOwnProperty('docString') && cstr['docString']) {
                 helpList += cstr.docString.replace(/(?:\r\n|\r|\n)/g, '<br>');
             }
