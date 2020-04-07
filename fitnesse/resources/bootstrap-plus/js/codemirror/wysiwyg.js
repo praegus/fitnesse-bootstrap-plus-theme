@@ -23,7 +23,7 @@ var Wysiwyg = function (textarea, options) {
         $(this).addClass('cm-comment');
         let doc = cm.getDoc();
 
-        // Function 1
+        // Get array of lines
         let beginLine = (doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
         let endLine = (doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
         let selectionRange = doc.getSelection().toString();
@@ -39,12 +39,9 @@ var Wysiwyg = function (textarea, options) {
         else if(cursor.line) {
             lineArray.push({index: cursor.line+1, lineText: doc.getLine(cursor.line)});
         }
-        console.log('B',beginLine);
-        console.log('E',endLine);
-        console.log(lineArray);
 
-        // Function 2
         if(lineArray.length !== 0){
+            // Find commented lines
             let amountLines = (endLine - beginLine) + 1;
             let amountHashes = 0;
             lineArray.forEach(object => {
@@ -52,19 +49,20 @@ var Wysiwyg = function (textarea, options) {
                     amountHashes++;
                 }
             });
-            console.log('amoutnline',amountLines);
-            console.log('amountHashes', amountHashes);
 
             if(amountHashes === amountLines){
+                // Remove comment
                 lineArray.forEach(object => {
                     const newLine = object.lineText.substring(0, object.lineText.length).replace('#','');
                     doc.replaceRange(newLine, createPosition("from", (object.index-1), 0, null), createPosition("to", (object.index-1), null, newLine.length));
                 });
             }
             else {
+                // Add comment
                 lineArray.forEach(object => {
-                    const newLine = '#' + object.lineText.substring(1, object.lineText.length);
-                    doc.replaceRange(newLine, createPosition("from", (object.index-1), 1, null), createPosition("to", (object.index-1), null, newLine.length));
+                    const placement = object.lineText.substring(0, 1) === '|' ? 1 : 0;
+                    const newLine = '#' + object.lineText.substring(placement, object.lineText.length);
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1),placement, null), createPosition("to", (object.index-1), null, newLine.length));
                 });
             }
         }
