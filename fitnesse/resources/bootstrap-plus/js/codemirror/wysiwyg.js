@@ -31,15 +31,19 @@ var Wysiwyg = function (textarea, options) {
         let lineArray = [];
 
         if (selectionRange !== "") {
+            // Multi line
             for (let i = beginLine; i <= endLine ; i++) {
                 let line = doc.getLine(i - 1);
                 lineArray.push({index: i, lineText: line});
             }
         }
         else if(cursor.line) {
+            // Single line
             lineArray.push({index: cursor.line+1, lineText: doc.getLine(cursor.line)});
         }
 
+
+        // Add of remove comment
         if(lineArray.length !== 0){
             // Find commented lines
             let amountLines = (endLine - beginLine) + 1;
