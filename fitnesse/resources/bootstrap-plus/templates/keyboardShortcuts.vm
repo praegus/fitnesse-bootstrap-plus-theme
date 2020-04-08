@@ -99,7 +99,7 @@
                 </li>
                 <li>
                     <kbd>Ctrl + /</kbd>
-                    <span class="help-key-def">Comment</span>
+                    <span class="help-key-def">Comment / Uncomment</span>
                 </li>
             </ul>
         </div>

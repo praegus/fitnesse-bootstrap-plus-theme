@@ -16,7 +16,7 @@ Did you know you can save your search as a link? This is found at the bottom of 
 Did you know you can add a table from i.e. Excel by copying it and then pasting it into the editor? After this push Spreadsheet to FitNesse and you're done.
 Did you know you can style your syntax? For more information see in the full reference guide "MarkupLanguageReference".
 Did you know you can collapse a suite by clicking on it's icon?
-Did you know you can change a line of code to an comment with 'Ctrl' + '/' ?
+Did you know you can change several lines at once into a comment with 'Ctrl' + '/' ?
 You can add a comment to the wiki markup text by simply putting the '#' sign as the first character of a line.
 You can add a comment to a table by starting the first cell's content with '#' or '*'.
 You can add a closed collapsible section by writing '!*> title [enter] text *!'.
