@@ -6,16 +6,17 @@ A picture can be added by using the !img marker followed by a URL.
 Did you know bootstrap-plus also has a dark theme for FitNesse?
 Did you know there is a contexthelper that contains all fixtures, methods, scenario's and slim symbols from your tests context?
 Did you know you add non-wiki files to the files section (Tools > Files)?
+Did you notice that there are special page titles?
+Did you know you can rename/move/delete existing pages?
+Did you know you can turn on autosave and autovalidate in settings?
 Did you know you can add/edit templates when you go to /TemplateLibrary?
 Did you know you can press 'CTRL' + 'space' in the editor to use autocomplete?
-Did you know you can rename/move/delete existing pages?
 Did you know you can run tests based on their tag? You can do this with 'Run test with tags'.
 Did you know you can save your search as a link? This is found at the bottom of your search page.
 Did you know you can add a table from i.e. Excel by copying it and then pasting it into the editor? After this push Spreadsheet to FitNesse and you're done.
 Did you know you can style your syntax? For more information see in the full reference guide "MarkupLanguageReference".
-Did you know you can turn on autosave and autovalidate in settings?
-Did you notice that there are special page titles?
 Did you know you can collapse a suite by clicking on it's icon?
+Did you know you can change several lines at once into a comment with 'Ctrl' + '/' ?
 You can add a comment to the wiki markup text by simply putting the '#' sign as the first character of a line.
 You can add a comment to a table by starting the first cell's content with '#' or '*'.
 You can add a closed collapsible section by writing '!*> title [enter] text *!'.

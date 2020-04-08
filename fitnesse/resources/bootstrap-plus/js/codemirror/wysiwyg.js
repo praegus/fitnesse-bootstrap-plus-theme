@@ -18,6 +18,70 @@ var Wysiwyg = function (textarea, options) {
         cm.showHint({hint: CodeMirror.hint.fitnesse_anyword, closeCharacters: /[()\|\[\]{};:>,]/ });
     };
 
+    CodeMirror.commands.comment = function (cm) {
+        $(this).removeClass('cm-variable-3');
+        $(this).addClass('cm-comment');
+        let doc = cm.getDoc();
+
+        // Get array of lines
+        let beginLine = (doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
+        let endLine = (doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
+        let selectionRange = doc.getSelection().toString();
+        let cursor = doc.getCursor();
+        let lineArray = [];
+
+        if (selectionRange !== "") {
+            // Multi line
+            for (let i = beginLine; i <= endLine ; i++) {
+                let line = doc.getLine(i - 1);
+                lineArray.push({index: i, lineText: line});
+            }
+        }
+        else if(cursor.line) {
+            // Single line
+            lineArray.push({index: cursor.line+1, lineText: doc.getLine(cursor.line)});
+        }
+
+
+        // Add of remove comment
+        if(lineArray.length !== 0){
+            // Find commented lines
+            let amountLines = (endLine - beginLine) + 1;
+            let amountHashes = 0;
+            lineArray.forEach(object => {
+                if(object.lineText.match('#')){
+                    amountHashes++;
+                }
+            });
+
+            if(amountHashes === amountLines){
+                // Remove comment
+                lineArray.forEach(object => {
+                    const newLine = object.lineText.substring(0, object.lineText.length).replace('#','');
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1), 0, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+            else {
+                // Add comment
+                lineArray.forEach(object => {
+                    const placement = object.lineText.substring(0, 1) === '|' ? 1 : 0;
+                    const newLine = '#' + object.lineText.substring(placement, object.lineText.length);
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1),placement, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+        }
+
+        function createPosition(direction, iteration, beginPlacement, endPlacement) {
+            return {
+                line: iteration,
+                ch: (direction === "from") ? beginPlacement : endPlacement+2
+            };
+        }
+
+    };
+
+
+//pre.CodeMirrorLine
     CodeMirror.commands.save = function (cm) {
         $(document.f).submit();
         return false;
@@ -31,7 +95,8 @@ var Wysiwyg = function (textarea, options) {
         viewportMargin: Infinity,
         gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
         extraKeys: {
-            'Ctrl-Space': 'autocomplete'
+            'Ctrl-Space': 'autocomplete',
+            'Ctrl-/': 'comment'
         }
     });
 
