@@ -856,7 +856,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         $('.tagErrorMessage').remove();
     }
     // Check if tag already exist and if it has no special characters
-    if (data[0].tags.length > 0 && data[0].tags.includes(lowerCaseTags) === true) {
+    if (typeof data[0].tags !== 'undefined' && data[0].tags.includes(lowerCaseTags) === true) {
         inputBorderStyling();
         $('.tagInputOverview').after('<div class="tagErrorMessage">Tag already exists on this element</div>');
     } else if (lowerCaseTags.match(/[`~!@#$%^&*()|+=?;:'",.<>\/]/gi) !== null) {
@@ -867,7 +867,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         $('.tagInputOverview').after('<div class="tagErrorMessage">Please fill in a tag name</div>');
     } else {
         // Post tags
-        const currentTagString = data[0].tags.join(', ');
+        const currentTagString = (typeof data[0].tags !== 'undefined') ? data[0].tags.join(', ') : '';
         const tagList = currentTagString.length > 0 ? currentTagString + ', ' + newTags : newTags;
         const url = 'http://' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
@@ -915,7 +915,8 @@ function deleteClickAndHoverEvent(deleteTagButton) {
     // Click delete tag function
     $(deleteTagButton).click(function () {
         const chosenTag = $(this).parent().text().trim();
-        const currentTagArray = $(this).parent().find('.tag');
+        const getCurrentPage = $(this).parent().parent().find('.addTagDiv').find('a')[0];
+        const currentTagArray = ($(getCurrentPage).hasClass('suite') === true) ? $(this).parent().parent().children('.tag') : $(this).parent().parent().find('.tag');
         const currentTagSpan = $(this).parent();
         const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
         postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
@@ -933,6 +934,7 @@ function joinTagList(chosenTag, currentTagArray) {
             newTagArray.push($(this).text().trim());
         }
     });
+
     // Return joined array values
     return newTagArray.reverse().join(', ');
 }
