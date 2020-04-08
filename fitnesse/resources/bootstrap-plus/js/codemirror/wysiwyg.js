@@ -120,7 +120,7 @@ var Wysiwyg = function (textarea, options) {
 
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
 
-    this.listenerToggleEditor('textarea')({initializing: true});
+    this.listenerToggleEditor()({initializing: true});
 
     // disable firefox table resizing
     try {
@@ -175,32 +175,24 @@ Wysiwyg.getValidateOnSave = function () {
     return Wysiwyg.getBooleanFromCookie('validateOnSave', false);
 };
 
-Wysiwyg.prototype.listenerToggleEditor = function (type) {
+Wysiwyg.prototype.listenerToggleEditor = function () {
     var self = this;
-    Wysiwyg.setCookie('textarea', 'textarea');
 
-    switch (type) {
-        case 'textarea':
-            return function (event) {
-                var wrappedElement = self.codeMirrorEditor.getWrapperElement();
-                if (wrappedElement.style.display === 'none') {
-                    if (event && !event.initializing) {
-                        self.loadWikiText();
-                    }
-                    wrappedElement.style.display = '';
-                    wrappedElement.setAttribute('tabIndex', '');
-                    self.syncTextAreaHeight();
-                    self.frame.setAttribute('tabIndex', '-1');
-                    self.textareaToolbar.style.display = '';
-                    self.codeMirrorEditor.refresh();
-                }
-                self.focusTextarea();
-            };
-    }
-};
-
-Wysiwyg.prototype.activeEditor = function () {
-    return this.codeMirrorEditor.getWrapperElement().style.display === 'none' ? 'wysiwyg' : 'textarea';
+    return function (event) {
+        var wrappedElement = self.codeMirrorEditor.getWrapperElement();
+        if (wrappedElement.style.display === 'none') {
+            if (event && !event.initializing) {
+                self.loadWikiText();
+            }
+            wrappedElement.style.display = '';
+            wrappedElement.setAttribute('tabIndex', '');
+            self.syncTextAreaHeight();
+            self.frame.setAttribute('tabIndex', '-1');
+            self.textareaToolbar.style.display = '';
+            self.codeMirrorEditor.refresh();
+        }
+        self.focusTextarea();
+    };
 };
 
 Wysiwyg.prototype.setupFormEvent = function () {
