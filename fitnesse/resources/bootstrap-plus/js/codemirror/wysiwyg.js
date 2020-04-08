@@ -36,7 +36,7 @@ var Wysiwyg = function (textarea, options) {
     });
 
     var self = this;
-    var editorMode = Wysiwyg.getEditorMode();
+    // var editorMode = Wysiwyg.getEditorMode();
 
     this.textarea = textarea;
     this.options = options || {};
@@ -46,27 +46,27 @@ var Wysiwyg = function (textarea, options) {
     this.contentWindow = window;
     this.contentDocument = this.contentWindow.document;
 
-    this.wysiwygToolbar = this.createWysiwygToolbar(document);
+    // this.wysiwygToolbar = this.createWysiwygToolbar(document);
     this.textareaToolbar = this.createTextareaToolbar(document);
-    this.styleMenu = this.createStyleMenu(document);
-    this.menus = [this.styleMenu];
-    this.toolbarButtons = this.setupWysiwygMenuEvents();
+    // this.styleMenu = this.createStyleMenu(document);
+    // this.menus = [this.styleMenu];
+    // this.toolbarButtons = this.setupWysiwygMenuEvents();
     this.setupTextareaMenuEvents();
 
     this.toggleEditorButtons = null;
     this.savedWysiwygHTML = null;
 
-    this.setupToggleEditorButtons();
+    // this.setupToggleEditorButtons();
 
     // Hide both editors, so the current one gets properly shown:
     this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = 'none';
 
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
-    textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
+    // textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
 
-    document.getElementById('wt-style').parentNode.appendChild(this.menus[0]);
+    // document.getElementById('wt-style').parentNode.appendChild(this.menus[0]);
 
-    this.listenerToggleEditor(editorMode)({initializing: true});
+    this.listenerToggleEditor('textarea')({initializing: true});
 
     // disable firefox table resizing
     try {
@@ -87,21 +87,21 @@ var Wysiwyg = function (textarea, options) {
         self.execCommand('styleWithCSS', false);
     } catch (e2) {
     }
-    if (editorMode === 'wysiwyg') {
-        try {
-            self.loadWysiwygDocument();
-        } catch (e3) {
-            exception = e3;
-        }
-    }
+    // if (editorMode === 'wysiwyg') {
+    //     try {
+    //         self.loadWysiwygDocument();
+    //     } catch (e3) {
+    //         exception = e3;
+    //     }
+    // }
     self.setupEditorEvents();
     self.setupFormEvent();
-    if (exception) {
-        self.codeMirrorEditor.getWrapperElement().style.display = self.textareaToolbar.style.display = '';
-        self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
-        alert('Failed to activate the wysiwyg editor.');
-        throw exception;
-    }
+    // if (exception) {
+    //     self.codeMirrorEditor.getWrapperElement().style.display = self.textareaToolbar.style.display = '';
+    //     self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
+    //     alert('Failed to activate the wysiwyg editor.');
+    //     throw exception;
+    // }
     //remember the original content to revert to on cancel
     document.originalContent = document.querySelector('.CodeMirror').CodeMirror.doc.getValue();
 };
@@ -137,22 +137,21 @@ Wysiwyg.getValidateOnSave = function () {
 
 Wysiwyg.prototype.listenerToggleEditor = function (type) {
     var self = this;
-        Wysiwyg.setCookie('textarea', 'textarea');
-
+    Wysiwyg.setCookie('textarea', 'textarea');
 
     switch (type) {
         case 'textarea':
             return function (event) {
                 var wrappedElement = self.codeMirrorEditor.getWrapperElement();
                 if (wrappedElement.style.display === 'none') {
-                    self.hideAllMenus();
+                    // self.hideAllMenus();
                     if (event && !event.initializing) {
                         self.loadWikiText();
                     }
                     wrappedElement.style.display = '';
                     wrappedElement.setAttribute('tabIndex', '');
                     self.syncTextAreaHeight();
-                    self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
+                    // self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
                     self.frame.setAttribute('tabIndex', '-1');
                     self.textareaToolbar.style.display = '';
                     self.codeMirrorEditor.refresh();
@@ -176,13 +175,13 @@ Wysiwyg.prototype.setupFormEvent = function () {
 
     $(this.textarea.form).submit(function (event) {
         try {
-            if (self.activeEditor() === 'wysiwyg') {
-                var body = self.frame;
-                if (self.isModified()) {
-                    self.codeMirrorEditor.setValue(self.domToWikitext(body, self.options));
-                    self.codeMirrorEditor.save();
-                }
-            }
+            // if (self.activeEditor() === 'wysiwyg') {
+            //     var body = self.frame;
+            //     if (self.isModified()) {
+            //         self.codeMirrorEditor.setValue(self.domToWikitext(body, self.options));
+            //         self.codeMirrorEditor.save();
+            //     }
+            // }
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
                 self.codeMirrorEditor.setValue(formatter.format(self.codeMirrorEditor.getValue()));
@@ -853,21 +852,21 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 };
 
-Wysiwyg.prototype.loadWysiwygDocument = function () {
-    var container = this.frame;
-    if (!container) {
-        return;
-    }
-    var tmp = container.lastChild;
-
-    while (tmp) {
-        container.removeChild(tmp);
-        tmp = container.lastChild;
-    }
-    var fragment = this.wikitextToFragment(this.codeMirrorEditor.getValue(), this.contentDocument, this.options);
-    container.appendChild(fragment);
-    this.savedWysiwygHTML = container.innerHTML;
-};
+// Wysiwyg.prototype.loadWysiwygDocument = function () {
+//     var container = this.frame;
+//     if (!container) {
+//         return;
+//     }
+//     var tmp = container.lastChild;
+//
+//     while (tmp) {
+//         container.removeChild(tmp);
+//         tmp = container.lastChild;
+//     }
+//     var fragment = this.wikitextToFragment(this.codeMirrorEditor.getValue(), this.contentDocument, this.options);
+//     container.appendChild(fragment);
+//     this.savedWysiwygHTML = container.innerHTML;
+// };
 
 Wysiwyg.prototype.focusWysiwyg = function () {
     var self = this;
