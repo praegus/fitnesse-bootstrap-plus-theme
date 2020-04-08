@@ -50,8 +50,6 @@ var Wysiwyg = function (textarea, options) {
 
     this.savedWysiwygHTML = null;
 
-    // this.setupToggleEditorButtons();
-
     // Hide both editors, so the current one gets properly shown:
     this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = 'none';
 
