@@ -14,6 +14,7 @@ body {
 }
 
 #content {
+  flex: 1;
   background-color: #434343;
   height: 100%;
   width: 100%;
@@ -349,7 +350,7 @@ span.error * {
 
 .ignore,
 span.ignore * {
-  background-color: darken(@alert-info-bg, 10%);
+  background-color: #356497;
   color: darken(@alert-info-text, 30%);
 }
 
@@ -1315,7 +1316,7 @@ li.CodeMirror-hint:nth-child(odd) {
   width: 90px;
   font-size: 11px;
   background: #595959;
-  margin-right: 6px;
+  margin-right: 5px;
 }
 
 .tagErrorMessage {
@@ -1495,10 +1496,10 @@ kbd {
 #testHistoryDiv{
   display:inline-block;
 }
-
 #testHistoryDiv > a {
   float:right;
 }
+
 
 /* Versionchecker */
 
@@ -1558,11 +1559,11 @@ tr.scenario-detail > td {
   padding: 18px 18px 5px 5px;
  }
 
-.toolchainTable tr:first-child > td:first-child {
+.toolchainTable > tbody > tr:first-child > td:first-child {
     padding-left: 30px;
 }
 
-.toolchainTable tr:first-child > td:first-child:before {
+.toolchainTable > tbody > tr:first-child > td:first-child:before {
     text-align: center;
     font: normal normal normal 16px/1 FontAwesome;
     position: absolute;
@@ -1603,3 +1604,39 @@ tr.scenario-detail > td {
 .toolchainTest .decisionTable > tbody > tr:first-child > td:first-child:before {
   content: "\f0ce";
 }
+
+.context-menu-list {
+    background: #434343 !important;
+    font-size: 0.95em !important;
+    }
+
+.context-menu-item {
+    background-color: #434343 !important;
+    color: #eeeeee !important;
+    padding: .2em .5em .2em 2em !important;
+    }
+
+.context-menu-item.context-menu-hover {
+    background-color: #303030 !important;
+    }
+
+.context-menu-icon.context-menu-icon--fa::before {
+    color: #eee !important;
+    }
+
+.context-menu-submenu:after {
+    border-color: transparent transparent transparent #eeeeee !important;
+    }
+
+.context-menu-separator {
+  padding: 0 !important;
+}
+
+.contextmenu-newtab:after{
+  font: normal normal normal 16px/1 FontAwesome;
+  content: "\f08e";
+  font-size: 0.95em;
+  float: right;
+  color: #ddd;
+  padding-top: 4px;
+  }
