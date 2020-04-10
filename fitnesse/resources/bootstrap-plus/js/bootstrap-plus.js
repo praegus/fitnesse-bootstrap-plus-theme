@@ -23,8 +23,6 @@ try {
         getPageHistory: getPageHistory,
         // Versioncheck.test
         versionCheck:versionCheck
-
-
     };
 } catch (e) {
 }
@@ -170,7 +168,6 @@ $(document).ready(function () {
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
         if ($('body').hasClass('testPage')) {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivDisabled');
-            setBootstrapPlusConfigCookie('collapseSidebar', 'true');
         }
         getSidebarContent(placeEverythingForSidebar);
     }
