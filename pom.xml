@@ -4,7 +4,7 @@
 
     <groupId>nl.praegus</groupId>
     <artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-    <version>2.0.8-SNAPSHOT</version>
+    <version>2.0.8</version>
     <url>https://github.com/praegus/fitnesse-bootstrap-plus-theme</url>
     <name>Extended boostrap theme for FitNesse</name>
     <description>Makes FitNesse more user friendly</description>
@@ -31,7 +31,7 @@
         <connection>scm:git:git@github.com:praegus/fitnesse-bootstrap-plus-theme.git</connection>
         <url>https://github.com/praegus/fitnesse-bootstrap-plus-theme.git</url>
         <developerConnection>scm:git:git@github.com:praegus/fitnesse-bootstrap-plus-theme.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>fitnesse-bootstrap-plus-theme-2.0.8</tag>
     </scm>
 
     <build>
