@@ -23,8 +23,6 @@ try {
         getPageHistory: getPageHistory,
         // Versioncheck.test
         versionCheck:versionCheck
-
-
     };
 } catch (e) {
 }
@@ -161,19 +159,20 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-   $('.test, .suite, .static').each(function () {
-       $(this).wrap('<div class=\'addTagDiv\'></div>');
-       $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-   });
+    $('.test, .suite, .static').each(function () {
+        $(this).wrap('<div class=\'addTagDiv\'></div>');
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
 
-    // For Sidebar
+    // For showing the Sidebar
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
+        if ($('body').hasClass('testPage')) {
+            $('#collapseSidebarDiv').removeClass('collapseSidebarDivDisabled');
+        }
         getSidebarContent(placeEverythingForSidebar);
     }
-    else {
-        $('#sidebar').addClass('displayNone');
-        $('#closedSidebar').addClass('displayNone');
-    }
+
+    // For the Sidebar buttons
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
         scrollSideBarToHighlight();
@@ -184,6 +183,8 @@ $(document).ready(function () {
         scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
     });
+
+    // For resizing the Sidebar
     $('#sidebar').resizable({
         handles: 'e',
         minWidth: 150,
