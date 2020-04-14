@@ -85,10 +85,43 @@ See: https://github.com/praegus/toolchain-fitnesse-plugin
 
 New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolTipData.txt and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets.
 
-* Tooltips will now also load in from fixtures.
-
-you can add tooltips to your fixture by adding Tooltips.txt(case insensitive) to the root off your fixture.
-
 * Tooltips can now contain links
 
 You can add a link to your tooltip by adding a simple link html tag to your tooltip.
+
+* Tooltips will now also load in from fixtures.
+
+you can add tooltips to your fixture by adding a Tooltips.txt on [FixtureRoot]/[FixtureName]_tooltips/Tooltips.txt
+
+you also need to add two executions to your maven dependency plugin:
+
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includes>**/Tooltips.txt</includes>
+                            <outputDirectory>${project.basedir}/wiki/TooltipData</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>nl.praegus</groupId>
+                                    <artifactId>fitnesse-bootstrap-plus-theme</artifactId>
+                                    <version>2.0.8-SNAPSHOT</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <includes>**/toolTipData.txt</includes>
+                            <outputDirectory> ${project.basedir}/wiki/TooltipData</outputDirectory>
+                        </configuration>
+                    </execution>
+
