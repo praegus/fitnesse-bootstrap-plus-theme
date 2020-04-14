@@ -723,9 +723,19 @@ function generateTestHistoryTable(data) {
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
     $.get('http://' + window.location.hostname + ':' + window.location.port +"/?Tooltips", function (data) {
-        const tooltips = data;
+        let tooltips = data;
+        if (tooltips != ""){
+            callback(tooltips);
+        }else{
+            $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data2){
+                const tooltipArray = data2.split("\n");
+                const pickedTip = Math.floor(Math.random() * tooltipArray.length);
+                tooltips = tooltipArray[pickedTip]
+                callback(tooltips);
+            });
+        }
         // Activate function displayToolTip
-        callback(tooltips);
+
     });
 }
 // Places picked tooltips on the page
