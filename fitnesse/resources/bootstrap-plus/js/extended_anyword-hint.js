@@ -138,7 +138,9 @@ function loadAutoCompletesFromResponder() {
                 });
             }
 
-        populateAutoCompletes();
+        if(curWord.length > 0) {
+            populateAutoCompletes();
+        }
         var searchResults = Array.from(matches);
         return {list: searchResults, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
     });

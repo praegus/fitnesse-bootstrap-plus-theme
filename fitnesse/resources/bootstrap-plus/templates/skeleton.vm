@@ -130,15 +130,22 @@
 
 <div id="contentDiv">
     ## Sidebar
-    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage"))
+    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage") && !$pageTitle.getTitle().equalsIgnoreCase("Files"))
+        ## Closed Sidebar
         <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
-            <div id="collapseSidebarDiv" #if( $collapseSidebar == 'false' ) class="collapseSidebarDivColor" #end>
+            <div id="collapseSidebarDiv"
+                #if( $collapseSidebar == 'false' && !$bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivColor"
+                #elseif( $bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivDisabled" #end
+            >
                 <p id="collapseSidebarText">Project</p>
                 <i id="collapseSidebarIcon" class="fa fa-folder"></i>
             </div>
         </div>
 
-        <div id="sidebar" #if( $sidebar == 'false' || $collapseSidebar == 'true' ) class="displayNone"#end style="width: $sidebarWidth;">
+        ## Open Sidebar
+        <div id="sidebar" style="width: $sidebarWidth;"
+            #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
+        >
             <div class="buttonSidebarDiv">
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>

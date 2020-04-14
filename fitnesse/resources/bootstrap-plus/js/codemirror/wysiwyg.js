@@ -18,6 +18,70 @@ var Wysiwyg = function (textarea, options) {
         cm.showHint({hint: CodeMirror.hint.fitnesse_anyword, closeCharacters: /[()\|\[\]{};:>,]/ });
     };
 
+    CodeMirror.commands.comment = function (cm) {
+        $(this).removeClass('cm-variable-3');
+        $(this).addClass('cm-comment');
+        let doc = cm.getDoc();
+
+        // Get array of lines
+        let beginLine = (doc.listSelections()[0].head.line < doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
+        let endLine = (doc.listSelections()[0].head.line > doc.listSelections()[0].anchor.line) ? doc.listSelections()[0].head.line + 1 : doc.listSelections()[0].anchor.line + 1;
+        let selectionRange = doc.getSelection().toString();
+        let cursor = doc.getCursor();
+        let lineArray = [];
+
+        if (selectionRange !== "") {
+            // Multi line
+            for (let i = beginLine; i <= endLine ; i++) {
+                let line = doc.getLine(i - 1);
+                lineArray.push({index: i, lineText: line});
+            }
+        }
+        else if(cursor.line) {
+            // Single line
+            lineArray.push({index: cursor.line+1, lineText: doc.getLine(cursor.line)});
+        }
+
+
+        // Add of remove comment
+        if(lineArray.length !== 0){
+            // Find commented lines
+            let amountLines = (endLine - beginLine) + 1;
+            let amountHashes = 0;
+            lineArray.forEach(object => {
+                if(object.lineText.match('#')){
+                    amountHashes++;
+                }
+            });
+
+            if(amountHashes === amountLines){
+                // Remove comment
+                lineArray.forEach(object => {
+                    const newLine = object.lineText.substring(0, object.lineText.length).replace('#','');
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1), 0, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+            else {
+                // Add comment
+                lineArray.forEach(object => {
+                    const placement = object.lineText.substring(0, 1) === '|' ? 1 : 0;
+                    const newLine = '#' + object.lineText.substring(placement, object.lineText.length);
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1),placement, null), createPosition("to", (object.index-1), null, newLine.length));
+                });
+            }
+        }
+
+        function createPosition(direction, iteration, beginPlacement, endPlacement) {
+            return {
+                line: iteration,
+                ch: (direction === "from") ? beginPlacement : endPlacement+2
+            };
+        }
+
+    };
+
+
+//pre.CodeMirrorLine
     CodeMirror.commands.save = function (cm) {
         $(document.f).submit();
         return false;
@@ -31,12 +95,12 @@ var Wysiwyg = function (textarea, options) {
         viewportMargin: Infinity,
         gutters: ['CodeMirror-lint-markers', 'CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
         extraKeys: {
-            'Ctrl-Space': 'autocomplete'
+            'Ctrl-Space': 'autocomplete',
+            'Ctrl-/': 'comment'
         }
     });
 
     var self = this;
-    var editorMode = Wysiwyg.getEditorMode();
 
     this.textarea = textarea;
     this.options = options || {};
@@ -46,28 +110,17 @@ var Wysiwyg = function (textarea, options) {
     this.contentWindow = window;
     this.contentDocument = this.contentWindow.document;
 
-    this.wysiwygToolbar = this.createWysiwygToolbar(document);
     this.textareaToolbar = this.createTextareaToolbar(document);
-    this.styleMenu = this.createStyleMenu(document);
-    this.menus = [this.styleMenu];
-    this.toolbarButtons = this.setupWysiwygMenuEvents();
     this.setupTextareaMenuEvents();
 
-    this.toggleEditorButtons = null;
     this.savedWysiwygHTML = null;
-
-    this.setupToggleEditorButtons();
 
     // Hide both editors, so the current one gets properly shown:
     this.codeMirrorEditor.getWrapperElement().style.display = this.frame.style.display = 'none';
 
-    textarea.parentNode.insertBefore(this.toggleEditorButtons, textarea);
     textarea.parentNode.insertBefore(this.textareaToolbar, textarea);
-    textarea.parentNode.insertBefore(this.wysiwygToolbar, textarea);
 
-    document.getElementById('wt-style').parentNode.appendChild(this.menus[0]);
-
-    this.listenerToggleEditor(editorMode)({initializing: true});
+    this.listenerToggleEditor()({initializing: true});
 
     // disable firefox table resizing
     try {
@@ -79,7 +132,6 @@ var Wysiwyg = function (textarea, options) {
     } catch (e) {
     }
 
-    var exception;
     try {
         self.execCommand('useCSS', false);
     } catch (e1) {
@@ -88,21 +140,8 @@ var Wysiwyg = function (textarea, options) {
         self.execCommand('styleWithCSS', false);
     } catch (e2) {
     }
-    if (editorMode === 'wysiwyg') {
-        try {
-            self.loadWysiwygDocument();
-        } catch (e3) {
-            exception = e3;
-        }
-    }
     self.setupEditorEvents();
     self.setupFormEvent();
-    if (exception) {
-        self.codeMirrorEditor.getWrapperElement().style.display = self.textareaToolbar.style.display = '';
-        self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
-        alert('Failed to activate the wysiwyg editor.');
-        throw exception;
-    }
     //remember the original content to revert to on cancel
     document.originalContent = document.querySelector('.CodeMirror').CodeMirror.doc.getValue();
 };
@@ -136,66 +175,24 @@ Wysiwyg.getValidateOnSave = function () {
     return Wysiwyg.getBooleanFromCookie('validateOnSave', false);
 };
 
-Wysiwyg.prototype.listenerToggleEditor = function (type) {
+Wysiwyg.prototype.listenerToggleEditor = function () {
     var self = this;
-    var setEditorMode = function (mode) {
-        if (mode !== 'wysiwyg') {
-            mode = 'textarea';
+
+    return function (event) {
+        var wrappedElement = self.codeMirrorEditor.getWrapperElement();
+        if (wrappedElement.style.display === 'none') {
+            if (event && !event.initializing) {
+                self.loadWikiText();
+            }
+            wrappedElement.style.display = '';
+            wrappedElement.setAttribute('tabIndex', '');
+            self.syncTextAreaHeight();
+            self.frame.setAttribute('tabIndex', '-1');
+            self.textareaToolbar.style.display = '';
+            self.codeMirrorEditor.refresh();
         }
-        Wysiwyg.editorMode = mode;
-        Wysiwyg.setCookie('wysiwyg', mode);
+        self.focusTextarea();
     };
-
-    switch (type) {
-        case 'textarea':
-            return function (event) {
-                var wrappedElement = self.codeMirrorEditor.getWrapperElement();
-                if (wrappedElement.style.display === 'none') {
-                    self.hideAllMenus();
-                    if (event && !event.initializing) {
-                        self.loadWikiText();
-                    }
-                    wrappedElement.style.display = '';
-                    wrappedElement.setAttribute('tabIndex', '');
-                    self.syncTextAreaHeight();
-                    self.frame.style.display = self.wysiwygToolbar.style.display = 'none';
-                    self.frame.setAttribute('tabIndex', '-1');
-                    self.textareaToolbar.style.display = '';
-                    self.codeMirrorEditor.refresh();
-                    setEditorMode(type);
-                }
-                self.focusTextarea();
-            };
-        case 'wysiwyg':
-            return function (event) {
-                var frame = self.frame;
-                var wrappedElement = self.codeMirrorEditor.getWrapperElement();
-                if (frame.style.display === 'none') {
-                    try {
-                        self.loadWysiwygDocument();
-                    } catch (e) {
-                        Wysiwyg.stopEvent(event || window.event);
-                        alert('Failed to activate the wysiwyg editor.');
-                        throw e;
-                    }
-                    wrappedElement.style.display = 'none';
-                    wrappedElement.setAttribute('tabIndex', '-1');
-                    frame.style.display = self.wysiwygToolbar.style.display = '';
-                    frame.setAttribute('tabIndex', '');
-                    self.textareaToolbar.style.display = 'none';
-                    setEditorMode(type);
-                }
-                self.focusWysiwyg();
-            };
-    }
-};
-
-Wysiwyg.prototype.activeEditor = function () {
-    return this.codeMirrorEditor.getWrapperElement().style.display === 'none' ? 'wysiwyg' : 'textarea';
-};
-
-Wysiwyg.prototype.isModified = function () {
-    return this.savedWysiwygHTML !== null && this.frame.innerHTML !== this.savedWysiwygHTML;
 };
 
 Wysiwyg.prototype.setupFormEvent = function () {
@@ -203,13 +200,6 @@ Wysiwyg.prototype.setupFormEvent = function () {
 
     $(this.textarea.form).submit(function (event) {
         try {
-            if (self.activeEditor() === 'wysiwyg') {
-                var body = self.frame;
-                if (self.isModified()) {
-                    self.codeMirrorEditor.setValue(self.domToWikitext(body, self.options));
-                    self.codeMirrorEditor.save();
-                }
-            }
             if (Wysiwyg.getAutoformat()) {
                 var formatter = new WikiFormatter();
                 self.codeMirrorEditor.setValue(formatter.format(self.codeMirrorEditor.getValue()));
@@ -240,226 +230,6 @@ Wysiwyg.prototype.createEditable = function (d, textarea) {
 
     textarea.parentNode.insertBefore(frame, textarea.nextSibling);
     return frame;
-};
-
-Wysiwyg.prototype.createWysiwygToolbar = function (d) {
-    var html = [
-        '<ul id="wm-style">',
-        '<li class="wysiwyg-menu-style" title="Style">',
-        '<a id="wt-style" href="#">',
-        '<span class="wysiwyg-menu-style">Style</span>',
-        '<span class="wysiwyg-menu-paragraph">Normal</span>',
-        '<span class="wysiwyg-menu-heading1">Header 1</span>',
-        '<span class="wysiwyg-menu-heading2">Header 2</span>',
-        '<span class="wysiwyg-menu-heading3">Header 3</span>',
-        '<span class="wysiwyg-menu-heading4">Header 4</span>',
-        '<span class="wysiwyg-menu-heading5">Header 5</span>',
-        '<span class="wysiwyg-menu-heading6">Header 6</span>',
-        '<span class="wysiwyg-menu-code">Code block</span>',
-        '</a></li>',
-        '</ul>',
-        '<ul>',
-        '<li title="Bold (Ctrl+B)"><a id="wt-strong" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M11.63 7.82C12.46 7.24 13 6.38 13 5.5 13 3.57 11.43 2 9.5 2H4v12h6.25c1.79 0 3.25-1.46 3.25-3.25 0-1.3-.77-2.41-1.87-2.93zM6.5 4h2.75c.83 0 1.5.67 1.5 1.5S10.08 7 9.25 7H6.5V4zm3.25 8H6.5V9h3.25c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></svg></a></li>',
-        '<li title="Italic (Ctrl+I)"><a id="wt-em" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M7 2v2h2.58l-3.66 8H3v2h8v-2H8.42l3.66-8H15V2z"/></svg></a></li>',
-        '<li title="Strike through"><a id="wt-strike" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M8 15h2v-4H8v4zM4 2v2h4v3h2V4h4V2H4zm-1 8h12V8H3v2z"/></svg></a></li>',
-        '<li title="Escape"><a id="wt-escape" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 11,15.5 a 1.5,1.5 0 1 1 -3,0 1.5,1.5 0 1 1 3,0 z" transform="translate(-3.5,-1)" id="path4665" style="fill:#000000;fill-opacity:1;stroke:none" /> <path d="M 6,12 5,3 7,3 z" id="path4667" style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 10,8 c 4,0 4,0 4,0 l 0,0" id="path4669" style="fill:none;stroke:#000000;stroke-width:1.89999998;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '<li title="Remove format"><a id="wt-remove" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M2.27 4.55L7.43 9.7 5 15h2.5l1.64-3.58L13.73 16 15 14.73 3.55 3.27 2.27 4.55zM5.82 3l2 2h1.76l-.55 1.21 1.71 1.71L12.08 5H16V3H5.82z"/></svg></a></li>',
-        '<li title="Image"><a id="wt-image" href="#insert-image"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="M 16.086957,14.444444 V 3.5555556 C 16.086957,2.7 15.382609,2 14.521739,2 H 3.5652174 C 2.7043478,2 2,2.7 2,3.5555556 V 14.444444 C 2,15.3 2.7043478,16 3.5652174,16 H 14.521739 c 0.86087,0 1.565218,-0.7 1.565218,-1.555556 z M 6.3043478,10.166667 8.2608696,12.507778 11,9 14.521739,13.666667 H 3.5652174 l 2.7391304,-3.5 z" /> </svg></a></li>',
-        '<li title="Hash table"><a id="wt-hash-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" id="svg2985" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,15 c 6,0 1,-6 6,-6 M 10,3 c 6,0 1,6 6,6" /> <path d="M 8,15 C 2,15 7,9 2,9 M 8,3 C 2,3 7,9 2,9" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg></a></li>',
-        '</ul>',
-        '<ul>',
-        '<li title="Link"><a id="wt-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M 11,1.75 C 9.8,1.75 8.675,2.2544118 7.85,2.975 8.45,3.1191176 8.975,3.3352941 9.425,3.6235294 9.875,3.3352941 10.4,3.1911765 11,3.1911765 c 1.65,0 3,1.2970588 3,2.8823529 v 3.6029412 c 0,1.5852944 -1.35,2.8823534 -3,2.8823534 -1.65,0 -3,-1.297059 -3,-2.8823534 V 7.1544118 C 7.625,6.7220588 7.1,6.4338235 6.5,6.4338235 V 9.6764706 C 6.5,12.054412 8.525,14 11,14 c 2.475,0 4.5,-1.945588 4.5,-4.3235294 V 6.0735294 C 15.5,3.6955882 13.475,1.75 11,1.75 z"/> <path d="m 6.5,16.161765 c 1.2,0 2.325,-0.504412 3.15,-1.225 -0.6,-0.144118 -1.125,-0.360294 -1.575,-0.64853 -0.45,0.288236 -0.975,0.432353 -1.575,0.432353 -1.65,0 -3,-1.297059 -3,-2.882353 V 8.2352941 C 3.5,6.65 4.85,5.3529412 6.5,5.3529412 c 1.65,0 3,1.2970588 3,2.8823529 v 2.5220589 c 0.375,0.432353 0.9,0.720588 1.5,0.720588 V 8.2352941 C 11,5.8573529 8.975,3.9117647 6.5,3.9117647 4.025,3.9117647 2,5.8573529 2,8.2352941 v 3.6029409 c 0,2.377941 2.025,4.32353 4.5,4.32353 z"/> </svg></a></li>',
-        '<li title="Unlink"><a id="wt-unlink" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="m 10.936089,1.8927186 0.132989,1.4243861 c 1.462877,-0.1424386 2.726271,0.9970702 2.925754,2.5638949 l 0.332472,3.5609651 c 0.132989,1.5668243 -0.930921,2.9199913 -2.393798,3.1336493 -1.462877,0.142439 -2.7262711,-0.99707 -2.9257543,-2.563895 L 7.6778636,10.154158 C 7.8773468,12.504395 9.8056846,14.213658 12,14 14.194315,13.786342 15.790181,11.720982 15.590698,9.3707454 L 15.258226,5.8097803 C 15.058743,3.388324 13.130405,1.6790607 10.936089,1.8927186 z"/> <path d="M 6.9464251,16.136579 6.8134363,14.712193 C 5.3505594,14.854632 4.0871656,13.715123 3.9541768,12.148298 L 3.6881992,8.587333 C 3.488716,7.0205084 4.6191209,5.6673417 6.0819978,5.5249031 7.5448748,5.3824645 8.8082685,6.5219733 8.9412573,8.0887979 L 10.271145,7.9463593 C 10.071662,5.5961224 8.1433244,3.8868591 5.949009,4.100517 3.7546936,4.3141749 2.0923334,6.3795347 2.2918167,8.7297716 l 0.2659776,3.5609654 c 0.2659776,2.350237 2.1943154,4.0595 4.3886308,3.845842 z"/> </svg></a></li>',
-        '</ul>',
-        '<ul class="non-table">',
-        '<li title="List"><a id="wt-ul" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M7 10h9V8H7v2zm0-7v2h9V3H7zm0 12h9v-2H7v2zm-4-5h2V8H3v2zm0-7v2h2V3H3zm0 12h2v-2H3v2z"/></svg></a></li>',
-        '<li title="Indent"><a id="wt-indent" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M8 12h8v-2H8v2zM5.5 9L2 5.5v7L5.5 9zM2 16h14v-2H2v2zM2 2v2h14V2H2zm6 6h8V6H8v2z"/></svg></a></li>',
-        '<li title="Outdent"><a id="wt-outdent" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><path d="M10 10H2v2h8v-2zm0-4H2v2h8V6zM2 16h14v-2H2v2zm14-3.5v-7L12.5 9l3.5 3.5zM2 2v2h14V2H2z"/></svg></a></li>',
-        '<li title="Horizontal rule"><a id="wt-hr" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="m 2,9 14,0 0,0" id="path3180" style="fill:none;stroke:#000000;stroke-width:2.16024685;stroke-linecap:butt;stroke-opacity:1" /> </svg></a></li>',
-        '<li title="Table"><a id="wt-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"><path style="stroke-width:2;stroke-opacity:1;marker-end:none;fill:none;stroke:#000000" d="M 3,3 3,15 15,15 15,3 z"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0"/></svg></a></li>',
-        '</ul>',
-        '<ul class="non-table">',
-        '<li title="Collapsible section (default closed)"><a id="wt-collapsible-closed" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-rule:nonzero" d="M 16,5.5 12.5,9 16,12.5 z"/> <path style="fill:#000000;fill-opacity:1;stroke:none" d="M 4.5,11.5 8,8 4.5,4.5 z" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" d="m 15.5,2.5 c -14,0 -13,0 -13,0 l 0,13" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 10,10.5 c 10,0 5.5,0 5.5,0" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '<li title="Collapsible section (default open)"><a id="wt-collapsible-open" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18"> <path d="M 16,5.5 12.5,9 16,12.5 z" style="fill:none;stroke:none" /> <path d="M 4.5,4.5 8,8 11.5,4.5 z" style="fill:#000000;fill-opacity:1;stroke:none" /> <path d="m 15.5,2.5 c -14,0 -13,0 -13,0 l 0,13" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="m 6.5,10.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '<li title="Collapsible section (hidden)"><a id="wt-collapsible-hidden" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-rule:nonzero" d="M 16,5.5 12.5,9 16,12.5 z" /> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-opacity:0.50196081;stroke-miterlimit:4;stroke-dasharray:none" d="m 15.5,2.5 c -14,0 -13,0 -13,0 l 0,13" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.50196081;stroke-dasharray:none"/> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:0.50196078;stroke-dasharray:none" d="m 9,10 c 10,0 6.5,0 6.5,0"/> <path style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="M 9 3 C 7 3 5 5 5 7 C 5 8.1331878 5.4944498 9.0940909 6.09375 9.90625 C 4.2247342 11.736073 6.3209481 11.750998 7.625 11.625 C 9.4559533 13.372886 13.5 15.5 13.5 15.5 C 13.5 15.5 13.134898 12.287173 13.03125 10.71875 C 14.233828 10.363035 15.739596 9.685859 13.21875 8.75 C 13.349978 8.2958135 13.5 7.7895642 13.5 7 C 13.5 5 11 3 9 3 z " /> <path style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="m 8.5,6.75 a 0.5,0.25 0 1 1 -1,0 0.5,0.25 0 1 1 1,0 z" transform="translate(-0.5,-0.75)" /> <path d="m 8.5,6.75 a 0.5,0.25 0 1 1 -1,0 0.5,0.25 0 1 1 1,0 z" style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" transform="translate(2.5,-0.5)" /> <path style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" d="M 9,9 A 0.25,0.5 0 0 1 8.9308389,9.3452379 L 8.75,9 z" transform="matrix(3,0,0,1,-17,0)" /> </svg> </a></li>',
-        '<li title="Remove collapsible section"><a id="wt-remove-collapsible" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <path d="M 16,5.5 12.5,9 16,12.5 z" style="fill:none;stroke:none" /> <path d="M 14,3 C 0,3 3,3 3,3 l 0,12" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="M 6.5394551,10.5 14,10.543804" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="m 6.5,14.5 c 10,0 9,0 9,0" style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="M 1,3 16,16" style="fill:none;stroke:#000000;stroke-width:1.72800004;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> <path d="M 1.4743476,1 17,15" style="fill:none;stroke:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '</ul>',
-        '<ul class="in-table">',
-        '<li title="Insert cell before"><a id="wt-insert-cell-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7.5,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3.0000002" height="3" x="4" y="7.5"/> </svg> </a></li>',
-        '<li title="Insert cell after (|)"><a id="wt-insert-cell-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" id="svg3053" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 10.5,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="11" y="7.5"/> </svg> </a></li>',
-        '<li title="Insert row above"><a id="wt-insert-row-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7.5 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="4"/> <rect y="4" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="4"/> </svg> </a></li>',
-        '<li title="Insert row below"><a id="wt-insert-row-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,10.5 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="11" /> <rect y="11" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="11"/> </svg></a></li>',
-        '<li title="Insert column before"><a id="wt-insert-col-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7.5,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="2.5" x="4" y="4" /> <rect y="11.5" x="4" height="2.5" width="3" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="4" y="7.5"/> </svg> </a></li>',
-        '<li title="Insert column after"><a id="wt-insert-col-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" id="svg3307" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 10.5,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="2.5" x="11" y="4" /> <rect y="11.5" x="11" height="2.5" width="3" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="11" y="7.5" /> </svg> </a></li>',
-        '<li title="Delete cell (Ctrl-|)"><a id="wt-delete-cell" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg> </a></li>',
-        '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
-        '<li title="Delete column"><a id="wt-delete-col" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="2.5" x="7.5" y="4" /> <rect y="11.5" x="7.5" height="2.5" width="3" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg> </a></li>',
-        '<li title="Table"><a id="wt-table-in-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"><path style="stroke-width:2;stroke-opacity:1;marker-end:none;fill:none;stroke:#000000" d="M 3,3 3,15 15,15 15,3 z"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,7 10,0 0,0"/><path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 4,11 10,0"/></svg></a></li>',
-        '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '</ul>',
-        '<ul class="in-hash-table">',
-        '<li title="Insert row above"><a id="wt-insert-row-before" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7.5 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="4"/> <rect y="4" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="4"/> </svg> </a></li>',
-        '<li title="Insert row below"><a id="wt-insert-row-after" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" version="1.1"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z"/> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,10.5 10,0"/> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="11" /> <rect y="11" x="4" height="3" width="2.5" style="fill:#00ff00;fill-opacity:1;stroke:none" /> <rect style="fill:#00ff00;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="11"/> </svg></a></li>',
-        '<li title="Delete row"><a id="wt-delete-row" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"> <path style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" d="M 3,3 3,15 15,15 15,3 z" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 7,4 0,10 0,0" /> <path style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" d="m 11,4 0,10 0,0 0,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,7 10,0 0,0"/> <path style="fill:none;stroke:#000000;stroke-width:1px;stroke-opacity:1" d="m 4,11 10,0" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="2.5" height="3" x="11.5" y="7.5"/> <rect y="7.5" x="4" height="3" width="2.5" style="fill:#ff0000;fill-opacity:1;stroke:none" /> <rect style="fill:#ff0000;fill-opacity:1;stroke:none" width="3" height="3" x="7.5" y="7.5" /> </svg></a></li>',
-        '<li title="Delete table"><a id="wt-remove-table" href="#"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="18" height="18" viewBox="0 0 18 18"> <g transform="matrix(0.91666667,0,0,0.91666667,1.25,0.25)"> <path d="M 3,3 3,15 15,15 15,3 z" style="fill:none;stroke:#000000;stroke-width:2;stroke-opacity:1;marker-end:none" /> <path d="m 7,4 0,10 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 11,4 0,10 0,0 0,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,7 10,0 0,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> <path d="m 4,11 10,0" style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1" /> </g> <path d="m 2,4 13,12 0,0" style="fill:none;stroke:#000000;stroke-width:1.19087446px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" /> <path d="m 2,2 14,13 0,0" style="fill:none;stroke:#ffffff;stroke-width:1.72819757;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" /> </svg> </a></li>',
-        '</ul>'];
-    var div = d.createElement('div');
-    div.className = 'wysiwyg-toolbar';
-    div.innerHTML = html.join('').replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
-    return div;
-};
-
-Wysiwyg.prototype.createStyleMenu = function (d) {
-    var html = [
-        '<p><a id="wt-paragraph" href="#">Normal</a></p>',
-        '<h1><a id="wt-heading1" href="#">Header 1</a></h1>',
-        '<h2><a id="wt-heading2" href="#">Header 2</a></h2>',
-        '<h3><a id="wt-heading3" href="#">Header 3</a></h3>',
-        '<h4><a id="wt-heading4" href="#">Header 4</a></h4>',
-        '<h5><a id="wt-heading5" href="#">Header 5</a></h5>',
-        '<h6><a id="wt-heading6" href="#">Header 6</a></h6>',
-        '<pre class="wiki"><a id="wt-code" href="#">Code block</a></pre>'];
-    var menu = d.createElement('div');
-    menu.className = 'wysiwyg-menu';
-    Wysiwyg.setStyle(menu, {display: 'none'});
-    menu.innerHTML = html.join('').replace(/ href="#">/g, ' href="#" onmousedown="return false" tabindex="-1">');
-    return menu;
-};
-
-Wysiwyg.prototype.setupWysiwygMenuEvents = function () {
-    function addToolbarEvent(element, self, args) {
-        var method = args.shift();
-        $(element).click(function (event) {
-            Wysiwyg.stopEvent(event);
-            var keepMenus = false, exception;
-            try {
-                keepMenus = method.apply(self, args);
-            } catch (e) {
-                exception = e;
-            }
-            if (!keepMenus) {
-                self.hideAllMenus();
-            }
-            element.blur();
-            self.frame.focus();
-            if (exception) {
-                throw exception;
-            }
-        });
-    }
-
-    function argsByType(self, name, element) {
-        switch (name) {
-            case 'style':
-                return [self.toggleMenu, self.styleMenu, element];
-            case 'strong':
-                return [self.execDecorate, 'bold'];
-            case 'em':
-                return [self.execDecorate, 'italic'];
-            case 'underline':
-                return [self.execDecorate, 'underline'];
-            case 'strike':
-                return [self.execDecorate, 'strikethrough'];
-            case 'sub':
-                return [self.execDecorate, 'subscript'];
-            case 'sup':
-                return [self.execDecorate, 'superscript'];
-            case 'escape':
-                return [self.execDecorate, 'escape'];
-            case 'remove':
-                return [self.execCommand, 'removeformat'];
-            case 'paragraph':
-                return [self.formatParagraph];
-            case 'heading1':
-                return [self.formatHeaderBlock, 'h1'];
-            case 'heading2':
-                return [self.formatHeaderBlock, 'h2'];
-            case 'heading3':
-                return [self.formatHeaderBlock, 'h3'];
-            case 'heading4':
-                return [self.formatHeaderBlock, 'h4'];
-            case 'heading5':
-                return [self.formatHeaderBlock, 'h5'];
-            case 'heading6':
-                return [self.formatHeaderBlock, 'h6'];
-            case 'link':
-                return [self.createLink];
-            case 'unlink':
-                return [self.execCommand, 'unlink'];
-            case 'ol':
-                return [self.insertOrderedList];
-            case 'ul':
-                return [self.insertUnorderedList];
-            case 'outdent':
-                return [self.outdent];
-            case 'indent':
-                return [self.indent];
-            case 'image':
-                return [self.insertImage];
-            case 'table':
-            case 'table-in-table':
-                return [self.insertTable];
-            case 'hash-table':
-                return [self.insertHashTable];
-            case 'insert-cell-before':
-                return [self.ui_insertTableCell, false];
-            case 'insert-cell-after':
-                return [self.ui_insertTableCell, true];
-            case 'insert-row-before':
-                return [self.insertTableRow, false];
-            case 'insert-row-after':
-                return [self.insertTableRow, true];
-            case 'insert-col-before':
-                return [self.insertTableColumn, false];
-            case 'insert-col-after':
-                return [self.insertTableColumn, true];
-            case 'delete-cell':
-                return [self.deleteTableCell];
-            case 'delete-row':
-                return [self.deleteTableRow];
-            case 'delete-col':
-                return [self.deleteTableColumn];
-            case 'remove-table':
-                return [self.deleteTable];
-            case 'code':
-                return [self.formatCodeBlock];
-            case 'hr':
-                return [self.insertHorizontalRule];
-            case 'br':
-                return [self.insertLineBreak];
-            case 'collapsible-closed':
-                return [self.insertCollapsibleSection, 'closed'];
-            case 'collapsible-open':
-                return [self.insertCollapsibleSection];
-            case 'collapsible-hidden':
-                return [self.insertCollapsibleSection, 'hidden'];
-            case 'remove-collapsible':
-                return [self.deleteCollapsibleSection];
-        }
-        return null;
-    }
-
-    function setup(container) {
-        var elements = container.getElementsByTagName('a');
-        var length = elements.length;
-        var i;
-        for (i = 0; i < length; i++) {
-            var element = elements[i];
-            var name = element.id.replace(/^wt-/, '');
-            var args = argsByType(this, name, element);
-            if (args) {
-                addToolbarEvent(element, this, args);
-                buttons[name] = element;
-            }
-        }
-    }
-
-    var buttons = {}, i;
-    setup.call(this, this.wysiwygToolbar);
-    for (i = 0; i < this.menus.length; i++) {
-        setup.call(this, this.menus[i]);
-    }
-    return buttons;
 };
 
 Wysiwyg.prototype.createTextareaToolbar = function (d) {
@@ -561,16 +331,6 @@ Wysiwyg.prototype.setupTextareaMenuEvents = function () {
     })
     .prop('checked', Wysiwyg.getValidateOnSave())
     .change();
-};
-
-Wysiwyg.prototype.toggleMenu = function (menu) {
-    if (menu.style.display === 'none') {
-        this.hideAllMenus(menu);
-        Wysiwyg.setStyle(menu, {display: ''});
-    } else {
-        this.hideAllMenus();
-    }
-    return true;
 };
 
 Wysiwyg.prototype.hideAllMenus = function (except) {
@@ -880,42 +640,6 @@ Wysiwyg.prototype.setupEditorEvents = function () {
     });
 };
 
-Wysiwyg.prototype.loadWysiwygDocument = function () {
-    var container = this.frame;
-    if (!container) {
-        return;
-    }
-    var tmp = container.lastChild;
-
-    while (tmp) {
-        container.removeChild(tmp);
-        tmp = container.lastChild;
-    }
-    var fragment = this.wikitextToFragment(this.codeMirrorEditor.getValue(), this.contentDocument, this.options);
-    container.appendChild(fragment);
-    this.savedWysiwygHTML = container.innerHTML;
-};
-
-Wysiwyg.prototype.focusWysiwyg = function () {
-    var self = this;
-
-    function lazy() {
-        self.frame.focus();
-        try {
-            self.execCommand('useCSS', false);
-        } catch (e1) {
-        }
-        try {
-            self.execCommand('styleWithCSS', false);
-        } catch (e2) {
-        }
-        self.selectionChanged();
-        $(window).resize();
-    }
-
-    setTimeout(lazy, 10);
-};
-
 Wysiwyg.prototype.loadWikiText = function () {
     this.codeMirrorEditor.setValue(this.domToWikitext(this.frame, this.options));
     this.codeMirrorEditor.save();
@@ -925,39 +649,6 @@ Wysiwyg.prototype.loadWikiText = function () {
 Wysiwyg.prototype.focusTextarea = function () {
     this.codeMirrorEditor.focus();
     $(window).resize();
-};
-
-Wysiwyg.prototype.setupToggleEditorButtons = function () {
-    var div = document.createElement('div');
-    var mode = Wysiwyg.editorMode;
-    var html = '<label for="editor-wysiwyg-@">'
-        + '<input type="radio" name="__EDITOR__@" value="wysiwyg" id="editor-wysiwyg-@" '
-        + (mode === 'wysiwyg' ? 'checked="checked"' : '') + ' />'
-        + 'rich text</label> '
-        + '<label for="editor-textarea-@">'
-        + '<input type="radio" name="__EDITOR__@" value="textarea" id="editor-textarea-@" '
-        + (mode === 'textarea' ? 'checked="checked"' : '') + ' />'
-        + 'plain text</label> '
-        + '&nbsp; ';
-    var buttons;
-    var i;
-
-    div.className = 'editor-toggle';
-    //noinspection JSCheckFunctionSignatures,JSCheckFunctionSignatures
-    div.innerHTML = html.replace(/@/g, ++Wysiwyg.count);
-    this.toggleEditorButtons = div;
-
-    buttons = div.getElementsByTagName('input');
-    for (i = 0; i < buttons.length; i++) {
-        var button = buttons[i];
-        var token = button.id.replace(/[0-9]+$/, '@');
-        switch (token) {
-            case 'editor-wysiwyg-@':
-            case 'editor-textarea-@':
-                $(button).click(this.listenerToggleEditor(button.value));
-                break;
-        }
-    }
 };
 
 Wysiwyg.prototype.syncTextAreaHeight = function () {
