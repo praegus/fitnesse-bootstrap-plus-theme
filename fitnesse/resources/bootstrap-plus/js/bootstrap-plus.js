@@ -725,29 +725,28 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // if the document has been loaded, then get data from toolTipData.txt
-    $.get('http://' + window.location.hostname + ':' + window.location.port +"/?Tooltips", function (data) {
+    $.get('http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips', function (data) {
         let tooltips = data;
-        if (tooltips != ""){
+        if (tooltips != '') {
             callback(tooltips);
-        }else{
-            $.get("files/fitnesse/bootstrap-plus/txt/toolTipData.txt",function(data2){
-                const tooltipArray = data2.split("\n");
+        } else {
+            $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data2) {
+                const tooltipArray = data2.split('\n');
                 const pickedTip = Math.floor(Math.random() * tooltipArray.length);
-                tooltips = tooltipArray[pickedTip]
+                tooltips = tooltipArray[pickedTip];
                 callback(tooltips);
             });
         }
-        // Activate function displayToolTip
 
     });
 }
+
 // Places picked tooltips on the page
 function placeToolTip(text) {
     if ($('#tooltip-text')) {
         if (text.includes('</a>') && !text.includes('<script>')) {
             $('#tooltip-text').html(text);
-        }
-        else {
+        } else {
             $('#tooltip-text').text(text);
         }
     }
