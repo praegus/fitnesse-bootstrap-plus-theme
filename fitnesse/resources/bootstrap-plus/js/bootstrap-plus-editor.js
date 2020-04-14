@@ -120,10 +120,10 @@ function getInfoForLine(line, returnParamCount) {
     var params = 0;
     var relevantCells = lineCells.length;
     var ignoreParams = false;
-    var containsConstructor = false;
+    var sequentialArgs = false;
     var validate = false;
     var firstCell = lineCells[0].toLowerCase().trim();
-    if (reservedWords.includes(firstCell) || (firstCell.startsWith('$') && firstCell.endsWith('='))) {
+    if (reservedWords.includes(firstCell) || firstCell.startsWith('script:') || (firstCell.startsWith('$') && firstCell.endsWith('='))) {
         offset = 1;
         if (firstCell.startsWith('check')) {
             relevantCells--;
@@ -139,7 +139,11 @@ function getInfoForLine(line, returnParamCount) {
             (firstCell.startsWith('script') ||
                 firstCell.endsWith('script') ||
                 firstCell.startsWith('storyboard'))) {
-            containsConstructor = true;
+            sequentialArgs = true;
+        }
+        if (firstCell.startsWith('script:')) {
+            offset = 0;
+            lineCells[0] = lineCells[0].split(':')[1].trim();
         }
     }
     if (!lineCells[0].trim() == '') {
@@ -149,11 +153,14 @@ function getInfoForLine(line, returnParamCount) {
                 if (/\W_(?=\W|$)/.test(lineCells[i])) {
                     underscoreScenario = true;
                     lineCells[i] = lineCells[i].replaceAll(/\W_(?=\W|$)/, '');
+                } else if (lineCells[i].trim().endsWith(';')) {
+                    sequentialArgs = true;
+                    lineCells[i] = lineCells[i].replaceAll(';', '');
                 }
                 result += lineCells[i].trim() + ' ';
                 useCell = false;
             } else {
-                if (!containsConstructor) {
+                if (!sequentialArgs) {
                     useCell = true;
                 }
                 if (!ignoreParams) {
@@ -386,6 +393,8 @@ function validateTestPage() {
                     firstCellVal.indexOf('storyboard') > -1 ||
                     firstCellVal == 'table template') {
                     tableType = 'script';
+                } else if (firstCellVal.indexOf('query:') > -1) {
+                    tableType = 'query';
                 } else if (firstCellVal == 'import' || firstCellVal == 'library' || firstCellVal == 'comment') {
                     tableType = 'ignore';
                 } else {
@@ -443,6 +452,21 @@ function validateTestPage() {
                         tableType = 'script';
                         row++;
                         continue;
+                    }
+                } else if (tableType == 'query') {
+                    if (row == 0) {
+                        var infoForLine = getInfoForLine(lineContent, true);
+                        infoForLine = infoForLine.split(':')[1];
+                        //Treat as a DT from next row (column count from row 1, etc)
+                        tableType = 'treatAsDT';
+                        if (!signatureList.includes(infoForLine) && !infoForLine.startsWith('#')) {
+                            var message = 'Unknown command: ' + infoForLine.split('#')[0] +
+                                ' (' + infoForLine.split('#')[1] + ' parameters)';
+                            cm.setGutterMarker(i, 'CodeMirror-lint-markers', makeMarker(message, 'warning'));
+                            msgs++;
+                            row++;
+                            continue;
+                        }
                     }
                 } else if (tableType == 'treatAsDT') {
                     var ignoreParams;
