@@ -84,8 +84,6 @@
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/jquery-ui-1.12.1.min.css">
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/contextmenu/jquery.contextMenu.min.css">
 
-    <link rel="csv file" type="text/csv" href="${contextRoot}files/fitnesse/bootstrap-plus/csv/toolTipData.txt">
-
     <script src="${contextRoot}files/fitnesse/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/js/jquery-ui-1.12.1.min.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/fitnesse.js" type="text/javascript"></script>
