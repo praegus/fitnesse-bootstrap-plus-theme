@@ -724,20 +724,39 @@ function generateTestHistoryTable(data) {
 
 // Get list of tooltips
 function getToolTips(callback) {
-    // if the document has been loaded, then get data from toolTipData.txt
-    $.get('http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips', function (data) {
-        let tooltips = data;
-        if (tooltips != '') {
-            callback(tooltips);
-        } else {
-            $.get('files/fitnesse/bootstrap-plus/txt/toolTipData.txt', function (data2) {
-                const tooltipArray = data2.split('\n');
-                const pickedTip = Math.floor(Math.random() * tooltipArray.length);
-                tooltips = tooltipArray[pickedTip];
+    // get data from responder
+    $.ajax({
+        type: 'GET',
+        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
+        contentType: 'charset=utf-8',
+        success: function (responderData) {
+            const tooltips = responderData;
+            // if responder data is empty get plain txt tooltips
+            if (tooltips != '') {
                 callback(tooltips);
-            });
+            } else {
+                $.ajax({
+                    type: 'GET',
+                    url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+                    contentType: 'charset=utf-8',
+                    success: function (bootstrapData) {
+                        //pick tooltip and send it to place tooltip function
+                        const tooltipArray = bootstrapData.split('\n');
+                        const pickedTip = Math.floor(Math.random() * tooltipArray.length);
+                        const tooltips = tooltipArray[pickedTip];
+                        callback(tooltips);
+                    },
+                    error: function (xhr) {
+                        alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+                        console.log('Error code: ' + xhr.status, xhr);
+                    }
+                });
+            }
+        },
+        error: function (xhr) {
+            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+            console.log('Error code: ' + xhr.status, xhr);
         }
-
     });
 }
 
