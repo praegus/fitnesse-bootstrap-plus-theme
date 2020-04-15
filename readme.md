@@ -78,6 +78,8 @@ See: https://github.com/praegus/toolchain-fitnesse-plugin
 ![alt text](https://github.com/tcnh/binstore/raw/master/recent_pages.png "Recent test pages")
 
 #### Maven version checker
+Use "!VersionChecker" in the editor to enable the Maven version checker.
+
 ![alt text](https://github.com/tcnh/binstore/raw/master/macen_versioncheck.png "Maven dependency versions")
 
 #### ToolTips
