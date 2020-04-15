@@ -191,7 +191,7 @@
                 <h3>Maven Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>
-                    <td colspan="4">
+                    <td colspan="5">
                         <b>Versioncheck</b>
                     </td>
                     <tr>
@@ -199,6 +199,7 @@
                         <td><b>Current Version</b></td>
                         <td><b>Newest version</b></td>
                         <td><b>Status</b></td>
+                        <td><b>Documentation</b></td>
                     </tr>
                     </tbody>
                 </table>
