@@ -732,7 +732,7 @@ function getToolTips(callback) {
         success: function (responderData) {
             const tooltips = responderData;
             // if responder data is empty get plain txt tooltips
-            if (tooltips != '') {
+            if (tooltips !== '') {
                 callback(tooltips);
             } else {
                 $.ajax({

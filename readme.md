@@ -94,7 +94,7 @@ Tooltips can now contain links
 Tooltips will now also load in from fixtures:
 
 * You can add tooltips to your fixture by adding a Tooltips.txt on [FixtureRoot]/[FixtureName]_tooltips/Tooltips.txt
-* You also need to add two executions to your maven dependency plugin:
+* You also need to add two executions to your maven dependency plugin to be able to load fixture tooltips:
 
                     <execution>
                         <id>unpack-dependencies</id>
