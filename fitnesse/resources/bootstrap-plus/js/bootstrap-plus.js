@@ -154,19 +154,20 @@ $(document).ready(function () {
     });
 
     // Add hidden tag buttons upon entering overview page
-   $('.test, .suite, .static').each(function () {
-       $(this).wrap('<div class=\'addTagDiv\'></div>');
-       $(this).after('<i class="fas fa-plus-circle addTag"></i>');
-   });
+    $('.test, .suite, .static').each(function () {
+        $(this).wrap('<div class=\'addTagDiv\'></div>');
+        $(this).after('<i class="fas fa-plus-circle addTag"></i>');
+    });
 
-    // For Sidebar
+    // For showing the Sidebar
     if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
+        if ($('body').hasClass('testPage')) {
+            $('#collapseSidebarDiv').removeClass('collapseSidebarDivDisabled');
+        }
         getSidebarContent(placeEverythingForSidebar);
     }
-    else {
-        $('#sidebar').addClass('displayNone');
-        $('#closedSidebar').addClass('displayNone');
-    }
+
+    // For the Sidebar buttons
     $('#collapseAllSidebar').click(function () {
         collapseSidebarIcons(location.pathname);
         scrollSideBarToHighlight();
@@ -177,6 +178,8 @@ $(document).ready(function () {
         scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
     });
+
+    // For resizing the Sidebar
     $('#sidebar').resizable({
         handles: 'e',
         minWidth: 150,
@@ -541,49 +544,51 @@ function expandSidebarIcons() {
 }
 
 $(function(){
-    $('#sidebarContent').contextMenu({
-        selector: 'a',
-        callback: function(key, options) {
-            handleContextMenuClick(key, this);
-        },
-        items: {
-            "run": {name: "Run",
-                    icon: "fa-play-circle-o",
-                    visible: function(key, opt) { return showRunnablePageItems(opt); }
-                    },
-            "runNewTab": {name: "Run in new tab",
-                    icon: "fa-play-circle-o",
-                    visible: function(key, opt) { return showRunnablePageItems(opt); },
-                    className: "contextmenu-newtab"
-                    },
-            "sep0": {type: "cm_separator", visible: function(key, opt) { return showRunnablePageItems(opt); }
-                    },
-            "edit": {name: "Edit", icon: "fa-edit"},
-            "editNewTab": {name: "Edit in new tab", icon: "fa-edit", className: "contextmenu-newtab"},
-            "rename": {name: "Rename", icon: "fa-pencil"},
-            "move": {name: "Move", icon: "fa-long-arrow-right"},
-            "delete": {name: "Delete", icon: "fa-trash-o"},
-            "sep1": {type: "cm_separator"},
-            "fold1": {
-                name: "Add",
-                icon: "fa-plus",
-                items: {
-                    addStatic: {name: "Static Page", icon: "fa-file-o"},
-                    addSuite: {name: "Suite Page", icon: "fa-cogs"},
-                    addTest: {name: "Test Page", icon: "fa-cog"}
-                }
+    if($('#sidebarContent').length) {
+        $('#sidebarContent').contextMenu({
+            selector: 'a',
+            callback: function(key, options) {
+                handleContextMenuClick(key, this);
             },
-            "sep2": {type: "cm_separator"},
-            "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
-            "testhistory": {name: "Test History",
-                            icon: "fa-history",
-                            visible: function(key, opt) {
-                                return showRunnablePageItems(opt);
-                             }},
-            "search": {name: "Search from here", icon: "fa-search"},
-            "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
-        }
-    });
+            items: {
+                "run": {name: "Run",
+                        icon: "fa-play-circle-o",
+                        visible: function(key, opt) { return showRunnablePageItems(opt); }
+                        },
+                "runNewTab": {name: "Run in new tab",
+                        icon: "fa-play-circle-o",
+                        visible: function(key, opt) { return showRunnablePageItems(opt); },
+                        className: "contextmenu-newtab"
+                        },
+                "sep0": {type: "cm_separator", visible: function(key, opt) { return showRunnablePageItems(opt); }
+                        },
+                "edit": {name: "Edit", icon: "fa-edit"},
+                "editNewTab": {name: "Edit in new tab", icon: "fa-edit", className: "contextmenu-newtab"},
+                "rename": {name: "Rename", icon: "fa-pencil"},
+                "move": {name: "Move", icon: "fa-long-arrow-right"},
+                "delete": {name: "Delete", icon: "fa-trash-o"},
+                "sep1": {type: "cm_separator"},
+                "fold1": {
+                    name: "Add",
+                    icon: "fa-plus",
+                    items: {
+                        addStatic: {name: "Static Page", icon: "fa-file-o"},
+                        addSuite: {name: "Suite Page", icon: "fa-cogs"},
+                        addTest: {name: "Test Page", icon: "fa-cog"}
+                    }
+                },
+                "sep2": {type: "cm_separator"},
+                "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
+                "testhistory": {name: "Test History",
+                                icon: "fa-history",
+                                visible: function(key, opt) {
+                                    return showRunnablePageItems(opt);
+                                 }},
+                "search": {name: "Search from here", icon: "fa-search"},
+                "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
+            }
+        });
+    }
 });
 
 function showRunnablePageItems(opt) {
