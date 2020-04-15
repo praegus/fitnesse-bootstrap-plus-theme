@@ -1000,14 +1000,14 @@ function versionCheck(data) {
                 });
                 switch (versionData.artifactid) {
                     case 'fitnesse':
-                        versionData['notes'] = '<a href="http://fitnesse.org/FitNesse.ReleaseNotes"  target="_blank">Release Notes</a>';
+                        versionData['notes'] = '<a href="http://fitnesse.org/FitNesse.ReleaseNotes"  target="_blank">Fitnesse</a>';
                         break;
                     case 'hsac-fitnesse-fixtures':
-                        versionData['notes'] = '<a href="https://github.com/fhoeben/hsac-fitnesse-fixtures/releases"  target="_blank">Release Notes</a>';
+                        versionData['notes'] = '<a href="https://github.com/fhoeben/hsac-fitnesse-fixtures/releases"  target="_blank">Hsac fixture</a>';
                         break;
                     case 'toolchain-fitnesse-plugin' +
                     '':
-                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Release Notes</a>';
+                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Toolchain</a>/<a href="https://github.com/praegus/fitnesse-bootstrap-plus-theme/releases" target="_blank">Bootstrap</a>';
                         break;
                     default:
                         versionData['notes'] ='';
