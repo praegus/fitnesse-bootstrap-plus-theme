@@ -553,7 +553,7 @@ function expandRouteSidebarIcons(path) {
     collapseSidebarIcons();
 
     let idNames = [];
-    if (location.pathname.toLowerCase() === '/frontpage' || location.pathname === '/') {
+    if (path.toLowerCase() === '/frontpage' || path === '/') {
         idNames.push('root');
         idNames.push('FrontPage');
     } else {
