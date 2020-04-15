@@ -552,14 +552,15 @@ function toggleIconClickEvent() {
 function expandRouteSidebarIcons(path) {
     collapseSidebarIcons();
 
-    // Make an array of ids
-    const names = path.slice(1).split('.');
     let idNames = [];
-    names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
-    // If FrontPage
     if (location.pathname.toLowerCase() === '/frontpage' || location.pathname === '/') {
-        idNames.push('root')
+        idNames.push('root');
+        idNames.push('FrontPage');
+    } else {
+        const names = path.slice(1).split('.');
+        names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
     }
+
     // Expand al the ids
     idNames.forEach(id => {
         $('#sidebarContent #' + id + ' ul').first().css({'display': 'block'});
