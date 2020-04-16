@@ -725,9 +725,17 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // get data from responder
+    let cookieIsValid;
+    if(getCookie("tooltipCache") == ""){
+        document.cookie = "tooltipCache" + '=' + "" + ';expires=' + ';path=/';
+        cookieIsValid = false;
+    }else{
+        cookieIsValid = true;
+    }
+    console.log('http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CookieIsValid='+cookieIsValid);
     $.ajax({
         type: 'GET',
-        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
+        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CookieIsValid='+cookieIsValid,
         contentType: 'charset=utf-8',
         success: function (responderData) {
             const tooltips = responderData;
@@ -762,6 +770,7 @@ function getToolTips(callback) {
 
 // Places picked tooltips on the page
 function placeToolTip(text) {
+
     if ($('#tooltip-text')) {
         if (text.includes('</a>') && !text.includes('<script>')) {
             $('#tooltip-text').html(text);
