@@ -1,0 +1,18 @@
+<form method="get" action="" name="symbolics" id="symbolics">
+    <h2>Symbolic Links</h2>
+    <table class="dirListing">
+        <tr>
+            <th>Page name</th>
+            <th>Link name</th>
+            <th>Link path</th>
+        </tr>
+        #foreach( $symlink in $symlinks )
+            <tr>
+                <td>$symlink.pagePath</td>
+                <td>$symlink.linkName</td>
+                <td>$symlink.linkPath</td>
+            </tr>
+        #end
+    </table>
+
+</form>
