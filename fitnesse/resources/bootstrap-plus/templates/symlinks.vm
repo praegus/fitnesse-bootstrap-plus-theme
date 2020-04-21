@@ -2,9 +2,9 @@
     <h2>Symbolic Links</h2>
     <table class="dirListing">
         <tr>
-            <th>Page name</th>
-            <th>Link name</th>
-            <th>Link path</th>
+            <th style="min-width: 150px">Page name</th>
+            <th style="min-width: 150px">Simbolic link name</th>
+            <th style="min-width: 150px">Original path</th>
         </tr>
         #foreach( $symlink in $symlinks )
             <tr>
