@@ -2,7 +2,7 @@
     <h2>Symbolic Links manager</h2>
     <br>
 
-    #if($symlinks.length > 0)
+    #if($symlinks.length() > 0)
 
         <table class="dirListing">
             <tr>
