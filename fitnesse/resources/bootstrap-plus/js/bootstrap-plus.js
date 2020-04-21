@@ -727,40 +727,16 @@ function getToolTips(callback) {
     // get data from responder
     let cookieIsValid;
     if(getCookie("tooltipCache") == ""){
-        document.cookie = "tooltipCache" + '=' + "" + ';expires=' + ';path=/';
+        document.cookie = 'tooltipCache' + '=' + 'value' + ';expires= ;path=/';
         cookieIsValid = false;
     }else{
         cookieIsValid = true;
     }
-    console.log('http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CookieIsValid='+cookieIsValid);
     $.ajax({
         type: 'GET',
-        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CookieIsValid='+cookieIsValid,
+        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CacheIsCurrent='+cookieIsValid,
         contentType: 'charset=utf-8',
-        success: function (responderData) {
-            const tooltips = responderData;
-            // if responder data is empty get plain txt tooltips
-            if (tooltips !== '') {
-                callback(tooltips);
-            } else {
-                $.ajax({
-                    type: 'GET',
-                    url: 'files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
-                    contentType: 'charset=utf-8',
-                    success: function (bootstrapData) {
-                        //pick tooltip and send it to place tooltip function
-                        const tooltipArray = bootstrapData.split('\n');
-                        const pickedTip = Math.floor(Math.random() * tooltipArray.length);
-                        const tooltips = tooltipArray[pickedTip];
-                        callback(tooltips);
-                    },
-                    error: function (xhr) {
-                        alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
-                        console.log('Error code: ' + xhr.status, xhr);
-                    }
-                });
-            }
-        },
+        success: function (responderData) {callback(responderData)},
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status, xhr);
