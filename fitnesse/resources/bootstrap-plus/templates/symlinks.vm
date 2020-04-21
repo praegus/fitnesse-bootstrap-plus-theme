@@ -1,8 +1,8 @@
 <form method="get" action="" name="symbolics" id="symbolics">
     <h2>Symbolic Links manager</h2>
-    <br><br>
+    <br>
 
-    #if($symlinks.length != 0)
+    #if($symlinks.length > 0)
 
         <table class="dirListing">
             <tr>
@@ -21,7 +21,7 @@
 
     #else
 
-        <p>There are no symbolic links</p>
+        <p>There are no symbolic links.</p>
 
     #end
 
