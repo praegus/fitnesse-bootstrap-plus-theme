@@ -14,7 +14,11 @@
                 <tr>
                     <td><a href="$symlink.pagePath" accesskey="e">$symlink.pagePath</a></td>
                     <td>$symlink.linkName</td>
-                    <td><a href="$symlink.linkPath" accesskey="e">$symlink.linkPath</a></td>
+                    #if( $symlink.linkPath.length() > 0 )
+                        <td><a href="$symlink.linkPath" accesskey="e">$symlink.linkPath</a></td>
+                    #else
+                        <td>$symlink.backUpLinkPath</td>
+                    #end
                 </tr>
             #end
         </table>
