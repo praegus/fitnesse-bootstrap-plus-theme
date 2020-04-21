@@ -1,10 +1,4 @@
 #parse( "menu.vm" )
-
-
-<ul class="nav navbar-nav">
-    <li><a href="?symlinks" accesskey="e">Symlinks</a></li>
-</ul>
-
 <div class="navextras">
     <form class="navbar-form search" role="search" action="?search">
         <input type="hidden" name="responder" value="search"/>
