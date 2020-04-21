@@ -107,22 +107,5 @@ Tooltips will now also load in from fixtures:
                             <outputDirectory>${project.basedir}/wiki/TooltipData</outputDirectory>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>nl.praegus</groupId>
-                                    <artifactId>fitnesse-bootstrap-plus-theme</artifactId>
-                                    <version>2.0.8-SNAPSHOT</version>
-                                </artifactItem>
-                            </artifactItems>
-                            <includes>**/toolTipData.txt</includes>
-                            <outputDirectory> ${project.basedir}/wiki/TooltipData</outputDirectory>
-                        </configuration>
-                    </execution>
+                    
 
