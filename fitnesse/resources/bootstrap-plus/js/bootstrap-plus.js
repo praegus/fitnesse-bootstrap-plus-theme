@@ -1006,7 +1006,7 @@ function versionCheck(data) {
                         versionData['notes'] = '<a href="https://github.com/fhoeben/hsac-fitnesse-fixtures/releases"  target="_blank">Hsac fixture</a>';
                         break;
                     case 'toolchain-fitnesse-plugin':
-                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Toolchain plugin release notes</a> / <a href="https://github.com/praegus/fitnesse-bootstrap-plus-theme/releases" target="_blank">Bootstrap+</a>';
+                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Toolchain plugin release notes</a> / <a href="https://github.com/praegus/fitnesse-bootstrap-plus-theme/releases" target="_blank">Bootstrap+ </a>';
                         break;
                     default:
                         versionData['notes'] ='';
