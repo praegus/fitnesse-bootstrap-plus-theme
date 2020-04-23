@@ -727,7 +727,7 @@ function getToolTips(callback) {
     // get data from responder
     let cookieIsValid;
     if(getCookie("tooltipCache") == ""){
-        document.cookie = 'tooltipCache' + '=' + '' + ';expires= ;path=/';
+        document.cookie = 'tooltipCache =val;expires= ;path=/';
         cookieIsValid = false;
     }else{
         cookieIsValid = true;
