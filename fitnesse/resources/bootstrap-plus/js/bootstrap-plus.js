@@ -725,20 +725,11 @@ function generateTestHistoryTable(data) {
 // Get list of tooltips
 function getToolTips(callback) {
     // get data from responder
-    let cookieIsValid;
-    if (getCookie('tooltipCache') == '') {
-        document.cookie = 'tooltipCache =val;expires= ;path=/';
-        cookieIsValid = false;
-    } else {
-        cookieIsValid = true;
-    }
     $.ajax({
         type: 'GET',
-        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips&CacheIsCurrent=' + cookieIsValid,
+        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
         contentType: 'charset=utf-8',
-        success: function (responderData) {
-            callback(responderData);
-        },
+        success: data => callback(data),
         error: function (xhr) {
             alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status, xhr);
