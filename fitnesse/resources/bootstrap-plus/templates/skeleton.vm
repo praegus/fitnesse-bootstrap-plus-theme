@@ -128,7 +128,7 @@
 
 <div id="contentDiv">
     ## Sidebar
-    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage") && !$pageTitle.getTitle().equalsIgnoreCase("Files"))
+    #if(!$pageTitle.getTitle().equalsIgnoreCase("Files"))
         ## Closed Sidebar
         <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
             <div id="collapseSidebarDiv"
