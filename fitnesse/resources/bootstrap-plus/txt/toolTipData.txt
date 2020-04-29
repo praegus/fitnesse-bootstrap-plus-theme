@@ -31,5 +31,5 @@ You can use <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.WikiImp
 You can use the <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.FilesSection">Files Section</a> to acces and manage all non "wiki" files.
 You can find a list of your recently executed test <a href="/?testHistory">here</a>.
 You can find information on how to use a Symbolic Link <a href="/FitNesse.FullReferenceGuide.UserGuide.FitNesseWiki.SymbolicLinks">here</a>.
-Right click on a page in the sidebar to find a context menu full of nifty shortcuts that save lots of clicks.
+Right click on a page in the sidebar to find a context menu full of nifty shortcuts that saves a lot of clicks.
 You can enable the Project sidebar in the settings menu for easier navigation in your projects!
