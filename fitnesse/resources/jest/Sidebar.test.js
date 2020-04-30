@@ -118,7 +118,7 @@ it('Test if the toggle icon will have a click function', () => {
 });
 
 /*
- collapseSidebarIcons
+ expandRouteSidebarIcons
  */
 it('Test if every toggle collapse expect the route you are in', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
@@ -130,7 +130,7 @@ it('Test if every toggle collapse expect the route you are in', () => {
 
     document.body.innerHTML = neededHtml;
     jsfile.placeSidebarContent(sidebarData);
-    jsfile.collapseSidebarIcons(path);
+    jsfile.expandRouteSidebarIcons(path);
     const receivedBackEndTest = document.getElementById('TestSuiteDemoBackEndTests').innerHTML;
     const receivedFrontEndTest = document.getElementById('TestSuiteDemoFrontEndTests').innerHTML;
 
