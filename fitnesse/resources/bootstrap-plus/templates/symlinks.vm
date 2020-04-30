@@ -1,5 +1,5 @@
 <form method="get" action="" name="symbolics" id="symbolics">
-    <h2>Symbolic Links manager</h2>
+    <h2>Symbolic Links Overview</h2>
     <br>
 
     #if($symlinks.length() > 0)
