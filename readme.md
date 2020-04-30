@@ -81,10 +81,31 @@ See: https://github.com/praegus/toolchain-fitnesse-plugin
 ![alt text](https://github.com/tcnh/binstore/raw/master/macen_versioncheck.png "Maven dependency versions")
 
 #### ToolTips
-* Tooltips now display on every page
+Tooltips are now displayed on every page.
 
-New tooltips can be added by editing fitnesse/resources/bootstrap-plus/txt/toolTipData.txt and putting text at the end of the file and seperating by enters in format [this is a tooltip] without the brackets.
+You can add your own tooltips with the following steps:
+1. You go to fitnesse/resources/bootstrap-plus/txt/toolTipData.txt for editing.
+2. Put the text at the end of the file and separate the tooltips by enters
+3. The format of a tooltip is[this is a tooltip] (without the brackets).
 
-* Tooltips will now also load in from fixtures.
+Tooltips can now contain links
+* You can add a link to your tooltip by adding a simple html link tag to your tooltip.
 
-you can add tooltips to your fixture by adding Tooltips.txt(case insensitive) to the root off your fixture.
+Tooltips will now also load in from fixtures:
+
+* You can add tooltips to your fixture by adding a Tooltips.txt on [FixtureRoot]/[FixtureName]_tooltips/Tooltips.txt
+* You also need to add two executions to your maven dependency plugin to be able to load fixture tooltips:
+
+                    <execution>
+                        <id>unpack-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includes>**/Tooltips.txt</includes>
+                            <outputDirectory>${project.basedir}/wiki/TooltipData</outputDirectory>
+                        </configuration>
+                    </execution>
+                    
+
