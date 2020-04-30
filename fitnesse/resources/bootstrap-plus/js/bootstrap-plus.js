@@ -1014,6 +1014,22 @@ function versionCheck(data) {
                         }
                     }
                 });
+                switch (versionData.artifactid) {
+                    case 'fitnesse':
+                        versionData['notes'] = '<a href="http://fitnesse.org/FitNesse.ReleaseNotes"  target="_blank">FitNesse</a>';
+                        break;
+                    case 'hsac-fitnesse-fixtures':
+                        versionData['notes'] = '<a href="https://github.com/fhoeben/hsac-fitnesse-fixtures/releases"  target="_blank">Hsac FitNesse Fixtures</a>';
+                        break;
+                    case 'toolchain-fitnesse-plugin':
+                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Toolchain Plugin</a> / <a href="https://github.com/praegus/fitnesse-bootstrap-plus-theme/releases" target="_blank">Bootstrap<sup>+</sup></a>';
+                        break;
+                    default:
+                        versionData['notes'] ='';
+                        break;
+                }
+
+
 
 
             // Place in html
@@ -1023,6 +1039,7 @@ function versionCheck(data) {
                 '<td><p>' + versionData.currentVersion + '</p></td>' +
                 '<td><p>' + versionData.latest + '</p></td>' +
                 '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
+                '<td><p>' + versionData.notes + '</p></td>' +
                 '</tr>');
         });
    }
