@@ -64,9 +64,9 @@ var Wysiwyg = function (textarea, options) {
             else {
                 // Add comment
                 lineArray.forEach(object => {
-                    const placement = object.lineText.substring(0, 1) === '|' ? 1 : 0;
-                    const newLine = '#' + object.lineText.substring(placement, object.lineText.length);
-                    doc.replaceRange(newLine, createPosition("from", (object.index-1),placement, null), createPosition("to", (object.index-1), null, newLine.length));
+                    //const placement = object.lineText.substring(0, 1) === '|' ? 1 : 0;
+                    const newLine = '#' + object.lineText.substring(0, object.lineText.length);
+                    doc.replaceRange(newLine, createPosition("from", (object.index-1),0, null), createPosition("to", (object.index-1), null, newLine.length));
                 });
             }
         }

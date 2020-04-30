@@ -6,7 +6,7 @@ try {
         getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         toggleIconClickEvent: toggleIconClickEvent,
-        collapseSidebarIcons: collapseSidebarIcons,
+        expandRouteSidebarIcons: expandRouteSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
         // Tooltip.test
         placeToolTip:placeToolTip,
@@ -121,6 +121,9 @@ $(document).ready(function () {
         getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
 
     }
+    if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
+        getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
+    }
 
     //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
@@ -160,7 +163,7 @@ $(document).ready(function () {
     });
 
     // For showing the Sidebar
-    if (!location.pathname.includes('FrontPage') && !location.pathname.includes('files') && getCookie('sidebar') == 'true') {
+    if (!location.pathname.includes('files') && getCookie('sidebar') == 'true') {
         if ($('body').hasClass('testPage')) {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivDisabled');
         }
@@ -169,7 +172,7 @@ $(document).ready(function () {
 
     // For the Sidebar buttons
     $('#collapseAllSidebar').click(function () {
-        collapseSidebarIcons(location.pathname);
+        expandRouteSidebarIcons(location.pathname);
         scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "");
     });
@@ -423,7 +426,9 @@ function getSidebarContent(callback) {
 }
 
 function getMainWorkSpace(mainWorkspace) {
-    if (mainWorkspace.includes('.')) {
+    if (mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage') {
+        mainWorkspace = '/root';
+    } else if (mainWorkspace.includes('.')) {
         mainWorkspace = mainWorkspace.slice(0, mainWorkspace.indexOf('.'));
     }
     return mainWorkspace;
@@ -432,7 +437,7 @@ function getMainWorkSpace(mainWorkspace) {
 function placeEverythingForSidebar(contentArray) {
     placeSidebarContent(contentArray);
     toggleIconClickEvent();
-    getCookie('sidebarTreeState') !== 'expanded' ? collapseSidebarIcons(location.pathname) : expandSidebarIcons();
+    getCookie('sidebarTreeState') !== 'expanded' ? expandRouteSidebarIcons(location.pathname) : expandSidebarIcons();
     scrollSideBarToHighlight();
 }
 
@@ -450,7 +455,9 @@ function placeSidebarContent(contentArray) {
 
     contentArray.forEach(layerOne => {
         // If path name doesn't exist and location.path is root
-        layerOne.path === '' && location.pathname === '/root' ? layerOne.path = 'root' : layerOne.path = layerOne.path;
+        layerOne.path === '' && (location.pathname.toLowerCase() === '/root' || location.pathname.toLowerCase() === '/frontpage' || location.pathname === '/')
+            ? layerOne.path = 'root'
+            : layerOne.path = layerOne.path;
 
         // Place the li in the html
         $('#sidebarContent').append(getSidebarContentHtml(layerOne));
@@ -480,10 +487,13 @@ function sidebarContentLayerLoop(suiteName, children) {
 function getSidebarContentHtml(content) {
     let iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
-    const highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
+    let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
 
+    // If Frontpage
+    highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' id="highlight"' : highlight;
+    // If files
     if (content.path.slice(0, 5) === 'files') {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
         toggleClass = 'iconWidth';
@@ -516,19 +526,20 @@ function toggleIconClickEvent() {
     });
 }
 
-// Collapse all sidebar icons expect the route you are in
-function collapseSidebarIcons(path) {
-    // Close all
-    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'none'});
-    $('#sidebarContent .iconToggle').removeClass('fa-angle-down');
-    $('#sidebarContent .iconToggle').addClass('fa-angle-right');
+// Collapse all and Expand the route you are in
+function expandRouteSidebarIcons(path) {
+    collapseSidebarIcons();
 
-    // Expand the route you are in
-    // Removes the / from the location.pathname
-    path = path.slice(1);
-    const names = path.split('.');
     let idNames = [];
-    names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
+    if (path.toLowerCase() === '/frontpage' || path === '/') {
+        idNames.push('root');
+        idNames.push('FrontPage');
+    } else {
+        const names = path.slice(1).split('.');
+        names.forEach(name => idNames.length === 0 ? idNames.push(name) : idNames.push(idNames[idNames.length - 1] + name));
+    }
+
+    // Expand al the ids
     idNames.forEach(id => {
         $('#sidebarContent #' + id + ' ul').first().css({'display': 'block'});
         $('#sidebarContent #' + id + ' .iconToggle').first().removeClass('fa-angle-right');
@@ -536,13 +547,21 @@ function collapseSidebarIcons(path) {
     });
 }
 
-// Collapse all sidebar icons expect
+// Collapse all
+function collapseSidebarIcons() {
+    $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'none'});
+    $('#sidebarContent .iconToggle').removeClass('fa-angle-down');
+    $('#sidebarContent .iconToggle').addClass('fa-angle-right');
+}
+
+// Expand all sidebar icons
 function expandSidebarIcons() {
     $('#sidebarContent .iconToggle').parent().siblings('ul').css({'display': 'block'});
     $('#sidebarContent .iconToggle').removeClass('fa-angle-right');
     $('#sidebarContent .iconToggle').addClass('fa-angle-down');
 }
 
+// Right click
 $(function(){
     if($('#sidebarContent').length) {
         $('#sidebarContent').contextMenu({
