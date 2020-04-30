@@ -740,10 +740,10 @@ function generateTestHistoryTable(data) {
 
 // Get list of tooltips
 function getToolTips(callback) {
-    // if the document has been loaded, then get data from toolTipData.txt
+    // get data from responder
     $.ajax({
         type: 'GET',
-        url: '/files/fitnesse/bootstrap-plus/txt/toolTipData.txt',
+        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
         contentType: 'charset=utf-8',
         success: data => callback(data),
         error: function (xhr) {
@@ -755,17 +755,12 @@ function getToolTips(callback) {
 
 // Places picked tooltips on the page
 function placeToolTip(text) {
-    //split tooltips and pick a random tooltip
-    const tipsArray = text.split('\n');
-    const pickedTip = Math.floor(Math.random() * tipsArray.length);
 
-    const textfield = document.getElementById('tooltip-text');
-    if (textfield) {
-        // check if there is not a script tag in the tooltip if there is a link in it because we dont want to execute scripts from a tooltip
-        if (tipsArray[pickedTip].includes('</a>') && !tipsArray[pickedTip].includes('<script>')) {
-            textfield.innerHTML = tipsArray[pickedTip];
+    if ($('#tooltip-text')) {
+        if (text.includes('</a>') && !text.includes('<script>')) {
+            $('#tooltip-text').html(text);
         } else {
-            textfield.innerText = tipsArray[pickedTip];
+            $('#tooltip-text').text(text);
         }
     }
 }
