@@ -128,7 +128,7 @@
 
 <div id="contentDiv">
     ## Sidebar
-    #if(!$pageTitle.getTitle().equalsIgnoreCase("FrontPage") && !$pageTitle.getTitle().equalsIgnoreCase("Files"))
+    #if(!$pageTitle.getTitle().equalsIgnoreCase("Files"))
         ## Closed Sidebar
         <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
             <div id="collapseSidebarDiv"
@@ -191,7 +191,7 @@
                 <h3>Maven Version Checker</h3>
                 <table id="versioncheck">
                     <tbody>
-                    <td colspan="4">
+                    <td colspan="5">
                         <b>Versioncheck</b>
                     </td>
                     <tr>
@@ -199,6 +199,7 @@
                         <td><b>Current Version</b></td>
                         <td><b>Newest version</b></td>
                         <td><b>Status</b></td>
+                        <td><b>Release Notes</b></td>
                     </tr>
                     </tbody>
                 </table>
