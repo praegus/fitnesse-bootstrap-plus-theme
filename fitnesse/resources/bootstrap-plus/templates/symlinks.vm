@@ -1,0 +1,33 @@
+<form method="get" action="" name="symbolics" id="symbolics">
+    <h2>Symbolic Links Overview</h2>
+    <br>
+
+    #if($symlinks.length() > 0)
+
+        <table class="dirListing">
+            <tr>
+                <th style="min-width: 150px">Page path</th>
+                <th style="min-width: 150px">Symbolic link name</th>
+                <th style="min-width: 150px">Original path</th>
+            </tr>
+            #foreach( $symlink in $symlinks )
+                <tr>
+                    <td><a href="$symlink.pagePath" accesskey="e">$symlink.pagePath</a></td>
+                    <td>$symlink.linkName</td>
+                    #if( $symlink.linkPath.length() > 0 )
+                        <td><a href="$symlink.linkPath" accesskey="e">$symlink.linkPath</a></td>
+                    #else
+                        <td>$symlink.backUpLinkPath</td>
+                    #end
+                </tr>
+            #end
+        </table>
+
+    #else
+
+        <p>There are no symbolic links.</p>
+
+    #end
+
+
+</form>
