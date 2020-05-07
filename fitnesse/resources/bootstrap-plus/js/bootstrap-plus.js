@@ -121,9 +121,6 @@ $(document).ready(function () {
         getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
 
     }
-    if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
-    }
 
     //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
