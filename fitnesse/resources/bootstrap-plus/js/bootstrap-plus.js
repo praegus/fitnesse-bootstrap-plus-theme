@@ -538,7 +538,6 @@ function getSidebarContentHtml(content) {
             '&nbsp;' +
             '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
             symbolicIcon +
-            '<br>'+
             sidebarTags(content.tags) +
             '</div>' +
             '</li>';
