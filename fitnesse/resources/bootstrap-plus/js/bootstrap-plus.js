@@ -494,7 +494,6 @@ function placeSidebarContent(contentArray) {
 function sidebarContentLayerLoop(suiteName, children) {
     // Place new ul in the correct li
     $('#' + suiteName).append('<ul></ul>');
-
     children.forEach(content => {
         // Place new li in the new made ul
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
@@ -503,6 +502,17 @@ function sidebarContentLayerLoop(suiteName, children) {
             sidebarContentLayerLoop(content.path.replace(/\./g, ''), content.children);
         }
     });
+}
+function sidebarTags(tagsArray){
+    let tagsss = "" ;
+    if(tagsArray !== undefined){
+        for(let i = 0; i < tagsArray.length; i++) {
+            //tagsss.push(tagsArray[i].join(', '));
+            tagsss += '<span class=\'tag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
+        }
+
+    }
+    return tagsss;
 }
 
 // Generate the li for the html
@@ -520,17 +530,19 @@ function getSidebarContentHtml(content) {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
         toggleClass = 'iconWidth';
     }
+        return '<li id="' + content.path.replace(/\./g, '') + '">' +
+            '<div' + highlight + '>' +
+            '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+            '&nbsp;' +
+            '<i class="' + iconClass + '" aria-hidden="true"></i>' +
+            '&nbsp;' +
+            '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
+            symbolicIcon +
+            '<br>'+
+            sidebarTags(content.tags) +
+            '</div>' +
+            '</li>';
 
-    return '<li id="' + content.path.replace(/\./g, '') + '">' +
-        '<div' + highlight + '>' +
-        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
-        '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
-        symbolicIcon +
-        '</div>' +
-        '</li>';
 }
 
 // Set a click event an the sidebar toggle icons
