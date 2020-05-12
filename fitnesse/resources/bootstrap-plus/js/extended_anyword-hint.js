@@ -7,7 +7,7 @@ var autoCompleteJson;
 var autocompletes = [];
 
 function loadAutoCompletesFromResponder() {
-    $('#spinner').show();
+    $('.navbar #spinner').show();
     $('.toggle-bar').hide();
     if (window.location.pathname.indexOf('ScenarioLibrary') !== -1
         || window.location.pathname.indexOf('SetUp') !== -1
@@ -43,7 +43,7 @@ function loadAutoCompletesFromResponder() {
             $.each(result.variables, function (vIndex, v) {
                 autocompletes.push(v.varName);
             });
-            $('#spinner').hide();
+            $('.navbar #spinner').hide();
             $('.toggle-bar').show();
         },
         error: function () {

@@ -367,6 +367,7 @@ function populateContext() {
 
     $('.side-bar').prepend(helpList);
     $('.toggle-bar').attr('populated', 'true');
+    $('#contextHelpContent').prepend(helpList);
 }
 
 function validateTestPage() {
@@ -729,4 +730,32 @@ $(document).ready(function () {
         $('.fullSymbolTable' + currentItem).toggle();
         $('.fullSymbolTable' + currentItem + ' tr:contains(' + variable + '=)').addClass('side-bar-tr-highlight');
     });
+
+    // Context help sidebar
+    $('body').on('click', '#collapseCHelpDiv', function (e) {
+            e.preventDefault();
+            switchCollapseContextHelp();
+            if ($('.toggle-bar').attr('populated') === undefined) {
+                populateContext();
+            }
+        }
+    );
+
+    // $('#contextHelp').resizable({
+    //     handles: 'w',
+    //     minWidth: 150,
+    //     stop: function(event, ui) {
+    //         setBootstrapPlusConfigCookie("contextHelpPosition", ui.size.width);
+    //     }
+    // });
 });
+
+function switchCollapseContextHelp() {
+    if ($('#contextHelp').hasClass('displayNone')) {
+        $('#collapseCHelpDiv').addClass('collapseCHelpDivColor');
+        $('#contextHelp').removeClass('displayNone');
+    } else {
+        $('#collapseCHelpDiv').removeClass('collapseCHelpDivColor');
+        $('#contextHelp').addClass('displayNone');
+    }
+}

@@ -40,11 +40,11 @@
         #set( $collapseSidebar = 'false' )
     #end
 
-    #set( $collapseContextHelpCookieName = "collapseContextHelp")
-    #set ($collapseContextHelp = $request.getCookie($collapseContextHelpCookieName))
-    #if($collapseContextHelp == "")
-        #set( $collapseContextHelp = 'false' )
-    #end
+##    #set( $collapseContextHelpCookieName = "collapseContextHelp")
+##    #set ($collapseContextHelp = $request.getCookie($collapseContextHelpCookieName))
+##    #if($collapseContextHelp == "")
+##        #set( $collapseContextHelp = 'false' )
+##    #end
 
     #set ($sidebarWidthCookieName = "sidebarPosition")
     #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
@@ -124,8 +124,10 @@
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
-        <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
-        <div class="toggle-bar" style="display:none">Context help</div>
+        #if( $sidebar == 'false' )
+            <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
+            <div class="toggle-bar" style="display:none">Context help</div>
+        #end
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <a class="navbar-brand" href="${contextRoot}FrontPage"><span>FitNesse</span></a>
@@ -236,11 +238,8 @@
     ## Context help
     #if( $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
-        <div id="contextHelp" style="width: $contextHelpWidth;" #if( $sidebar == 'false' || $collapseContextHelp == 'true' ) class="displayNone" #end>
-            <div class="buttonSidebarDiv">
-
-            </div>
-
+        ## <div id="contextHelp" style="width: $contextHelpWidth;" #if( $sidebar == 'false' || $collapseContextHelp == 'true' ) class="displayNone" #end>
+        <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
             <ul id="contextHelpContent" class="scrollbar">
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
             </ul>
@@ -248,7 +247,8 @@
 
         ## Closed Context help
         <div id="closedContextHelp" #if( $sidebar == 'false' ) class="displayNone" #end>
-            <div id="collapseCHelpDiv" #if( $collapseContextHelp == 'false' ) class="collapseCHelpDivColor" #end>
+            ## <div id="collapseCHelpDiv" #if( $collapseContextHelp == 'false' ) class="collapseCHelpDivColor" #end>
+            <div id="collapseCHelpDiv">
                 <p id="collapseCHelpText">Context Help</p>
             </div>
         </div>
