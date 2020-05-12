@@ -184,7 +184,7 @@ $(document).ready(function () {
         setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
     });
 
-    // For resizing the Sidebar
+    // For resizing the Sidebar and context help
     $('#sidebar').resizable({
         handles: 'e',
         minWidth: 150,
@@ -192,6 +192,13 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie("sidebarPosition", ui.size.width);
         }
     });
+    // $('#contextHelp').resizable({
+    //     handles: 'w',
+    //     minWidth: 150,
+    //     stop: function(event, ui) {
+    //         setBootstrapPlusConfigCookie("contextHelpPosition", ui.size.width);
+    //     }
+    // });
 
     if (getCookie('highlightSymbols') == 'true') {
         $('table').html(function(index,html){
@@ -285,6 +292,12 @@ $(document).ready(function () {
     $('body').on('click', '#collapseSidebarDiv', function (e) {
             e.preventDefault();
             switchCollapseSidebar();
+        }
+    );
+
+    $('body').on('click', '#collapseCHelpDiv', function (e) {
+            e.preventDefault();
+            switchCollapseContextHelp();
         }
     );
 
@@ -389,6 +402,18 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie('collapseSidebar', 'true');
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
             $('#sidebar').addClass('displayNone');
+        }
+    }
+
+    function switchCollapseContextHelp() {
+        if (getCookie('collapseContextHelp') == 'true') {
+            setBootstrapPlusConfigCookie('collapseContextHelp', 'false');
+            $('#collapseCHelpDiv').addClass('collapseCHelpDivColor');
+            $('#contextHelp').removeClass('displayNone');
+        } else {
+            setBootstrapPlusConfigCookie('collapseContextHelp', 'true');
+            $('#collapseCHelpDiv').removeClass('collapseCHelpDivColor');
+            $('#contextHelp').addClass('displayNone');
         }
     }
 

@@ -40,12 +40,26 @@
         #set( $collapseSidebar = 'false' )
     #end
 
+    #set( $collapseContextHelpCookieName = "collapseContextHelp")
+    #set ($collapseContextHelp = $request.getCookie($collapseContextHelpCookieName))
+    #if($collapseContextHelp == "")
+        #set( $collapseContextHelp = 'false' )
+    #end
+
     #set ($sidebarWidthCookieName = "sidebarPosition")
     #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
     #if($sidebarWidth == "")
         #set( $sidebarWidth = '15vw' )
     #else
         #set( $sidebarWidth = $sidebarWidth + 'px' )
+    #end
+
+    #set ($contextHelpWidthCookieName = "contextHelpPosition")
+    #set ($contextHelpWidth = $request.getCookie($contextHelpWidthCookieName))
+    #if($contextHelpWidth == "")
+        #set( $contextHelpWidth = '15vw' )
+    #else
+        #set( $contextHelpWidth = $contextHelpWidth + 'px' )
     #end
 <html>
 <head>
@@ -155,7 +169,9 @@
         </div>
     #end
 
-    <div id="content">
+
+    ## Content
+    <div id="content" #if( !$bodyClass.equalsIgnoreCase("EditPage") ) style="padding-bottom: 10px" #end>
         #parse( 'breadcrumb.vm' )
 
         <header>
@@ -215,6 +231,28 @@
         #end
 
     </div>
+
+
+    ## Context help
+    #if( $bodyClass.equalsIgnoreCase("EditPage") )
+        ## Open Sidebar
+        <div id="contextHelp" style="width: $contextHelpWidth;" #if( $sidebar == 'false' || $collapseContextHelp == 'true' ) class="displayNone" #end>
+            <div class="buttonSidebarDiv">
+
+            </div>
+
+            <ul id="contextHelpContent" class="scrollbar">
+                <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
+            </ul>
+        </div>
+
+        ## Closed Context help
+        <div id="closedContextHelp" #if( $sidebar == 'false' ) class="displayNone" #end>
+            <div id="collapseCHelpDiv" #if( $collapseContextHelp == 'false' ) class="collapseCHelpDivColor" #end>
+                <p id="collapseCHelpText">Context Help</p>
+            </div>
+        </div>
+    #end
 </div>
 
     #if( $!footerTemplate )

@@ -17,7 +17,6 @@ body {
   flex: 1;
   height: 100%;
   width: 100%;
-  padding-bottom: 10px;
   overflow-y: auto;
 }
 
@@ -1199,45 +1198,61 @@ kbd {
 
 /* Sidebar */
 
-#closedSidebar {
+#closedSidebar, #closedContextHelp {
   height: 100%;
   padding: 0 0 5px;
   background-color: #f8f8f8;
+}
+#closedSidebar {
   border-right: 1px solid #e7e7e7;
 }
+#closedContextHelp {
+  border-left: 1px solid #e7e7e7;
+}
 
-#collapseSidebarDiv {
+#collapseSidebarDiv, #collapseCHelpDiv {
   padding: 10px 4px;
   cursor: pointer;
 }
 
-.collapseSidebarDivDisabled {
+.collapseSidebarDivDisabled, .collapseCHelpDivDisabled {
   cursor: default !important;
   color: darkgray;
 }
 
-.collapseSidebarDivColor {
+.collapseSidebarDivColor, .collapseCHelpDivColor {
   background-color: #e7e7e7;
 }
 
-#collapseSidebarText {
+#collapseSidebarText, #collapseCHelpText {
   writing-mode: tb-rl;
-  transform: rotate(-180deg);
   font-size: 0.95em;
+}
+#collapseSidebarText {
+  transform: rotate(-180deg);
+}
+#collapseCHelpText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
 #collapseSidebarIcon {
-  transform: rotate(-90deg);
   font-size: 18px;
+  transform: rotate(-90deg);
 }
 
-#sidebar {
+#sidebar, #contextHelp {
   display: flex;
   flex-direction: column;
   width: 300px;
   height: 100%;
   background-color: #f8f8f8;
+}
+#sidebar {
   border-right: 1px solid #e7e7e7;
+}
+#contextHelp {
+  border-left: 1px solid #e7e7e7;
 }
 
 .buttonSidebarDiv {
@@ -1272,7 +1287,7 @@ kbd {
   display: none !important;
 }
 
-#sidebarContent {
+#sidebarContent, #contextHelpContent {
   height: 100%;
   padding: 0 10px 10px;
   overflow: auto;
