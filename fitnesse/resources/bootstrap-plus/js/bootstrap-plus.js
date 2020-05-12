@@ -288,6 +288,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#sidebarTags-switch', function (e) {
+            e.preventDefault();
+            switchSidebarTags();
+        }
+    );
+
     $('body').on('click', '.coll', function () {
         if ($(this).children('input').is(':checked')) {
             $(this).removeClass('closed');
@@ -390,6 +396,18 @@ $(document).ready(function () {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
             $('#sidebar').addClass('displayNone');
         }
+    }
+
+    function switchSidebarTags(){
+           if (getCookie('sidebarTags') == 'true'){
+               setBootstrapPlusConfigCookie('sidebarTags', 'false');
+               $('#sidebarTags-switch').removeClass('fa-toggle-on');
+               $('#sidebarTags-switch').addClass('fa-toggle-off');
+           }else {
+               setBootstrapPlusConfigCookie('sidebarTags', 'true');
+               $('#sidebarTags-switch').removeClass('fa-toggle-off');
+               $('#sidebarTags-switch').addClass('fa-toggle-on');
+           }
     }
 
        function setBootstrapPlusConfigCookie(name, value) {
