@@ -746,14 +746,6 @@ $(document).ready(function () {
             }
         }
     );
-
-    // $('#contextHelp').resizable({
-    //     handles: 'w',
-    //     minWidth: 150,
-    //     stop: function(event, ui) {
-    //         setBootstrapPlusConfigCookie("contextHelpPosition", ui.size.width);
-    //     }
-    // });
 });
 
 function switchCollapseContextHelp() {

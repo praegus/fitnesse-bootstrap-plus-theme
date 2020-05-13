@@ -192,6 +192,13 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie("sidebarPosition", ui.size.width);
         }
     });
+    $('#contextHelp').resizable({
+        handles: 'w',
+        minWidth: 230,
+        stop: function(event, ui) {
+            setBootstrapPlusConfigCookie("contextHelpPosition", ui.size.width);
+        }
+    });
 
     if (getCookie('highlightSymbols') == 'true') {
         $('table').html(function(index,html){
