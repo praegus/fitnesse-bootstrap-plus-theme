@@ -12,12 +12,12 @@
             "path": "TestSuiteDemo.BackEndTests.T001AddCoursesByServiceCall",
             "name": "T 001 Add Courses By Service Call",
             "type": "test linked pruned",
-            "tags": [""]
+            "tags": ["test"]
           }
         ],
         "name": "Back End Tests",
         "type": "suite",
-        "tags": [""]
+        "tags": ["lalala"]
       },
       {
         "help": "",
@@ -28,24 +28,24 @@
             "path": "TestSuiteDemo.FrontEndTests.PageObjects",
             "name": "Page Objects",
             "type": "static",
-            "tags": [""]
+            "tags": ["gdzfgd"]
           }
         ],
         "name": "Front End Tests",
         "type": "suite",
         "isSymlink": true,
-        "tags": [""]
+        "tags": ["fgwgwr"]
       },
       {
         "help": "",
         "path": "TestSuiteDemo.ScenarioLibrary",
         "name": "Scenario Library",
         "type": "static",
-        "tags": [""]
+        "tags": ["htgrhtr"]
       }
     ],
     "name": "Test Suite Demo",
     "type": "suite",
-    "tags": [""]
+    "tags": ["test"]
   }
 ]

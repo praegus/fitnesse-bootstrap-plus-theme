@@ -93,6 +93,7 @@ it('Test if data input returns the correct html code', () => {
         '<i class="fa fa-cogs icon-test" aria-hidden="true"></i>' +
         '&nbsp;' +
         '<a href="TestSuiteDemo" class="suite">Test Suite Demo</a>' +
+        '<span class=\'tag sidebarTag displayNone\'>test <i class=\"fas fa-times deleteTagButton\"></i></span>'+
         '</div>' +
         '</li>';
 
@@ -156,16 +157,15 @@ it('Test if every toggle is expand', () => {
     expect(receivedResult).not.toContain(expectedResult);
 });
 
-it('Test if every toggle icon is expand', () => {
+it('Test if tag tags are in the sidebar when toggle is on', () =>{
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const sidebarData = require('./mockup-data/SidebarData');
     const neededHtml = '<ul id="sidebarContent"></ul>';
-    const expectedResult = 'fa-angle-right';
-
+    const expectedResult = '<span class="tag sidebarTag displayNone">';
     document.body.innerHTML = neededHtml;
     jsfile.placeSidebarContent(sidebarData);
-    jsfile.expandSidebarIcons();
     const receivedResult = document.getElementById('sidebarContent').innerHTML;
+    expect(receivedResult).toContain(expectedResult);
 
-    expect(receivedResult).not.toContain(expectedResult);
 });
+

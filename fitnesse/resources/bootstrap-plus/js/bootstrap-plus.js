@@ -391,14 +391,12 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie('sidebarTags', 'false');
             $('#sidebarTags-switch').removeClass('fa-toggle-on');
             $('#sidebarTags-switch').addClass('fa-toggle-off');
-            $('#sidebarTags').addClass('displayNone');
-            getSidebarContent(placeEverythingForSidebar);
+            $('.sidebarTag').addClass('displayNone');
         }else {
             setBootstrapPlusConfigCookie('sidebarTags', 'true');
             $('#sidebarTags-switch').removeClass('fa-toggle-off');
             $('#sidebarTags-switch').addClass('fa-toggle-on');
-            $('#sidebarTags').removeClass('displayNone');
-            getSidebarContent(placeEverythingForSidebar);
+            $('.sidebarTag').removeClass('displayNone');
         }
     }
 
@@ -531,10 +529,10 @@ function sidebarTags(tagsArray){
     if(tagsArray !== undefined){
         for(let i = 0; i < tagsArray.length; i++) {
             //tagsss.push(tagsArray[i].join(', '));
-
-
             if (getCookie('sidebarTags') == 'true') {
-                tagsss += '<span class=\'tag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
+                tagsss += '<span class=\'tag sidebarTag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
+            }else {
+                tagsss += '<span class=\'tag sidebarTag displayNone\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
             }
         }
 
