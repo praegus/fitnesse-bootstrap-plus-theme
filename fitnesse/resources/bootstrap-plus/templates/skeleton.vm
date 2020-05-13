@@ -25,7 +25,7 @@
 
     #set( $sidebarTagsCookieName = "sidebarTags")
     #set ($sidebarTags = $request.getCookie($sidebarTagsCookieName))
-    #if(sidebarTags == "")
+    #if($sidebarTags == "")
         #set($sidebarTags = 'false')
     #end
 

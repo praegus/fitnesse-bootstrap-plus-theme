@@ -386,6 +386,23 @@ $(document).ready(function () {
         }
     }
 
+    function switchSidebarTags(){
+        if (getCookie('sidebarTags') == 'true'){
+            setBootstrapPlusConfigCookie('sidebarTags', 'false');
+            $('#sidebarTags-switch').removeClass('fa-toggle-on');
+            $('#sidebarTags-switch').addClass('fa-toggle-off');
+            $('#sidebarTags').addClass('displayNone');
+            getSidebarContent(placeEverythingForSidebar);
+        }else {
+            setBootstrapPlusConfigCookie('sidebarTags', 'true');
+            $('#sidebarTags-switch').removeClass('fa-toggle-off');
+            $('#sidebarTags-switch').addClass('fa-toggle-on');
+            $('#sidebarTags').removeClass('displayNone');
+            getSidebarContent(placeEverythingForSidebar);
+        }
+    }
+
+
     function switchCollapseSidebar() {
         if (getCookie('collapseSidebar') == 'true') {
             setBootstrapPlusConfigCookie('collapseSidebar', 'false');
@@ -396,18 +413,6 @@ $(document).ready(function () {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
             $('#sidebar').addClass('displayNone');
         }
-    }
-
-    function switchSidebarTags(){
-           if (getCookie('sidebarTags') == 'true'){
-               setBootstrapPlusConfigCookie('sidebarTags', 'false');
-               $('#sidebarTags-switch').removeClass('fa-toggle-on');
-               $('#sidebarTags-switch').addClass('fa-toggle-off');
-           }else {
-               setBootstrapPlusConfigCookie('sidebarTags', 'true');
-               $('#sidebarTags-switch').removeClass('fa-toggle-off');
-               $('#sidebarTags-switch').addClass('fa-toggle-on');
-           }
     }
 
        function setBootstrapPlusConfigCookie(name, value) {
@@ -526,7 +531,11 @@ function sidebarTags(tagsArray){
     if(tagsArray !== undefined){
         for(let i = 0; i < tagsArray.length; i++) {
             //tagsss.push(tagsArray[i].join(', '));
-            tagsss += '<span class=\'tag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
+
+
+            if (getCookie('sidebarTags') == 'true') {
+                tagsss += '<span class=\'tag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
+            }
         }
 
     }
