@@ -365,9 +365,15 @@ function populateContext() {
 
     helpList += '</ol></div>';
 
-    $('.side-bar').prepend(helpList);
+
     $('.toggle-bar').attr('populated', 'true');
-    $('#contextHelpContent').prepend(helpList);
+    // Check if sidebar is on of off
+    if (!$('#closedContextHelp').hasClass('displayNone')) {
+        $('#contextHelpContent').html(helpList);
+    } else {
+        $('.side-bar').prepend(helpList);
+    }
+
 }
 
 function validateTestPage() {

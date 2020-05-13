@@ -240,9 +240,9 @@
         ## Open Sidebar
         ## <div id="contextHelp" style="width: $contextHelpWidth;" #if( $sidebar == 'false' || $collapseContextHelp == 'true' ) class="displayNone" #end>
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
-            <ul id="contextHelpContent" class="scrollbar">
+            <div id="contextHelpContent" class="scrollbar">
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
-            </ul>
+            </div>
         </div>
 
         ## Closed Context help
