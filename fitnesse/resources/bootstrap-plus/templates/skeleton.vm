@@ -40,12 +40,6 @@
         #set( $collapseSidebar = 'false' )
     #end
 
-##    #set( $collapseContextHelpCookieName = "collapseContextHelp")
-##    #set ($collapseContextHelp = $request.getCookie($collapseContextHelpCookieName))
-##    #if($collapseContextHelp == "")
-##        #set( $collapseContextHelp = 'false' )
-##    #end
-
     #set ($sidebarWidthCookieName = "sidebarPosition")
     #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
     #if($sidebarWidth == "")
@@ -238,7 +232,6 @@
     ## Context help
     #if( $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
-        ## <div id="contextHelp" style="width: $contextHelpWidth;" #if( $sidebar == 'false' || $collapseContextHelp == 'true' ) class="displayNone" #end>
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
             <div id="contextHelpContent" class="scrollbar">
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
@@ -247,7 +240,6 @@
 
         ## Closed Context help
         <div id="closedContextHelp" #if( $sidebar == 'false' ) class="displayNone" #end>
-            ## <div id="collapseCHelpDiv" #if( $collapseContextHelp == 'false' ) class="collapseCHelpDivColor" #end>
             <div id="collapseCHelpDiv">
                 <p id="collapseCHelpText">Context Help</p>
             </div>
