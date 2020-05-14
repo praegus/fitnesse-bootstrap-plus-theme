@@ -17,7 +17,7 @@
         ],
         "name": "Back End Tests",
         "type": "suite",
-        "tags": ["lalala"]
+        "tags": [""]
       },
       {
         "help": "",
@@ -28,20 +28,20 @@
             "path": "TestSuiteDemo.FrontEndTests.PageObjects",
             "name": "Page Objects",
             "type": "static",
-            "tags": ["gdzfgd"]
+            "tags": [""]
           }
         ],
         "name": "Front End Tests",
         "type": "suite",
         "isSymlink": true,
-        "tags": ["fgwgwr"]
+        "tags": [""]
       },
       {
         "help": "",
         "path": "TestSuiteDemo.ScenarioLibrary",
         "name": "Scenario Library",
         "type": "static",
-        "tags": ["htgrhtr"]
+        "tags": [""]
       }
     ],
     "name": "Test Suite Demo",

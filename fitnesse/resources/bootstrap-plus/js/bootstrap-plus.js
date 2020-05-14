@@ -515,6 +515,7 @@ function placeSidebarContent(contentArray) {
 function sidebarContentLayerLoop(suiteName, children) {
     // Place new ul in the correct li
     $('#' + suiteName).append('<ul></ul>');
+
     children.forEach(content => {
         // Place new li in the new made ul
         $('#' + suiteName).find('ul').first().append(getSidebarContentHtml(content));
