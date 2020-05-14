@@ -105,11 +105,13 @@ function processSymbolData(str) {
 }
 
 function showNotification(type, message) {
-    const icon = type === 'success' ? 'check' : type === 'info' ? 'info' : type === 'warning' ? 'exclamation' : type === 'danger' ? 'times-circle' : 'question';
-    $('body').append('<div class="push-notification push-' + type + '" id="notification"><i class="notification-icon fa fa-' + icon + '" aria-hidden="true"></i>' + message + '</div>');
-    $('#notification').show().delay(4000).fadeOut(1200, function () {
-        $('#notification').remove();
-    });
+    if ($('#notification').length < 1) {
+        const icon = type === 'success' ? 'check' : type === 'info' ? 'info' : type === 'warning' ? 'exclamation' : type === 'danger' ? 'times-circle' : 'question';
+        $('body').append('<div class="push-notification push-' + type + '" id="notification"><i class="notification-icon fa fa-' + icon + '" aria-hidden="true"></i>' + message + '</div>');
+        $('#notification').show().delay(4000).fadeOut(1200, function () {
+            $('#notification').remove();
+        });
+    }
 }
 
 /*
