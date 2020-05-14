@@ -93,7 +93,7 @@ it('Test if data input returns the correct html code', () => {
         '<i class="fa fa-cogs icon-test" aria-hidden="true"></i>' +
         '&nbsp;' +
         '<a href="TestSuiteDemo" class="suite">Test Suite Demo</a>' +
-        '<span class=\'tag sidebarTag displayNone\'>test <i class=\"fas fa-times deleteTagButton\"></i></span>'+
+        '<span class="tag sidebarTag displayNone">test<i class="fas fa-times deleteTagButton"></i></span>'+
         '</div>' +
         '</li>';
 
