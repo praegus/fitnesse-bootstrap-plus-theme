@@ -152,6 +152,7 @@
             #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
         >
             <div class="buttonSidebarDiv">
+                <i id="sidebarTags-switch" aria-hidden="true" title="Sidebar with tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-check-square-o" #else class="buttonSidebar fa fa-square-o" #end></i>
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
             </div>

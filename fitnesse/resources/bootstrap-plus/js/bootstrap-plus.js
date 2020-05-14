@@ -389,13 +389,13 @@ $(document).ready(function () {
     function switchSidebarTags(){
         if (getCookie('sidebarTags') == 'true'){
             setBootstrapPlusConfigCookie('sidebarTags', 'false');
-            $('#sidebarTags-switch').removeClass('fa-toggle-on');
-            $('#sidebarTags-switch').addClass('fa-toggle-off');
+            $('#sidebarTags-switch').removeClass('fa-check-square-o');
+            $('#sidebarTags-switch').addClass('fa-square-o');
             $('.sidebarTag').addClass('displayNone');
         }else {
             setBootstrapPlusConfigCookie('sidebarTags', 'true');
-            $('#sidebarTags-switch').removeClass('fa-toggle-off');
-            $('#sidebarTags-switch').addClass('fa-toggle-on');
+            $('#sidebarTags-switch').removeClass('fa-square-o');
+            $('#sidebarTags-switch').addClass('fa-check-square-o');
             $('.sidebarTag').removeClass('displayNone');
         }
     }
@@ -524,21 +524,6 @@ function sidebarContentLayerLoop(suiteName, children) {
         }
     });
 }
-function sidebarTags(tagsArray){
-    let tagsss = "" ;
-    if(tagsArray !== undefined){
-        for(let i = 0; i < tagsArray.length; i++) {
-            //tagsss.push(tagsArray[i].join(', '));
-            if (getCookie('sidebarTags') == 'true') {
-                tagsss += '<span class=\'tag sidebarTag\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
-            }else {
-                tagsss += '<span class=\'tag sidebarTag displayNone\'>' + tagsArray[i] + ' <i class="fas fa-times deleteTagButton"></i></span>';
-            }
-        }
-
-    }
-    return tagsss;
-}
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
@@ -547,6 +532,7 @@ function getSidebarContentHtml(content) {
     let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
+    const tagString = sidebarTags(content.tags);
 
     // If Frontpage
     highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' id="highlight"' : highlight;
@@ -563,10 +549,22 @@ function getSidebarContentHtml(content) {
             '&nbsp;' +
             '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
             symbolicIcon +
-            sidebarTags(content.tags) +
+            tagString +
             '</div>' +
             '</li>';
 
+}
+
+function sidebarTags(tagsArray){
+    let tagString = "" ;
+    if(tagsArray !== undefined){
+        tagsArray.forEach(tag => {
+            tagString += getCookie('sidebarTags') == 'true'
+                ? '<span class="tag sidebarTag">' + tag + '<i class="fas fa-times deleteTagButton"></i></span>'
+                : '<span class="tag sidebarTag displayNone">' + tag + '<i class="fas fa-times deleteTagButton"></i></span>';
+        });
+    }
+    return tagString;
 }
 
 // Set a click event an the sidebar toggle icons

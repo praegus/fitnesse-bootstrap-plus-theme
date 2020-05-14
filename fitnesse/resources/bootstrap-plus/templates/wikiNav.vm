@@ -45,18 +45,6 @@
             </li>
         #end
 
-        #if ($sidebarTags == 'true')
-            <li>
-                <button class="fa fa-toggle-on prefsbutton" id="sidebarTags-switch" title="Toggle sidebar"></button>
-                Sidebar Tags
-            </li>
-        #else
-            <li>
-                <button class="fa fa-toggle-off prefsbutton" id="sidebarTags-switch" title="Toggle sidebar"></button>
-                Sidebar Tags
-            </li>
-        #end
-
         #if ( $highlightSymbols == 'true' )
                     <li>
                         <button class="fa fa-toggle-on prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
