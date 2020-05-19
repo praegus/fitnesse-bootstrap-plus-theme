@@ -151,9 +151,7 @@
         </div>
 
         ## Open Sidebar
-        <div id="sidebar" style="width: $sidebarWidth;"
-            #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
-        >
+        <div id="sidebar" style="width: $sidebarWidth;" #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
@@ -230,7 +228,7 @@
 
 
     ## Context help
-    #if( $bodyClass.equalsIgnoreCase("EditPage") )
+    #if( $sidebar == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
             <div id="contextHelpContent" class="scrollbar">
@@ -239,8 +237,9 @@
         </div>
 
         ## Closed Context help
-        <div id="closedContextHelp" #if( $sidebar == 'false' ) class="displayNone" #end>
-            <div id="collapseCHelpDiv">
+        <div id="closedContextHelp">
+            <div id="spinner" style="width: 19px; height:19px; margin: 20px 2px; background-size: contain;"></div>
+            <div id="collapseCHelpDiv" style="display: none;">
                 <p id="collapseCHelpText">Context Help</p>
             </div>
         </div>

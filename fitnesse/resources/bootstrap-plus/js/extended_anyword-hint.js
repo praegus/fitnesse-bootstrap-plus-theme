@@ -9,6 +9,8 @@ var autocompletes = [];
 function loadAutoCompletesFromResponder() {
     $('.navbar #spinner').show();
     $('.toggle-bar').hide();
+    $('#closedContextHelp #spinner').show();
+    $('#collapseCHelpDiv').hide();
     if (window.location.pathname.indexOf('ScenarioLibrary') !== -1
         || window.location.pathname.indexOf('SetUp') !== -1
         || window.location.pathname.indexOf('TearDown') !== -1
@@ -45,6 +47,8 @@ function loadAutoCompletesFromResponder() {
             });
             $('.navbar #spinner').hide();
             $('.toggle-bar').show();
+            $('#closedContextHelp #spinner').hide();
+            $('#collapseCHelpDiv').show();
         },
         error: function () {
             console.log('Unable to retrieve page context from autoComplete Responder. Is it installed?');

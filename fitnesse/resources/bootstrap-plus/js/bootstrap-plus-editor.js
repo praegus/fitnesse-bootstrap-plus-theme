@@ -26,6 +26,7 @@ function savePage(target) {
             //Only reload helper if helper is closed
             if ($('#helper-bar').is(':hidden')) {
                 $('.toggle-bar').removeAttr('populated');
+                $('#collapseCHelpText').removeAttr('populated');
                 $('.helper-content').remove();
                 $.when(loadAutoCompletesFromResponder()).done(function (a) {
                     populateContext();
@@ -34,7 +35,7 @@ function savePage(target) {
                 setNewContextBadge();
             }
 
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
 
@@ -366,12 +367,13 @@ function populateContext() {
     helpList += '</ol></div>';
 
 
-    $('.toggle-bar').attr('populated', 'true');
     // Check if sidebar is on of off
-    if (!$('#closedContextHelp').hasClass('displayNone')) {
+    if ($('#closedContextHelp').length !== 0) {
         $('#contextHelpContent').html(helpList);
+        $('#collapseCHelpText').attr('populated', 'true');
     } else {
         $('.side-bar').prepend(helpList);
+        $('.toggle-bar').attr('populated', 'true');
     }
 
 }
@@ -648,7 +650,7 @@ $(document).ready(function () {
         //Get definition on SHIFT-ALT-D or ctrl-comma
         if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey)) {
             e.preventDefault();
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
             showDefinitions();
@@ -656,7 +658,7 @@ $(document).ready(function () {
         //Validate on ctrl dot
         if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
             e.preventDefault();
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
             validateTestPage();
@@ -716,6 +718,7 @@ $(document).ready(function () {
     $('body').on('click', '#resync', function (e) {
         e.preventDefault();
         $('.toggle-bar').removeAttr('populated');
+        $('#collapseCHelpText').removeAttr('populated');
         $('.helper-content').remove();
         $.when(loadAutoCompletesFromResponder()).done(function (a) {
             populateContext();
@@ -723,7 +726,7 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.validate', function () {
-        if ($('.toggle-bar').attr('populated') === undefined) {
+        if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
             populateContext();
         }
         validateTestPage();
@@ -741,7 +744,7 @@ $(document).ready(function () {
     $('body').on('click', '#collapseCHelpDiv', function (e) {
             e.preventDefault();
             switchCollapseContextHelp();
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
         }
