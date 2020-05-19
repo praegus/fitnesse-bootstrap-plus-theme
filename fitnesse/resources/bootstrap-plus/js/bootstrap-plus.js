@@ -355,13 +355,13 @@ $(document).ready(function () {
        }
     function switchVersionCheck() {
         if (getCookie('versionCheck') == 'true') {
-            setBootstrapPlusConfigCookie('versionCheck','false')
+            setBootstrapPlusConfigCookie('versionCheck','false');
             $('#mavenVersionCheck-switch').removeClass('fa-toggle-on');
             $('#mavenVersionCheck-switch').addClass('fa-toggle-off');
             $('#mavenVersions').addClass('displayNone');
         } else {
             getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
-            setBootstrapPlusConfigCookie('versionCheck','true')
+            setBootstrapPlusConfigCookie('versionCheck','true');
             $('#mavenVersionCheck-switch').removeClass('fa-toggle-off');
             $('#mavenVersionCheck-switch').addClass('fa-toggle-on');
             $('#mavenVersions').removeClass('displayNone');
@@ -389,13 +389,11 @@ $(document).ready(function () {
     function switchSidebarTags(){
         if (getCookie('sidebarTags') == 'true'){
             setBootstrapPlusConfigCookie('sidebarTags', 'false');
-            $('#sidebarTags-switch').removeClass('fa-check-square-o');
-            $('#sidebarTags-switch').addClass('fa-square-o');
+            $('#sidebarTags-switch').addClass("noTags");
             $('.sidebarTag').addClass('displayNone');
         }else {
             setBootstrapPlusConfigCookie('sidebarTags', 'true');
-            $('#sidebarTags-switch').removeClass('fa-square-o');
-            $('#sidebarTags-switch').addClass('fa-check-square-o');
+            $('#sidebarTags-switch').removeClass('noTags');
             $('.sidebarTag').removeClass('displayNone');
         }
     }
