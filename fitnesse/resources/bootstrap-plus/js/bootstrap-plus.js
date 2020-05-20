@@ -288,6 +288,12 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#sidebarTags-switch', function (e) {
+            e.preventDefault();
+            switchSidebarTags();
+        }
+    );
+
     $('body').on('click', '.coll', function () {
         if ($(this).children('input').is(':checked')) {
             $(this).removeClass('closed');
@@ -349,13 +355,13 @@ $(document).ready(function () {
        }
     function switchVersionCheck() {
         if (getCookie('versionCheck') == 'true') {
-            setBootstrapPlusConfigCookie('versionCheck','false')
+            setBootstrapPlusConfigCookie('versionCheck','false');
             $('#mavenVersionCheck-switch').removeClass('fa-toggle-on');
             $('#mavenVersionCheck-switch').addClass('fa-toggle-off');
             $('#mavenVersions').addClass('displayNone');
         } else {
             getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
-            setBootstrapPlusConfigCookie('versionCheck','true')
+            setBootstrapPlusConfigCookie('versionCheck','true');
             $('#mavenVersionCheck-switch').removeClass('fa-toggle-off');
             $('#mavenVersionCheck-switch').addClass('fa-toggle-on');
             $('#mavenVersions').removeClass('displayNone');
@@ -379,6 +385,19 @@ $(document).ready(function () {
             getSidebarContent(placeEverythingForSidebar);
         }
     }
+
+    function switchSidebarTags(){
+        if (getCookie('sidebarTags') == 'true'){
+            setBootstrapPlusConfigCookie('sidebarTags', 'false');
+            $('#sidebarTags-switch').addClass("noTags");
+            $('.sidebarTag').addClass('displayNone');
+        }else {
+            setBootstrapPlusConfigCookie('sidebarTags', 'true');
+            $('#sidebarTags-switch').removeClass('noTags');
+            $('.sidebarTag').removeClass('displayNone');
+        }
+    }
+
 
     function switchCollapseSidebar() {
         if (getCookie('collapseSidebar') == 'true') {
@@ -512,6 +531,7 @@ function getSidebarContentHtml(content) {
     let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
+    const tagString = sidebarTags(content.tags);
 
     // If Frontpage
     highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' id="highlight"' : highlight;
@@ -520,17 +540,30 @@ function getSidebarContentHtml(content) {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
         toggleClass = 'iconWidth';
     }
+        return '<li id="' + content.path.replace(/\./g, '') + '">' +
+            '<div' + highlight + '>' +
+            '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+            '&nbsp;' +
+            '<i class="' + iconClass + '" aria-hidden="true"></i>' +
+            '&nbsp;' +
+            '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
+            symbolicIcon +
+            tagString +
+            '</div>' +
+            '</li>';
 
-    return '<li id="' + content.path.replace(/\./g, '') + '">' +
-        '<div' + highlight + '>' +
-        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
-        '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
-        symbolicIcon +
-        '</div>' +
-        '</li>';
+}
+
+function sidebarTags(tagsArray){
+    let tagString = "" ;
+    if(tagsArray !== undefined){
+        tagsArray.forEach(tag => {
+            tagString += getCookie('sidebarTags') == 'true'
+                ? '<span class="tag sidebarTag">' + tag + '<i class="fas fa-times deleteTagButton"></i></span>'
+                : '<span class="tag sidebarTag displayNone">' + tag + '<i class="fas fa-times deleteTagButton"></i></span>';
+        });
+    }
+    return tagString;
 }
 
 // Set a click event an the sidebar toggle icons

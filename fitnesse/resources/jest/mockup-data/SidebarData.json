@@ -12,7 +12,7 @@
             "path": "TestSuiteDemo.BackEndTests.T001AddCoursesByServiceCall",
             "name": "T 001 Add Courses By Service Call",
             "type": "test linked pruned",
-            "tags": [""]
+            "tags": ["test"]
           }
         ],
         "name": "Back End Tests",
@@ -46,6 +46,6 @@
     ],
     "name": "Test Suite Demo",
     "type": "suite",
-    "tags": [""]
+    "tags": ["test"]
   }
 ]
