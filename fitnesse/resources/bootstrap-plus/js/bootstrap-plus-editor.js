@@ -218,7 +218,7 @@ function populateContext() {
     helpList += '<ol id="scenarios">';
     var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort('name'));
     $.each(sortedScenarios, function (sIndex, s) {
-        helpList += '<li class="coll closed item">';
+        helpList += '<li class="coll closed">';
         helpList += '<label for="help-' + helpId + '"><span>' + s.contexthelp + '</span></label>';
         helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
         helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';

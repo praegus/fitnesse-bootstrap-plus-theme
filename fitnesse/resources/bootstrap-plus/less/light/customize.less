@@ -660,7 +660,7 @@ font-size:12px;
 .side-bar li input,
 #contextHelpContent li input {width:1em;height:1em;position:absolute;left:-0.5em;top:0;opacity:0;cursor:pointer;}
 .side-bar li.closed:before,
-#contextHelpContent li.closed:before  {content: "\f105"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
+#contextHelpContent li.closed:before  {content: "\f105"; font-family: FontAwesome; display: inline-block; width: 1.3em; vertical-align: top;}
 .side-bar li input + ol,
 #contextHelpContent li input + ol {height:1em; margin:-16px 0 0 -45px;}
 .side-bar li input + ol > li,
@@ -672,7 +672,7 @@ font-size:12px;
 .side-bar li input:checked + ol > li:first-child,
 #contextHelpContent li input:checked + ol > li:first-child {margin:0 0 0.125em;}
 .side-bar li.open:before,
-#contextHelpContent li.open:before {content: "\f107"; font-family: FontAwesome; display: inline-block; width: 1.3em;}
+#contextHelpContent li.open:before {content: "\f107"; font-family: FontAwesome; display: inline-block; width: 1.3em; vertical-align: top;}
 .side-bar .insert,
 #contextHelpContent .insert {float: right; margin-right: 10px; cursor: pointer; color: #337ab7; }
 .side-bar .symbol:before,
@@ -682,15 +682,17 @@ font-size:12px;
 .side-bar .deprecated,
 #contextHelpContent .deprecated {text-decoration: line-through; color: #666;}
 .side-bar li.javadoc,
-#contextHelpContent li.javadoc { border: 1px solid silver; padding: 4px; left: -22px; }
+#contextHelpContent li.javadoc { border: 1px solid silver; padding: 4px; left: -22px;  font-size: 0.9em; }
 .side-bar li.docItem,
 #contextHelpContent li.docItem { list-style-type: circle; }
+li.javadoc h5 {
+    font-size: 1em;
+    }
 
 .side-bar-tr-highlight {border: 2px solid red;}
 #side-bar-tree label { text-align:left; width: 85%; font-weight:normal; margin-left: -15px; padding-left: 15px;}
-#side-bar-tree table { display:inline-table; border: 1px solid grey; border-radius: 6px; background: #fdfdfd; min-width: 85%;}
+#side-bar-tree table { display:inline-table; border: 1px solid grey; border-radius: 6px; background: #fdfdfd; min-width: 85%; font-size: 0.9em;}
 #side-bar-tree table tr:first-child td:nth-child(2n+3){ font-style: italic; color: navy; font-weight: 500;}
-.item:nth-child(even){ background: #f1f1f1; }
 
 .helper-content {
   min-height: 98%;
@@ -1521,4 +1523,8 @@ tr.scenario-detail > td {
   float: right;
   color: #666;
   padding-top: 4px;
+  }
+
+input#helptext {
+  width: 40vw !important;
   }
