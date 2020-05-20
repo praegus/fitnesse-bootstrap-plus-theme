@@ -23,11 +23,18 @@
         #set( $autoSave = 'false' )
     #end
 
+    #set( $sidebarTagsCookieName = "sidebarTags")
+    #set ($sidebarTags = $request.getCookie($sidebarTagsCookieName))
+    #if($sidebarTags == "")
+        #set($sidebarTags = 'false')
+    #end
+
     #set( $sidebarCookieName = "sidebar")
     #set ($sidebar = $request.getCookie($sidebarCookieName))
     #if($sidebar == "")
         #set( $sidebar = 'false' )
     #end
+
     #set( $versionCheckCookieName = "versionCheck")
     #set ($versionCheck = $request.getCookie($versionCheckCookieName))
     #if($versionCheck == "")
@@ -147,6 +154,7 @@
             #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
         >
             <div class="buttonSidebarDiv">
+                <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
             </div>
