@@ -349,7 +349,7 @@ function populateContext() {
     helpList += '<ol id="slimSymbols">';
     var sortedSymbols = autoCompleteJson.variables.sort(dynamicSort('varName'));
     $.each(sortedSymbols, function (sIndex, s) {
-        helpList += '<li class="coll closed item">';
+        helpList += '<li class="coll closed">';
         helpList += '<label class="filterIt" for="help-' + helpId + '" title="' + s.varName + '"><span>' + s.varName + '</span></label>';
         helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
         helpList += '<ol>';
