@@ -1351,7 +1351,6 @@ kbd {
   padding: 2px 10px 2px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
   border-bottom: 1px solid #292929;
 }
 
@@ -1363,11 +1362,14 @@ kbd {
   cursor: pointer;
   line-height: 1.42857143 !important;
   user-select: none;
-  font-weight: 600 !important;
   text-decoration: none;
   margin: 2px;
   padding: 1px 5px;
   font-size: 13px !important;
+}
+
+#expandAllSidebar {
+  margin-left: auto;
 }
 
 #highlight {
@@ -1425,6 +1427,12 @@ kbd {
 #sidebarContent .iconWidth {
   display: inline-block;
   width: 10px;
+}
+
+#sidebarContent .sidebarTag {
+  font-size: 0.85em;
+  padding: 1px 7px 2px;
+  margin: 0px 2px;
 }
 
 /* Test History */
@@ -1616,3 +1624,7 @@ tr.scenario-detail > td {
 input#helptext {
   width: 40vw !important;
   }
+
+.noTags{
+  color:#8b8b8b;
+}
