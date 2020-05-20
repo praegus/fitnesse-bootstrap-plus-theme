@@ -114,11 +114,7 @@
                     return;
                 }
 
-                if (editor.activeEditor() === 'wysiwyg') {
-                    editor.loadWikiText();
-                } else {
-                    editor.codeMirrorEditor.save();
-                }
+                editor.codeMirrorEditor.save();
 
                 if (fieldValues().join('$$') !== originalFieldValues.join('$$')) {
                     return 'The page content has been changed.\nDo you really want to leave this page?';

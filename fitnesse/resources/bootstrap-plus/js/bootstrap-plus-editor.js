@@ -26,6 +26,7 @@ function savePage(target) {
             //Only reload helper if helper is closed
             if ($('#helper-bar').is(':hidden')) {
                 $('.toggle-bar').removeAttr('populated');
+                $('#collapseCHelpText').removeAttr('populated');
                 $('.helper-content').remove();
                 $.when(loadAutoCompletesFromResponder()).done(function (a) {
                     populateContext();
@@ -34,7 +35,7 @@ function savePage(target) {
                 setNewContextBadge();
             }
 
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
 
@@ -217,7 +218,7 @@ function populateContext() {
     helpList += '<ol id="scenarios">';
     var sortedScenarios = autoCompleteJson.scenarios.sort(dynamicSort('name'));
     $.each(sortedScenarios, function (sIndex, s) {
-        helpList += '<li class="coll closed item">';
+        helpList += '<li class="coll closed">';
         helpList += '<label for="help-' + helpId + '"><span>' + s.contexthelp + '</span></label>';
         helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
         helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
@@ -348,7 +349,7 @@ function populateContext() {
     helpList += '<ol id="slimSymbols">';
     var sortedSymbols = autoCompleteJson.variables.sort(dynamicSort('varName'));
     $.each(sortedSymbols, function (sIndex, s) {
-        helpList += '<li class="coll closed item">';
+        helpList += '<li class="coll closed">';
         helpList += '<label class="filterIt" for="help-' + helpId + '" title="' + s.varName + '"><span>' + s.varName + '</span></label>';
         helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
         helpList += '<ol>';
@@ -365,8 +366,16 @@ function populateContext() {
 
     helpList += '</ol></div>';
 
-    $('.side-bar').prepend(helpList);
-    $('.toggle-bar').attr('populated', 'true');
+
+    // Check if sidebar is on of off
+    if ($('#closedContextHelp').length !== 0) {
+        $('#contextHelpContent').html(helpList);
+        $('#collapseCHelpText').attr('populated', 'true');
+    } else {
+        $('.side-bar').prepend(helpList);
+        $('.toggle-bar').attr('populated', 'true');
+    }
+
 }
 
 function validateTestPage() {
@@ -641,7 +650,7 @@ $(document).ready(function () {
         //Get definition on SHIFT-ALT-D or ctrl-comma
         if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey)) {
             e.preventDefault();
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
             showDefinitions();
@@ -649,7 +658,7 @@ $(document).ready(function () {
         //Validate on ctrl dot
         if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
             e.preventDefault();
-            if ($('.toggle-bar').attr('populated') === undefined) {
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
             }
             validateTestPage();
@@ -709,6 +718,7 @@ $(document).ready(function () {
     $('body').on('click', '#resync', function (e) {
         e.preventDefault();
         $('.toggle-bar').removeAttr('populated');
+        $('#collapseCHelpText').removeAttr('populated');
         $('.helper-content').remove();
         $.when(loadAutoCompletesFromResponder()).done(function (a) {
             populateContext();
@@ -716,7 +726,7 @@ $(document).ready(function () {
     });
 
     $('body').on('click', '.validate', function () {
-        if ($('.toggle-bar').attr('populated') === undefined) {
+        if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
             populateContext();
         }
         validateTestPage();
@@ -729,4 +739,24 @@ $(document).ready(function () {
         $('.fullSymbolTable' + currentItem).toggle();
         $('.fullSymbolTable' + currentItem + ' tr:contains(' + variable + '=)').addClass('side-bar-tr-highlight');
     });
+
+    // Context help sidebar
+    $('body').on('click', '#collapseCHelpDiv', function (e) {
+            e.preventDefault();
+            switchCollapseContextHelp();
+            if ($('#collapseCHelpText').attr('populated') === undefined) {
+                populateContext();
+            }
+        }
+    );
 });
+
+function switchCollapseContextHelp() {
+    if ($('#contextHelp').hasClass('displayNone')) {
+        $('#collapseCHelpDiv').addClass('collapseCHelpDivColor');
+        $('#contextHelp').removeClass('displayNone');
+    } else {
+        $('#collapseCHelpDiv').removeClass('collapseCHelpDivColor');
+        $('#contextHelp').addClass('displayNone');
+    }
+}
