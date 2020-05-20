@@ -23,6 +23,12 @@
         #set( $autoSave = 'false' )
     #end
 
+    #set( $sidebarTagsCookieName = "sidebarTags")
+    #set ($sidebarTags = $request.getCookie($sidebarTagsCookieName))
+    #if($sidebarTags == "")
+        #set($sidebarTags = 'false')
+    #end
+
     #set( $sidebarCookieName = "sidebar")
     #set ($sidebar = $request.getCookie($sidebarCookieName))
     #if($sidebar == "")
@@ -78,6 +84,7 @@
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/jquery-ui-1.12.1.min.css">
     <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/contextmenu/jquery.contextMenu.min.css">
+    <link rel="stylesheet" type="text/css" href="${contextRoot}files/fitnesse/bootstrap-plus/css/custom.css">
 
     <script src="${contextRoot}files/fitnesse/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/js/jquery-ui-1.12.1.min.js" type="text/javascript"></script>
@@ -86,6 +93,7 @@
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/respond.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
+    <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/custom.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/contextmenu/jquery.contextMenu.min.js"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/contextmenu/jquery.ui.position.min.js"></script>
 
@@ -140,6 +148,7 @@
             #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
         >
             <div class="buttonSidebarDiv">
+                <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
             </div>
