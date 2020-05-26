@@ -7,8 +7,10 @@ var autoCompleteJson;
 var autocompletes = [];
 
 function loadAutoCompletesFromResponder() {
-    $('#spinner').show();
+    $('.navbar #spinner').show();
     $('.toggle-bar').hide();
+    $('#closedContextHelp #spinner').show();
+    $('#collapseCHelpDiv').hide();
     if (window.location.pathname.indexOf('ScenarioLibrary') !== -1
         || window.location.pathname.indexOf('SetUp') !== -1
         || window.location.pathname.indexOf('TearDown') !== -1
@@ -43,8 +45,10 @@ function loadAutoCompletesFromResponder() {
             $.each(result.variables, function (vIndex, v) {
                 autocompletes.push(v.varName);
             });
-            $('#spinner').hide();
+            $('.navbar #spinner').hide();
             $('.toggle-bar').show();
+            $('#closedContextHelp #spinner').hide();
+            $('#collapseCHelpDiv').show();
         },
         error: function () {
             console.log('Unable to retrieve page context from autoComplete Responder. Is it installed?');

@@ -18,7 +18,6 @@ body {
   background-color: #434343;
   height: 100%;
   width: 100%;
-  padding-bottom: 10px;
   overflow-y: auto;
 }
 
@@ -726,148 +725,52 @@ fieldset {
   padding: 2px;
 }
 
-.side-bar input {
-  margin-left: 20px;
-  max-width: 60%;
-  display: inline;
-  vertical-align: middle;
-}
+.side-bar input,
+#contextHelpContent input {margin-left: 20px; max-width:60%;display:inline;vertical-align:middle;}
+.side-bar ol.side-bar-tree,
+#contextHelpContent ol.side-bar-tree {padding-left:20px;}
+.side-bar li,
+#contextHelpContent li { list-style-type:none; color:#eee; position:relative; margin-left:-15px; }
+.side-bar li label,
+#contextHelpContent li label { cursor:pointer; display:inline-block; }
+.side-bar li.item,
+#contextHelpContent li.item {margin-left:0 !important;}
+.side-bar li input,
+#contextHelpContent li input {width:1em; height:1em; position:absolute; left:-0.5em; top:0; opacity:0; cursor:pointer; }
+.side-bar li.closed:before,
+#contextHelpContent li.closed:before  {content: "\f105"; font-family: FontAwesome; display: inline-block; width: 1.3em; vertical-align: top;}
+.side-bar li input + ol,
+#contextHelpContent li input + ol {height:1em; margin:-16px 0 0 -45px;}
+.side-bar li input + ol > li,
+#contextHelpContent li input + ol > li {display:none;margin-left:-14px !important;padding-left:1px;}
+.side-bar li input:checked + ol,
+#contextHelpContent li input:checked + ol {height:auto;margin:-20px 0 0 -44px;padding:15px 15px 0 80px;}
+.side-bar li input:checked + ol > li,
+#contextHelpContent li input:checked + ol > li {display:block;margin:0 0 0.063em;}
+.side-bar li input:checked + ol > li:first-child,
+#contextHelpContent li input:checked + ol > li:first-child {margin:0 0 0.125em;}
+.side-bar li.open:before,
+#contextHelpContent li.open:before {content: "\f107"; font-family: FontAwesome; display: inline-block; width: 1.3em; vertical-align: top;}
+.side-bar .insert,
+#contextHelpContent .insert {float: right; margin-right: 10px; cursor: pointer; color: #19d817; }
+.side-bar .symbol:before,
+#contextHelpContent .symbol:before {content: "\2195"; font-size: 1.5em; margin-right:5px; cursor: pointer; float: left; margin-top: 4px; margin-left: -15px;}
+.side-bar .symbol,
+#contextHelpContent .symbol {cursor: pointer;}
+.side-bar .deprecated,
+#contextHelpContent .deprecated {text-decoration: line-through; color: #666;}
+.side-bar li.javadoc,
+#contextHelpContent li.javadoc { border: 1px solid silver; padding: 4px; left: -22px;  font-size: 0.9em; }
+.side-bar li.docItem,
+#contextHelpContent li.docItem { list-style-type: circle; }
+li.javadoc h5 {
+    font-size: 1em;
+    }
 
-.side-bar ol.side-bar-tree {
-  padding-left: 20px;
-}
-
-.side-bar li {
-  list-style-type: none;
-  color: #eee;
-  position: relative;
-  margin-left: -15px;
-}
-
-.side-bar li label {
-  cursor: pointer;
-  display: inline-block;
-}
-
-.side-bar li.item {
-  margin-left: 0px !important;
-}
-
-.side-bar li input {
-  width: 1em;
-  height: 1em;
-  position: absolute;
-  left: -0.5em;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.side-bar li.closed:before {
-  content: "\f0d7";
-  font-family: FontAwesome;
-  display: inline-block;
-  width: 1.3em;
-}
-
-.side-bar li input + ol {
-  height: 1em;
-  margin: -16px 0 0 -45px;
-}
-
-.side-bar li input + ol > li {
-  display: none;
-  margin-left: -14px !important;
-  padding-left: 1px
-}
-
-.side-bar li input:checked + ol {
-  height: auto;
-  margin: -20px 0 0 -44px;
-  padding: 15px 0 0 80px;
-}
-
-.side-bar li input:checked + ol > li {
-  display: block;
-  margin: 0 0 0.063em;
-}
-
-.side-bar li input:checked + ol > li:first-child {
-  margin: 0 0 0.125em;
-}
-
-.side-bar li.open:before {
-  content: "\f0d8";
-  font-family: FontAwesome;
-  display: inline-block;
-  width: 1.3em;
-}
-
-#side-bar-tree label {
-  text-align: left;
-  width: 95%;
-  font-weight: normal;
-  margin-left: -15px;
-  padding-left: 15px;
-}
-
-#side-bar-tree table {
-  display: inline-table;
-  border: 1px solid grey;
-  border-radius: 6px;
-  background: #3d3d3d;
-  min-width: 85%;
-}
-
-#side-bar-tree table tr:first-child td:nth-child(2n+3) {
-  font-style: italic;
-  color: #2aca21;
-  font-weight: 500;
-}
-
-.side-bar .insert {
-  float: right;
-  margin-right: 10px;
-  cursor: pointer;
-  color: #19d817;
-}
-
-.item:nth-child(even) {
-  background: #5d5d5d;
-}
-
-.side-bar .symbol:before {
-  content: "\2195";
-  font-size: 1.5em;
-  margin-right: 5px;
-  cursor: pointer;
-  float: left;
-  margin-top: 4px;
-  margin-left: -15px;
-}
-
-.side-bar .symbol {
-  cursor: pointer;
-}
-
-.side-bar-tr-highlight {
-  border: 2px solid #dede32;
-}
-
-.side-bar .deprecated {
-  text-decoration: line-through;
-  color: #bbb;
-}
-
-.side-bar li.javadoc {
-  border: 1px solid silver;
-  padding: 4px;
-  left: -22px;
-}
-
-.side-bar li.docItem {
-  list-style-type: circle;
-}
+.side-bar-tr-highlight { border: 2px solid #dede32; }
+#side-bar-tree label { text-align: left; width: 85%; font-weight: normal; margin-left: -15px; padding-left: 15px; }
+#side-bar-tree table { display: inline-table; border: 1px solid grey; border-radius: 6px; background: #3d3d3d; min-width: 85%;  font-size: 0.9em; }
+#side-bar-tree table tr:first-child td:nth-child(2n+3) { font-style: italic; color: #2aca21; font-weight: 500; }
 
 .helper-content {
   min-height: 98%;
@@ -877,6 +780,12 @@ fieldset {
   background-position: right bottom;
   position: relative;
   bottom: -16px;
+}
+
+#contextHelpContent .helper-content {
+  bottom: -9px !important;
+  width: 100%;
+  min-height: 99% !important;
 }
 
 li i {
@@ -1377,46 +1286,65 @@ kbd {
   float: right;
 }
 
-/* Sidebar */
+/* Sidebar and context help */
 
-#closedSidebar {
+#closedSidebar, #closedContextHelp {
+  height: 100%;
   padding: 0 0 5px;
   background-color: #3a3a3a;
+  min-width: 30px;
+}
+#closedSidebar {
   border-right: 1px solid #292929;
 }
+#closedContextHelp {
+  border-left: 1px solid #292929;
+}
 
-#collapseSidebarDiv {
+#collapseSidebarDiv, #collapseCHelpDiv {
   padding: 10px 4px;
   cursor: pointer;
 }
 
-.collapseSidebarDivDisabled {
+.collapseSidebarDivDisabled, .collapseCHelpDivDisabled {
   cursor: default !important;
   color: darkgray;
 }
 
-.collapseSidebarDivColor {
+.collapseSidebarDivColor, .collapseCHelpDivColor {
   background-color: #303030;
 }
 
-#collapseSidebarText {
+#collapseSidebarText, #collapseCHelpText {
   writing-mode: tb-rl;
-  transform: rotate(-180deg);
   font-size: 0.95em;
+}
+#collapseSidebarText {
+  transform: rotate(-180deg);
+}
+#collapseCHelpText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
 }
 
 #collapseSidebarIcon {
-  transform: rotate(-90deg);
   font-size: 18px;
+  transform: rotate(-90deg);
 }
 
-#sidebar {
-  display: flex;
-  flex-direction: column;
+#sidebar, #contextHelp {
   width: 300px;
   height: 100%;
   background-color: #3a3a3a;
+}
+#sidebar {
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid #292929;
+}
+#contextHelp {
+  border-left: 1px solid #292929;
+  left: 0 !important;
 }
 
 .buttonSidebarDiv {
@@ -1453,14 +1381,16 @@ kbd {
   display: none !important;
 }
 
-#sidebarContent {
+#sidebarContent, #contextHelpContent {
   height: 100%;
-  padding: 0 10px 10px;
   overflow: auto;
-  white-space: nowrap;
-  display: flex;
   margin-bottom: 0;
   font-size: 0.9em;
+}
+#sidebarContent {
+  padding: 0 10px 10px;
+  white-space: nowrap;
+  display: flex;
 }
 
 #sidebarContent li {
@@ -1559,6 +1489,42 @@ tr.check > td{
   background: #aaaaaa;
 }
 
+/* Notification */
+.push-notification {
+  z-index: 9999;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 15px 20px;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+.notification-icon {
+  margin-right: 15px;
+}
+// # color and ad 'a6' for the opacity
+.push-success {
+  color: #fff;
+  background-color: #5cb85c;
+  box-shadow: 4px 4px 4px #5cb85ca6;
+}
+.push-info {
+  color: #fff;
+  background-color: #2196F3;
+  box-shadow: 4px 4px 4px #2196f3a6;
+}
+.push-warning {
+  color: #fff;
+  background-color: #f0ad4e;
+  box-shadow: 4px 4px 4px #f0ad4ea6;
+}
+.push-danger {
+  color: #fff;
+  background-color: #d9534f;
+  box-shadow: 4px 4px 4px #d9534fa6;
+}
+
+
 .selected-error {
      box-shadow: 0 0 5px 3px rgba(255,50,50,0.8);
      border-radius: 4px;
@@ -1653,6 +1619,10 @@ tr.scenario-detail > td {
   float: right;
   color: #ddd;
   padding-top: 4px;
+  }
+
+input#helptext {
+  width: 40vw !important;
   }
 
 .noTags{

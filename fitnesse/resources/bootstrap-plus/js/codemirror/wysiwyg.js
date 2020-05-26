@@ -206,7 +206,7 @@ Wysiwyg.prototype.setupFormEvent = function () {
                 self.codeMirrorEditor.save();
             }
             if (Wysiwyg.getValidateOnSave()) {
-                if ($('.toggle-bar').attr('populated') === undefined) {
+                if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                     populateContext();
                 }
                 var validationMessages = validateTestPage();

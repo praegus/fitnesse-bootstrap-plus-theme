@@ -54,6 +54,14 @@
     #else
         #set( $sidebarWidth = $sidebarWidth + 'px' )
     #end
+
+    #set ($contextHelpWidthCookieName = "contextHelpPosition")
+    #set ($contextHelpWidth = $request.getCookie($contextHelpWidthCookieName))
+    #if($contextHelpWidth == "")
+        #set( $contextHelpWidth = '15vw' )
+    #else
+        #set( $contextHelpWidth = $contextHelpWidth + 'px' )
+    #end
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -119,8 +127,10 @@
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
-        <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
-        <div class="toggle-bar" style="display:none">Context help</div>
+        #if( $sidebar == 'false' )
+            <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
+            <div class="toggle-bar" style="display:none">Context help</div>
+        #end
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
             <a class="navbar-brand" href="${contextRoot}FrontPage"><span>FitNesse</span></a>
@@ -150,9 +160,7 @@
         </div>
 
         ## Open Sidebar
-        <div id="sidebar" style="width: $sidebarWidth;"
-            #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end
-        >
+        <div id="sidebar" style="width: $sidebarWidth;" #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
                 <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
@@ -165,7 +173,9 @@
         </div>
     #end
 
-    <div id="content">
+
+    ## Content
+    <div id="content" #if( !$bodyClass.equalsIgnoreCase("EditPage") ) style="padding-bottom: 10px" #end>
         #parse( 'breadcrumb.vm' )
 
         <header>
@@ -225,6 +235,25 @@
         #end
 
     </div>
+
+
+    ## Context help
+    #if( $sidebar == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
+        ## Open Sidebar
+        <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
+            <div id="contextHelpContent" class="scrollbar">
+                <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
+            </div>
+        </div>
+
+        ## Closed Context help
+        <div id="closedContextHelp">
+            <div id="spinner" style="width: 19px; height:19px; margin: 20px 2px; background-size: contain;"></div>
+            <div id="collapseCHelpDiv" style="display: none;">
+                <p id="collapseCHelpText">Context Help</p>
+            </div>
+        </div>
+    #end
 </div>
 
     #if( $!footerTemplate )
