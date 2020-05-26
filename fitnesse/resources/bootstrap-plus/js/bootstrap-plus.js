@@ -20,9 +20,7 @@ try {
         deleteTag: deleteTag,
         // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory,
-        // Versioncheck.test
-        versionCheck:versionCheck
+        getPageHistory: getPageHistory
     };
 } catch (e) {
 }
@@ -132,9 +130,6 @@ $(document).ready(function () {
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
         getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
 
-    }
-    if (location.pathname.includes('FrontPage') && getCookie('versionCheck') === 'true') {
-        getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
     }
 
     //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
@@ -281,12 +276,6 @@ $(document).ready(function () {
         }
     );
 
-    $('body').on('click', '#mavenVersionCheck-switch', function (e) {
-            e.preventDefault();
-            switchVersionCheck();
-        }
-    );
-
     $('body').on('click', '#autoSave-switch', function (e) {
             e.preventDefault();
             switchAutoSave();
@@ -370,20 +359,6 @@ $(document).ready(function () {
                $('#autoSave-switch').addClass('fa-toggle-on');
            }
        }
-    function switchVersionCheck() {
-        if (getCookie('versionCheck') == 'true') {
-            setBootstrapPlusConfigCookie('versionCheck','false');
-            $('#mavenVersionCheck-switch').removeClass('fa-toggle-on');
-            $('#mavenVersionCheck-switch').addClass('fa-toggle-off');
-            $('#mavenVersions').addClass('displayNone');
-        } else {
-            getVersionData(versionCheck,'http://' + window.location.hostname + ':' + window.location.port + "/?mavenVersions");
-            setBootstrapPlusConfigCookie('versionCheck','true');
-            $('#mavenVersionCheck-switch').removeClass('fa-toggle-off');
-            $('#mavenVersionCheck-switch').addClass('fa-toggle-on');
-            $('#mavenVersions').removeClass('displayNone');
-        }
-    }
 
     function switchSidebar() {
         if (getCookie('sidebar') == 'true') {
@@ -1012,85 +987,4 @@ function deleteTag(successData, neededValues) {
 
 /*
  DELETE END | ADD & DELETE TAGS FUNCTIONS END
- */
-
-/*
- START VERSIONCHECKER
- */
-
-function getVersionData(callback, url) {
-    $.ajax({
-        type: 'GET',
-        url: url,
-        contentType: 'charset=utf-8',
-        success: data => callback(data),
-        error: function (xhr) {
-            console.log('Error code for version checker: ' + xhr.status, xhr);
-        }
-    });
-}
-
-function versionCheck(data) {
-    if (data !== undefined) {
-        data.forEach(versionData => {
-            // Replace property 'version' with 'currentVersion' to make al the property names alike
-            if (versionData.hasOwnProperty('version')) {
-                versionData["currentVersion"] = versionData['version'];
-                delete versionData['version'];
-            }
-
-                // split version strings by dot and line then parse them to ints
-                let semanticCurrentVersion = versionData.currentVersion.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-                let semanticLatestVersion = versionData.latest.replace(/[^.-\d]/ig, '').split(/[-.]/).map(Number);
-
-                // make arrays equal in length if necessary so there wont be an undefined index
-                if (semanticCurrentVersion.length < semanticLatestVersion.length || semanticLatestVersion.length < semanticCurrentVersion.length) {
-                    while (semanticCurrentVersion.length < semanticLatestVersion.length) semanticCurrentVersion.push(0);
-                    while (semanticLatestVersion.length < semanticCurrentVersion.length) semanticLatestVersion.push(0);
-                }
-                semanticLatestVersion.forEach(function (semanticLatestVersionNumber, i) {
-                    //check if current ver is smaller then the latest and check if status is not defined so it doesnt have to loop more than it has to
-                    if (versionData.status === undefined) {
-                        if (semanticLatestVersionNumber < semanticCurrentVersion[i]) {
-                            versionData['status'] = 'Ahead';
-                        } else if (semanticCurrentVersion[i] < semanticLatestVersionNumber && i !== semanticLatestVersion.length) {
-                            versionData['status'] = 'Outdated';
-                        } else if (semanticCurrentVersion[i] === semanticLatestVersionNumber && i === semanticLatestVersion.length - 1) {
-                            versionData['status'] = 'Up-to-date';
-                        }
-                    }
-                });
-                switch (versionData.artifactid) {
-                    case 'fitnesse':
-                        versionData['notes'] = '<a href="http://fitnesse.org/FitNesse.ReleaseNotes"  target="_blank">FitNesse</a>';
-                        break;
-                    case 'hsac-fitnesse-fixtures':
-                        versionData['notes'] = '<a href="https://github.com/fhoeben/hsac-fitnesse-fixtures/releases"  target="_blank">Hsac FitNesse Fixtures</a>';
-                        break;
-                    case 'toolchain-fitnesse-plugin':
-                        versionData['notes'] = '<a href="https://github.com/praegus/toolchain-fitnesse-plugin/releases"  target="_blank">Toolchain Plugin</a> / <a href="https://github.com/praegus/fitnesse-bootstrap-plus-theme/releases" target="_blank">Bootstrap<sup>+</sup></a>';
-                        break;
-                    default:
-                        versionData['notes'] ='';
-                        break;
-                }
-
-
-
-
-            // Place in html
-            $('#versioncheck').append(
-                '<tr class="check">' +
-                '<td><p>' + versionData.artifactid.replace(/-/g, ' ') + '</p></td>' +
-                '<td><p>' + versionData.currentVersion + '</p></td>' +
-                '<td><p>' + versionData.latest + '</p></td>' +
-                '<td class="' + versionData.status + '"><p>' + versionData.status + '</p></td>' +
-                '<td><p>' + versionData.notes + '</p></td>' +
-                '</tr>');
-        });
-   }
-}
-
-/*
-END VERSIONCHECKER
  */
