@@ -333,6 +333,7 @@ $(document).ready(function () {
               setBootstrapPlusConfigCookie('highlightSymbols', 'true');
               $('#highlight-switch').removeClass('fa-toggle-off');
               $('#highlight-switch').addClass('fa-toggle-on');
+               showNotification('info', 'Symbol highlighting enabled. Can be slow on large result pages!');
           }
       }
 
@@ -345,6 +346,7 @@ $(document).ready(function () {
                setBootstrapPlusConfigCookie('collapseSymbols', 'true');
                $('#collapse-switch').removeClass('fa-toggle-off');
                $('#collapse-switch').addClass('fa-toggle-on');
+               showNotification('info', 'Symbol collapse enabled. Can be slow on large result pages!');
            }
        }
 
@@ -357,6 +359,7 @@ $(document).ready(function () {
                setBootstrapPlusConfigCookie('autoSave', 'true');
                $('#autoSave-switch').removeClass('fa-toggle-off');
                $('#autoSave-switch').addClass('fa-toggle-on');
+               showNotification('warning', 'You have enabled an experimental function. Use with caution!');
            }
        }
 
@@ -375,7 +378,7 @@ $(document).ready(function () {
             $('#sidebar').removeClass('displayNone');
             $('#closedSidebar').removeClass('displayNone');
             getSidebarContent(placeEverythingForSidebar);
-            showNotification('info', 'The context help is also changed into the sidebar styling');
+            showNotification('info', 'The context helper styling has also changed into the sidebar style');
         }
     }
 
