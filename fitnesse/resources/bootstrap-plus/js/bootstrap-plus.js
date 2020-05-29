@@ -776,7 +776,6 @@ function getToolTips(callback) {
         contentType: 'charset=utf-8',
         success: data => callback(data),
         error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status, xhr);
         }
     });
