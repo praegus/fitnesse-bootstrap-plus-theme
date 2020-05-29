@@ -455,7 +455,6 @@ function getSidebarContent(callback) {
             dataType: 'json',
             success: contentArray => callback(contentArray),
             error: function (xhr) {
-                alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
                 console.log('Error code: ' + xhr.status, xhr);
             }
         });
@@ -807,7 +806,6 @@ function postTagRequest(callback, url, tagList, neededValues) {
         dataType: 'json',
         success: data => callback(data, neededValues),
         error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
             console.log(xhr);
         }
@@ -862,7 +860,6 @@ function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
         dataType: 'json',
         success: data => callback(data, currentPageURL, newTags),
         error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
             console.log('Error code: ' + xhr.status);
             console.log(xhr);
         }
