@@ -128,7 +128,7 @@ $(document).ready(function () {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
-        getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
+        getPageHistory( window.location.protocol + "//"+ window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
 
     }
 
@@ -723,8 +723,7 @@ function getPageHistory(url, callback) {
         url: url,
         contentType: 'charset=utf-8',
         success: data => callback(data),
-        error: function (xhr) {
-            alert('An error ' + xhr.status + ' occurred. Look at the console (F12 or Ctrl+Shift+I) for more information.');
+        error: function (xhr) {            
             console.log('Error code: ' + xhr.status, xhr);
         }
     });
