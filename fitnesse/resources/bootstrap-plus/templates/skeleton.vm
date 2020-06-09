@@ -35,12 +35,6 @@
         #set( $sidebar = 'false' )
     #end
 
-    #set( $versionCheckCookieName = "versionCheck")
-    #set ($versionCheck = $request.getCookie($versionCheckCookieName))
-    #if($versionCheck == "")
-        #set( $versionCheck = 'false' )
-    #end
-
     #set( $collapseSidebarCookieName = "collapseSidebar")
     #set ($collapseSidebar = $request.getCookie($collapseSidebarCookieName))
     #if($collapseSidebar == "")
@@ -206,23 +200,6 @@
 
                     </div>
                     <a href="/?recentTestHistory">More...</a>
-                </div>
-                <div id="mavenVersions" #if( $versionCheck == 'false' ) class="displayNone" #end>
-                <h3>Maven Version Checker</h3>
-                <table id="versioncheck">
-                    <tbody>
-                    <td colspan="5">
-                        <b>Versioncheck</b>
-                    </td>
-                    <tr>
-                        <td><b>Name</b></td>
-                        <td><b>Current Version</b></td>
-                        <td><b>Newest version</b></td>
-                        <td><b>Status</b></td>
-                        <td><b>Release Notes</b></td>
-                    </tr>
-                    </tbody>
-                </table>
                 </div>
             #end
         </article>
