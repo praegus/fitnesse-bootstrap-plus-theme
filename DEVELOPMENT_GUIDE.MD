@@ -3,11 +3,10 @@ This is meant for people who want to develop for the Bootstrap-plus FitNesse The
 
 ## Running the code 
 
-1. Put the correct Bootstrap plus version in the pom.xml.
-2. Press on "Maven" on the right side.
-    2. Open the folder “Lifecycle”.
-    2. Select “clean” and “install”. 
-    2. Press on “Run Maven Build”.
+1. Press on "Maven" on the right side.
+    1. Open the folder “Lifecycle”.
+    1. Select “clean” and “install”. 
+    1. Press on “Run Maven Build”.
 
 ## Code Set Up 
 
@@ -16,13 +15,6 @@ This is meant for people who want to develop for the Bootstrap-plus FitNesse The
 Bootstrap+ is a dependency of the Toolchain Plugin. 
 The Plugin is a maven project, so it is easier to make the Bootstrap+ a maven project too. 
 Every maven project has a pom file that contains the version number of the pom and the dependencies.  
-
-The most understandable way the keep track of your own version is to use a version with "-SNAPSHOT" that will ultimately be released. 
-For example if the most recent version is "2.0.5" then use "2.0.6-SNAPSHOT" for your local version.
-
-The Toolchain Plugin pom file also contains the Bootstrap+ Theme version. 
-If you want to see your local version you have to set this version to the same version as your local Bootstrap+.
-If you want to see the most recent version then you have to set the latest version of the [Maven Repository](https://mvnrepository.com/artifact/nl.praegus/fitnesse-bootstrap-plus-theme).
 
 ### README
 
