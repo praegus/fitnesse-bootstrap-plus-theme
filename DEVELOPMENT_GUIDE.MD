@@ -89,7 +89,7 @@ The Praegus repo has an integrated build that runs the tests.
     
     
 - Spaces
-    - Place spaces where necessary. For example do not write an if statement like this: “if(saveButton==true){}” but like this “if (saveButton == true) { }“. As another example, do not write a variable like this ”const saveButton=false;" but like this “const saveButton = false;”
+    - Place spaces where it's necessary. For example do not write an if statement like this: “if(saveButton==true){}” but like this “if (saveButton == true) { }“. As another example, do not write a variable like this ”const saveButton=false;" but like this “const saveButton = false;”
 
 ### Unit testing
 #### Naming
