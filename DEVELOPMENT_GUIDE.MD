@@ -1,28 +1,23 @@
-# Getting Started with Bootstrap-plus FitNesse Theme
-This is meant for people who want to develop for the Bootstrap-plus FitNesse Theme.
+# Getting Started with the Bootstrap-plus FitNesse Theme
+This MD is meant for people who want to develop for the Bootstrap-plus FitNesse Theme.
 
 ## Running the code 
 
-1. Press on "Maven" on the right side.
-    1. Open the folder “Lifecycle”.
-    1. Select “clean” and “install”. 
-    1. Press on “Run Maven Build”.
+Bootstrap+ is a maven project because it is a dependency of the Toolchain Plugin.
+Every maven project has a pom file that contains the version number of the pom and the dependencies.  
+
+Bootstrap+ can't be run on it's own. 
+To run Bootstrap+ it needs to be compiled within the Toolchain Plugin.
 
 ## Code Set Up 
 
-### Pom file
-
-Bootstrap+ is a dependency of the Toolchain Plugin. 
-The Plugin is a maven project, so it is easier to make the Bootstrap+ a maven project too. 
-Every maven project has a pom file that contains the version number of the pom and the dependencies.  
-
 ### README
 
-There is a README in both projects that shows all current features. This README needs to be updated when a new feature is developed.   
+The README.MD shows all current features. This README needs to be updated when a new feature is developed.   
 
 ### HTML
 
-Bootstrap+ Theme uses VM (Velocity templates) files instead of HTML files. 
+Bootstrap+ uses VM (Velocity templates) files instead of HTML files. 
 These are found in the folder "templates".
 
 The VM files in the Bootstrap+ are newly created templates or templates that are overwriting the existing ones from FitNesse. 
@@ -64,7 +59,7 @@ The bootstrap-plus-editor is meant for functions that are only in the editor, th
 The written Javascript code needs to be tested. 
 The Javascript testing framework "Jest" is used for unit testing the code. 
 The created unit tests are located in the "jest" folder. 
-The tests are integrated with a automated build in Github. When creating a pull request to the Praegus.     
+The Praegus repo has an integrated build that runs the tests.  
 
 ## Code Conventions
 ### General
@@ -83,32 +78,25 @@ The tests are integrated with a automated build in Github. When creating a pull 
     
     
 - Notation
-    - Every time when you add something with a name(Like a variable, function, etc.) you need to use Camel casting. For example : function parseCookies(){}”" or “const expectedResult".
+    - Every time when you add something with a name(Like a variable, function, etc.) you need to use Camel casing. For example : function parseCookies(){}”" or “const expectedResult".
     - Do not use Pascal casing or Snake casing.
     - With ID’s and classes can also use Kebab casing, but Camel casing is preferred.
 
-#### Formating
+#### Formatting
 
-- Format button
-    - Using the format button, everyone will get their code to look well arranged.
-    
-    
 - Enters
-    - Don't add unnecessary enters, but place them in places to provide more a beter overall picture. Just like with each new CSS element and between functions.
+    - Don't add unnecessary enters, but place them in places to provide a better overall picture. Just like with each new CSS element and between functions.
     
     
 - Spaces
     - Place spaces where necessary. For example do not write an if statement like this: “if(saveButton==true){}” but like this “if (saveButton == true) { }“. As another example, do not write a variable like this ”const saveButton=false;" but like this “const saveButton = false;”
-    
-    
-- Quotes
-    - If you need to add quotes, use single quotes.
 
-    
 ### Unit testing
 #### Naming
-Straightforward naming that indicates what the test is or tests and what is expected of that test.
+The test name has to describe the goal of the test. 
+For example; "When _[explain what happens in the test]_ then _[explain the expected result]_". 
 
 #### Set Up
-Create a clear layout by first setting down all the necessary variables, then add a white line, then add the function/execution, another white line and finally the test itself.
-
+To create a clear layout you first need to set up al the necessary variables. 
+Place after that the functions/executions. 
+And finally the expected result of the test.
