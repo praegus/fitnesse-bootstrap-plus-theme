@@ -2,6 +2,8 @@
  
 ### [Bootstrap-plus @ Github.io Website](https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
 
+You can go to the [DEVELOPMENT_GUIDE.MD](./DEVELOPMENT_GUIDE.MD), for information about how to get started with the Bootstrap-plus FitNesse Theme.
+
 # Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
 Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
