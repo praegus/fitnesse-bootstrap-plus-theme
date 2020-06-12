@@ -1,8 +1,9 @@
  [![Maven Central](https://img.shields.io/maven-central/v/nl.praegus/fitnesse-bootstrap-plus-theme.svg?maxAge=21600)](https://mvnrepository.com/artifact/com.github.tcnh/fitnesse-bootstrap-plus-theme)
  
+You can go to the [DEVELOPMENT_GUIDE.MD](./DEVELOPMENT_GUIDE.MD), for information about how to get started with the Bootstrap-plus FitNesse Theme.
+
 ### [Bootstrap-plus @ Github.io Website](https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
 
-You can go to the [DEVELOPMENT_GUIDE.MD](./DEVELOPMENT_GUIDE.MD), for information about how to get started with the Bootstrap-plus FitNesse Theme.
 
 # Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
