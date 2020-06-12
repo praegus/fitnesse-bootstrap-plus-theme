@@ -6,8 +6,8 @@ This MD is meant for people who want to develop for the Bootstrap-plus FitNesse 
 Bootstrap+ is a maven project because it is a dependency of the Toolchain Plugin.
 Every maven project has a pom file that contains the version number of the pom and the dependencies.  
 
-Bootstrap+ can't be run on it's own. It is directly dependent on the [Toolchain plugin](https://mvnrepository.com/artifact/nl.praegus/toolchain-fitnesse-plugin). 
-The Toolchain plugin in it's turn is a plugin to use in combination with [FitNesse](https://mvnrepository.com/artifact/org.fitnesse/fitnesse) and [HSAC fixtures](https://mvnrepository.com/artifact/nl.hsac/hsac-fitnesse-fixtures). 
+Bootstrap+ can't be run on it's own. It is directly dependent on the [Toolchain plugin](https://github.com/praegus/toolchain-fitnesse-plugin). 
+The Toolchain plugin in it's turn is a plugin to use in combination with [FitNesse](https://github.com/unclebob/fitnesse) and [HSAC fixtures](https://github.com/fhoeben/hsac-fitnesse-fixtures). 
 Run FitNesse with these dependencies in your development environment.
 
 ## Code Set Up 
