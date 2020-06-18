@@ -1,12 +1,15 @@
  [![Maven Central](https://img.shields.io/maven-central/v/nl.praegus/fitnesse-bootstrap-plus-theme.svg?maxAge=21600)](https://mvnrepository.com/artifact/com.github.tcnh/fitnesse-bootstrap-plus-theme)
  
+You can go to the [DEVELOPMENT_GUIDE.MD](./DEVELOPMENT_GUIDE.MD), for information about how to get started with the Bootstrap-plus FitNesse Theme.
+
 ### [Bootstrap-plus @ Github.io Website](https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
 
-## Bootstrap-plus FitNesse Theme
+
+# Bootstrap-plus FitNesse Theme
 This is a FitNesse Theme that extends the default bootstrap theme for better usability.
 Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
 
-### Features:
+## Features:
 * Improved styling for better readability and information density
 * Light and dark version of the theme for the wiki and CodeMirror editor
 * Different favicons for Tests, Suites, Static pages and Edit mode
@@ -29,11 +32,11 @@ Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
 * Insert scenario's and fixture methods in the editor by clicking the plus-icon in the context pane
 * Experimental: Autosave and validate test pages on enter
 
-### Usage:
+## Usage:
 Use Praegus' toolchain-plugin to use bootstrap-plus and enable all of it's features.
 See: https://github.com/praegus/toolchain-fitnesse-plugin
 
-### Screenshots:
+## Screenshots:
 
 #### Fonts, margins and colors
 ![alt text](https://github.com/tcnh/binstore/raw/master/styling.png "Overall styling")
@@ -98,16 +101,15 @@ Tooltips will now also load in from fixtures:
 * You can add tooltips to your fixture by adding a Tooltips.txt on [FixtureRoot]/[FixtureName]_tooltips/Tooltips.txt
 * You also need to add two executions to your maven dependency plugin to be able to load fixture tooltips:
 
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includes>**/Tooltips.txt</includes>
-                            <outputDirectory>${project.basedir}/wiki/TooltipData</outputDirectory>
-                        </configuration>
-                    </execution>
-                    
-
+        <execution>
+            <id>unpack-dependencies</id>
+            <phase>compile</phase>
+            <goals>
+                <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+                <includes>**/Tooltips.txt</includes>
+                <outputDirectory>${project.basedir}/wiki/TooltipData</outputDirectory>
+            </configuration>
+        </execution>
+             
