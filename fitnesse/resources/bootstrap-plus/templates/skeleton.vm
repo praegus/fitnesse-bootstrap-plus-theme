@@ -193,15 +193,8 @@
             #parse( $mainTemplate )
 
             ## Test history table
-            #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
-                <div id="testHistoryDiv">
-                    <h3>Recent Test History</h3>
-                    <div id="recentTestHistoryTable">
+            #parse('testHistoryNav.vm')
 
-                    </div>
-                    <a href="/?recentTestHistory">More...</a>
-                </div>
-            #end
         </article>
 
         ## Tooltips edit page
