@@ -193,8 +193,9 @@
             #parse( $mainTemplate )
 
             ## Test history table
-            #parse('testHistoryNav.vm')
-
+            #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
+                #parse('testHistoryNav.vm')
+            #end
         </article>
 
         ## Tooltips edit page
