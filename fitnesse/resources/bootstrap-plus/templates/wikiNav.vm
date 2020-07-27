@@ -79,5 +79,16 @@
                 <b>Experimental:</b> Save and validate test pages on enter
             </li>
         #end
+        #if($historySpecialPages == 'true')
+            <li>
+                <button class="fa fa-toggle-on prefsbutton" id="history-specialPages-switch" title="See Special Pages (SuiteSetup, SuiteTearDown, etc.)"></button>
+                Filter Special Pages (SuiteSetup, SuiteTearDown, etc.)
+            </li>
+        #else
+            <li>
+                <button class="fa fa-toggle-off prefsbutton" id="history-specialPages-switch" title="Don't see Special Pages (SuiteSetup, SuiteTearDown, etc.)"></button>
+                Filter Special Pages (SuiteSetup, SuiteTearDown, etc.)
+            </li>
+        #end
     </ul>
 </div>

@@ -128,10 +128,16 @@ $(document).ready(function () {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
-        getPageHistory( window.location.protocol + "//"+ window.location.hostname + ':' + window.location.port + '/?recentTestHistory', generateTestHistoryTable);
-
+        getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
     }
-
+    // for recent test history filter switch
+    if(getCookie('historySpecialPages')== 'true'){
+        $('#history-specialPages-switch').removeClass('fa-toggle-off');
+        $('#history-specialPages-switch').addClass('fa-toggle-on');
+    }else{
+        $('#history-specialPages-switch').removeClass('fa-toggle-on');
+        $('#history-specialPages-switch').addClass('fa-toggle-off');
+    }
     //If the first row is hidden, don't use header row styling. Also remove it from DOM to keep table type decoration
     $('tr.hidden').each(function () {
         $(this).next().addClass('slimRowColor0').removeClass('slimRowTitle');
@@ -300,6 +306,14 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on('click', '#history-specialPages-switch', function (e) {
+        e.preventDefault();
+        switchHistorySpecialPages();
+        var info = getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
+        $('#recentTestHistoryTable').html('');
+        $('#recentTestHistoryTable').load(info);
+        }
+    );
     $('body').on('click', '.coll', function () {
         if ($(this).children('input').is(':checked')) {
             $(this).removeClass('closed');
@@ -405,6 +419,18 @@ $(document).ready(function () {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
             $('#sidebar').addClass('displayNone');
         }
+    }
+    function switchHistorySpecialPages(){
+        if(getCookie('historySpecialPages') == 'true'){
+            setBootstrapPlusConfigCookie('historySpecialPages', 'false');
+            $('#history-specialPages-switch').addClass('fa-toggle-off');
+            $('#history-specialPages-switch').removeClass('fa-toggle-on');
+        }else{
+            setBootstrapPlusConfigCookie('historySpecialPages','true');
+            $('#history-specialPages-switch').removeClass('fa-toggle-off');
+            $('#history-specialPages-switch').addClass('fa-toggle-on');
+        }
+
     }
 
        function setBootstrapPlusConfigCookie(name, value) {

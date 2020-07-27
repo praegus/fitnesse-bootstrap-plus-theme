@@ -194,13 +194,7 @@
 
             ## Test history table
             #if($pageTitle.Title == "FrontPage" && $bodyClass == "wikiPage" )
-                <div id="testHistoryDiv">
-                    <h3>Recent Test History</h3>
-                    <div id="recentTestHistoryTable">
-
-                    </div>
-                    <a href="/?recentTestHistory">More...</a>
-                </div>
+                #parse('testHistoryNav.vm')
             #end
         </article>
 
