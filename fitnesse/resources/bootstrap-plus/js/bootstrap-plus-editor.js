@@ -659,6 +659,15 @@ $(document).ready(function () {
             }
             showDefinitions();
         }
+        //toggle  context helper on alt-2
+        if ((evtobj.keyCode == 50 && evtobj.altKey)) {
+            e.preventDefault();
+            switchCollapseContextHelp();
+            if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
+                populateContext();
+            }
+        }
+
         //Validate on ctrl dot
         if (evtobj.keyCode == 190 && evtobj.ctrlKey) {
             e.preventDefault();

@@ -117,6 +117,15 @@ function showNotification(type, message) {
  */
 
 $(document).ready(function () {
+    $(document).keydown(function (e) {
+        var evtobj = window.event ? event : e;
+        //Get definition on SHIFT-ALT-D or ctrl-comma
+        if ((evtobj.keyCode == 49 && evtobj.altKey)) {
+            e.preventDefault();
+            switchCollapseSidebar();
+        }
+    });
+
     // Set padding for contentDiv based on header and footer
     document.getElementById('contentDiv').style.paddingTop = $('nav').height() + 'px';
     if ($('footer').height() !== 0) {

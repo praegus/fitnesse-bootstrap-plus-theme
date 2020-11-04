@@ -101,6 +101,14 @@
                     <kbd>Ctrl + /</kbd>
                     <span class="help-key-def">Comment / Uncomment</span>
                 </li>
+                <li>
+                    <kbd>Alt + 1</kbd>
+                    <span class="help-key-def">Toggle Sidebar</span>
+                </li>
+                <li>
+                    <kbd>Alt + 2</kbd>
+                    <span class="help-key-def">Toggle context help in Editor</span>
+                </li>
             </ul>
         </div>
         <a href="javascript:history.back()" class="button">Close</a>
