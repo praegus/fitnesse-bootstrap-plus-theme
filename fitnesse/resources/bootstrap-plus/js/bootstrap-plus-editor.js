@@ -628,7 +628,7 @@ $(document).ready(function () {
             var lineNr = cmEditor.doc.getCursor().line;
             var line = cmEditor.doc.getLine(lineNr);
             var searchString = getInfoForLine(line, false);
-            if (!$('.side-bar').is(':visible')) {
+            if (!$('#contextHelp').is(':visible')) {
                 $('.side-bar').slideToggle();
             }
             $('#filter').val(searchString.trim());
@@ -650,8 +650,12 @@ $(document).ready(function () {
         //Get definition on SHIFT-ALT-D or ctrl-comma
         if ((evtobj.keyCode == 68 && evtobj.altKey && evtobj.shiftKey) || (evtobj.keyCode == 188 && evtobj.ctrlKey)) {
             e.preventDefault();
+
             if ($('.toggle-bar').attr('populated') === undefined && $('#collapseCHelpText').attr('populated') === undefined) {
                 populateContext();
+            }
+            if($('#contextHelp').hasClass('displayNone')) {
+                switchCollapseContextHelp();
             }
             showDefinitions();
         }
