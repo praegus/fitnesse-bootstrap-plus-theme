@@ -6,7 +6,6 @@
 // ==========================================================================
 
 @media print {
-  *,
   *:before,
   *:after {
     background: transparent !important;
@@ -14,7 +13,30 @@
     box-shadow: none !important;
     text-shadow: none !important;
   }
-
+  .pass:before {
+      content: "\f05d";
+      font-family: FontAwesome;
+      display: inline-block;
+      padding: 2px;
+      color: green !important;
+      font-size: 1.1em;
+    }
+    .fail:before {
+      content: "\f05c";
+      font-family: FontAwesome;
+      display: inline-block;
+      padding: 2px;
+      color: red !important;
+      font-size: 1.1em;
+    }
+    .error:before {
+      content: "\f05e";
+      font-family: FontAwesome;
+      display: inline-block;
+      padding: 2px;
+      color: yellow !important;
+      font-size: 1.1em;
+    }
   a,
   a:visited {
     text-decoration: underline;
@@ -28,17 +50,17 @@
     content: " (" attr(title) ")";
   }
 
-  // Don't show links that are fragment identifiers,
-  // or use the `javascript:` pseudo protocol
-  a[href^="#"]:after,
-  a[href^="javascript:"]:after {
-    content: "";
-  }
+    // Don't show links that are fragment identifiers,
+    // or use the `javascript:` pseudo protocol
+    a:not([href^="http"]):after {
+      content: "";
+    }
 
   pre,
   blockquote {
     border: 1px solid #999;
     page-break-inside: avoid;
+    white-space: pre-wrap;
   }
 
   thead {
@@ -68,7 +90,7 @@
 
   // Bootstrap specific changes start
   // Bootstrap components
-  .navbar {
+  .navbar, .nav {
     display: none;
   }
 
@@ -86,10 +108,6 @@
   .table {
     border-collapse: collapse !important;
 
-    td,
-    th {
-      background-color: #fff !important;
-    }
   }
 
   .table-bordered {
@@ -100,4 +118,41 @@
   }
 
   // Bootstrap specific changes end
+
+  //Bootstrap-plus
+   nav, footer, #closedSidebar, #sidebar, .expandall, .collapseall {
+      display: none !important;
+    }
+
+    #contentDiv, {
+      width: auto;
+      height: auto !important;
+      overflow: visible !important;
+      display: flex;
+    }
+    .pass {
+      background-color: green;
+    }
+
+    .exception-detail.closed-detail, .exception-detail.closed-detail td {
+        display:block !important;
+        max-height: 3.5em !important;
+        overflow: hidden;
+    }
+
+    #test-summaries {
+        transform: scale(1.5);
+        transform-origin: left;
+        padding: 7em 0 9em 0;
+    }
+    #test_summaries h2, #test-summaries h3 {
+        text-align: left !important;
+    }
+
+    body { transform: scale(0.8);
+           transform-origin: left;
+           width: max-content;
+          }
+
+    table {page-break-inside: avoid;}
 }
