@@ -151,8 +151,18 @@ $(document).ready(function () {
         $(this).before('<i class="fa fa-cogs icon-test" aria-hidden="true" title="show/hide"></i>&nbsp;');
     });
     $('.static').each(function () {
-        $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
+        if($(this).attr('href').endsWith('.ScenarioLibrary')) {
+            $(this).before('<i class="fa fa-bolt icon-scenariolib" aria-hidden="true"></i>&nbsp;');
+        } else if ($(this).attr('href').endsWith('.SetUp') ||
+                    $(this).attr('href').endsWith('.SuiteSetUp') ||
+                    $(this).attr('href').endsWith('.TearDown') ||
+                    $(this).attr('href').endsWith('.SuiteTearDown'))  {
+            $(this).before('<i class="fa fa-wrench icon-special" aria-hidden="true"></i>&nbsp;');
+        } else {
+            $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
+        }
     });
+
     $('.contents li a').each(function () {
         var item = $(this);
         var orig = item.html();
