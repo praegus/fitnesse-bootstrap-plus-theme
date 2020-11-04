@@ -134,6 +134,7 @@ $(document).ready(function () {
     if(getCookie('historySpecialPages')== 'true'){
         $('#history-specialPages-switch').removeClass('fa-toggle-off');
         $('#history-specialPages-switch').addClass('fa-toggle-on');
+
     }else{
         $('#history-specialPages-switch').removeClass('fa-toggle-on');
         $('#history-specialPages-switch').addClass('fa-toggle-off');
@@ -547,7 +548,10 @@ function sidebarContentLayerLoop(suiteName, children) {
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
-    let iconClass = content.type.includes('suite') ? 'fa fa-cogs icon-test' : content.type.includes('test') ? 'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
+    let iconClass = content.type.includes('suite') ?
+        'fa fa-cogs icon-test' :
+        content.type.includes('test') ?
+            'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
     let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
     let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
@@ -561,17 +565,29 @@ function getSidebarContentHtml(content) {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
         toggleClass = 'iconWidth';
     }
-        return '<li id="' + content.path.replace(/\./g, '') + '">' +
-            '<div' + highlight + '>' +
-            '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
-            '&nbsp;' +
-            '<i class="' + iconClass + '" aria-hidden="true"></i>' +
-            '&nbsp;' +
-            '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
-            symbolicIcon +
-            tagString +
-            '</div>' +
-            '</li>';
+    // Wrench for setup/teardown pages
+    if(content.path.endsWith('.SetUp') ||
+        content.path.endsWith('.SuiteSetUp') ||
+        content.path.endsWith('.TearDown') ||
+        content.path.endsWith('.SuiteTearDown')) {
+        iconClass = 'fa fa-wrench icon-special'
+        }
+    // bolt for scenariolibrary
+    if(content.path.endsWith('.ScenarioLibrary')) {
+         iconClass = 'fa fa-bolt icon-scenariolib'
+         }
+
+    return '<li id="' + content.path.replace(/\./g, '') + '">' +
+        '<div' + highlight + '>' +
+        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
+        '&nbsp;' +
+        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
+        '&nbsp;' +
+        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
+        symbolicIcon +
+        tagString +
+        '</div>' +
+        '</li>';
 
 }
 
