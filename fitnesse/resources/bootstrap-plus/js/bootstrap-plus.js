@@ -348,11 +348,13 @@ $(document).ready(function () {
            if (getCookie('themeType') == 'bootstrap-plus-dark') {
                setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus');
                $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/custom-bootstrap-plus-dark.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/custom-bootstrap-plus.css');
                $('#theme-switch').removeClass('fa-toggle-on');
                $('#theme-switch').addClass('fa-toggle-off');
            } else {
                setBootstrapPlusConfigCookie('themeType', 'bootstrap-plus-dark');
                $('link[href="/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/fitnesse-bootstrap-plus-dark.css');
+               $('link[href="/files/fitnesse/bootstrap-plus/css/custom-bootstrap-plus.css"]').attr('href', '/files/fitnesse/bootstrap-plus/css/custom-bootstrap-plus-dark.css');
                $('#theme-switch').removeClass('fa-toggle-off');
                $('#theme-switch').addClass('fa-toggle-on');
            }
