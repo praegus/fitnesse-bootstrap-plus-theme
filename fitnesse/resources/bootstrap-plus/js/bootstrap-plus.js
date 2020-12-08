@@ -81,14 +81,13 @@ function processSymbolData(str) {
         if (str[i] === '[') {
             if (nesting == 0) {
                 result += '<span class="symbol-data">';
+                inSymbol = true;
             } else {
                 result += str[i];
             }
             nesting++;
-            inSymbol = true;
         } else if (str[i] === ']') {
             nesting--;
-
             if (nesting > 0) {
                 result += str[i];
             } else if (inSymbol) {
@@ -104,7 +103,16 @@ function processSymbolData(str) {
 
 function showNotification(type, message) {
     if ($('#notification').length < 1) {
-        const icon = type === 'success' ? 'check' : type === 'info' ? 'info' : type === 'warning' ? 'exclamation' : type === 'danger' ? 'times-circle' : 'question';
+        const icon = type === 'success'
+            ? 'check'
+            : type === 'info'
+                ? 'info'
+                : type === 'warning'
+                    ? 'exclamation'
+                    : type === 'danger'
+                        ? 'times-circle'
+                        : 'question';
+
         $('body').append('<div class="push-notification push-' + type + '" id="notification"><i class="notification-icon fa fa-' + icon + '" aria-hidden="true"></i>' + message + '</div>');
         $('#notification').show().delay(4000).fadeOut(1200, function () {
             $('#notification').remove();
@@ -240,7 +248,7 @@ $(document).ready(function () {
 
     if (getCookie('collapseSymbols') == 'true') {
         $('td').contents().filter(function () {
-            return this.nodeType == 3 && this.nodeValue.indexOf('->') >= 0 | this.nodeValue.indexOf('<-') >= 0;
+            return this.nodeType == 3 && this.nodeValue.indexOf('->[') >= 0 | this.nodeValue.indexOf('<-[') >= 0;
         })
         .each(function (cell) {
             if (this.parentNode != null && this.parentNode != undefined) {
