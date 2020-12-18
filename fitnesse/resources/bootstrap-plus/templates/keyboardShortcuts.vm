@@ -109,6 +109,23 @@
                     <kbd>Alt + 2</kbd>
                     <span class="help-key-def">Toggle context help in Editor</span>
                 </li>
+                <li><h4>Sidebar Navigation</h4></li>
+                <li>
+                    <kbd>Arrow Up/Down</kbd>
+                    <span class="help-key-def">Navigate sidebar</span>
+                </li>
+                <li>
+                    <kbd>Arrow Left/Right/Space</kbd>
+                    <span class="help-key-def">Show/Hide Children</span>
+                </li>
+                <li>
+                    <kbd>Right Alt</kbd>
+                    <span class="help-key-def">Open Context Menu</span>
+                </li>
+                <li>
+                    <kbd>Enter</kbd>
+                    <span class="help-key-def">Open Selected page</span>
+                </li>
             </ul>
         </div>
         <a href="javascript:history.back()" class="button">Close</a>

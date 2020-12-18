@@ -125,9 +125,51 @@ function showNotification(type, message) {
  */
 
 $(document).ready(function () {
+
+    $(document).keydown(function (e) {
+        var items = $('#sidebarContent div:visible');
+        var itemSelected = $(".highlight");
+        var index = items.index(itemSelected);
+        var focused = document.activeElement.tagName;
+        var prevent = focused.toLowerCase() === 'textarea'
+                        || focused.toLowerCase() === 'input'
+                        || focused.toLowerCase() === 'select'
+                        || $(".context-menu-list").is(":visible")
+                        || !$("#sidebarContent").is(":visible");
+        if (prevent) {
+            return;
+        }
+        if(e.which === 40){
+
+            itemSelected.removeClass('highlight');
+            next = items.eq(index + 1);
+            if(next.length > 0){
+                itemSelected = next.addClass('highlight');
+            }else{
+                itemSelected = items.eq(0).addClass('highlight');
+            }
+
+        } else if(e.which === 38){
+            itemSelected.removeClass('highlight');
+            next = items.eq(index - 1);
+            if(next.length > 0){
+                itemSelected = next.addClass('highlight');
+            }else{
+                itemSelected = items.last().addClass('highlight');
+            }
+        } else if(e.which === 37 || e.which === 39 || e.which === 32) {
+            itemSelected.children('.iconToggle').trigger('click');
+        } else if(e.which === 13) {
+            location.href=itemSelected.children('a').attr("href");
+        }
+        else if(e.code === 'AltRight') {
+            itemSelected.children('a').trigger('contextmenu');
+        }
+    });
+
     $(document).keydown(function (e) {
         var evtobj = window.event ? event : e;
-        //Get definition on SHIFT-ALT-D or ctrl-comma
+        //toggle sidebar with alt-1
         if ((evtobj.keyCode == 49 && evtobj.altKey)) {
             e.preventDefault();
             switchCollapseSidebar();
@@ -602,13 +644,13 @@ function getSidebarContentHtml(content) {
     let toggleClass = content.children
         ? 'iconToggle iconWidth fa fa-angle-right'
         : 'iconWidth';
-    let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
+    let highlight = location.pathname === ('/' + content.path) ? ' class="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
     const tagString = sidebarTags(content.tags);
 
     // If Frontpage
-    highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' id="highlight"' : highlight;
+    highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' class="highlight"' : highlight;
     // If files
     if (content.path.slice(0, 5) === 'files') {
         iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
@@ -767,7 +809,10 @@ function handleContextMenuClick(key, element) {
          exp.setTime(exp.getTime() + 3600*1000*24*365);
          document.cookie = 'sidebarRoot=/' + element[0].pathname.replace('/', '.').substring(1) + ';expires=' + exp.toGMTString() + ';path=/';
          getSidebarContent(placeEverythingForSidebar);
-         $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
+         $("#resetSidebarRoot").remove();
+         if (!$("#resetSidebarRoot").is(":visible")) {
+            $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
+         }
          //Manually register onClick handler
          $('#resetSidebarRoot').click(function () {
                  document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
