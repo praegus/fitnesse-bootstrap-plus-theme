@@ -389,7 +389,8 @@ function validateTestPage() {
     for (var i = 0; i < totalLines; i++) {
         cm.setGutterMarker(i, 'CodeMirror-lint-markers', null);
         var lineContent = cm.doc.getLine(i).trim();
-        if (lineContent.startsWith('|') || lineContent.startsWith('!|') || lineContent.startsWith('-|') || lineContent.startsWith('-!|')) {
+        if (lineContent.startsWith('|') || lineContent.startsWith('!|') || lineContent.startsWith('-|')
+                || lineContent.startsWith('-!|') || lineContent.startsWith('^|') || lineContent.startsWith('-^|')) {
             //Treat as a table line
             if (row == 0) {
                 //determine the table type
@@ -410,7 +411,7 @@ function validateTestPage() {
                     tableType = 'treatAsDT';
                 }
             } else if (!lineContent.startsWith('|')) {
-                var message = 'only the first row can start with ! or -';
+                var message = 'only the first row can start with !, ^ or -';
                 cm.setGutterMarker(i, 'CodeMirror-lint-markers', makeMarker(message, 'error'));
                 msgs++;
                 row++;

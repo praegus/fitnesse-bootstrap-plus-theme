@@ -223,6 +223,14 @@ $(document).ready(function () {
         setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
     });
 
+    $('#resetSidebarRoot').click(function () {
+        setBootstrapPlusConfigCookie("sidebarRoot", "");
+        $('#sidebarContent').empty();
+        $('#sidebarContent').append('<div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>');
+        getSidebarContent(placeEverythingForSidebar);
+        $(this).remove();
+    });
+
     // For resizing the Sidebar and context help
     $('#sidebar').resizable({
         handles: 'e',
@@ -506,7 +514,7 @@ function getSidebarContent(callback) {
     try {
         $.ajax({
             type: 'GET',
-            url: 'http://' + location.host + getMainWorkSpace(location.pathname) + '?responder=tableOfContents',
+            url: 'http://' + location.host + getWorkSpace(location.pathname) + '?responder=tableOfContents',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: contentArray => callback(contentArray),
@@ -517,13 +525,19 @@ function getSidebarContent(callback) {
     } catch(e) { }
 }
 
-function getMainWorkSpace(mainWorkspace) {
-    if (mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage') {
+function getWorkSpace(mainWorkspace) {
+
+    if (getCookie('sidebarRoot').length == 0 && mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage') {
         mainWorkspace = '/root';
-    } else if (mainWorkspace.includes('.')) {
+    } else if (getCookie('sidebarRoot').length == 0 && mainWorkspace.includes('.')) {
         mainWorkspace = mainWorkspace.slice(0, mainWorkspace.indexOf('.'));
     }
-    return mainWorkspace;
+
+    var workspace = getCookie('sidebarRoot').length > 0
+            ? getCookie('sidebarRoot')
+            : mainWorkspace;
+
+    return workspace;
 }
 
 function placeEverythingForSidebar(contentArray) {
@@ -547,11 +561,14 @@ function placeSidebarContent(contentArray) {
 
     contentArray.forEach(layerOne => {
         // If path name doesn't exist and location.path is root
-        layerOne.path === '' && (location.pathname.toLowerCase() === '/root' || location.pathname.toLowerCase() === '/frontpage' || location.pathname === '/')
+        layerOne.path === '' && (location.pathname.toLowerCase() === '/root' ||
+                                 location.pathname.toLowerCase() === '/frontpage' ||
+                                 location.pathname === '/')
             ? layerOne.path = 'root'
             : layerOne.path = layerOne.path;
 
         // Place the li in the html
+        $('#sidebarContent').empty();
         $('#sidebarContent').append(getSidebarContentHtml(layerOne));
 
         // If there are children
@@ -577,11 +594,14 @@ function sidebarContentLayerLoop(suiteName, children) {
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
-    let iconClass = content.type.includes('suite') ?
-        'fa fa-cogs icon-test' :
-        content.type.includes('test') ?
-            'fa fa-cog icon-suite' : 'fa fa-file-o icon-static';
-    let toggleClass = content.children ? 'iconToggle iconWidth fa fa-angle-right' : 'iconWidth';
+    let iconClass = content.type.includes('suite')
+        ? 'fa fa-cogs icon-test'
+        : content.type.includes('test')
+            ? 'fa fa-cog icon-suite'
+            : 'fa fa-file-o icon-static';
+    let toggleClass = content.children
+        ? 'iconToggle iconWidth fa fa-angle-right'
+        : 'iconWidth';
     let highlight = location.pathname === ('/' + content.path) ? ' id="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
@@ -695,7 +715,7 @@ $(function(){
                         icon: "fa-play-circle-o",
                         visible: function(key, opt) { return showRunnablePageItems(opt); }
                         },
-                "runNewTab": {name: "Run in new tab",
+                "runNewTab": {name: "Run in New Tab",
                         icon: "fa-play-circle-o",
                         visible: function(key, opt) { return showRunnablePageItems(opt); },
                         className: "contextmenu-newtab"
@@ -703,7 +723,7 @@ $(function(){
                 "sep0": {type: "cm_separator", visible: function(key, opt) { return showRunnablePageItems(opt); }
                         },
                 "edit": {name: "Edit", icon: "fa-edit"},
-                "editNewTab": {name: "Edit in new tab", icon: "fa-edit", className: "contextmenu-newtab"},
+                "editNewTab": {name: "Edit in New Tab", icon: "fa-edit", className: "contextmenu-newtab"},
                 "rename": {name: "Rename", icon: "fa-pencil"},
                 "move": {name: "Move", icon: "fa-long-arrow-right"},
                 "delete": {name: "Delete", icon: "fa-trash-o"},
@@ -719,12 +739,13 @@ $(function(){
                 },
                 "sep2": {type: "cm_separator"},
                 "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
+                "setSidebarRoot": {name: "Set as Sidebar Root", icon: "fa-thumb-tack"},
                 "testhistory": {name: "Test History",
                                 icon: "fa-history",
                                 visible: function(key, opt) {
                                     return showRunnablePageItems(opt);
                                  }},
-                "search": {name: "Search from here", icon: "fa-search"},
+                "search": {name: "Search From Here", icon: "fa-search"},
                 "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
             }
         });
@@ -741,6 +762,20 @@ function showRunnablePageItems(opt) {
 function handleContextMenuClick(key, element) {
     if (key === 'copypath') {
         copyToClipboard(element[0].pathname.replace('/', '.'));
+    } else if (key === 'setSidebarRoot') {
+         var exp = new Date();
+         exp.setTime(exp.getTime() + 3600*1000*24*365);
+         document.cookie = 'sidebarRoot=/' + element[0].pathname.replace('/', '.').substring(1) + ';expires=' + exp.toGMTString() + ';path=/';
+         getSidebarContent(placeEverythingForSidebar);
+         $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
+         //Manually register onClick handler
+         $('#resetSidebarRoot').click(function () {
+                 document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+                 $('#sidebarContent').empty();
+                 $('#sidebarContent').append('<div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>');
+                 getSidebarContent(placeEverythingForSidebar);
+                 $(this).remove();
+             });
     } else {
         var responder = getResponder(key, element);
         if (key.includes('NewTab')) {
