@@ -394,7 +394,7 @@ function validateTestPage() {
             //Treat as a table line
             if (row == 0) {
                 //determine the table type
-                var cleanLineContent = lineContent.replace(/([!-]*)(?=\|)/, '');
+                var cleanLineContent = lineContent.replace(/(^[!^-]+)(?=\|)/, '');
                 var firstCellVal = getCellValues(cleanLineContent)[0].toLowerCase().trim();
                 if (firstCellVal.startsWith('conditional')) {
                     tableType = 'conditional';
@@ -432,7 +432,7 @@ function validateTestPage() {
                 } else if (tableType == 'script') {
                     //Script tables
 
-                    lineContent = lineContent.replace(/([!-]*)(?=\|)/, '')
+                    lineContent = lineContent.replace(/(^[!^-]+)(?=\|)/, '')
                     .replace(/([a-z])([A-Z])/g, '$1 $2')
                     .replace(/([A-Z])([a-z])/g, ' $1$2')
                     .replace(/\ +/g, ' ').trim().toLowerCase();
@@ -501,7 +501,7 @@ function validateTestPage() {
                         }
 
                         //Validate first line against context
-                        lineContent = lineContent.replace(/([!-]*)(?=\|)/, '')
+                        lineContent = lineContent.replace(/(^[!^-]+)(?=\|)/, '')
                         .replace(/[\w\s]+:/, '').replace(/([a-z])([A-Z])/g, '$1 $2')
                         .replace(/([A-Z])([a-z])/g, ' $1$2')
                         .replace(/\ +/g, ' ').trim().toLowerCase();
@@ -620,7 +620,7 @@ function setNewContextBadge() {
 
 var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table',
     'scenario', 'conditional scenario', 'looping scenario', 'table template', 'show',
-    'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-'];
+    'ensure', 'reject', 'check', 'check not', 'start', 'push fixture', 'pop fixture', '!', '-!', '-', '^', '-^'];
 
 $(document).ready(function () {
     var showDefinitions = (function showDefinitions() {
