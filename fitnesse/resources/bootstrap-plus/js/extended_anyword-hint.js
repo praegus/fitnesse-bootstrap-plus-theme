@@ -106,19 +106,31 @@ function loadAutoCompletesFromResponder() {
     autocompletes.push('!sunday');
     autocompletes.push('!randomBSN');
     autocompletes.push('!randomInt');
+    autocompletes.push('!randomInt (min,max)');
     autocompletes.push('!randomString');
+    autocompletes.push('!randomString (min,maxLength) (allowedChars) (prefix)');
     autocompletes.push('!randomEmail');
     autocompletes.push('!monthsFromToday');
     autocompletes.push('!lastDayOfMonth');
     autocompletes.push('!weekDaysFromToday');
     autocompletes.push('!define');
     autocompletes.push('!defineDefault');
-    autocompletes.push('!defineFromProperties');
-    autocompletes.push('!defineDefaultFromProperties');
+    autocompletes.push('!defineFromProperties (fileName)');
+    autocompletes.push('!defineDefaultFromProperties (fileName)');
     autocompletes.push('!randomIBAN');
+    autocompletes.push('!randomIBAN (countryCode)');
+    autocompletes.push('!randomIBAN (countryCode) (bankCode)');
     autocompletes.push('!randomPostalCode');
+    autocompletes.push('!randomPostalCode (countryCode)');
     autocompletes.push('!randomDutchLicensePlate');
-    autocompletes.push('!randomUuid ');
+    autocompletes.push('!randomDutchLicensePlate (category)');
+    autocompletes.push('!randomDutchLicensePlate (category) (sideCode)');
+    autocompletes.push('!randomUuid');
+    autocompletes.push('!Fake (category)');
+    autocompletes.push('!Fake (category) (item)');
+    autocompletes.push('!Fake (category) (item) (locale)');
+    autocompletes.push('!includeIfAvailable');
+    autocompletes.push('!VersionChecker');
 
     CodeMirror.registerHelper('hint', 'fitnesse_anyword', function (editor, options) {
         var word = options && options.word || WORD;
