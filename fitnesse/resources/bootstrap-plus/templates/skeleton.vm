@@ -163,7 +163,7 @@
                 <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
                 <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
                 <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
-                #if ($sidebarRoot.length() > 0)
+                #if ($sidebarRoot && $sidebarRoot.length() > 0)
                     <i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>
                 #end
             </div>
