@@ -1,3 +1,4 @@
+*.swp
 .idea/*
 target/*
 fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus*.css
