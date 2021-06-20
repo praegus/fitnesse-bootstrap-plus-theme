@@ -3,7 +3,7 @@ try {
     module.exports = {
         // Sidebar.test
         getSidebarContentHtml: getSidebarContentHtml,
-        getMainWorkSpace: getMainWorkSpace,
+        //getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         toggleIconClickEvent: toggleIconClickEvent,
         expandRouteSidebarIcons: expandRouteSidebarIcons,
@@ -23,6 +23,7 @@ try {
         getPageHistory: getPageHistory
     };
 } catch (e) {
+    console.log(e);
 }
 
 /**
