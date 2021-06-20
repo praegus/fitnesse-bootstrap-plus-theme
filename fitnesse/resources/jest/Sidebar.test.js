@@ -5,7 +5,7 @@ beforeEach(() => jest.resetModules());
 /*
  getMainWorkSpace
  */
-it('Test if input "TestSuiteDemo.FrontEndTests" will return main work space "TestSuiteDemo"', () => {
+it.skip('Test if input "TestSuiteDemo.FrontEndTests" will return main work space "TestSuiteDemo"', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const expectedResult = 'TestSuiteDemo';
 
@@ -14,7 +14,7 @@ it('Test if input "TestSuiteDemo.FrontEndTests" will return main work space "Tes
     expect(receivedResult).toEqual(expectedResult);
 });
 
-it('Test if input "TestSuiteDemo." will return main work space "TestSuiteDemo"', () => {
+it.skip('Test if input "TestSuiteDemo." will return main work space "TestSuiteDemo"', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const expectedResult = 'TestSuiteDemo';
 
@@ -23,7 +23,7 @@ it('Test if input "TestSuiteDemo." will return main work space "TestSuiteDemo"',
     expect(receivedResult).toEqual(expectedResult);
 });
 
-it('Test if input "TestSuiteDemo" will return main work space "TestSuiteDemo"', () => {
+it.skip('Test if input "TestSuiteDemo" will return main work space "TestSuiteDemo"', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
     const expectedResult = 'TestSuiteDemo';
 
