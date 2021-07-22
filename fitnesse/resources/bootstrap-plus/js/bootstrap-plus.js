@@ -1,16 +1,12 @@
 // Needed for Jest
 try {
     module.exports = {
-        // Sidebar.test
         getSidebarContentHtml: getSidebarContentHtml,
-        getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         toggleIconClickEvent: toggleIconClickEvent,
         expandRouteSidebarIcons: expandRouteSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
-        // Tooltip.test
         placeToolTip:placeToolTip,
-        // Tags.test
         createTagInput: createTagInput,
         checkIfNewTagIsValid: checkIfNewTagIsValid,
         postTagInHtml: postTagInHtml,
@@ -18,11 +14,11 @@ try {
         deleteClickAndHoverEvent: deleteClickAndHoverEvent,
         joinTagList: joinTagList,
         deleteTag: deleteTag,
-        // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory: getPageHistory
     };
 } catch (e) {
+    //Intentionally left blank
 }
 
 /**
@@ -187,7 +183,7 @@ $(document).ready(function () {
 
     //This is for testHistoryChecker
     if ((location.pathname === '/FrontPage' || location.pathname === '/') && !location.search.includes('?')) {
-        getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
+        getPageHistory(location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
     }
     // for recent test history filter switch
     if(getCookie('historySpecialPages')== 'true'){
@@ -387,7 +383,7 @@ $(document).ready(function () {
     $('body').on('click', '#history-specialPages-switch', function (e) {
         e.preventDefault();
         switchHistorySpecialPages();
-        var info = getPageHistory('http://' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
+        var info = getPageHistory(location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
         $('#recentTestHistoryTable').html('');
         $('#recentTestHistoryTable').load(info);
         }
@@ -556,7 +552,7 @@ function getSidebarContent(callback) {
     try {
         $.ajax({
             type: 'GET',
-            url: 'http://' + location.host + getWorkSpace(location.pathname) + '?responder=tableOfContents',
+            url: location.protocol + '//' + location.host + getWorkSpace(location.pathname) + '?responder=tableOfContents',
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: contentArray => callback(contentArray),
@@ -921,7 +917,7 @@ function getToolTips(callback) {
     // get data from responder
     $.ajax({
         type: 'GET',
-        url: 'http://' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
+        url: location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?Tooltips',
         contentType: 'charset=utf-8',
         success: data => callback(data),
         error: function (xhr) {
@@ -1006,7 +1002,7 @@ function createTagInput(currentAddTagButton) {
 function GetCurrentTagList(callback, currentPageURL, responderURL, newTags) {
     $.ajax({
         type: 'GET',
-        url: 'http://' + location.host + '/' + currentPageURL + responderURL,
+        url: location.protocol + '//' + location.host + '/' + currentPageURL + responderURL,
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: data => callback(data, currentPageURL, newTags),
@@ -1058,7 +1054,7 @@ function checkIfNewTagIsValid(data, currentPageURL, newTags) {
         // Post tags
         const currentTagString = (typeof data[0].tags !== 'undefined') ? data[0].tags.join(', ') : '';
         const tagList = currentTagString.length > 0 ? currentTagString + ', ' + newTags : newTags;
-        const url = 'http://' + location.host + '/' + currentPageURL;
+        const url = location.protocol + '//' + location.host + '/' + currentPageURL;
         postTagRequest(postTagInHtml, url, tagList, {currentPageURL, newTags});
     }
 }
@@ -1107,7 +1103,7 @@ function deleteClickAndHoverEvent(deleteTagButton) {
         const getCurrentPage = $(this).parent().parent().find('.addTagDiv').find('a')[0];
         const currentTagArray = ($(getCurrentPage).hasClass('suite') === true) ? $(this).parent().parent().children('.tag') : $(this).parent().parent().find('.tag');
         const currentTagSpan = $(this).parent();
-        const url = 'http://' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
+        const url = location.protocol + '//' + location.host + '/' + $(this).parent().siblings('.addTagDiv').find('a').attr('href');
         postTagRequest(deleteTag, url, joinTagList(chosenTag, currentTagArray), {currentTagSpan});
     });
 }
