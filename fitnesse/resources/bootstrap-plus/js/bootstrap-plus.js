@@ -1,16 +1,12 @@
 // Needed for Jest
 try {
     module.exports = {
-        // Sidebar.test
         getSidebarContentHtml: getSidebarContentHtml,
-        //getMainWorkSpace: getMainWorkSpace,
         placeSidebarContent: placeSidebarContent,
         toggleIconClickEvent: toggleIconClickEvent,
         expandRouteSidebarIcons: expandRouteSidebarIcons,
         expandSidebarIcons: expandSidebarIcons,
-        // Tooltip.test
         placeToolTip:placeToolTip,
-        // Tags.test
         createTagInput: createTagInput,
         checkIfNewTagIsValid: checkIfNewTagIsValid,
         postTagInHtml: postTagInHtml,
@@ -18,12 +14,11 @@ try {
         deleteClickAndHoverEvent: deleteClickAndHoverEvent,
         joinTagList: joinTagList,
         deleteTag: deleteTag,
-        // TestHistoryChecker.test
         generateTestHistoryTable: generateTestHistoryTable,
         getPageHistory: getPageHistory
     };
 } catch (e) {
-    console.log(e);
+    //Intentionally left blank
 }
 
 /**
