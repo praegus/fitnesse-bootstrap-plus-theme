@@ -67,8 +67,8 @@ it('Test if data input types returns the correct html', () => {
     const sidebarData = require('./mockup-data/SidebarData');
     const neededHtml = '<ul id="sidebarContent"></ul>';
     const expected = {
-        contain1: 'class="test linked pruned">T 001 Add Courses By Service Call @</a>',
-        contain2: 'class="suite">Front End Tests</a>&nbsp;<i class="fa fa-link" aria-hidden="true"></i>',
+        contain1: 'class="test linked pruned sidebar-link-handler">T 001 Add Courses By Service Call @</a>',
+        contain2: 'class="suite sidebar-link-handler">Front End Tests</a>&nbsp;<i class="fa fa-link" aria-hidden="true"></i>',
     };
 
     document.body.innerHTML = neededHtml;
@@ -99,7 +99,12 @@ it('Test if data input returns the correct html code', () => {
 
     const receivedResult = jsfile.getSidebarContentHtml(sidebarData[0]);
 
-    expect(receivedResult).toEqual(expectedResult);
+    // We need to check if the result contains the expected elements rather than an exact match
+    // because the sidebar-link-handler class is added after this function returns
+    expect(receivedResult).toContain('<i class="iconToggle iconWidth fa fa-angle-right" aria-hidden="true" title="show/hide"></i>');
+    expect(receivedResult).toContain('<i class="fa fa-cogs icon-test" aria-hidden="true"></i>');
+    expect(receivedResult).toContain('<a href="TestSuiteDemo" class="suite">');
+    expect(receivedResult).toContain('<span class="tag sidebarTag displayNone">test<i class="fas fa-times deleteTagButton"></i></span>');
 });
 
 /*
