@@ -135,7 +135,7 @@ $(document).ready(function () {
         document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
     });
 
-    $(document).keydown(function (e) {
+    $(document).on('keydown', function (e) {
         var items = $('#sidebarContent div:visible');
         var itemSelected = $(".highlight");
         var index = items.index(itemSelected);
@@ -176,7 +176,7 @@ $(document).ready(function () {
         }
     });
 
-    $(document).keydown(function (e) {
+    $(document).on('keydown', function (e) {
         var evtobj = window.event ? event : e;
         //toggle sidebar with alt-1
         if ((evtobj.keyCode == 49 && evtobj.altKey)) {
@@ -268,12 +268,12 @@ $(document).ready(function () {
     }
 
     // For the Sidebar buttons
-    $('#collapseAllSidebar').click(function () {
+    $('#collapseAllSidebar').on('click', function () {
         expandRouteSidebarIcons(location.pathname);
         scrollSideBarToHighlight();
         setBootstrapPlusConfigCookie("sidebarTreeState", "");
     });
-    $('#expandAllSidebar').click(function () {
+    $('#expandAllSidebar').on('click', function () {
         // Set cookie to remember expanded state BEFORE making the request
         setBootstrapPlusConfigCookie("sidebarTreeState", "expanded");
         
@@ -314,7 +314,7 @@ $(document).ready(function () {
         });
     });
 
-    $('#resetSidebarRoot').click(function () {
+    $('#resetSidebarRoot').on('click', function () {
         setBootstrapPlusConfigCookie("sidebarRoot", "");
         $('#sidebarContent').empty();
         $('#sidebarContent').append('<div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>');
@@ -360,7 +360,7 @@ $(document).ready(function () {
             $(this).addClass('closed');
         });
 
-        $('.canToggle').click(function () {
+        $('.canToggle').on('click', function () {
             if ($(this).hasClass('closed')) {
                 $(this).next('.symbol-data').css('display', 'inline-flex');
                 $(this).removeClass('closed');
@@ -373,7 +373,7 @@ $(document).ready(function () {
         });
     }
 
-    $('#alltags').change(function () {
+    $('#alltags').on('change', function () {
         if (this.checked) {
             $('#filtertags').attr('name', 'runTestsMatchingAllTags');
         } else {
@@ -381,7 +381,7 @@ $(document).ready(function () {
         }
     });
 
-    $('.fa-cogs').click(function () {
+    $('.fa-cogs').on('click', function () {
         $(this).siblings('ul').toggle();
     });
 
@@ -593,7 +593,7 @@ $(document).ready(function () {
     tagButtonHover('suite');
 
     // Click add tag function
-   $('.addTag').click(function () {
+   $('.addTag').on('click', function () {
        createTagInput($(this));
    });
 
@@ -1037,7 +1037,7 @@ function handleContextMenuClick(key, element) {
             $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
          }
          //Manually register onClick handler
-         $('#resetSidebarRoot').click(function () {
+         $('#resetSidebarRoot').on('click', function () {
                  document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
                  $('#sidebarContent').empty();
                  $('#sidebarContent').append('<div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>');
@@ -1201,14 +1201,14 @@ function createTagInput(currentAddTagButton) {
     $('.tagInputOverview').focus();
 
     //Remove tag input (& tag error message) when focus is out of the input field
-    $('.tagInputOverview').focusout(function () {
+    $('.tagInputOverview').on('focusout', function () {
         $('.tagInputOverview').remove();
         if ($('.tagErrorMessage').length) {
             $('.tagErrorMessage').remove();
         }
     });
 
-    $('.tagInputOverview').keyup(function (event) {
+    $('.tagInputOverview').on('keyup', function (event) {
         if (event.keyCode === 13) {
             const currentPageURL = $(currentAddTagButton).siblings('a').attr('href');
             const responderURL = '?responder=tableOfContents';
@@ -1325,7 +1325,7 @@ function deleteClickAndHoverEvent(deleteTagButton) {
     );
 
     // Click delete tag function
-    $(deleteTagButton).click(function () {
+    $(deleteTagButton).on('click', function () {
         const chosenTag = $(this).parent().text().trim();
         const getCurrentPage = $(this).parent().parent().find('.addTagDiv').find('a')[0];
         const currentTagArray = ($(getCurrentPage).hasClass('suite') === true) ? $(this).parent().parent().children('.tag') : $(this).parent().parent().find('.tag');
