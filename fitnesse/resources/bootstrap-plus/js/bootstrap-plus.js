@@ -73,57 +73,119 @@ function copyToClipboard (str) {
 }
 
 function processSymbolData(str) {
-    var result = '';
-    var inSymbol = false;
-    var nesting = 0;
-    for (var i = 0; i < str.length; i++) {
-        if (str[i] === '[') {
-            if (nesting == 0) {
-                result += '<span class="symbol-data">';
+    /**
+     * Processes string data to wrap symbol sections (content between brackets) with span tags
+     * and remove arrow notation.
+     * Performance optimized version using a single-pass with array buffer.
+     * 
+     * @param {string} str - The string to process
+     * @return {string} - Processed string with symbol data wrapped in spans
+     */
+    
+    // Shortcut for empty strings
+    if (!str || str.length === 0) {
+        return str;
+    }
+    
+    // Use array as buffer - faster than string concatenation
+    const resultBuffer = [];
+    let inSymbol = false;
+    let nestingLevel = 0;
+    
+    // Process the entire string in a single pass
+    for (let i = 0; i < str.length; i++) {
+        const currentChar = str[i];
+        
+        if (currentChar === '[') {
+            nestingLevel++;
+            
+            // Only add span opening for the outermost bracket
+            if (nestingLevel === 1) {
+                resultBuffer.push('<span class="symbol-data">');
                 inSymbol = true;
             } else {
-                result += str[i];
+                resultBuffer.push(currentChar);
             }
-            nesting++;
-        } else if (str[i] === ']') {
-            nesting--;
-            if (nesting > 0) {
-                result += str[i];
-            } else if (inSymbol) {
-                result += '</span>';
+        } 
+        else if (currentChar === ']') {
+            nestingLevel--;
+            
+            if (nestingLevel === 0 && inSymbol) {
+                resultBuffer.push('</span>');
                 inSymbol = false;
+            } else {
+                resultBuffer.push(currentChar);
             }
-        } else {
-            result += str[i];
+        } 
+        else {
+            resultBuffer.push(currentChar);
         }
     }
-    return result.replace(/&lt;-|-&gt;/g, '');
+    
+    // Join buffer only once at the end and remove arrow notation
+    return removeArrowNotation(resultBuffer.join(''));
 }
 
-function showNotification(type, message) {
-    if ($('#notification').length < 1) {
-        const icon = type === 'success'
-            ? 'check'
-            : type === 'info'
-                ? 'info'
-                : type === 'warning'
-                    ? 'exclamation'
-                    : type === 'danger'
-                        ? 'times-circle'
-                        : 'question';
+/**
+ * Removes arrow notation (&lt;- and -&gt;) from a string.
+ * 
+ * @param {string} str - The string to process
+ * @return {string} - String with arrow notation removed
+ */
+function removeArrowNotation(str) {
+    // Use a single regex replace operation
+    return str.replace(/&lt;-|-&gt;/g, '');
+}
 
-        $('body').append('<div class="push-notification push-' + type + '" id="notification"><i class="notification-icon fa fa-' + icon + '" aria-hidden="true"></i>' + message + '</div>');
-        $('#notification').show().delay(4000).fadeOut(1200, function () {
-            $('#notification').remove();
-        });
+/**
+ * Shows a notification message to the user
+ * 
+ * @param {string} type - The type of notification ('success', 'info', 'warning', 'danger', or any other value defaults to 'question')
+ * @param {string} message - The message to display
+ * @return {void}
+ */
+function showNotification(type, message) {
+    // Only show if no notification is currently displayed
+    if ($('#notification').length >= 1) {
+        return;
     }
+    
+    // Map notification types to their corresponding icons
+    const iconMap = {
+        success: 'check',
+        info: 'info',
+        warning: 'exclamation',
+        danger: 'times-circle',
+        default: 'question'
+    };
+    
+    // Get the appropriate icon or use default if type is not recognized
+    const icon = iconMap[type] || iconMap.default;
+    
+    // Create notification element
+    const notificationHtml = 
+        `<div class="push-notification push-${type}" id="notification">
+            <i class="notification-icon fa fa-${icon}" aria-hidden="true"></i>
+            ${message}
+        </div>`;
+    
+    // Add notification to the DOM and set animation
+    $('body').append(notificationHtml);
+    
+    // Show notification and remove after animation completes
+    $('#notification')
+        .show()
+        .delay(4000)
+        .fadeOut(1200, function() {
+            $(this).remove();
+        });
 }
 
 /*
  DOCUMENT READY START
  */
 
-$(document).ready(function () {
+$(function() {
 
     // Reset sidebar root when we're on FrontPage or root
     if (location.pathname === '/' || location.pathname.toLowerCase() === '/frontpage') {
@@ -745,7 +807,7 @@ function sidebarContentLayerLoopOptimized(parentElement, children, currentDepth)
             // Make sure there's no toggle icon for nodes without children
             const toggleIcon = $(li).find('i').first();
             if (toggleIcon.hasClass('iconToggle')) {
-                toggleIcon.removeClass('iconToggle fa fa-angle-right fa-angle-down');
+                toggleIcon.removeClass('iconToggle fa fa-angle-right');
                 toggleIcon.addClass('iconWidth');
             }
         }
