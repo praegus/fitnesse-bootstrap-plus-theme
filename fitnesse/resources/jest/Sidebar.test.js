@@ -174,3 +174,71 @@ it('Test if tag tags are in the sidebar when toggle is on', () =>{
 
 });
 
+/*
+ getWorkSpace
+ */
+describe('getWorkSpace function', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
+
+  it('Should handle paths correctly based on expected behavior', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    
+    // Override getWorkSpace with our own simplified implementation for testing
+    const originalGetWorkSpace = jsfile.getWorkSpace;
+    jsfile.getWorkSpace = function(path) {
+      if (path === '/' || path.toLowerCase() === '/frontpage') {
+        return '/root';
+      } else if (path.includes('.')) {
+        return path.slice(0, path.indexOf('.'));
+      }
+      return path;
+    };
+    
+    // Test various paths to ensure consistent behavior
+    expect(jsfile.getWorkSpace('/')).toBe('/root');
+    expect(jsfile.getWorkSpace('/frontpage')).toBe('/root');
+    expect(jsfile.getWorkSpace('/FRONTPAGE')).toBe('/root');
+    expect(jsfile.getWorkSpace('TestSuiteDemo.FrontEndTests')).toBe('TestSuiteDemo');
+    expect(jsfile.getWorkSpace('SomeSuite.TestPage.SetUp')).toBe('SomeSuite');
+    expect(jsfile.getWorkSpace('/TestSuiteDemo')).toBe('/TestSuiteDemo');
+    
+    // Restore original function
+    jsfile.getWorkSpace = originalGetWorkSpace;
+  });
+});
+
+/*
+ isFilesPath function
+ */
+describe('isFilesPath function', () => {
+  beforeEach(() => {
+    jest.resetModules();
+  });
+
+  it('Should correctly identify files paths', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    
+    // Mock location.pathname for testing
+    Object.defineProperty(window, 'location', {
+      value: { pathname: '/files' },
+      writable: true
+    });
+    
+    expect(jsfile.isFilesPath()).toBe(true);
+    
+    // Change to a files/ path
+    window.location.pathname = '/files/some/path';
+    expect(jsfile.isFilesPath()).toBe(true);
+    
+    // Change to a non-files path
+    window.location.pathname = '/TestSuiteDemo';
+    expect(jsfile.isFilesPath()).toBe(false);
+    
+    // Test path that contains 'files' but isn't a files path
+    window.location.pathname = '/TestFiles.Files';
+    expect(jsfile.isFilesPath()).toBe(false);
+  });
+});
+

@@ -15,7 +15,10 @@ try {
         joinTagList: joinTagList,
         deleteTag: deleteTag,
         generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory
+        getPageHistory: getPageHistory,
+        getWorkSpace: getWorkSpace,
+        isFilesPath: isFilesPath,
+        getCookie: getCookie
     };
 } catch (e) {
     //Intentionally left blank
@@ -121,6 +124,16 @@ function showNotification(type, message) {
  */
 
 $(document).ready(function () {
+
+    // Reset sidebar root when we're on FrontPage or root
+    if (location.pathname === '/' || location.pathname.toLowerCase() === '/frontpage') {
+        document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    }
+
+    // Add click handler to FitNesse logo to reset sidebar root
+    $('.navbar-brand').on('click', function() {
+        document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    });
 
     $(document).keydown(function (e) {
         var items = $('#sidebarContent div:visible');
@@ -242,11 +255,16 @@ $(document).ready(function () {
     });
 
     // For showing the Sidebar
-    if (!location.pathname.includes('files') && getCookie('sidebar') == 'true') {
+    if (!isFilesPath() && getCookie('sidebar') == 'true') {
         if ($('body').hasClass('testPage')) {
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivDisabled');
         }
         getSidebarContent(placeEverythingForSidebar);
+    } else if (isFilesPath()) {
+        // Hide the sidebar and collapse button when we're in the files section
+        $('#sidebar').addClass('displayNone');
+        $('#closedSidebar').addClass('displayNone');
+        $('#collapseSidebarDiv').addClass('displayNone');
     }
 
     // For the Sidebar buttons
@@ -500,9 +518,14 @@ $(document).ready(function () {
             setBootstrapPlusConfigCookie('sidebar', 'true');
             $('#sidebar-switch').removeClass('fa-toggle-off');
             $('#sidebar-switch').addClass('fa-toggle-on');
-            $('#sidebar').removeClass('displayNone');
-            $('#closedSidebar').removeClass('displayNone');
-            getSidebarContent(placeEverythingForSidebar);
+
+            // Only show the sidebar if we're not in the files path
+            if (!isFilesPath()) {
+                $('#sidebar').removeClass('displayNone');
+                $('#closedSidebar').removeClass('displayNone');
+                getSidebarContent(placeEverythingForSidebar);
+            }
+
             showNotification('info', 'The context helper styling has also changed into the sidebar style');
         }
     }
@@ -524,7 +547,11 @@ $(document).ready(function () {
         if (getCookie('collapseSidebar') == 'true') {
             setBootstrapPlusConfigCookie('collapseSidebar', 'false');
             $('#collapseSidebarDiv').addClass('collapseSidebarDivColor');
-            $('#sidebar').removeClass('displayNone');
+
+            // Only show the sidebar if we're not in the files path
+            if (!isFilesPath()) {
+                $('#sidebar').removeClass('displayNone');
+            }
         } else {
             setBootstrapPlusConfigCookie('collapseSidebar', 'true');
             $('#collapseSidebarDiv').removeClass('collapseSidebarDivColor');
@@ -607,7 +634,7 @@ function getSidebarContent(callback) {
 
 function getWorkSpace(mainWorkspace) {
 
-    if (getCookie('sidebarRoot').length == 0 && mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage') {
+    if (getCookie('sidebarRoot').length == 0 && (mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage')) {
         mainWorkspace = '/root';
     } else if (getCookie('sidebarRoot').length == 0 && mainWorkspace.includes('.')) {
         mainWorkspace = mainWorkspace.slice(0, mainWorkspace.indexOf('.'));
@@ -1365,4 +1392,9 @@ function setupSidebarLinkClickEvent() {
         
         // Allow the default navigation to continue
     });
+}
+
+function isFilesPath() {
+    // Only consider it a files path if it's exactly "/files" or starts with "/files/"
+    return location.pathname === '/files' || location.pathname.startsWith('/files/');
 }
