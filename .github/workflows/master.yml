@@ -24,7 +24,7 @@ jobs:
       - name: Storing release version
         id: store_release_version
         run: |
-          echo "release_version=$(mvn -f toolchain-fitnesse-plugin help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
+          echo "release_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> "$GITHUB_OUTPUT"
       - name: Release Maven package
         uses: samuelmeuli/action-maven-publish@v1
         with:
