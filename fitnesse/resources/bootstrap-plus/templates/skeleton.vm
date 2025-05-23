@@ -171,6 +171,27 @@
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
             </ul>
         </div>
+
+        ## Sidebar 2.0 - Enhanced Tree View
+        <div id="sidebar2" style="width: $sidebarWidth;" #if( $sidebar2 != 'true' ) class="displayNone" #end>
+            <div class="sidebar2-header">
+                <div class="sidebar2-title">
+                    <i class="fa fa-sitemap" aria-hidden="true"></i>
+                    <span>Project Tree</span>
+                </div>
+                <div class="sidebar2-controls">
+                    <i id="sidebar2-refresh" class="fa fa-refresh sidebar2-btn" aria-hidden="true" title="Refresh tree"></i>
+                    <i id="sidebar2-expand-all" class="fa fa-plus-square sidebar2-btn" aria-hidden="true" title="Expand all"></i>
+                    <i id="sidebar2-collapse-all" class="fa fa-minus-square sidebar2-btn" aria-hidden="true" title="Collapse all"></i>
+                </div>
+            </div>
+            <div id="sidebar2Content" class="sidebar2-tree-container scrollbar">
+                <div id="sidebar2-spinner" class="sidebar2-loading">
+                    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
     #end
 
 

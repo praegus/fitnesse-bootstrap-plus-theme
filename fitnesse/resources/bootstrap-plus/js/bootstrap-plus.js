@@ -329,6 +329,15 @@ $(function() {
         $('#collapseSidebarDiv').addClass('displayNone');
     }
 
+    // For showing Sidebar 2.0
+    if (!isFilesPath() && getCookie('sidebar2') == 'true') {
+        $('#sidebar2').removeClass('displayNone');
+        loadSidebar2Tree();
+    } else if (isFilesPath()) {
+        // Hide Sidebar 2.0 when we're in the files section
+        $('#sidebar2').addClass('displayNone');
+    }
+
     // For the Sidebar buttons
     $('#collapseAllSidebar').on('click', function () {
         expandRouteSidebarIcons(location.pathname);
@@ -603,12 +612,20 @@ $(function() {
             setBootstrapPlusConfigCookie('sidebar2', 'false');
             $('#sidebar2-switch').removeClass('fa-toggle-on');
             $('#sidebar2-switch').addClass('fa-toggle-off');
+            $('#sidebar2').addClass('displayNone');
             showNotification('info', 'Sidebar 2.0 disabled');
         } else {
             setBootstrapPlusConfigCookie('sidebar2', 'true');
             $('#sidebar2-switch').removeClass('fa-toggle-off');
             $('#sidebar2-switch').addClass('fa-toggle-on');
-            showNotification('success', 'Sidebar 2.0 enabled! (Implementation coming soon...)');
+            
+            // Only show sidebar2 if we're not in the files path
+            if (!isFilesPath()) {
+                $('#sidebar2').removeClass('displayNone');
+                loadSidebar2Tree();
+            }
+            
+            showNotification('success', 'Sidebar 2.0 enabled!');
         }
     }
 
@@ -1480,3 +1497,295 @@ function isFilesPath() {
     // Only consider it a files path if it's exactly "/files" or starts with "/files/"
     return location.pathname === '/files' || location.pathname.startsWith('/files/');
 }
+
+/*
+ SIDEBAR 2.0 FUNCTIONS START
+ */
+
+/**
+ * Load and display the Sidebar 2.0 tree
+ */
+function loadSidebar2Tree() {
+    // Show loading state
+    $('#sidebar2Content').html(`
+        <div class="sidebar2-loading">
+            <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+            <span>Loading tree...</span>
+        </div>
+    `);
+    
+    // Always load from root for Sidebar 2.0
+    $.ajax({
+        type: 'GET',
+        url: location.protocol + '//' + location.host + '/root?responder=tableOfContents&depth=2',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function(contentArray) {
+            renderSidebar2Tree(contentArray);
+            setupSidebar2EventHandlers();
+        },
+        error: function(xhr) {
+            console.log('Error loading Sidebar 2.0 tree: ' + xhr.status, xhr);
+            $('#sidebar2Content').html(`
+                <div class="sidebar2-loading">
+                    <i class="fa fa-exclamation-triangle" style="margin-right: 8px; color: #dc3545;"></i>
+                    <span>Error loading tree</span>
+                </div>
+            `);
+        }
+    });
+}
+
+/**
+ * Render the tree structure in Sidebar 2.0
+ */
+function renderSidebar2Tree(contentArray) {
+    $('#sidebar2Content').empty();
+    
+    if (!contentArray || contentArray.length === 0) {
+        $('#sidebar2Content').html(`
+            <div class="sidebar2-loading">
+                <i class="fa fa-info-circle" style="margin-right: 8px; color: #6c757d;"></i>
+                <span>No content found</span>
+            </div>
+        `);
+        return;
+    }
+    
+    // Create tree structure
+    const tree = $('<div class="sidebar2-tree"></div>');
+    
+    contentArray.forEach(item => {
+        const node = createSidebar2TreeNode(item, 0);
+        tree.append(node);
+    });
+    
+    $('#sidebar2Content').append(tree);
+    
+    // Expand path to current page
+    expandToCurrentPage();
+}
+
+/**
+ * Create a tree node for Sidebar 2.0
+ */
+function createSidebar2TreeNode(item, depth) {
+    const nodeId = 'sidebar2-' + (item.path || 'root').replace(/\./g, '-');
+    const isCurrentPage = location.pathname === '/' + item.path || 
+                         (location.pathname === '/' && item.path === 'FrontPage') ||
+                         (location.pathname === '/FrontPage' && item.path === 'FrontPage');
+    
+    // Determine icon class
+    let iconClass = 'fa fa-file-o icon-static';
+    if (item.type) {
+        if (item.type.includes('suite')) {
+            iconClass = 'fa fa-cogs icon-suite';
+        } else if (item.type.includes('test')) {
+            iconClass = 'fa fa-cog icon-test';
+        }
+        
+        // Special page types
+        if (item.path && (item.path.endsWith('.SetUp') || item.path.endsWith('.SuiteSetUp') || 
+                         item.path.endsWith('.TearDown') || item.path.endsWith('.SuiteTearDown'))) {
+            iconClass = 'fa fa-wrench icon-special';
+        } else if (item.path && item.path.endsWith('.ScenarioLibrary')) {
+            iconClass = 'fa fa-bolt icon-scenariolib';
+        }
+    }
+    
+    // Create node structure
+    const node = $(`
+        <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''}" data-path="${item.path || ''}" id="${nodeId}">
+            <div class="sidebar2-node-content" data-href="/${item.path || ''}">
+                <div class="sidebar2-node-toggle ${!item.children || item.children.length === 0 ? 'no-children' : ''}">
+                    ${item.children && item.children.length > 0 ? '<i class="fa fa-angle-right"></i>' : ''}
+                </div>
+                <div class="sidebar2-node-icon ${iconClass.split(' ').slice(-1)[0]}">
+                    <i class="${iconClass}" aria-hidden="true"></i>
+                </div>
+                <div class="sidebar2-node-text" title="${item.name || item.path}">${item.name || item.path}</div>
+            </div>
+        </div>
+    `);
+    
+    // Add children if they exist
+    if (item.children && item.children.length > 0) {
+        const childrenContainer = $('<div class="sidebar2-node-children"></div>');
+        item.children.forEach(child => {
+            const childNode = createSidebar2TreeNode(child, depth + 1);
+            childrenContainer.append(childNode);
+        });
+        node.append(childrenContainer);
+    }
+    
+    return node;
+}
+
+/**
+ * Set up event handlers for Sidebar 2.0
+ */
+function setupSidebar2EventHandlers() {
+    // Remove existing handlers to avoid duplicates
+    $('#sidebar2').off('click');
+    
+    // Toggle node expansion
+    $('#sidebar2').on('click', '.sidebar2-node-toggle', function(e) {
+        e.stopPropagation();
+        
+        const toggle = $(this);
+        const node = toggle.closest('.sidebar2-tree-node');
+        const childrenContainer = node.find('> .sidebar2-node-children');
+        const toggleIcon = toggle.find('i');
+        
+        if (toggle.hasClass('no-children')) {
+            return; // No children to toggle
+        }
+        
+        // If children container exists and has content
+        if (childrenContainer.length > 0 && childrenContainer.children().length > 0) {
+            // Toggle visibility
+            if (childrenContainer.hasClass('expanded')) {
+                childrenContainer.removeClass('expanded');
+                toggleIcon.removeClass('fa-angle-down').addClass('fa-angle-right');
+            } else {
+                childrenContainer.addClass('expanded');
+                toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+            }
+        } else {
+            // Need to load children
+            loadSidebar2NodeChildren(node);
+        }
+    });
+    
+    // Navigate on node click
+    $('#sidebar2').on('click', '.sidebar2-node-content', function(e) {
+        // Don't navigate if clicking on toggle
+        if ($(e.target).closest('.sidebar2-node-toggle').length > 0) {
+            return;
+        }
+        
+        const href = $(this).data('href');
+        if (href) {
+            window.location.href = href;
+        }
+    });
+    
+    // Control buttons
+    $('#sidebar2-refresh').off('click').on('click', function() {
+        loadSidebar2Tree();
+    });
+    
+    $('#sidebar2-expand-all').off('click').on('click', function() {
+        expandAllSidebar2Nodes();
+    });
+    
+    $('#sidebar2-collapse-all').off('click').on('click', function() {
+        collapseAllSidebar2Nodes();
+    });
+}
+
+/**
+ * Load children for a specific node
+ */
+function loadSidebar2NodeChildren(node) {
+    const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+    const toggleIcon = toggle.find('i');
+    const path = node.data('path');
+    
+    if (!path) return;
+    
+    // Show loading state
+    toggle.addClass('loading');
+    toggleIcon.removeClass('fa-angle-right').addClass('fa-spinner fa-spin');
+    
+    $.ajax({
+        type: 'GET',
+        url: location.protocol + '//' + location.host + '/' + path + '?responder=tableOfContents&depth=2',
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        success: function(contentArray) {
+            toggle.removeClass('loading');
+            
+            if (contentArray && contentArray.length > 0 && contentArray[0].children && contentArray[0].children.length > 0) {
+                // Remove existing children container
+                node.find('> .sidebar2-node-children').remove();
+                
+                // Create new children container
+                const childrenContainer = $('<div class="sidebar2-node-children expanded"></div>');
+                contentArray[0].children.forEach(child => {
+                    const childNode = createSidebar2TreeNode(child, 1);
+                    childrenContainer.append(childNode);
+                });
+                
+                node.append(childrenContainer);
+                toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-down');
+            } else {
+                // No children found
+                toggle.addClass('no-children');
+                toggleIcon.removeClass('fa-spinner fa-spin');
+            }
+        },
+        error: function(xhr) {
+            console.log('Error loading children for ' + path + ': ' + xhr.status, xhr);
+            toggle.removeClass('loading');
+            toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-right');
+        }
+    });
+}
+
+/**
+ * Expand path to current page
+ */
+function expandToCurrentPage() {
+    const currentPath = location.pathname.replace('/', '');
+    
+    if (!currentPath || currentPath === 'FrontPage') {
+        // Highlight FrontPage or root
+        $('#sidebar2 .sidebar2-tree-node[data-path="FrontPage"], #sidebar2 .sidebar2-tree-node[data-path=""]').addClass('current-page');
+        return;
+    }
+    
+    // Split path and expand nodes along the way
+    const pathParts = currentPath.split('.');
+    let currentNodePath = '';
+    
+    pathParts.forEach((part, index) => {
+        currentNodePath += (currentNodePath ? '.' : '') + part;
+        const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + currentNodePath + '"]');
+        
+        if (node.length > 0) {
+            // Expand parent nodes
+            node.parents('.sidebar2-node-children').addClass('expanded');
+            node.parents('.sidebar2-tree-node').find('> .sidebar2-node-content > .sidebar2-node-toggle > i')
+                .removeClass('fa-angle-right').addClass('fa-angle-down');
+            
+            // Mark as current page if this is the final part
+            if (index === pathParts.length - 1) {
+                node.addClass('current-page');
+            }
+        }
+    });
+}
+
+/**
+ * Expand all nodes in Sidebar 2.0
+ */
+function expandAllSidebar2Nodes() {
+    $('#sidebar2 .sidebar2-node-children').addClass('expanded');
+    $('#sidebar2 .sidebar2-node-toggle i').removeClass('fa-angle-right').addClass('fa-angle-down');
+}
+
+/**
+ * Collapse all nodes in Sidebar 2.0
+ */
+function collapseAllSidebar2Nodes() {
+    $('#sidebar2 .sidebar2-node-children').removeClass('expanded');
+    $('#sidebar2 .sidebar2-node-toggle i').removeClass('fa-angle-down').addClass('fa-angle-right');
+    
+    // Re-expand path to current page
+    expandToCurrentPage();
+}
+
+/*
+ SIDEBAR 2.0 FUNCTIONS END
+ */
