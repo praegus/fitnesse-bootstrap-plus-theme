@@ -1852,4 +1852,90 @@ li.runWithOrangeBeard a {
   100% { transform: rotate(360deg); }
 }
 
+/* Context Menu Styling for Sidebar 2.0 */
+.sidebar2-context-menu {
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  padding: 4px 0 !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  min-width: 160px !important;
+}
+
+.sidebar2-context-menu .context-menu-item {
+  background-color: #ffffff !important;
+  color: #495057 !important;
+  padding: 8px 12px 8px 32px !important;
+  border: none !important;
+  font-size: 13px !important;
+  transition: all 0.15s ease !important;
+  
+  &:hover,
+  &.context-menu-hover {
+    background-color: #f1f3f4 !important;
+    color: #495057 !important;
+  }
+  
+  &.context-menu-disabled {
+    color: #adb5bd !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Icon styling */
+  &::before {
+    color: #6c757d !important;
+    font-size: 13px !important;
+    width: 1.5em !important;
+    left: 8px !important;
+  }
+  
+  &:hover::before,
+  &.context-menu-hover::before {
+    color: #495057 !important;
+  }
+  
+  &.context-menu-disabled::before {
+    color: #adb5bd !important;
+  }
+}
+
+.sidebar2-context-menu .context-menu-separator {
+  border-bottom: 1px solid #e9ecef !important;
+  margin: 4px 0 !important;
+  padding: 0 !important;
+}
+
+.sidebar2-context-menu .context-menu-submenu::after {
+  border-color: transparent transparent transparent #6c757d !important;
+  right: 8px !important;
+}
+
+.sidebar2-context-menu .context-menu-item.context-menu-hover .context-menu-submenu::after {
+  border-color: transparent transparent transparent #495057 !important;
+}
+
+/* Submenu styling */
+.sidebar2-context-menu .context-menu-item .context-menu-list {
+  top: -4px !important;
+  right: -4px !important;
+}
+
+/* FontAwesome icon adjustments for context menu */
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa::before {
+  color: #6c757d !important;
+  font-size: 13px !important;
+  width: 1.5em !important;
+  left: 8px !important;
+}
+
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa.context-menu-hover::before {
+  color: #495057 !important;
+}
+
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa.context-menu-disabled::before {
+  color: #adb5bd !important;
+}
+
 /* Test History */

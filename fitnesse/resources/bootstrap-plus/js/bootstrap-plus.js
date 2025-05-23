@@ -1773,6 +1773,7 @@ function setupSidebar2EventHandlers() {
     if ($('#sidebar2').length) {
         $('#sidebar2').contextMenu({
             selector: '.sidebar2-node-content',
+            className: 'sidebar2-context-menu',
             callback: function(key, options) {
                 handleSidebar2ContextMenuClick(key, this);
             },
