@@ -1862,6 +1862,12 @@ li.runWithOrangeBeard a {
   font-family: inherit !important;
   font-size: 14px !important;
   min-width: 160px !important;
+  
+  /* Viewport constraint handling */
+  &.constrained-height {
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
 }
 
 .sidebar2-context-menu .context-menu-item {

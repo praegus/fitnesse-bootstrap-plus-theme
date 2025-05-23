@@ -1774,6 +1774,66 @@ function setupSidebar2EventHandlers() {
         $('#sidebar2').contextMenu({
             selector: '.sidebar2-node-content',
             className: 'sidebar2-context-menu',
+            position: function(opt, x, y) {
+                // Get viewport dimensions
+                const $window = $(window);
+                const $menu = opt.$menu;
+                const windowWidth = $window.width();
+                const windowHeight = $window.height();
+                const scrollTop = $window.scrollTop();
+                const scrollLeft = $window.scrollLeft();
+                
+                // Default position
+                let left = x;
+                let top = y;
+                
+                // Reset any previous constraints
+                $menu.removeClass('constrained-height').css({
+                    'max-height': '',
+                    'overflow-y': ''
+                });
+                
+                // Temporarily show menu to measure its dimensions
+                $menu.css({ visibility: 'hidden', display: 'block' });
+                const menuWidth = $menu.outerWidth();
+                const menuHeight = $menu.outerHeight();
+                $menu.css({ visibility: 'visible', display: 'none' });
+                
+                // Adjust horizontal position if menu would go off-screen
+                if (left + menuWidth > windowWidth + scrollLeft) {
+                    // Position to the left of the cursor
+                    left = x - menuWidth;
+                    // Ensure it doesn't go off the left edge
+                    if (left < scrollLeft) {
+                        left = scrollLeft + 10;
+                    }
+                }
+                
+                // Adjust vertical position if menu would go off-screen
+                if (top + menuHeight > windowHeight + scrollTop) {
+                    // Position above the cursor
+                    top = y - menuHeight;
+                    // Ensure it doesn't go off the top edge
+                    if (top < scrollTop) {
+                        // If it still doesn't fit above, position at the top of viewport
+                        // and constrain height if necessary
+                        top = scrollTop + 10;
+                        const availableHeight = windowHeight - 30;
+                        if (menuHeight > availableHeight) {
+                            $menu.addClass('constrained-height').css({
+                                'max-height': availableHeight + 'px',
+                                'overflow-y': 'auto'
+                            });
+                        }
+                    }
+                }
+                
+                // Apply the calculated position
+                $menu.css({
+                    top: top + 'px',
+                    left: left + 'px'
+                });
+            },
             callback: function(key, options) {
                 handleSidebar2ContextMenuClick(key, this);
             },
