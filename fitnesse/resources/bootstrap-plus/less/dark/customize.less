@@ -1165,9 +1165,28 @@ kbd {
   border-left: 1px solid #292929;
 }
 
+#closedSidebar2 {
+  height: 100%;
+  padding: 0 0 5px;
+  background-color: #2b2b2b;
+  min-width: 30px;
+  border-right: 1px solid #404040;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.3);
+}
+
 #collapseSidebarDiv, #collapseCHelpDiv {
   padding: 10px 4px;
   cursor: pointer;
+}
+
+#collapseSidebar2Div {
+  padding: 10px 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#collapseSidebar2Div:hover {
+  background-color: #404040;
 }
 
 .collapseSidebarDivDisabled, .collapseCHelpDivDisabled {
@@ -1191,9 +1210,23 @@ kbd {
   text-orientation: mixed;
 }
 
+#collapseSidebar2Text {
+  writing-mode: tb-rl;
+  font-size: 0.95em;
+  transform: rotate(-180deg);
+  color: #e9ecef;
+  font-weight: 600;
+}
+
 #collapseSidebarIcon {
   font-size: 18px;
   transform: rotate(-90deg);
+}
+
+#collapseSidebar2Icon {
+  font-size: 16px;
+  color: #66b3ff;
+  margin-top: 8px;
 }
 
 #sidebar, #contextHelp {
@@ -1332,9 +1365,45 @@ kbd {
   }
 }
 
+.sidebar2-hide-btn {
+  cursor: pointer;
+  color: #adb5bd;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #66b3ff;
+    background-color: #404040;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .sidebar2-controls {
   display: flex;
   gap: 8px;
+}
+
+#sidebar2-refresh {
+  cursor: pointer;
+  color: #adb5bd;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #66b3ff;
+    background-color: #404040;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .sidebar2-btn {

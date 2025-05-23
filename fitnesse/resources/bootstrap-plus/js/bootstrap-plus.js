@@ -1615,8 +1615,9 @@ function isFilesPath() {
 
 /**
  * Load and display the Sidebar 2.0 tree
+ * @param {boolean} isManualRefresh - Whether this is triggered by manual refresh button click
  */
-function loadSidebar2Tree() {
+function loadSidebar2Tree(isManualRefresh = false) {
     // Show loading state
     $('#sidebar2Content').html(`
         <div class="sidebar2-loading">
@@ -1634,6 +1635,11 @@ function loadSidebar2Tree() {
         success: function(contentArray) {
             renderSidebar2Tree(contentArray);
             setupSidebar2EventHandlers();
+            
+            // Show success notification only for manual refresh
+            if (isManualRefresh) {
+                showNotification('success', 'Sidebar tree refreshed');
+            }
         },
         error: function(xhr) {
             console.log('Error loading Sidebar 2.0 tree: ' + xhr.status, xhr);
@@ -1651,7 +1657,11 @@ function loadSidebar2Tree() {
  * Render the tree structure in Sidebar 2.0
  */
 function renderSidebar2Tree(contentArray) {
+    // Clear all content and temporary states
     $('#sidebar2Content').empty();
+    
+    // Clear any remaining temporary highlights or states
+    $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused expanded selected');
     
     if (!contentArray || contentArray.length === 0) {
         $('#sidebar2Content').html(`
@@ -1834,15 +1844,28 @@ function setupSidebar2EventHandlers() {
     
     // Control buttons
     $('#sidebar2-refresh').off('click').on('click', function() {
-        loadSidebar2Tree();
+        // Show refresh notification
+        showNotification('info', 'Refreshing sidebar tree...');
+        
+        // Clear any temporary highlights (keyboard focus, etc.)
+        $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
+        
+        // Reload the entire tree from root with manual refresh flag
+        loadSidebar2Tree(true);
     });
     
-    $('#sidebar2-expand-all').off('click').on('click', function() {
-        expandAllSidebar2Nodes();
+    // Hide/Show sidebar toggle
+    $('#sidebar2-hide-toggle').off('click').on('click', function() {
+        $('#sidebar2').addClass('displayNone');
+        $('#closedSidebar2').removeClass('displayNone');
+        showNotification('info', 'Sidebar hidden');
     });
     
-    $('#sidebar2-collapse-all').off('click').on('click', function() {
-        collapseAllSidebar2Nodes();
+    // Show sidebar when clicking on closed sidebar 2.0
+    $('#closedSidebar2').off('click').on('click', function() {
+        $('#sidebar2').removeClass('displayNone');
+        $('#closedSidebar2').addClass('displayNone');
+        showNotification('success', 'Sidebar shown');
     });
 }
 
@@ -1937,22 +1960,6 @@ function expandToCurrentPage() {
 
 /**
  * Expand all nodes in Sidebar 2.0
- */
-function expandAllSidebar2Nodes() {
-    $('#sidebar2 .sidebar2-node-children').addClass('expanded');
-    $('#sidebar2 .sidebar2-node-toggle i').removeClass('fa-angle-right').addClass('fa-angle-down');
-}
-
-/**
- * Collapse all nodes in Sidebar 2.0
- */
-function collapseAllSidebar2Nodes() {
-    $('#sidebar2 .sidebar2-node-children').removeClass('expanded');
-    $('#sidebar2 .sidebar2-node-toggle i').removeClass('fa-angle-down').addClass('fa-angle-right');
-    
-    // Re-expand path to current page
-    expandToCurrentPage();
-}
 
 /*
  SIDEBAR 2.0 FUNCTIONS END

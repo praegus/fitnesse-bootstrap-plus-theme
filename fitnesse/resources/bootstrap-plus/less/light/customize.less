@@ -1247,9 +1247,28 @@ kbd {
   border-left: 1px solid #e7e7e7;
 }
 
+#closedSidebar2 {
+  height: 100%;
+  padding: 0 0 5px;
+  background-color: #f8f9fa;
+  min-width: 30px;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
 #collapseSidebarDiv, #collapseCHelpDiv {
   padding: 10px 4px;
   cursor: pointer;
+}
+
+#collapseSidebar2Div {
+  padding: 10px 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+#collapseSidebar2Div:hover {
+  background-color: #e9ecef;
 }
 
 .collapseSidebarDivDisabled, .collapseCHelpDivDisabled {
@@ -1273,9 +1292,23 @@ kbd {
   text-orientation: mixed;
 }
 
+#collapseSidebar2Text {
+  writing-mode: tb-rl;
+  font-size: 0.95em;
+  transform: rotate(-180deg);
+  color: #495057;
+  font-weight: 600;
+}
+
 #collapseSidebarIcon {
   font-size: 18px;
   transform: rotate(-90deg);
+}
+
+#collapseSidebar2Icon {
+  font-size: 16px;
+  color: #007bff;
+  margin-top: 8px;
 }
 
 #sidebar, #contextHelp {
@@ -1610,9 +1643,45 @@ li.runWithOrangeBeard a {
   }
 }
 
+.sidebar2-hide-btn {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .sidebar2-controls {
   display: flex;
   gap: 8px;
+}
+
+#sidebar2-refresh {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
 .sidebar2-btn {

@@ -156,6 +156,14 @@
             </div>
         </div>
 
+        ## Closed Sidebar 2.0
+        <div id="closedSidebar2" class="displayNone">
+            <div id="collapseSidebar2Div">
+                <p id="collapseSidebar2Text">Project</p>
+                <i id="collapseSidebar2Icon" class="fa fa-chevron-right"></i>
+            </div>
+        </div>
+
         ## Open Sidebar
         <div id="sidebar" style="width: $sidebarWidth;" #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end>
             <div class="buttonSidebarDiv">
@@ -176,21 +184,14 @@
         <div id="sidebar2" style="width: $sidebarWidth;" #if( $sidebar2 != 'true' ) class="displayNone" #end>
             <div class="sidebar2-header">
                 <div class="sidebar2-title">
-                    <i class="fa fa-sitemap" aria-hidden="true"></i>
-                    <span>Project Tree</span>
+                    <i id="sidebar2-hide-toggle" class="fa fa-chevron-left sidebar2-hide-btn" aria-hidden="true" title="Hide sidebar"></i>
+                    Project
                 </div>
                 <div class="sidebar2-controls">
-                    <i id="sidebar2-refresh" class="fa fa-refresh sidebar2-btn" aria-hidden="true" title="Refresh tree"></i>
-                    <i id="sidebar2-expand-all" class="fa fa-plus-square sidebar2-btn" aria-hidden="true" title="Expand all"></i>
-                    <i id="sidebar2-collapse-all" class="fa fa-minus-square sidebar2-btn" aria-hidden="true" title="Collapse all"></i>
+                    <i id="sidebar2-refresh" class="fa fa-refresh" aria-hidden="true" title="Refresh tree"></i>
                 </div>
             </div>
-            <div id="sidebar2Content" class="sidebar2-tree-container scrollbar">
-                <div id="sidebar2-spinner" class="sidebar2-loading">
-                    <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+            <div id="sidebar2Content"></div>
         </div>
     #end
 
