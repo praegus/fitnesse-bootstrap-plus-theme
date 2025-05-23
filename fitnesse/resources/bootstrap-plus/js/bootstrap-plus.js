@@ -1579,9 +1579,9 @@ function createSidebar2TreeNode(item, depth) {
     let iconClass = 'fa fa-file-o icon-static';
     if (item.type) {
         if (item.type.includes('suite')) {
-            iconClass = 'fa fa-cogs icon-suite';
+            iconClass = 'fa fa-cogs icon-test';
         } else if (item.type.includes('test')) {
-            iconClass = 'fa fa-cog icon-test';
+            iconClass = 'fa fa-cog icon-suite';
         }
         
         // Special page types
