@@ -1220,7 +1220,6 @@ $(function(){
                                 visible: function(key, opt) {
                                     return showRunnablePageItems(opt);
                                  }},
-                "search": {name: "Search From Here", icon: "fa-search"},
                 "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
             }
         });
@@ -1281,8 +1280,6 @@ function getResponder(key, element) {
               return 'deletePage';
           case "testhistory":
               return 'testHistory';
-          case "search":
-              return 'search';
           case "properties":
               return 'properties';
           case "addStatic":
@@ -1876,7 +1873,6 @@ function setupSidebar2EventHandlers() {
                 },
                 "sep2": {type: "cm_separator"},
                 "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
-                "setSidebarRoot": {name: "Set as Sidebar Root", icon: "fa-thumb-tack"},
                 "testhistory": {
                     name: "Test History",
                     icon: "fa-history",
@@ -1884,7 +1880,6 @@ function setupSidebar2EventHandlers() {
                         return showSidebar2RunnablePageItems(opt);
                     }
                 },
-                "search": {name: "Search From Here", icon: "fa-search"},
                 "properties": {name: "Properties", icon: "fa-ellipsis-h"}
             }
         });
@@ -2116,28 +2111,6 @@ function handleSidebar2ContextMenuClick(key, element) {
     if (key === 'copypath') {
         copyToClipboard(nodePath);
         showNotification('success', 'Page path copied to clipboard: ' + nodePath);
-    } else if (key === 'setSidebarRoot') {
-        var exp = new Date();
-        exp.setTime(exp.getTime() + 3600*1000*24*365);
-        document.cookie = 'sidebarRoot=/' + nodePath + ';expires=' + exp.toGMTString() + ';path=/';
-        
-        // Reload sidebar 2.0 tree with new root
-        loadSidebar2Tree();
-        showNotification('success', 'Sidebar root set to: ' + nodePath);
-        
-        // Update reset button if needed
-        $("#resetSidebarRoot").remove();
-        if (!$("#resetSidebarRoot").is(":visible")) {
-            $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
-        }
-        
-        // Register onClick handler for reset
-        $('#resetSidebarRoot').on('click', function () {
-            document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
-            loadSidebar2Tree();
-            showNotification('success', 'Sidebar root reset');
-            $(this).remove();
-        });
     } else {
         var responder = getSidebar2Responder(key, mockAnchor);
         var targetUrl = '/' + nodePath.replace(/\./g, '/') + '?' + responder;
@@ -2170,8 +2143,6 @@ function getSidebar2Responder(key, element) {
             return 'deletePage';
         case "testhistory":
             return 'testHistory';
-        case "search":
-            return 'search';
         case "properties":
             return 'properties';
         case "addStatic":
