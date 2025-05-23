@@ -1769,6 +1769,66 @@ function setupSidebar2EventHandlers() {
     // Remove existing handlers to avoid duplicates
     $('#sidebar2').off('click');
     
+    // Setup context menu for sidebar 2.0
+    if ($('#sidebar2').length) {
+        $('#sidebar2').contextMenu({
+            selector: '.sidebar2-node-content',
+            callback: function(key, options) {
+                handleSidebar2ContextMenuClick(key, this);
+            },
+            items: {
+                "run": {
+                    name: "Run",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) { 
+                        return showSidebar2RunnablePageItems(opt); 
+                    }
+                },
+                "runNewTab": {
+                    name: "Run in New Tab",
+                    icon: "fa-play-circle-o",
+                    visible: function(key, opt) { 
+                        return showSidebar2RunnablePageItems(opt); 
+                    },
+                    className: "contextmenu-newtab"
+                },
+                "sep0": {
+                    type: "cm_separator", 
+                    visible: function(key, opt) { 
+                        return showSidebar2RunnablePageItems(opt); 
+                    }
+                },
+                "edit": {name: "Edit", icon: "fa-edit"},
+                "editNewTab": {name: "Edit in New Tab", icon: "fa-edit", className: "contextmenu-newtab"},
+                "rename": {name: "Rename", icon: "fa-pencil"},
+                "move": {name: "Move", icon: "fa-long-arrow-right"},
+                "delete": {name: "Delete", icon: "fa-trash-o"},
+                "sep1": {type: "cm_separator"},
+                "fold1": {
+                    name: "Add",
+                    icon: "fa-plus",
+                    items: {
+                        addStatic: {name: "Static Page", icon: "fa-file-o"},
+                        addSuite: {name: "Suite Page", icon: "fa-cogs"},
+                        addTest: {name: "Test Page", icon: "fa-cog"}
+                    }
+                },
+                "sep2": {type: "cm_separator"},
+                "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
+                "setSidebarRoot": {name: "Set as Sidebar Root", icon: "fa-thumb-tack"},
+                "testhistory": {
+                    name: "Test History",
+                    icon: "fa-history",
+                    visible: function(key, opt) {
+                        return showSidebar2RunnablePageItems(opt);
+                    }
+                },
+                "search": {name: "Search From Here", icon: "fa-search"},
+                "properties": {name: "Properties", icon: "fa-ellipsis-h"}
+            }
+        });
+    }
+    
     // Toggle node expansion
     $('#sidebar2').on('click', '.sidebar2-node-toggle', function(e) {
         e.stopPropagation();
@@ -1959,7 +2019,110 @@ function expandToCurrentPage() {
 }
 
 /**
- * Expand all nodes in Sidebar 2.0
+ * Check if sidebar 2.0 node is runnable (test or suite)
+ */
+function showSidebar2RunnablePageItems(opt) {
+    const nodeContent = opt.$trigger[0];
+    const nodeElement = $(nodeContent).closest('.sidebar2-tree-node');
+    
+    // Check if the node has test or suite class
+    return nodeElement.hasClass('test') || nodeElement.hasClass('suite');
+}
+
+/**
+ * Handle context menu clicks for Sidebar 2.0
+ */
+function handleSidebar2ContextMenuClick(key, element) {
+    const nodeContent = $(element);
+    const nodeElement = nodeContent.closest('.sidebar2-tree-node');
+    const nodePath = nodeElement.data('path');
+    
+    if (!nodePath) {
+        console.error('No path found for context menu item');
+        return;
+    }
+    
+    // Create a mock anchor element similar to original sidebar for compatibility
+    const mockAnchor = {
+        pathname: '/' + nodePath.replace(/\./g, '/'),
+        classList: {
+            contains: function(className) {
+                return nodeElement.hasClass(className);
+            }
+        }
+    };
+    
+    if (key === 'copypath') {
+        copyToClipboard(nodePath);
+        showNotification('success', 'Page path copied to clipboard: ' + nodePath);
+    } else if (key === 'setSidebarRoot') {
+        var exp = new Date();
+        exp.setTime(exp.getTime() + 3600*1000*24*365);
+        document.cookie = 'sidebarRoot=/' + nodePath + ';expires=' + exp.toGMTString() + ';path=/';
+        
+        // Reload sidebar 2.0 tree with new root
+        loadSidebar2Tree();
+        showNotification('success', 'Sidebar root set to: ' + nodePath);
+        
+        // Update reset button if needed
+        $("#resetSidebarRoot").remove();
+        if (!$("#resetSidebarRoot").is(":visible")) {
+            $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
+        }
+        
+        // Register onClick handler for reset
+        $('#resetSidebarRoot').on('click', function () {
+            document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT';
+            loadSidebar2Tree();
+            showNotification('success', 'Sidebar root reset');
+            $(this).remove();
+        });
+    } else {
+        var responder = getSidebar2Responder(key, mockAnchor);
+        var targetUrl = '/' + nodePath.replace(/\./g, '/') + '?' + responder;
+        
+        if (key.includes('NewTab')) {
+            window.open(targetUrl, '_blank');
+        } else {
+            window.location.href = targetUrl;
+        }
+    }
+}
+
+/**
+ * Get responder string for Sidebar 2.0 context menu actions
+ */
+function getSidebar2Responder(key, element) {
+    var el = element;
+    switch(key) {
+        case "run":
+        case "runNewTab":
+            return el.classList.contains('suite') ? 'suite' : 'test';
+        case "edit":
+        case "editNewTab":
+            return 'edit';
+        case "rename":
+            return 'refactor&type=rename';
+        case "move":
+            return 'refactor&type=move';
+        case "delete":
+            return 'deletePage';
+        case "testhistory":
+            return 'testHistory';
+        case "search":
+            return 'search';
+        case "properties":
+            return 'properties';
+        case "addStatic":
+            return 'new&pageTemplate=.TemplateLibrary.StaticPage';
+        case "addSuite":
+            return 'new&pageTemplate=.TemplateLibrary.SuitePage';
+        case "addTest":
+            return 'new&pageTemplate=.TemplateLibrary.TestPage';
+        default:
+            return '';
+    }
+}
 
 /*
  SIDEBAR 2.0 FUNCTIONS END
