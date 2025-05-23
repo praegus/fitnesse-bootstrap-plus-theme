@@ -1527,6 +1527,20 @@ kbd {
     border-left: 3px solid #66b3ff;
     font-weight: 600;
   }
+  
+  &.keyboard-focused > .sidebar2-node-content {
+    background-color: #3d3d1a;
+    border-left: 3px solid #ffc107;
+    outline: 2px solid #ffc107;
+    outline-offset: -2px;
+  }
+  
+  &.current-page.keyboard-focused > .sidebar2-node-content {
+    background-color: #2a5490;
+    border-left: 3px solid #66b3ff;
+    outline: 2px solid #66b3ff;
+    outline-offset: -2px;
+  }
 }
 
 .sidebar2-node-content {

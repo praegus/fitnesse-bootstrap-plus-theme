@@ -247,6 +247,92 @@ $(function() {
         }
     });
 
+    // Keyboard navigation for Sidebar 2.0
+    $(document).on('keydown', function (e) {
+        // Only handle if Sidebar 2.0 is visible and focused
+        if (!$('#sidebar2').is(':visible') || $('#sidebar2 .sidebar2-tree-node.keyboard-focused').length === 0) {
+            return;
+        }
+        
+        // Don't interfere with form inputs
+        var focused = document.activeElement.tagName.toLowerCase();
+        if (focused === 'textarea' || focused === 'input' || focused === 'select' || 
+            $('.context-menu-list').is(':visible')) {
+            return;
+        }
+        
+        var visibleNodes = $('#sidebar2 .sidebar2-tree-node:visible');
+        var currentFocused = $('#sidebar2 .sidebar2-tree-node.keyboard-focused');
+        var currentIndex = visibleNodes.index(currentFocused);
+        
+        if (e.which === 40) { // Down arrow
+            e.preventDefault();
+            currentFocused.removeClass('keyboard-focused');
+            var nextIndex = currentIndex + 1;
+            if (nextIndex >= visibleNodes.length) {
+                nextIndex = 0; // Wrap to first
+            }
+            var nextNode = visibleNodes.eq(nextIndex);
+            nextNode.addClass('keyboard-focused');
+            
+            // Scroll into view
+            nextNode[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            
+        } else if (e.which === 38) { // Up arrow
+            e.preventDefault();
+            currentFocused.removeClass('keyboard-focused');
+            var prevIndex = currentIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = visibleNodes.length - 1; // Wrap to last
+            }
+            var prevNode = visibleNodes.eq(prevIndex);
+            prevNode.addClass('keyboard-focused');
+            
+            // Scroll into view
+            prevNode[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            
+        } else if (e.which === 39) { // Right arrow - expand
+            e.preventDefault();
+            var toggle = currentFocused.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+            var childrenContainer = currentFocused.find('> .sidebar2-node-children');
+            
+            if (!toggle.hasClass('no-children') && !childrenContainer.hasClass('expanded')) {
+                toggle.trigger('click');
+            }
+            
+        } else if (e.which === 37) { // Left arrow - collapse
+            e.preventDefault();
+            var toggle = currentFocused.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+            var childrenContainer = currentFocused.find('> .sidebar2-node-children');
+            
+            if (childrenContainer.hasClass('expanded')) {
+                toggle.trigger('click');
+            }
+            
+        } else if (e.which === 13) { // Enter - navigate or toggle
+            e.preventDefault();
+            var nodeContent = currentFocused.find('> .sidebar2-node-content');
+            var href = nodeContent.data('href');
+            
+            if (href && href !== '/') {
+                window.location.href = href;
+            } else {
+                // If no href or root, try to toggle
+                var toggle = currentFocused.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+                if (!toggle.hasClass('no-children')) {
+                    toggle.trigger('click');
+                }
+            }
+            
+        } else if (e.which === 32) { // Space - toggle
+            e.preventDefault();
+            var toggle = currentFocused.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+            if (!toggle.hasClass('no-children')) {
+                toggle.trigger('click');
+            }
+        }
+    });
+
     // Set padding for contentDiv based on header and footer
     document.getElementById('contentDiv').style.paddingTop = $('nav').height() + 'px';
     if ($('footer').height() !== 0) {
@@ -1564,6 +1650,20 @@ function renderSidebar2Tree(contentArray) {
     
     // Expand path to current page
     expandToCurrentPage();
+    
+    // Set initial keyboard focus after tree is fully rendered
+    setTimeout(() => {
+        if ($('#sidebar2').is(':visible')) {
+            let focusTarget = $('#sidebar2 .sidebar2-tree-node.current-page').first();
+            if (focusTarget.length === 0) {
+                focusTarget = $('#sidebar2 .sidebar2-tree-node').first();
+            }
+            if (focusTarget.length > 0) {
+                $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
+                focusTarget.addClass('keyboard-focused');
+            }
+        }
+    }, 100);
 }
 
 /**
@@ -1670,6 +1770,37 @@ function setupSidebar2EventHandlers() {
         }
     });
     
+    // Focus management - allow sidebar to receive focus
+    $('#sidebar2').attr('tabindex', '0');
+    
+    // Set initial focus to current page or first node
+    function setInitialFocus() {
+        let focusTarget = $('#sidebar2 .sidebar2-tree-node.current-page').first();
+        if (focusTarget.length === 0) {
+            focusTarget = $('#sidebar2 .sidebar2-tree-node').first();
+        }
+        if (focusTarget.length > 0) {
+            focusTarget.addClass('keyboard-focused');
+        }
+    }
+    
+    // Handle sidebar focus
+    $('#sidebar2').on('focus', function() {
+        if ($('#sidebar2 .sidebar2-tree-node.keyboard-focused').length === 0) {
+            setInitialFocus();
+        }
+    });
+    
+    // Handle sidebar blur
+    $('#sidebar2').on('blur', function() {
+        // Only remove focus if we're not clicking within the sidebar
+        setTimeout(() => {
+            if (!$.contains(this, document.activeElement)) {
+                $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
+            }
+        }, 0);
+    });
+    
     // Control buttons
     $('#sidebar2-refresh').off('click').on('click', function() {
         loadSidebar2Tree();
@@ -1719,6 +1850,12 @@ function loadSidebar2NodeChildren(node) {
                 
                 node.append(childrenContainer);
                 toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-down');
+                
+                // Maintain keyboard focus if it was on this node
+                if (node.hasClass('keyboard-focused')) {
+                    // Focus stays on the parent node that was expanded
+                    node.addClass('keyboard-focused');
+                }
             } else {
                 // No children found
                 toggle.addClass('no-children');
