@@ -483,6 +483,12 @@ $(function() {
         }
     );
 
+    $('body').on('click', '#sidebar2-switch', function (e) {
+            e.preventDefault();
+            switchSidebar2();
+        }
+    );
+
     $('body').on('click', '#collapseSidebarDiv', function (e) {
             e.preventDefault();
             switchCollapseSidebar();
@@ -589,6 +595,20 @@ $(function() {
             }
 
             showNotification('info', 'The context helper styling has also changed into the sidebar style');
+        }
+    }
+
+    function switchSidebar2() {
+        if (getCookie('sidebar2') == 'true') {
+            setBootstrapPlusConfigCookie('sidebar2', 'false');
+            $('#sidebar2-switch').removeClass('fa-toggle-on');
+            $('#sidebar2-switch').addClass('fa-toggle-off');
+            showNotification('info', 'Sidebar 2.0 disabled');
+        } else {
+            setBootstrapPlusConfigCookie('sidebar2', 'true');
+            $('#sidebar2-switch').removeClass('fa-toggle-off');
+            $('#sidebar2-switch').addClass('fa-toggle-on');
+            showNotification('success', 'Sidebar 2.0 enabled! (Implementation coming soon...)');
         }
     }
 

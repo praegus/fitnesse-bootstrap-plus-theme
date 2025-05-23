@@ -45,6 +45,18 @@
             </li>
         #end
 
+        #if ( $sidebar2 == 'true' )
+            <li>
+                <button class="fa fa-toggle-on prefsbutton" id="sidebar2-switch" title="Toggle enhanced sidebar"></button>
+                Sidebar 2.0 <span style="color: #007bff; font-size: 0.8em;">(Enhanced)</span>
+            </li>
+        #else
+            <li>
+                <button class="fa fa-toggle-off prefsbutton" id="sidebar2-switch" title="Toggle enhanced sidebar"></button>
+                Sidebar 2.0 <span style="color: #6c757d; font-size: 0.8em;">(Enhanced)</span>
+            </li>
+        #end
+
         #if ( $highlightSymbols == 'true' )
                     <li>
                         <button class="fa fa-toggle-on prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
