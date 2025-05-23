@@ -1618,6 +1618,8 @@ li.runWithOrangeBeard a {
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  height: 100vh; /* Full viewport height */
+  max-height: 100vh; /* Prevent sidebar from exceeding viewport */
 }
 
 .sidebar2-header {
@@ -1702,10 +1704,32 @@ li.runWithOrangeBeard a {
   }
 }
 
-.sidebar2-tree-container {
-  flex: 1;
-  overflow-y: auto;
+#sidebar2Content {
+  flex: 1 1 0%; /* Explicit flex shorthand for proper shrinking */
+  overflow-y: scroll; /* Always show scrollbar for consistent UX */
+  overflow-x: hidden;
   padding: 8px 0;
+  min-height: 0; /* Important for flex items to shrink */
+  height: 0; /* Force height calculation from flex parent */
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
 }
 
 .sidebar2-loading {
