@@ -945,11 +945,36 @@ function sidebarContentLayerLoopOptimized(parentElement, children, currentDepth)
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
-    let iconClass = content.type.includes('suite')
-        ? 'fa fa-cogs icon-test'
-        : content.type.includes('test')
-            ? 'fa fa-cog icon-suite'
-            : 'fa fa-file-o icon-static';
+    // Debug logging to see actual data structure
+    if (content.name && (content.name.includes('Root') || content.name.includes('root'))) {
+        console.log('Regular sidebar root item data:', content);
+        console.log('Content name:', content.name);
+        console.log('Content path:', content.path);
+        console.log('Content type:', content.type);
+    }
+    
+    let iconClass = 'fa fa-file-o icon-static';
+    
+    // Special case for FitNesse root page - try multiple detection methods
+    if (content.name === 'FitNesseRoot' || content.path === 'FitNesseRoot' ||
+        content.name === 'root' || content.path === 'root' ||
+        (!content.path && content.name && content.name.toLowerCase().includes('root'))) {
+        iconClass = 'fa fitnesse-root-icon';
+    } else if (content.type) {
+        if (content.type.includes('suite')) {
+            iconClass = 'fa fa-cogs icon-test';
+        } else if (content.type.includes('test')) {
+            iconClass = 'fa fa-cog icon-suite';
+        }
+        
+        // Special page types
+        if (content.path && (content.path.endsWith('.SetUp') || content.path.endsWith('.SuiteSetUp') || 
+                         content.path.endsWith('.TearDown') || content.path.endsWith('.SuiteTearDown'))) {
+            iconClass = 'fa fa-wrench icon-special';
+        } else if (content.path && content.path.endsWith('.ScenarioLibrary')) {
+            iconClass = 'fa fa-bolt icon-scenariolib';
+        }
+    }
     
     // Determine if we should show the toggle icon
     let toggleClass = '';
@@ -1677,7 +1702,13 @@ function createSidebar2TreeNode(item, depth) {
     
     // Determine icon class
     let iconClass = 'fa fa-file-o icon-static';
-    if (item.type) {
+    
+    // Special case for FitNesse root page - try multiple detection methods
+    if (item.name === 'FitNesseRoot' || item.path === 'FitNesseRoot' || 
+        item.name === 'root' || item.path === 'root' ||
+        (depth === 0 && !item.path) || (depth === 0 && item.path === '')) {
+        iconClass = 'fa fitnesse-root-icon';
+    } else if (item.type) {
         if (item.type.includes('suite')) {
             iconClass = 'fa fa-cogs icon-test';
         } else if (item.type.includes('test')) {

@@ -686,6 +686,20 @@ fieldset {
   padding: 0 2px 0 2px;
 }
 
+.fitnesse-root-icon {
+  background-image: url(../img/suite-favicon.png) !important;
+  background-size: 14px 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  width: 14px !important;
+  height: 14px !important;
+  display: inline-block !important;
+  
+  &:before {
+    content: "" !important; // Hide FontAwesome icon content
+  }
+}
+
 .contents li {
   list-style-type: none;
 }
@@ -888,16 +902,6 @@ span.code {
   box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
-
-
-
-
-
-
-
-
-
-
 li.CodeMirror-hint:nth-child(even) {
   background-color: #888787;
   border-radius: 0px;
@@ -974,140 +978,6 @@ li.CodeMirror-hint:nth-child(odd) {
   font-style: italic;
   color: lightyellow;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .validate-badge {
   position: absolute;
@@ -1241,20 +1111,6 @@ li.CodeMirror-hint:nth-child(odd) {
   display: inline-block;
   color: red;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* Keyshortcut page */
 
@@ -1529,16 +1385,16 @@ kbd {
   }
   
   &.keyboard-focused > .sidebar2-node-content {
-    background-color: #3d3d1a;
-    border-left: 3px solid #ffc107;
-    outline: 2px solid #ffc107;
+    background-color: #1e3a1e;
+    border-left: 3px solid #40c057;
+    outline: 2px solid #40c057;
     outline-offset: -2px;
   }
   
   &.current-page.keyboard-focused > .sidebar2-node-content {
-    background-color: #2a5490;
+    background-color: #2a4a3a;
     border-left: 3px solid #66b3ff;
-    outline: 2px solid #66b3ff;
+    outline: 2px solid #40c057;
     outline-offset: -2px;
   }
 }
@@ -1608,6 +1464,17 @@ kbd {
   &.icon-static { color: #adb5bd; }
   &.icon-special { color: #fd7e14; }
   &.icon-scenariolib { color: #9775fa; }
+  
+  &.fitnesse-root-icon {
+    background-image: url(../img/suite-favicon.png);
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    i {
+      display: none; // Hide the FontAwesome icon
+    }
+  }
 }
 
 .sidebar2-node-text {

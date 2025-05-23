@@ -615,6 +615,20 @@ font-size:12px;
   padding: 0 2px 0 2px;
 }
 
+.fitnesse-root-icon {
+  background-image: url(../img/suite-favicon.png) !important;
+  background-size: 14px 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  width: 14px !important;
+  height: 14px !important;
+  display: inline-block !important;
+  
+  &:before {
+    content: "" !important; // Hide FontAwesome icon content
+  }
+}
+
 .contents li {
   list-style-type: none;
 }
@@ -1649,16 +1663,16 @@ li.runWithOrangeBeard a {
   }
   
   &.keyboard-focused > .sidebar2-node-content {
-    background-color: #fff3cd;
-    border-left: 3px solid #ffc107;
-    outline: 2px solid #ffc107;
+    background-color: #d4edda;
+    border-left: 3px solid #28a745;
+    outline: 2px solid #28a745;
     outline-offset: -2px;
   }
   
   &.current-page.keyboard-focused > .sidebar2-node-content {
-    background-color: #d1ecf1;
+    background-color: #cce7d0;
     border-left: 3px solid #007bff;
-    outline: 2px solid #007bff;
+    outline: 2px solid #28a745;
     outline-offset: -2px;
   }
 }
@@ -1728,6 +1742,17 @@ li.runWithOrangeBeard a {
   &.icon-static { color: #6c757d; }
   &.icon-special { color: #fd7e14; }
   &.icon-scenariolib { color: #6f42c1; }
+  
+  &.fitnesse-root-icon {
+    background-image: url(../img/suite-favicon.png);
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    i {
+      display: none; // Hide the FontAwesome icon
+    }
+  }
 }
 
 .sidebar2-node-text {
