@@ -1390,6 +1390,33 @@ kbd {
   gap: 8px;
 }
 
+#sidebar2-tags-switch {
+  cursor: pointer;
+  color: #66b3ff;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #4daef7;
+    background-color: #404040;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &.sidebar2-tags-disabled {
+    color: #6c757d;
+    
+    &:hover {
+      color: #adb5bd;
+      background-color: #404040;
+    }
+  }
+}
+
 #sidebar2-refresh {
   cursor: pointer;
   color: #adb5bd;
@@ -1576,6 +1603,29 @@ kbd {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar2-node-name {
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar2-symlink-icon {
+  color: #66b3ff;
+  font-size: 11px;
+  margin-left: 4px;
+  margin-right: 2px;
+  flex-shrink: 0;
+  opacity: 0.8;
+  
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .sidebar2-node-children {
@@ -1894,4 +1944,33 @@ li.runWithOrangeBeard a {
 
 .sidebar2-context-menu .context-menu-icon.context-menu-icon--fa.context-menu-disabled::before {
   color: #6c757d !important;
+}
+
+/* Sidebar 2.0 Tags (Dark Theme) */
+.sidebar2-node-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  flex-shrink: 0;
+  
+  .sidebar2-tag {
+    background-color: #1a4480;
+    color: #a8d8ff;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid #2d5ba8;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #2d5ba8;
+      color: #d4edff;
+    }
+  }
+  
+  &.sidebar2-tags-hidden {
+    display: none;
+  }
 }

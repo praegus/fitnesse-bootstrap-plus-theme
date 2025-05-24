@@ -709,6 +709,12 @@ $(function() {
         }
     );
 
+    $('body').on('click', '#sidebar2-tags-switch', function (e) {
+            e.preventDefault();
+            switchSidebar2Tags();
+        }
+    );
+
     $('body').on('click', '#history-specialPages-switch', function (e) {
         e.preventDefault();
         switchHistorySpecialPages();
@@ -843,6 +849,20 @@ $(function() {
             setBootstrapPlusConfigCookie('sidebarTags', 'true');
             $('#sidebarTags-switch').removeClass('noTags');
             $('.sidebarTag').removeClass('displayNone');
+        }
+    }
+
+    function switchSidebar2Tags(){
+        if (getCookie('sidebarTags') == 'true'){
+            setBootstrapPlusConfigCookie('sidebarTags', 'false');
+            $('#sidebar2-tags-switch').addClass("sidebar2-tags-disabled");
+            $('.sidebar2-node-tags').addClass('sidebar2-tags-hidden');
+            showNotification('info', 'Sidebar 2.0 tags hidden');
+        }else {
+            setBootstrapPlusConfigCookie('sidebarTags', 'true');
+            $('#sidebar2-tags-switch').removeClass('sidebar2-tags-disabled');
+            $('.sidebar2-node-tags').removeClass('sidebar2-tags-hidden');
+            showNotification('success', 'Sidebar 2.0 tags shown');
         }
     }
 
@@ -1155,6 +1175,26 @@ function sidebarTags(tagsArray){
         });
     }
     return tagString;
+}
+
+/**
+ * Generate tags HTML for Sidebar 2.0 nodes
+ * @param {Array} tagsArray - Array of tag strings
+ * @returns {string} - HTML string for tags container
+ */
+function sidebar2Tags(tagsArray) {
+    if (!tagsArray || tagsArray.length === 0) {
+        return '';
+    }
+    
+    const isTagsEnabled = getCookie('sidebarTags') === 'true';
+    const hiddenClass = isTagsEnabled ? '' : ' sidebar2-tags-hidden';
+    
+    const tagsHtml = tagsArray.map(tag => 
+        `<span class="sidebar2-tag" title="Tag: ${tag}">${tag}</span>`
+    ).join('');
+    
+    return `<div class="sidebar2-node-tags${hiddenClass}">${tagsHtml}</div>`;
 }
 
 // Set a click event an the sidebar toggle icons
@@ -1890,6 +1930,9 @@ function createSidebar2TreeNode(item, depth) {
     }
     
     // Create node structure
+    const linkedText = item.type && item.type.includes('linked') ? ' @' : '';
+    const symbolicIcon = item.isSymlink === true ? '<i class="fa fa-link sidebar2-symlink-icon" aria-hidden="true" title="Symbolic Link"></i>' : '';
+    
     const node = $(`
         <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''}" data-path="${item.path || ''}" data-depth="${depth}" id="${nodeId}">
             <div class="sidebar2-node-content" data-href="/${item.path || ''}">
@@ -1899,7 +1942,11 @@ function createSidebar2TreeNode(item, depth) {
                 <div class="sidebar2-node-icon ${iconClass.split(' ').slice(-1)[0]}">
                     <i class="${iconClass}" aria-hidden="true"></i>
                 </div>
-                <div class="sidebar2-node-text" title="${item.name || item.path}">${item.name || item.path}</div>
+                <div class="sidebar2-node-text" title="${item.name || item.path}">
+                    <span class="sidebar2-node-name">${item.name || item.path}${linkedText}</span>
+                    ${symbolicIcon}
+                    ${sidebar2Tags(item.tags)}
+                </div>
             </div>
         </div>
     `);

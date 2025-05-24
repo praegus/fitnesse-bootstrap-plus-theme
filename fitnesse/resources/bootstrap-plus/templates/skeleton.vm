@@ -188,6 +188,7 @@
                     Project
                 </div>
                 <div class="sidebar2-controls">
+                    <i id="sidebar2-tags-switch" aria-hidden="true" title="Show/Hide page tags" #if( $sidebarTags == 'true' ) class="fa fa-tags" #else class="fa fa-tags sidebar2-tags-disabled" #end></i>
                     <i id="sidebar2-refresh" class="fa fa-refresh" aria-hidden="true" title="Refresh tree"></i>
                 </div>
             </div>

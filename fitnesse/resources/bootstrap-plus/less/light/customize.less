@@ -1668,6 +1668,33 @@ li.runWithOrangeBeard a {
   gap: 8px;
 }
 
+#sidebar2-tags-switch {
+  cursor: pointer;
+  color: #007bff;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &.sidebar2-tags-disabled {
+    color: #adb5bd;
+    
+    &:hover {
+      color: #6c757d;
+      background-color: #e9ecef;
+    }
+  }
+}
+
 #sidebar2-refresh {
   cursor: pointer;
   color: #6c757d;
@@ -1854,6 +1881,29 @@ li.runWithOrangeBeard a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar2-node-name {
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar2-symlink-icon {
+  color: #007bff;
+  font-size: 11px;
+  margin-left: 4px;
+  margin-right: 2px;
+  flex-shrink: 0;
+  opacity: 0.8;
+  
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .sidebar2-node-children {
@@ -1969,3 +2019,35 @@ li.runWithOrangeBeard a {
 }
 
 /* Test History */
+
+/* Sidebar 2.0 Tags */
+.sidebar2-node-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  flex-shrink: 0;
+  
+  .sidebar2-tag {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #bbdefb;
+      color: #0d47a1;
+    }
+  }
+  
+  &.sidebar2-tags-hidden {
+    display: none;
+  }
+}
+
+.sidebar2-btn {
+}
