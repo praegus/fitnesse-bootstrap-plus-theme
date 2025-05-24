@@ -2398,8 +2398,9 @@ function handleSidebar2ContextMenuClick(key, element) {
             showNotification('error', 'Cannot copy path: no path found');
             return;
         }
-        copyToClipboard(nodePath);
-        showNotification('success', 'Page path copied to clipboard: ' + nodePath);
+        const pathWithDot = '.' + nodePath;
+        copyToClipboard(pathWithDot);
+        showNotification('success', 'Page path copied to clipboard: ' + pathWithDot);
         return;
     }
     
