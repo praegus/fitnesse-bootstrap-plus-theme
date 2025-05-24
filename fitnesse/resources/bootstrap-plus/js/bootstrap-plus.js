@@ -195,6 +195,8 @@ $(function() {
     // Add click handler to FitNesse logo to reset sidebar root
     $('.navbar-brand').on('click', function() {
         document.cookie = 'sidebarRoot= ; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        // Also clear Sidebar 2.0 state for fresh start
+        clearSidebar2State();
     });
 
     $(document).on('keydown', function (e) {
@@ -1747,7 +1749,7 @@ function loadSidebar2Tree(isManualRefresh = false) {
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function(contentArray) {
-            renderSidebar2Tree(contentArray);
+            renderSidebar2Tree(contentArray, isManualRefresh);
             setupSidebar2EventHandlers();
         },
         error: function(xhr) {
@@ -1764,8 +1766,10 @@ function loadSidebar2Tree(isManualRefresh = false) {
 
 /**
  * Render the tree structure in Sidebar 2.0
+ * @param {Array} contentArray - The content array from API
+ * @param {boolean} isManualRefresh - Whether this is a manual refresh (skip state restoration)
  */
-function renderSidebar2Tree(contentArray) {
+function renderSidebar2Tree(contentArray, isManualRefresh = false) {
     // Clear all content and temporary states
     $('#sidebar2Content').empty();
     
@@ -1795,6 +1799,23 @@ function renderSidebar2Tree(contentArray) {
     // Expand path to current page
     expandToCurrentPage();
     
+    // For manual refresh or when no state restoration, ensure root node children are visible
+    if (isManualRefresh) {
+        setTimeout(() => {
+            // Find the root node and expand its children
+            const rootNode = $('#sidebar2 .sidebar2-tree-node').first();
+            const rootChildrenContainer = rootNode.find('> .sidebar2-node-children');
+            const rootToggleIcon = rootNode.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+            
+            if (rootChildrenContainer.length > 0) {
+                rootChildrenContainer.addClass('expanded');
+                if (rootToggleIcon.length > 0) {
+                    rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                }
+            }
+        }, 50);
+    }
+    
     // Set initial keyboard focus after tree is fully rendered
     setTimeout(() => {
         if ($('#sidebar2').is(':visible')) {
@@ -1809,10 +1830,30 @@ function renderSidebar2Tree(contentArray) {
         }
     }, 100);
     
-    // Restore sidebar state after a short delay to let the tree render
-    setTimeout(() => {
-        restoreSidebar2State();
-    }, 200);
+    // Only restore sidebar state if this is not a manual refresh
+    if (!isManualRefresh) {
+        setTimeout(() => {
+            // Check if we have any saved state
+            const stateJson = localStorage.getItem('sidebar2State');
+            if (stateJson) {
+                restoreSidebar2State();
+            } else {
+                // No saved state - expand root node for better UX
+                setTimeout(() => {
+                    const rootNode = $('#sidebar2 .sidebar2-tree-node').first();
+                    const rootChildrenContainer = rootNode.find('> .sidebar2-node-children');
+                    const rootToggleIcon = rootNode.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+                    
+                    if (rootChildrenContainer.length > 0 && !rootChildrenContainer.hasClass('expanded')) {
+                        rootChildrenContainer.addClass('expanded');
+                        if (rootToggleIcon.length > 0) {
+                            rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                        }
+                    }
+                }, 50);
+            }
+        }, 200);
+    }
 }
 
 /**
@@ -2093,14 +2134,16 @@ function setupSidebar2EventHandlers() {
     
     // Control buttons
     $('#sidebar2-refresh').off('click').on('click', function() {
-        // Save current state before refresh
-        saveSidebar2State();
+        // Clear saved state for fresh start on manual refresh
+        clearSidebar2State();
         
         // Clear any temporary highlights (keyboard focus, etc.)
         $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
         
         // Reload the entire tree from root with manual refresh flag
         loadSidebar2Tree(true);
+        
+        showNotification('info', 'Sidebar refreshed - tree state cleared');
     });
     
     // Save state on scroll
@@ -2245,6 +2288,18 @@ function expandToCurrentPage() {
     if (!currentPath || currentPath === 'FrontPage') {
         // Highlight FrontPage or root
         $('#sidebar2 .sidebar2-tree-node[data-path="FrontPage"], #sidebar2 .sidebar2-tree-node[data-path=""]').addClass('current-page');
+        
+        // Also expand the root node's children for better UX when on FrontPage
+        const rootNode = $('#sidebar2 .sidebar2-tree-node').first();
+        const rootChildrenContainer = rootNode.find('> .sidebar2-node-children');
+        const rootToggleIcon = rootNode.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+        
+        if (rootChildrenContainer.length > 0 && !rootChildrenContainer.hasClass('expanded')) {
+            rootChildrenContainer.addClass('expanded');
+            if (rootToggleIcon.length > 0) {
+                rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+            }
+        }
         return;
     }
     
