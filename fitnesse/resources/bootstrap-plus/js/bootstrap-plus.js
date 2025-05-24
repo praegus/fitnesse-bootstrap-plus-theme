@@ -508,6 +508,12 @@ $(function() {
     if (!isFilesPath() && getCookie('sidebar2') == 'true') {
         $('#sidebar2').removeClass('displayNone');
         loadSidebar2Tree();
+        
+        // Apply saved width when initially loading the sidebar
+        var sidebar2Width = getCookie('sidebar2Position');
+        if (sidebar2Width && sidebar2Width !== '') {
+            $('#sidebar2').css('width', sidebar2Width + 'px');
+        }
     } else if (isFilesPath()) {
         // Hide Sidebar 2.0 when we're in the files section
         $('#sidebar2').addClass('displayNone');
@@ -583,6 +589,22 @@ $(function() {
             setBootstrapPlusConfigCookie("contextHelpPosition", ui.size.width);
         }
     });
+    
+    // For resizing Sidebar 2.0
+    $('#sidebar2').resizable({
+        handles: 'e',
+        minWidth: 200,
+        maxWidth: 600,
+        stop: function(event, ui) {
+            setBootstrapPlusConfigCookie("sidebar2Position", ui.size.width);
+        }
+    });
+    
+    // Apply saved width to Sidebar 2.0 if it exists
+    var sidebar2Width = getCookie('sidebar2Position');
+    if (sidebar2Width && sidebar2Width !== '') {
+        $('#sidebar2').css('width', sidebar2Width + 'px');
+    }
 
     if (getCookie('highlightSymbols') == 'true') {
         $('table').html(function(index,html){
@@ -798,6 +820,12 @@ $(function() {
             if (!isFilesPath()) {
                 $('#sidebar2').removeClass('displayNone');
                 loadSidebar2Tree();
+                
+                // Apply saved width when showing the sidebar
+                var sidebar2Width = getCookie('sidebar2Position');
+                if (sidebar2Width && sidebar2Width !== '') {
+                    $('#sidebar2').css('width', sidebar2Width + 'px');
+                }
             }
             
             showNotification('success', 'Sidebar 2.0 enabled!');
@@ -1721,11 +1749,6 @@ function loadSidebar2Tree(isManualRefresh = false) {
         success: function(contentArray) {
             renderSidebar2Tree(contentArray);
             setupSidebar2EventHandlers();
-            
-            // Show success notification only for manual refresh
-            if (isManualRefresh) {
-                showNotification('success', 'Sidebar tree refreshed');
-            }
         },
         error: function(xhr) {
             console.log('Error loading Sidebar 2.0 tree: ' + xhr.status, xhr);
@@ -2049,9 +2072,6 @@ function setupSidebar2EventHandlers() {
     
     // Control buttons
     $('#sidebar2-refresh').off('click').on('click', function() {
-        // Show refresh notification
-        showNotification('info', 'Refreshing sidebar tree...');
-        
         // Clear any temporary highlights (keyboard focus, etc.)
         $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
         
