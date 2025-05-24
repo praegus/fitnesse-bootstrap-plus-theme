@@ -2202,14 +2202,35 @@ function handleSidebar2ContextMenuClick(key, element) {
     const nodeElement = nodeContent.closest('.sidebar2-tree-node');
     const nodePath = nodeElement.data('path');
     
-    if (!nodePath) {
-        console.error('No path found for context menu item');
+    // Handle copypath separately as it uses the raw path
+    if (key === 'copypath') {
+        if (!nodePath && nodePath !== '') {
+            console.error('No path found for context menu item');
+            showNotification('error', 'Cannot copy path: no path found');
+            return;
+        }
+        copyToClipboard(nodePath);
+        showNotification('success', 'Page path copied to clipboard: ' + nodePath);
         return;
+    }
+    
+    // For other actions, we need to construct a proper URL path
+    // Handle special cases for root and empty paths
+    let urlPath;
+    if (!nodePath || nodePath === '' || nodePath === 'root') {
+        // For root node, use root path
+        urlPath = '/root';
+    } else if (nodePath === 'FrontPage') {
+        // FrontPage is accessed at root
+        urlPath = '/FrontPage';
+    } else {
+        // Convert dot notation to URL path (e.g., "Suite.Test" -> "/Suite.Test")
+        urlPath = '/' + nodePath;
     }
     
     // Create a mock anchor element similar to original sidebar for compatibility
     const mockAnchor = {
-        pathname: '/' + nodePath.replace(/\./g, '/'),
+        pathname: urlPath,
         classList: {
             contains: function(className) {
                 return nodeElement.hasClass(className);
@@ -2217,18 +2238,20 @@ function handleSidebar2ContextMenuClick(key, element) {
         }
     };
     
-    if (key === 'copypath') {
-        copyToClipboard(nodePath);
-        showNotification('success', 'Page path copied to clipboard: ' + nodePath);
+    var responder = getSidebar2Responder(key, mockAnchor);
+    if (!responder) {
+        console.error('No responder found for action: ' + key);
+        return;
+    }
+    
+    var targetUrl = urlPath + '?' + responder;
+    
+    console.log('Sidebar 2.0 context menu action:', key, 'URL:', targetUrl); // Debug logging
+    
+    if (key.includes('NewTab')) {
+        window.open(targetUrl, '_blank');
     } else {
-        var responder = getSidebar2Responder(key, mockAnchor);
-        var targetUrl = '/' + nodePath.replace(/\./g, '/') + '?' + responder;
-        
-        if (key.includes('NewTab')) {
-            window.open(targetUrl, '_blank');
-        } else {
-            window.location.href = targetUrl;
-        }
+        window.location.href = targetUrl;
     }
 }
 
