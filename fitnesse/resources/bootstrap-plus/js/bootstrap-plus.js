@@ -291,6 +291,64 @@ $(function() {
             // Scroll into view
             prevNode[0].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             
+        } else if (e.which === 39 && e.shiftKey) { // Shift+Right arrow - open context menu
+            e.preventDefault();
+            var nodeContent = currentFocused.find('> .sidebar2-node-content');
+            
+            if (nodeContent.length > 0) {
+                // Calculate position for context menu
+                var nodeOffset = nodeContent.offset();
+                var nodeHeight = nodeContent.outerHeight();
+                
+                // Position menu at the right edge of the node, vertically centered
+                var menuX = nodeOffset.left + nodeContent.outerWidth() - 10;
+                var menuY = nodeOffset.top + (nodeHeight / 2);
+                
+                // Create a more complete synthetic contextmenu event
+                var syntheticEvent = $.Event('contextmenu', {
+                    type: 'contextmenu',
+                    bubbles: true,
+                    cancelable: true,
+                    which: 3,
+                    button: 2,
+                    clientX: menuX,
+                    clientY: menuY,
+                    pageX: menuX,
+                    pageY: menuY,
+                    screenX: menuX,
+                    screenY: menuY,
+                    target: nodeContent[0],
+                    currentTarget: nodeContent[0]
+                });
+                
+                // Add preventDefault and stopPropagation methods
+                syntheticEvent.preventDefault = function() { return false; };
+                syntheticEvent.stopPropagation = function() { return false; };
+                syntheticEvent.stopImmediatePropagation = function() { return false; };
+                
+                // Create originalEvent with the same properties
+                syntheticEvent.originalEvent = {
+                    type: 'contextmenu',
+                    bubbles: true,
+                    cancelable: true,
+                    which: 3,
+                    button: 2,
+                    clientX: menuX,
+                    clientY: menuY,
+                    pageX: menuX,
+                    pageY: menuY,
+                    screenX: menuX,
+                    screenY: menuY,
+                    target: nodeContent[0],
+                    currentTarget: nodeContent[0],
+                    preventDefault: function() { return false; },
+                    stopPropagation: function() { return false; },
+                    stopImmediatePropagation: function() { return false; }
+                };
+                
+                // Trigger context menu with proper positioning
+                nodeContent.trigger(syntheticEvent);
+            }
         } else if (e.which === 39) { // Right arrow - expand
             e.preventDefault();
             var toggle = currentFocused.find('> .sidebar2-node-content > .sidebar2-node-toggle');
