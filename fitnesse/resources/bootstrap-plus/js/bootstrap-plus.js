@@ -397,6 +397,37 @@ $(function() {
         document.getElementById('contentDiv').style.paddingBottom = $('footer').height() + 31 + 'px';
     }
 
+    // Adjust sidebar2 height to account for footer
+    function adjustSidebar2Height() {
+        var footerHeight = $('footer').height();
+        var navHeight = $('nav').height();
+        
+        if (footerHeight !== 0) {
+            // Calculate available height: viewport height minus nav height minus footer height minus padding
+            // Increased buffer from 10px to 30px to ensure bottom content is visible
+            var availableHeight = 'calc(100vh - ' + navHeight + 'px - ' + footerHeight + 'px - 30px)';
+            $('#sidebar2').css('height', availableHeight);
+            $('#sidebar2').css('max-height', availableHeight);
+        } else {
+            // If no footer, use the original full viewport height minus nav and some padding
+            var availableHeight = 'calc(100vh - ' + navHeight + 'px - 20px)';
+            $('#sidebar2').css('height', availableHeight);
+            $('#sidebar2').css('max-height', availableHeight);
+        }
+    }
+    
+    // Call the function on page load with a small delay to ensure all elements are rendered
+    setTimeout(function() {
+        adjustSidebar2Height();
+    }, 100);
+    
+    // Also adjust on window resize in case footer height changes
+    $(window).on('resize', function() {
+        setTimeout(function() {
+            adjustSidebar2Height();
+        }, 50);
+    });
+
     // Tooltips
     getToolTips(placeToolTip);
 
