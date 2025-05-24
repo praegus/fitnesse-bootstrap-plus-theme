@@ -2672,6 +2672,11 @@ function clearSidebar2State() {
  * @param {string} message - Loading message to display
  */
 function showSidebar2LoadingOverlay(message = 'Loading...') {
+    // Detect current theme
+    const isDarkTheme = $('link#theme').attr('href').includes('dark');
+    const backgroundColor = isDarkTheme ? 'rgba(43, 43, 43, 0.9)' : 'rgba(255, 255, 255, 0.9)';
+    const textColor = isDarkTheme ? '#adb5bd' : '#666';
+    
     const overlay = $(`
         <div class="sidebar2-restore-overlay" style="
             position: absolute;
@@ -2679,14 +2684,14 @@ function showSidebar2LoadingOverlay(message = 'Loading...') {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.9);
+            background: ${backgroundColor};
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             border-radius: 4px;
         ">
-            <div style="text-align: center; color: #666;">
+            <div style="text-align: center; color: ${textColor};">
                 <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-bottom: 8px;"></div>
                 <div style="font-size: 12px;">${message}</div>
             </div>
