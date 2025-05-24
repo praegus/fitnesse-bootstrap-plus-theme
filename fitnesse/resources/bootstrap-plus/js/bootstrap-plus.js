@@ -1845,10 +1845,10 @@ function createSidebar2TreeNode(item, depth) {
     
     // Create node structure
     const node = $(`
-        <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''}" data-path="${item.path || ''}" id="${nodeId}">
+        <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''}" data-path="${item.path || ''}" data-depth="${depth}" id="${nodeId}">
             <div class="sidebar2-node-content" data-href="/${item.path || ''}">
-                <div class="sidebar2-node-toggle ${!item.children || item.children.length === 0 ? 'no-children' : ''}">
-                    ${item.children && item.children.length > 0 ? '<i class="fa fa-angle-right"></i>' : ''}
+                <div class="sidebar2-node-toggle ${!item.hasOwnProperty('children') ? 'no-children' : ''}">
+                    ${!item.hasOwnProperty('children') ? '' : '<i class="fa fa-angle-right"></i>'}
                 </div>
                 <div class="sidebar2-node-icon ${iconClass.split(' ').slice(-1)[0]}">
                     <i class="${iconClass}" aria-hidden="true"></i>
@@ -1858,14 +1858,18 @@ function createSidebar2TreeNode(item, depth) {
         </div>
     `);
     
-    // Add children if they exist
-    if (item.children && item.children.length > 0) {
-        const childrenContainer = $('<div class="sidebar2-node-children"></div>');
+    // Add direct children for initial levels only (depth 0)
+    // Deeper levels will be loaded dynamically via AJAX
+    if (item.children && item.children.length > 0 && depth === 0) {
+        const childrenContainer = $('<div class="sidebar2-node-children"></div>'); // Not expanded by default
         item.children.forEach(child => {
             const childNode = createSidebar2TreeNode(child, depth + 1);
             childrenContainer.append(childNode);
         });
         node.append(childrenContainer);
+        
+        // Mark this node as having pre-loaded children
+        node.attr('data-children-loaded', 'true');
     }
     
     return node;
@@ -2012,7 +2016,7 @@ function setupSidebar2EventHandlers() {
         
         // If children container exists and has content
         if (childrenContainer.length > 0 && childrenContainer.children().length > 0) {
-            // Toggle visibility
+            // Toggle visibility of existing children
             if (childrenContainer.hasClass('expanded')) {
                 childrenContainer.removeClass('expanded');
                 toggleIcon.removeClass('fa-angle-down').addClass('fa-angle-right');
@@ -2020,8 +2024,8 @@ function setupSidebar2EventHandlers() {
                 childrenContainer.addClass('expanded');
                 toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
             }
-        } else {
-            // Need to load children
+        } else if (!node.attr('data-children-loaded')) {
+            // Need to load children dynamically (only if not already loaded)
             loadSidebar2NodeChildren(node);
         }
     });
@@ -2095,6 +2099,38 @@ function setupSidebar2EventHandlers() {
 }
 
 /**
+ * Recursively render children for Sidebar 2.0 tree nodes
+ * @param {Element} parentNode - The parent DOM node to append children to
+ * @param {Array} children - Array of child items from API response
+ * @param {number} baseDepth - The base depth for icon calculation
+ */
+function renderSidebar2Children(parentNode, children, baseDepth) {
+    if (!children || children.length === 0) {
+        return;
+    }
+    
+    const childrenContainer = $('<div class="sidebar2-node-children expanded"></div>');
+    
+    children.forEach(child => {
+        const childNode = createSidebar2TreeNode(child, baseDepth + 1);
+        
+        // Don't pre-create grandchildren containers - let them be loaded dynamically
+        // Only mark as loaded if this is explicitly a leaf node
+        if (!child.hasOwnProperty('children')) {
+            // Mark nodes that are leaf nodes (no children property in API response)
+            childNode.attr('data-children-loaded', 'true');
+        }
+        // For nodes that have children property, leave them unmarked so they can trigger AJAX
+        
+        childrenContainer.append(childNode);
+    });
+    
+    // Remove any existing children container and add the new one
+    $(parentNode).find('> .sidebar2-node-children').remove();
+    $(parentNode).append(childrenContainer);
+}
+
+/**
  * Load children for a specific node
  */
 function loadSidebar2NodeChildren(node) {
@@ -2117,17 +2153,13 @@ function loadSidebar2NodeChildren(node) {
             toggle.removeClass('loading');
             
             if (contentArray && contentArray.length > 0 && contentArray[0].children && contentArray[0].children.length > 0) {
-                // Remove existing children container
-                node.find('> .sidebar2-node-children').remove();
+                // Use the new recursive rendering function to handle the full depth=2 tree
+                const currentDepth = parseInt(node.attr('data-depth') || '0');
+                renderSidebar2Children(node[0], contentArray[0].children, currentDepth);
                 
-                // Create new children container
-                const childrenContainer = $('<div class="sidebar2-node-children expanded"></div>');
-                contentArray[0].children.forEach(child => {
-                    const childNode = createSidebar2TreeNode(child, 1);
-                    childrenContainer.append(childNode);
-                });
+                // Mark this node as having its children loaded
+                node.attr('data-children-loaded', 'true');
                 
-                node.append(childrenContainer);
                 toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-down');
                 
                 // Maintain keyboard focus if it was on this node
@@ -2139,6 +2171,7 @@ function loadSidebar2NodeChildren(node) {
                 // No children found
                 toggle.addClass('no-children');
                 toggleIcon.removeClass('fa-spinner fa-spin');
+                toggle.empty(); // Remove toggle icon completely
             }
         },
         error: function(xhr) {
