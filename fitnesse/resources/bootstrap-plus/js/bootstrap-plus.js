@@ -1808,6 +1808,11 @@ function renderSidebar2Tree(contentArray) {
             }
         }
     }, 100);
+    
+    // Restore sidebar state after a short delay to let the tree render
+    setTimeout(() => {
+        restoreSidebar2State();
+    }, 200);
 }
 
 /**
@@ -2020,13 +2025,25 @@ function setupSidebar2EventHandlers() {
             if (childrenContainer.hasClass('expanded')) {
                 childrenContainer.removeClass('expanded');
                 toggleIcon.removeClass('fa-angle-down').addClass('fa-angle-right');
+                // Smooth collapse animation
+                childrenContainer.slideUp(150);
             } else {
                 childrenContainer.addClass('expanded');
                 toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                // Smooth expand animation
+                childrenContainer.hide().slideDown(150);
             }
+            
+            // Save state after toggle
+            saveSidebar2State();
+            
         } else if (!node.attr('data-children-loaded')) {
             // Need to load children dynamically (only if not already loaded)
-            loadSidebar2NodeChildren(node);
+            loadSidebar2NodeChildren(node).then(() => {
+                // Success - children loaded and state saved in loadSidebar2NodeChildren
+            }).catch((error) => {
+                console.warn('Failed to load children:', error);
+            });
         }
     });
     
@@ -2076,11 +2093,23 @@ function setupSidebar2EventHandlers() {
     
     // Control buttons
     $('#sidebar2-refresh').off('click').on('click', function() {
+        // Save current state before refresh
+        saveSidebar2State();
+        
         // Clear any temporary highlights (keyboard focus, etc.)
         $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
         
         // Reload the entire tree from root with manual refresh flag
         loadSidebar2Tree(true);
+    });
+    
+    // Save state on scroll
+    $('#sidebar2Content').off('scroll.state').on('scroll.state', function() {
+        // Throttle scroll events to avoid excessive localStorage writes
+        clearTimeout($(this).data('scrollTimeout'));
+        $(this).data('scrollTimeout', setTimeout(() => {
+            saveSidebar2State();
+        }, 250));
     });
     
     // Hide/Show sidebar toggle
@@ -2095,6 +2124,13 @@ function setupSidebar2EventHandlers() {
         $('#sidebar2').removeClass('displayNone');
         $('#closedSidebar2').addClass('displayNone');
         showNotification('success', 'Sidebar shown');
+    });
+    
+    // Save state when navigating away from the page
+    $(window).off('beforeunload.sidebar2').on('beforeunload.sidebar2', function() {
+        if ($('#sidebar2').is(':visible')) {
+            saveSidebar2State();
+        }
     });
 }
 
@@ -2132,53 +2168,71 @@ function renderSidebar2Children(parentNode, children, baseDepth) {
 
 /**
  * Load children for a specific node
+ * @param {jQuery} node - The node to load children for
+ * @returns {Promise} - Promise that resolves when children are loaded
  */
 function loadSidebar2NodeChildren(node) {
-    const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
-    const toggleIcon = toggle.find('i');
-    const path = node.data('path');
-    
-    if (!path) return;
-    
-    // Show loading state
-    toggle.addClass('loading');
-    toggleIcon.removeClass('fa-angle-right').addClass('fa-spinner fa-spin');
-    
-    $.ajax({
-        type: 'GET',
-        url: location.protocol + '//' + location.host + '/' + path + '?responder=tableOfContents&depth=2',
-        contentType: 'application/json; charset=utf-8',
-        dataType: 'json',
-        success: function(contentArray) {
-            toggle.removeClass('loading');
-            
-            if (contentArray && contentArray.length > 0 && contentArray[0].children && contentArray[0].children.length > 0) {
-                // Use the new recursive rendering function to handle the full depth=2 tree
-                const currentDepth = parseInt(node.attr('data-depth') || '0');
-                renderSidebar2Children(node[0], contentArray[0].children, currentDepth);
-                
-                // Mark this node as having its children loaded
-                node.attr('data-children-loaded', 'true');
-                
-                toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-down');
-                
-                // Maintain keyboard focus if it was on this node
-                if (node.hasClass('keyboard-focused')) {
-                    // Focus stays on the parent node that was expanded
-                    node.addClass('keyboard-focused');
-                }
-            } else {
-                // No children found
-                toggle.addClass('no-children');
-                toggleIcon.removeClass('fa-spinner fa-spin');
-                toggle.empty(); // Remove toggle icon completely
-            }
-        },
-        error: function(xhr) {
-            console.log('Error loading children for ' + path + ': ' + xhr.status, xhr);
-            toggle.removeClass('loading');
-            toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-right');
+    return new Promise((resolve, reject) => {
+        const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+        const toggleIcon = toggle.find('i');
+        const path = node.data('path');
+        
+        if (!path) {
+            reject('No path found for node');
+            return;
         }
+        
+        // Show loading state
+        toggle.addClass('loading');
+        toggleIcon.removeClass('fa-angle-right').addClass('fa-spinner fa-spin');
+        
+        $.ajax({
+            type: 'GET',
+            url: location.protocol + '//' + location.host + '/' + path + '?responder=tableOfContents&depth=2',
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(contentArray) {
+                toggle.removeClass('loading');
+                
+                if (contentArray && contentArray.length > 0 && contentArray[0].children && contentArray[0].children.length > 0) {
+                    // Use the new recursive rendering function to handle the full depth=2 tree
+                    const currentDepth = parseInt(node.attr('data-depth') || '0');
+                    renderSidebar2Children(node[0], contentArray[0].children, currentDepth);
+                    
+                    // Mark this node as having its children loaded
+                    node.attr('data-children-loaded', 'true');
+                    
+                    toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-down');
+                    
+                    // Maintain keyboard focus if it was on this node
+                    if (node.hasClass('keyboard-focused')) {
+                        // Focus stays on the parent node that was expanded
+                        node.addClass('keyboard-focused');
+                    }
+                    
+                    // Save state after successful load
+                    saveSidebar2State();
+                    
+                    resolve();
+                } else {
+                    // No children found
+                    toggle.addClass('no-children');
+                    toggleIcon.removeClass('fa-spinner fa-spin');
+                    toggle.empty(); // Remove toggle icon completely
+                    
+                    // Save state after update
+                    saveSidebar2State();
+                    
+                    reject('No children found');
+                }
+            },
+            error: function(xhr) {
+                console.log('Error loading children for ' + path + ': ' + xhr.status, xhr);
+                toggle.removeClass('loading');
+                toggleIcon.removeClass('fa-spinner fa-spin').addClass('fa-angle-right');
+                reject('AJAX error: ' + xhr.status);
+            }
+        });
     });
 }
 
@@ -2324,3 +2378,348 @@ function getSidebar2Responder(key, element) {
 /*
  SIDEBAR 2.0 FUNCTIONS END
  */
+
+/*
+ SIDEBAR 2.0 STATE PERSISTENCE START
+ */
+
+/**
+ * Save the current Sidebar 2.0 state to localStorage
+ */
+function saveSidebar2State() {
+    try {
+        const expandedNodes = [];
+        const loadedNodes = [];
+        
+        // Get all expanded nodes
+        $('#sidebar2 .sidebar2-node-children.expanded').each(function() {
+            const parentNode = $(this).parent('.sidebar2-tree-node');
+            const path = parentNode.data('path');
+            if (path) {
+                expandedNodes.push(path);
+            }
+        });
+        
+        // Get all loaded nodes
+        $('#sidebar2 .sidebar2-tree-node[data-children-loaded="true"]').each(function() {
+            const path = $(this).data('path');
+            if (path && !isLeafNode(this)) {
+                loadedNodes.push(path);
+            }
+        });
+        
+        const state = {
+            expandedNodes: expandedNodes,
+            loadedNodes: loadedNodes,
+            scrollPosition: $('#sidebar2Content').scrollTop() || 0,
+            timestamp: Date.now()
+        };
+        
+        localStorage.setItem('sidebar2State', JSON.stringify(state));
+        console.log('Sidebar 2.0 state saved:', state);
+    } catch (e) {
+        console.warn('Failed to save Sidebar 2.0 state:', e);
+    }
+}
+
+/**
+ * Restore the Sidebar 2.0 state from localStorage
+ */
+function restoreSidebar2State() {
+    try {
+        const stateJson = localStorage.getItem('sidebar2State');
+        if (!stateJson) return;
+        
+        const state = JSON.parse(stateJson);
+        
+        // Clean up old state (older than 7 days)
+        if (Date.now() - state.timestamp > 7 * 24 * 60 * 60 * 1000) {
+            localStorage.removeItem('sidebar2State');
+            return;
+        }
+        
+        console.log('Restoring Sidebar 2.0 state:', state);
+        
+        // Show loading overlay if we have nodes to restore
+        if (state.expandedNodes && state.expandedNodes.length > 0) {
+            showSidebar2LoadingOverlay('Restoring tree state...');
+            
+            // Optimize: Group nodes by depth for better loading strategy
+            const nodesByDepth = groupNodesByDepth(state.expandedNodes);
+            
+            // Start restoration with improved algorithm
+            restoreExpandedNodesOptimized(nodesByDepth).then(() => {
+                // Restoration complete - hide overlay and restore scroll
+                hideSidebar2LoadingOverlay();
+                
+                setTimeout(() => {
+                    if (state.scrollPosition) {
+                        $('#sidebar2Content').animate({
+                            scrollTop: state.scrollPosition
+                        }, 300); // Smooth scroll animation
+                    }
+                }, 100);
+                
+            }).catch((error) => {
+                console.warn('State restoration completed with some errors:', error);
+                hideSidebar2LoadingOverlay();
+            });
+        } else if (state.scrollPosition) {
+            // Just restore scroll position if no nodes to expand
+            setTimeout(() => {
+                $('#sidebar2Content').scrollTop(state.scrollPosition);
+            }, 100);
+        }
+        
+    } catch (e) {
+        console.warn('Failed to restore Sidebar 2.0 state:', e);
+        localStorage.removeItem('sidebar2State');
+        hideSidebar2LoadingOverlay();
+    }
+}
+
+/**
+ * Recursively restore expanded nodes
+ * @param {Array} expandedPaths - Array of paths to expand
+ * @param {number} index - Current index in the array
+ */
+function restoreExpandedNodes(expandedPaths, index) {
+    if (index >= expandedPaths.length) {
+        return; // All nodes processed
+    }
+    
+    const path = expandedPaths[index];
+    const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+    
+    if (node.length > 0) {
+        const childrenContainer = node.find('> .sidebar2-node-children');
+        const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+        const toggleIcon = toggle.find('i');
+        
+        if (toggle.hasClass('no-children')) {
+            // Skip nodes with no children, move to next
+            restoreExpandedNodes(expandedPaths, index + 1);
+            return;
+        }
+        
+        // If children already exist, just expand
+        if (childrenContainer.length > 0 && childrenContainer.children().length > 0) {
+            childrenContainer.addClass('expanded');
+            toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+            // Move to next node
+            restoreExpandedNodes(expandedPaths, index + 1);
+        } else if (!node.attr('data-children-loaded')) {
+            // Need to load children first, then expand
+            loadSidebar2NodeChildren(node).then(() => {
+                // After loading, expand the node
+                const updatedChildrenContainer = node.find('> .sidebar2-node-children');
+                const updatedToggleIcon = node.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+                
+                if (updatedChildrenContainer.length > 0) {
+                    updatedChildrenContainer.addClass('expanded');
+                    updatedToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                }
+                
+                // Move to next node after a small delay
+                setTimeout(() => {
+                    restoreExpandedNodes(expandedPaths, index + 1);
+                }, 100);
+            }).catch(() => {
+                // If loading failed, move to next node
+                restoreExpandedNodes(expandedPaths, index + 1);
+            });
+        } else {
+            // Node is loaded but collapsed, just expand
+            if (childrenContainer.length > 0) {
+                childrenContainer.addClass('expanded');
+                toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+            }
+            restoreExpandedNodes(expandedPaths, index + 1);
+        }
+    } else {
+        // Node not found, move to next
+        restoreExpandedNodes(expandedPaths, index + 1);
+    }
+}
+
+/**
+ * Check if a node is a leaf node (has no toggle or is marked as no-children)
+ * @param {Element} nodeElement - The tree node element
+ * @returns {boolean} - True if it's a leaf node
+ */
+function isLeafNode(nodeElement) {
+    const toggle = $(nodeElement).find('> .sidebar2-node-content > .sidebar2-node-toggle');
+    return toggle.hasClass('no-children') || toggle.find('i').length === 0;
+}
+
+/**
+ * Clear Sidebar 2.0 state from localStorage
+ */
+function clearSidebar2State() {
+    localStorage.removeItem('sidebar2State');
+    console.log('Sidebar 2.0 state cleared');
+}
+
+/*
+ SIDEBAR 2.0 STATE PERSISTENCE END
+ */
+
+/**
+ * Show loading overlay for Sidebar 2.0
+ * @param {string} message - Loading message to display
+ */
+function showSidebar2LoadingOverlay(message = 'Loading...') {
+    const overlay = $(`
+        <div class="sidebar2-restore-overlay" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            border-radius: 4px;
+        ">
+            <div style="text-align: center; color: #666;">
+                <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="margin-bottom: 8px;"></div>
+                <div style="font-size: 12px;">${message}</div>
+            </div>
+        </div>
+    `);
+    
+    $('#sidebar2Content').css('position', 'relative').append(overlay);
+    
+    // Smooth fade in
+    overlay.hide().fadeIn(200);
+}
+
+/**
+ * Hide loading overlay for Sidebar 2.0
+ */
+function hideSidebar2LoadingOverlay() {
+    $('.sidebar2-restore-overlay').fadeOut(200, function() {
+        $(this).remove();
+        $('#sidebar2Content').css('position', '');
+    });
+}
+
+/**
+ * Group nodes by their depth for optimized loading
+ * @param {Array} nodePaths - Array of node paths
+ * @returns {Object} - Object with depth as key and paths as values
+ */
+function groupNodesByDepth(nodePaths) {
+    const groups = {};
+    
+    nodePaths.forEach(path => {
+        const depth = path.split('.').length - 1;
+        if (!groups[depth]) {
+            groups[depth] = [];
+        }
+        groups[depth].push(path);
+    });
+    
+    return groups;
+}
+
+/**
+ * Optimized node restoration that processes nodes by depth level
+ * @param {Object} nodesByDepth - Nodes grouped by depth
+ * @returns {Promise} - Promise that resolves when restoration is complete
+ */
+function restoreExpandedNodesOptimized(nodesByDepth) {
+    return new Promise((resolve, reject) => {
+        const depths = Object.keys(nodesByDepth).map(Number).sort((a, b) => a - b);
+        let currentDepthIndex = 0;
+        
+        function processNextDepth() {
+            if (currentDepthIndex >= depths.length) {
+                resolve();
+                return;
+            }
+            
+            const currentDepth = depths[currentDepthIndex];
+            const nodesAtDepth = nodesByDepth[currentDepth];
+            
+            console.log(`Restoring depth ${currentDepth} nodes:`, nodesAtDepth);
+            
+            // Process all nodes at this depth in parallel
+            const promises = nodesAtDepth.map(path => expandNodeByPath(path));
+            
+            Promise.allSettled(promises).then(() => {
+                currentDepthIndex++;
+                // Small delay between depth levels to avoid overwhelming the browser
+                setTimeout(processNextDepth, 50);
+            });
+        }
+        
+        processNextDepth();
+    });
+}
+
+/**
+ * Expand a specific node by its path
+ * @param {string} path - The path of the node to expand
+ * @returns {Promise} - Promise that resolves when node is expanded
+ */
+function expandNodeByPath(path) {
+    return new Promise((resolve, reject) => {
+        const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+        
+        if (node.length === 0) {
+            console.warn('Node not found for path:', path);
+            resolve(); // Don't fail the entire process
+            return;
+        }
+        
+        const childrenContainer = node.find('> .sidebar2-node-children');
+        const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
+        const toggleIcon = toggle.find('i');
+        
+        if (toggle.hasClass('no-children')) {
+            resolve(); // Skip nodes with no children
+            return;
+        }
+        
+        // If children already exist, just expand with animation
+        if (childrenContainer.length > 0 && childrenContainer.children().length > 0) {
+            childrenContainer.addClass('expanded');
+            toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+            
+            // Add smooth expand animation
+            childrenContainer.hide().slideDown(150);
+            resolve();
+            
+        } else if (!node.attr('data-children-loaded')) {
+            // Need to load children first
+            loadSidebar2NodeChildren(node).then(() => {
+                const updatedChildrenContainer = node.find('> .sidebar2-node-children');
+                const updatedToggleIcon = node.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+                
+                if (updatedChildrenContainer.length > 0) {
+                    updatedChildrenContainer.addClass('expanded');
+                    updatedToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                    
+                    // Add smooth expand animation
+                    updatedChildrenContainer.hide().slideDown(150);
+                }
+                resolve();
+                
+            }).catch((error) => {
+                console.warn('Failed to load children for:', path, error);
+                resolve(); // Don't fail the entire process
+            });
+        } else {
+            // Node is loaded but collapsed, just expand
+            if (childrenContainer.length > 0) {
+                childrenContainer.addClass('expanded');
+                toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                childrenContainer.hide().slideDown(150);
+            }
+            resolve();
+        }
+    });
+}
