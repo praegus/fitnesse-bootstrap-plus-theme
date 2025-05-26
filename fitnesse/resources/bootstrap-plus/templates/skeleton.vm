@@ -35,6 +35,12 @@
         #set( $sidebar = 'false' )
     #end
 
+    #set( $sidebar2CookieName = "sidebar2")
+    #set ($sidebar2 = $request.getCookie($sidebar2CookieName))
+    #if($sidebar2 == "")
+        #set( $sidebar2 = 'false' )
+    #end
+
     #set($sidebarRootCookieName = "sidebarRoot")
     #set ($sidebarRoot = $request.getCookie($sidebarRootCookieName))
 

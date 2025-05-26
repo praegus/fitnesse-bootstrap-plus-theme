@@ -18,7 +18,9 @@ try {
         getPageHistory: getPageHistory,
         getWorkSpace: getWorkSpace,
         isFilesPath: isFilesPath,
-        getCookie: getCookie
+        getCookie: getCookie,
+        createSidebar2TreeNode: createSidebar2TreeNode,
+        showSidebar2RunnablePageItems: showSidebar2RunnablePageItems
     };
 } catch (e) {
     //Intentionally left blank
@@ -1929,12 +1931,19 @@ function createSidebar2TreeNode(item, depth) {
         }
     }
     
+    // Determine additional CSS classes for the tree node based on the item type
+    let additionalClasses = '';
+    if (item.type) {
+        // Add the exact type as CSS class (test, suite, static, etc.)
+        additionalClasses = item.type.replace(/\s+/g, ' '); // Clean up any extra spaces
+    }
+    
     // Create node structure
     const linkedText = item.type && item.type.includes('linked') ? ' @' : '';
     const symbolicIcon = item.isSymlink === true ? '<i class="fa fa-link sidebar2-symlink-icon" aria-hidden="true" title="Symbolic Link"></i>' : '';
     
     const node = $(`
-        <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''}" data-path="${item.path || ''}" data-depth="${depth}" id="${nodeId}">
+        <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''} ${additionalClasses}" data-path="${item.path || ''}" data-depth="${depth}" id="${nodeId}">
             <div class="sidebar2-node-content" data-href="/${item.path || ''}">
                 <div class="sidebar2-node-toggle ${!item.hasOwnProperty('children') ? 'no-children' : ''}">
                     ${!item.hasOwnProperty('children') ? '' : '<i class="fa fa-angle-right"></i>'}

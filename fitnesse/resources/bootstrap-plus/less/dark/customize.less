@@ -1606,13 +1606,15 @@ kbd {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0; /* Important for flex items to shrink properly */
 }
 
 .sidebar2-node-name {
-  flex-shrink: 1;
+  flex: 1; /* Allow page name to take available space */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 60px; /* Ensure minimum visibility of page name */
 }
 
 .sidebar2-symlink-icon {
@@ -1951,7 +1953,8 @@ li.runWithOrangeBeard a {
   display: flex;
   flex-wrap: nowrap;
   gap: 3px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevent tags container from shrinking */
+  overflow: hidden; /* Hide overflowing tags */
   
   .sidebar2-tag {
     background-color: #1a4480;
@@ -1963,6 +1966,7 @@ li.runWithOrangeBeard a {
     border: 1px solid #2d5ba8;
     white-space: nowrap;
     transition: all 0.2s ease;
+    flex-shrink: 0; /* Prevent individual tags from shrinking */
     
     &:hover {
       background-color: #2d5ba8;
