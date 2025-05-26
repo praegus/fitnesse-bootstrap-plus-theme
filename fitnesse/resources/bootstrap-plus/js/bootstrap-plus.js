@@ -1952,8 +1952,8 @@ function createSidebar2TreeNode(item, depth) {
                     <i class="${iconClass}" aria-hidden="true"></i>
                 </div>
                 <div class="sidebar2-node-text" title="${item.name || item.path}">
-                    <span class="sidebar2-node-name">${item.name || item.path}${linkedText}</span>
                     ${symbolicIcon}
+                    <span class="sidebar2-node-name">${item.name || item.path}${linkedText}</span>
                     ${sidebar2Tags(item.tags)}
                 </div>
             </div>

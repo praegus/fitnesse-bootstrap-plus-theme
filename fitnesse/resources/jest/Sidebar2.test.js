@@ -151,4 +151,38 @@ describe('Sidebar 2.0 Context Menu Tests', () => {
         global.$ = originalDollar;
     });
     
+    it('should handle symlink items without errors', () => {
+        const { createSidebar2TreeNode } = require('../bootstrap-plus/js/bootstrap-plus.js');
+        
+        const mockSymlinkItem = {
+            name: 'SymlinkedPage',
+            path: 'TestPage.SymlinkedPage',
+            type: 'test',
+            isSymlink: true
+        };
+        
+        // Should not throw any errors
+        expect(() => {
+            const result = createSidebar2TreeNode(mockSymlinkItem, 0);
+            expect(result).toBeTruthy();
+        }).not.toThrow();
+    });
+    
+    it('should handle regular (non-symlink) items without errors', () => {
+        const { createSidebar2TreeNode } = require('../bootstrap-plus/js/bootstrap-plus.js');
+        
+        const mockRegularItem = {
+            name: 'RegularPage',
+            path: 'TestPage.RegularPage',
+            type: 'test',
+            isSymlink: false
+        };
+        
+        // Should not throw any errors  
+        expect(() => {
+            const result = createSidebar2TreeNode(mockRegularItem, 0);
+            expect(result).toBeTruthy();
+        }).not.toThrow();
+    });
+
 }); 
