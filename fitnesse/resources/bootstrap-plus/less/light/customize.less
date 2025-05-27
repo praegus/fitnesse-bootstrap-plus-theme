@@ -1734,7 +1734,7 @@ li.runWithOrangeBeard a {
 #sidebar2Content {
   flex: 1 1 0%; /* Explicit flex shorthand for proper shrinking */
   overflow-y: scroll; /* Always show scrollbar for consistent UX */
-  overflow-x: hidden;
+  overflow-x: auto; /* Allow horizontal scrolling when content overflows */
   padding: 8px 0;
   min-height: 0; /* Important for flex items to shrink */
   height: 0; /* Force height calculation from flex parent */
@@ -1742,6 +1742,7 @@ li.runWithOrangeBeard a {
   /* Custom scrollbar styling */
   &::-webkit-scrollbar {
     width: 8px;
+    height: 8px; /* Add height for horizontal scrollbar */
   }
   
   &::-webkit-scrollbar-track {
@@ -1879,20 +1880,17 @@ li.runWithOrangeBeard a {
   flex: 1;
   font-size: 13px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible; /* Allow content to overflow naturally */
   display: flex;
   align-items: center;
   gap: 6px;
-  min-width: 0; /* Important for flex items to shrink properly */
+  min-width: 0;
 }
 
 .sidebar2-node-name {
-  flex: 1; /* Allow page name to take available space */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-shrink: 0; /* Never shrink page names */
   white-space: nowrap;
-  min-width: 60px; /* Ensure minimum visibility of page name */
+  /* Remove text-overflow: ellipsis to never truncate page names */
 }
 
 .sidebar2-symlink-icon {
@@ -2027,7 +2025,7 @@ li.runWithOrangeBeard a {
   flex-wrap: nowrap;
   gap: 3px;
   flex-shrink: 0; /* Prevent tags container from shrinking */
-  overflow: hidden; /* Hide overflowing tags */
+  /* Remove overflow: hidden to always show all tags */
   
   .sidebar2-tag {
     background-color: #e3f2fd;
