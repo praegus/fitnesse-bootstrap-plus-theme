@@ -1841,23 +1841,6 @@ function renderSidebar2Tree(contentArray, isManualRefresh = false) {
     // Expand path to current page
     expandToCurrentPage();
     
-    // For manual refresh or when no state restoration, ensure root node children are visible
-    if (isManualRefresh) {
-        setTimeout(() => {
-            // Find the root node and expand its children
-            const rootNode = $('#sidebar2 .sidebar2-tree-node').first();
-            const rootChildrenContainer = rootNode.find('> .sidebar2-node-children');
-            const rootToggleIcon = rootNode.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
-            
-            if (rootChildrenContainer.length > 0) {
-                rootChildrenContainer.addClass('expanded');
-                if (rootToggleIcon.length > 0) {
-                    rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
-                }
-            }
-        }, 50);
-    }
-    
     // Set initial keyboard focus after tree is fully rendered
     setTimeout(() => {
         if ($('#sidebar2').is(':visible')) {
@@ -1892,9 +1875,19 @@ function renderSidebar2Tree(contentArray, isManualRefresh = false) {
                             rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
                         }
                     }
+                    
+                    // Set focus after expansion is complete
+                    setTimeout(() => {
+                        setFocusToCurrentPage();
+                    }, 100);
                 }, 50);
             }
         }, 200);
+    } else {
+        // For manual refresh, set focus immediately after tree is ready
+        setTimeout(() => {
+            setFocusToCurrentPage();
+        }, 300);
     }
 }
 
@@ -2231,6 +2224,9 @@ function setupSidebar2EventHandlers() {
             saveSidebar2State();
         }
     });
+    
+    // Setup statistics panel
+    setupSidebar2StatsEventHandlers();
 }
 
 /**
@@ -2507,7 +2503,8 @@ function saveSidebar2State() {
         $('#sidebar2 .sidebar2-node-children.expanded').each(function() {
             const parentNode = $(this).parent('.sidebar2-tree-node');
             const path = parentNode.data('path');
-            if (path) {
+            // Include nodes with empty path (root node) by checking for !== undefined
+            if (path !== undefined && path !== null) {
                 expandedNodes.push(path);
             }
         });
@@ -2515,7 +2512,8 @@ function saveSidebar2State() {
         // Get all loaded nodes
         $('#sidebar2 .sidebar2-tree-node[data-children-loaded="true"]').each(function() {
             const path = $(this).data('path');
-            if (path && !isLeafNode(this)) {
+            // Include nodes with empty path (root node) by checking for !== undefined
+            if (path !== undefined && path !== null && !isLeafNode(this)) {
                 loadedNodes.push(path);
             }
         });
@@ -2528,7 +2526,7 @@ function saveSidebar2State() {
         };
         
         localStorage.setItem('sidebar2State', JSON.stringify(state));
-        console.log('Sidebar 2.0 state saved:', state);
+        console.log('Sidebar 2.0 state saved (including root node):', state);
     } catch (e) {
         console.warn('Failed to save Sidebar 2.0 state:', e);
     }
@@ -2552,17 +2550,102 @@ function restoreSidebar2State() {
         
         console.log('Restoring Sidebar 2.0 state:', state);
         
-        // Show loading overlay if we have nodes to restore
+        // Filter out paths that no longer exist in the current tree
+        // This handles the case where pages have been deleted
+        let validExpandedNodes = [];
         if (state.expandedNodes && state.expandedNodes.length > 0) {
+            validExpandedNodes = state.expandedNodes.filter(path => {
+                // Always keep the root node (empty path)
+                if (path === '' || path === 'root') {
+                    return true;
+                }
+                
+                // Check if this node exists in the current DOM
+                const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+                if (node.length > 0) {
+                    return true; // Node exists, keep it
+                }
+                
+                // If node doesn't exist, check if it's a nested path that might just not be loaded yet
+                if (path.includes('.')) {
+                    // Get all possible ancestor paths and check if any exist
+                    const pathParts = path.split('.');
+                    let hasExistingAncestor = false;
+                    
+                    // Check each level of the path hierarchy from immediate parent up to root
+                    for (let i = pathParts.length - 1; i > 0; i--) {
+                        const ancestorPath = pathParts.slice(0, i).join('.');
+                        const ancestorNode = $('#sidebar2 .sidebar2-tree-node[data-path="' + ancestorPath + '"]');
+                        
+                        if (ancestorNode.length > 0) {
+                            // Found an existing ancestor, keep this node
+                            console.log('Keeping nested node for restoration (ancestor exists):', path, 'ancestor:', ancestorPath);
+                            hasExistingAncestor = true;
+                            break;
+                        }
+                    }
+                    
+                    if (hasExistingAncestor) {
+                        return true;
+                    } else {
+                        // No ancestors exist, likely the whole branch was deleted
+                        console.log('Filtering out node (no ancestors found):', path);
+                        return false;
+                    }
+                } else {
+                    // Top-level node that doesn't exist, likely deleted
+                    console.log('Filtering out top-level node (not found):', path);
+                    return false;
+                }
+            });
+            
+            console.log('Filtered expanded nodes - Original:', state.expandedNodes.length, 'Valid:', validExpandedNodes.length);
+            
+            // If we filtered out some nodes, update the saved state to keep it clean
+            if (validExpandedNodes.length !== state.expandedNodes.length) {
+                const cleanedState = {
+                    ...state,
+                    expandedNodes: validExpandedNodes,
+                    loadedNodes: (state.loadedNodes || []).filter(path => {
+                        // Apply the same filtering logic to loaded nodes
+                        if (path === '' || path === 'root') {
+                            return true;
+                        }
+                        
+                        const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+                        if (node.length > 0) {
+                            return true;
+                        }
+                        
+                        if (path.includes('.')) {
+                            const pathParts = path.split('.');
+                            const parentPath = pathParts.slice(0, -1).join('.');
+                            const parentNode = $('#sidebar2 .sidebar2-tree-node[data-path="' + parentPath + '"]');
+                            return parentNode.length > 0;
+                        }
+                        
+                        return false;
+                    })
+                };
+                localStorage.setItem('sidebar2State', JSON.stringify(cleanedState));
+                console.log('Cleaned up saved state, removed deleted pages');
+            }
+        }
+        
+        // Show loading overlay if we have nodes to restore
+        if (validExpandedNodes.length > 0) {
             showSidebar2LoadingOverlay('Restoring tree state...');
             
             // Optimize: Group nodes by depth for better loading strategy
-            const nodesByDepth = groupNodesByDepth(state.expandedNodes);
+            const nodesByDepth = groupNodesByDepth(validExpandedNodes);
             
             // Start restoration with improved algorithm
             restoreExpandedNodesOptimized(nodesByDepth).then(() => {
                 // Restoration complete - hide overlay and restore scroll
                 hideSidebar2LoadingOverlay();
+                
+                // Ensure root node is expanded if no other nodes are expanded
+                ensureRootNodeExpanded();
                 
                 setTimeout(() => {
                     if (state.scrollPosition) {
@@ -2570,24 +2653,91 @@ function restoreSidebar2State() {
                             scrollTop: state.scrollPosition
                         }, 300); // Smooth scroll animation
                     }
+                    
+                    // Set focus to current page after restoration and scroll are complete
+                    setTimeout(() => {
+                        setFocusToCurrentPage();
+                    }, 150);
                 }, 100);
                 
             }).catch((error) => {
                 console.warn('State restoration completed with some errors:', error);
                 hideSidebar2LoadingOverlay();
+                
+                // Ensure root node is expanded as fallback
+                ensureRootNodeExpanded();
+                
+                // Set focus as fallback
+                setTimeout(() => {
+                    setFocusToCurrentPage();
+                }, 300);
             });
-        } else if (state.scrollPosition) {
-            // Just restore scroll position if no nodes to expand
-            setTimeout(() => {
-                $('#sidebar2Content').scrollTop(state.scrollPosition);
-            }, 100);
+        } else {
+            // No valid nodes to expand - ensure root is expanded for better UX
+            ensureRootNodeExpanded();
+            
+            if (state.scrollPosition) {
+                // Just restore scroll position if no nodes to expand
+                setTimeout(() => {
+                    $('#sidebar2Content').scrollTop(state.scrollPosition);
+                    
+                    // Set focus after scroll position is restored
+                    setTimeout(() => {
+                        setFocusToCurrentPage();
+                    }, 100);
+                }, 100);
+            } else {
+                // No scroll position, just set focus
+                setTimeout(() => {
+                    setFocusToCurrentPage();
+                }, 200);
+            }
         }
         
     } catch (e) {
         console.warn('Failed to restore Sidebar 2.0 state:', e);
         localStorage.removeItem('sidebar2State');
         hideSidebar2LoadingOverlay();
+        
+        // Ensure root node is expanded as fallback
+        ensureRootNodeExpanded();
+        
+        // Set focus as fallback
+        setTimeout(() => {
+            setFocusToCurrentPage();
+        }, 300);
     }
+}
+
+/**
+ * Ensure the root node is expanded if no other nodes are expanded
+ * This provides a better UX when all saved expanded nodes have been deleted
+ */
+function ensureRootNodeExpanded() {
+    setTimeout(() => {
+        // Check if any nodes are currently expanded
+        const expandedNodes = $('#sidebar2 .sidebar2-node-children.expanded');
+        
+        if (expandedNodes.length === 0) {
+            // No nodes expanded - expand the root node for better UX
+            const rootNode = $('#sidebar2 .sidebar2-tree-node').first();
+            const rootChildrenContainer = rootNode.find('> .sidebar2-node-children');
+            const rootToggleIcon = rootNode.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
+            
+            if (rootChildrenContainer.length > 0 && !rootChildrenContainer.hasClass('expanded')) {
+                console.log('No expanded nodes found, expanding root node as fallback');
+                rootChildrenContainer.addClass('expanded');
+                if (rootToggleIcon.length > 0) {
+                    rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                }
+                
+                // Save the updated state with root expanded
+                setTimeout(() => {
+                    saveSidebar2State();
+                }, 100);
+            }
+        }
+    }, 150);
 }
 
 /**
@@ -2784,14 +2934,55 @@ function restoreExpandedNodesOptimized(nodesByDepth) {
  */
 function expandNodeByPath(path) {
     return new Promise((resolve, reject) => {
-        const node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+        let node = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
         
         if (node.length === 0) {
+            // Node doesn't exist yet, check if we need to load its parent first
+            if (path.includes('.')) {
+                const pathParts = path.split('.');
+                const parentPath = pathParts.slice(0, -1).join('.');
+                const parentNode = $('#sidebar2 .sidebar2-tree-node[data-path="' + parentPath + '"]');
+                
+                if (parentNode.length > 0) {
+                    console.log('Target node not found, expanding parent first:', parentPath, 'to find:', path);
+                    
+                    // Expand parent first to load the target node
+                    expandNodeByPath(parentPath).then(() => {
+                        // Now try to find the target node again
+                        const targetNode = $('#sidebar2 .sidebar2-tree-node[data-path="' + path + '"]');
+                        if (targetNode.length > 0) {
+                            // Found the target node, now expand it
+                            expandSingleNode(targetNode, path).then(resolve).catch(resolve);
+                        } else {
+                            console.warn('Target node still not found after expanding parent:', path);
+                            resolve(); // Don't fail the entire process
+                        }
+                    }).catch(() => {
+                        console.warn('Failed to expand parent for:', path);
+                        resolve(); // Don't fail the entire process
+                    });
+                    return;
+                }
+            }
+            
             console.warn('Node not found for path:', path);
             resolve(); // Don't fail the entire process
             return;
         }
         
+        // Node exists, expand it directly
+        expandSingleNode(node, path).then(resolve).catch(resolve);
+    });
+}
+
+/**
+ * Expand a single node (helper function)
+ * @param {jQuery} node - The jQuery node to expand
+ * @param {string} path - The path of the node (for logging)
+ * @returns {Promise} - Promise that resolves when node is expanded
+ */
+function expandSingleNode(node, path) {
+    return new Promise((resolve) => {
         const childrenContainer = node.find('> .sidebar2-node-children');
         const toggle = node.find('> .sidebar2-node-content > .sidebar2-node-toggle');
         const toggleIcon = toggle.find('i');
@@ -2803,11 +2994,13 @@ function expandNodeByPath(path) {
         
         // If children already exist, just expand with animation
         if (childrenContainer.length > 0 && childrenContainer.children().length > 0) {
-            childrenContainer.addClass('expanded');
-            toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
-            
-            // Add smooth expand animation
-            childrenContainer.hide().slideDown(150);
+            if (!childrenContainer.hasClass('expanded')) {
+                childrenContainer.addClass('expanded');
+                toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                
+                // Add smooth expand animation
+                childrenContainer.hide().slideDown(150);
+            }
             resolve();
             
         } else if (!node.attr('data-children-loaded')) {
@@ -2816,7 +3009,7 @@ function expandNodeByPath(path) {
                 const updatedChildrenContainer = node.find('> .sidebar2-node-children');
                 const updatedToggleIcon = node.find('> .sidebar2-node-content > .sidebar2-node-toggle > i');
                 
-                if (updatedChildrenContainer.length > 0) {
+                if (updatedChildrenContainer.length > 0 && !updatedChildrenContainer.hasClass('expanded')) {
                     updatedChildrenContainer.addClass('expanded');
                     updatedToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
                     
@@ -2831,7 +3024,7 @@ function expandNodeByPath(path) {
             });
         } else {
             // Node is loaded but collapsed, just expand
-            if (childrenContainer.length > 0) {
+            if (childrenContainer.length > 0 && !childrenContainer.hasClass('expanded')) {
                 childrenContainer.addClass('expanded');
                 toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
                 childrenContainer.hide().slideDown(150);
@@ -2839,4 +3032,235 @@ function expandNodeByPath(path) {
             resolve();
         }
     });
+}
+
+/**
+ * Load project statistics in the background
+ * This function loads the complete tree without depth limit to gather statistics
+ */
+function loadSidebar2ProjectStats() {
+    // Don't load stats if sidebar2 is not visible
+    if (!$('#sidebar2').is(':visible')) {
+        return;
+    }
+    
+    const $statsTests = $('#sidebar2-stats-tests');
+    const $statsSuites = $('#sidebar2-stats-suites');
+    const $statsStatic = $('#sidebar2-stats-static');
+    const $refreshBtn = $('#sidebar2-stats-refresh');
+    
+    // Show loading state for all values
+    $statsTests.html('<i class="fa fa-spinner fa-spin"></i>');
+    $statsSuites.html('<i class="fa fa-spinner fa-spin"></i>');
+    $statsStatic.html('<i class="fa fa-spinner fa-spin"></i>');
+    $refreshBtn.addClass('loading');
+    
+    console.log('Loading project statistics in background...');
+    
+    // Use root path to get complete tree
+    const rootPath = location.protocol + '//' + location.host + '/root';
+    
+    $.ajax({
+        type: 'GET',
+        url: rootPath + '?responder=tableOfContents', // No depth parameter = get all
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        timeout: 30000, // 30 second timeout for large projects
+        success: function(contentArray) {
+            console.log('Project statistics loaded successfully');
+            try {
+                const stats = calculateProjectStats(contentArray);
+                updateSidebar2StatsDisplay(stats);
+            } catch (error) {
+                console.error('Error calculating project statistics:', error);
+                showStatsError('Error calculating statistics');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading project statistics:', status, error);
+            let errorMessage = 'Failed to load statistics';
+            
+            if (status === 'timeout') {
+                errorMessage = 'Timeout (large project)';
+            } else if (xhr.status) {
+                errorMessage = `Error ${xhr.status}`;
+            }
+            
+            showStatsError(errorMessage);
+        },
+        complete: function() {
+            $refreshBtn.removeClass('loading');
+        }
+    });
+}
+
+/**
+ * Calculate project statistics from the complete tree data
+ * @param {Array} contentArray - The complete tree data from API
+ * @returns {Object} - Statistics object with counts
+ */
+function calculateProjectStats(contentArray) {
+    const stats = {
+        testPages: 0,
+        suitePages: 0,
+        staticPages: 0,
+        totalPages: 0
+    };
+    
+    function countNodesRecursive(nodes, isInSymlinkedSubtree = false) {
+        if (!nodes || !Array.isArray(nodes)) {
+            return;
+        }
+        
+        nodes.forEach(node => {
+            if (node && typeof node === 'object') {
+                // Check if this node is a symlink or if we're already in a symlinked subtree
+                const isSymlinked = node.isSymlink === true || isInSymlinkedSubtree;
+                
+                // Skip counting if this page is symlinked (directly or through ancestor)
+                if (!isSymlinked) {
+                    stats.totalPages++;
+                    
+                    // Count by page type using the same logic as createSidebar2TreeNode
+                    if (node.type) {
+                        if (node.type.includes('test')) {
+                            stats.testPages++;
+                        } else if (node.type.includes('suite')) {
+                            stats.suitePages++;
+                        } else {
+                            stats.staticPages++;
+                        }
+                    } else {
+                        // If no type, consider it static
+                        stats.staticPages++;
+                    }
+                }
+                
+                // Recursively count children, passing down the symlink status
+                if (node.children && Array.isArray(node.children)) {
+                    countNodesRecursive(node.children, isSymlinked);
+                }
+            }
+        });
+    }
+    
+    countNodesRecursive(contentArray);
+    
+    console.log('Project statistics calculated (excluding symlinks and their descendants):', stats);
+    return stats;
+}
+
+/**
+ * Update the statistics display with calculated values
+ * @param {Object} stats - Statistics object with counts
+ */
+function updateSidebar2StatsDisplay(stats) {
+    const $statsTests = $('#sidebar2-stats-tests');
+    const $statsSuites = $('#sidebar2-stats-suites');
+    const $statsStatic = $('#sidebar2-stats-static');
+    
+    // Update all statistics with success styling
+    $statsTests.removeClass('error').addClass('success').text(stats.testPages);
+    $statsSuites.removeClass('error').addClass('success').text(stats.suitePages);
+    $statsStatic.removeClass('error').addClass('success').text(stats.staticPages);
+}
+
+/**
+ * Show error message in statistics display
+ * @param {string} message - Error message to display
+ */
+function showStatsError(message) {
+    const $statsTests = $('#sidebar2-stats-tests');
+    const $statsSuites = $('#sidebar2-stats-suites');
+    const $statsStatic = $('#sidebar2-stats-static');
+    
+    // Show error message for all statistics
+    $statsTests.removeClass('success').addClass('error').text('!');
+    $statsSuites.removeClass('success').addClass('error').text('!');
+    $statsStatic.removeClass('success').addClass('error').text('!');
+    
+    // Add title attribute with full error message for debugging
+    $statsTests.attr('title', message);
+    $statsSuites.attr('title', message);
+    $statsStatic.attr('title', message);
+}
+
+/**
+ * Setup event handlers for the statistics panel
+ */
+function setupSidebar2StatsEventHandlers() {
+    // Handle refresh button click
+    $('#sidebar2-stats-refresh').off('click.sidebar2Stats').on('click.sidebar2Stats', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        loadSidebar2ProjectStats();
+    });
+    
+    // Load initial statistics when sidebar2 becomes visible
+    if ($('#sidebar2').is(':visible')) {
+        // Delay initial load to not block sidebar tree loading
+        setTimeout(() => {
+            loadSidebar2ProjectStats();
+        }, 1000);
+    }
+    
+    // Reload stats when sidebar2 is refreshed
+    $('#sidebar2-refresh').off('click.sidebar2StatsRefresh').on('click.sidebar2StatsRefresh', function() {
+        // Delay stats reload to not interfere with tree refresh
+        setTimeout(() => {
+            if ($('#sidebar2').is(':visible')) {
+                loadSidebar2ProjectStats();
+            }
+        }, 2000);
+    });
+}
+
+/**
+ * Set keyboard focus to the current page node, with fallback behavior
+ * This should be called after tree rendering and state restoration are complete
+ */
+function setFocusToCurrentPage() {
+    if (!$('#sidebar2').is(':visible')) {
+        return;
+    }
+    
+    // Clear any existing keyboard focus
+    $('#sidebar2 .sidebar2-tree-node').removeClass('keyboard-focused');
+    
+    // Try to find the current page node
+    let focusTarget = $('#sidebar2 .sidebar2-tree-node.current-page').first();
+    
+    if (focusTarget.length === 0) {
+        // If current page not found, try to match by URL path
+        const currentPath = location.pathname.replace('/', '');
+        if (currentPath && currentPath !== 'FrontPage') {
+            focusTarget = $('#sidebar2 .sidebar2-tree-node[data-path="' + currentPath + '"]').first();
+        } else {
+            // For FrontPage, look for FrontPage node or root
+            focusTarget = $('#sidebar2 .sidebar2-tree-node[data-path="FrontPage"]').first();
+            if (focusTarget.length === 0) {
+                focusTarget = $('#sidebar2 .sidebar2-tree-node[data-path=""]').first();
+            }
+        }
+    }
+    
+    // If still no target found, fall back to first visible node
+    if (focusTarget.length === 0) {
+        focusTarget = $('#sidebar2 .sidebar2-tree-node:visible').first();
+    }
+    
+    // Set focus and scroll into view
+    if (focusTarget.length > 0) {
+        focusTarget.addClass('keyboard-focused');
+        
+        // Scroll the focused node into view
+        setTimeout(() => {
+            focusTarget[0].scrollIntoView({ 
+                block: 'nearest', 
+                behavior: 'smooth' 
+            });
+        }, 100);
+        
+        console.log('Keyboard focus set to:', focusTarget.data('path') || 'root');
+    }
 }

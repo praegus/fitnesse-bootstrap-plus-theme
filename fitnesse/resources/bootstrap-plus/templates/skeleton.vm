@@ -199,6 +199,30 @@
                 </div>
             </div>
             <div id="sidebar2Content"></div>
+            <div class="sidebar2-stats-panel">
+                <div class="sidebar2-stats-header">
+                    <i class="sidebar2-stats-icon fa fa-bar-chart"></i>
+                    <span class="sidebar2-stats-title">Project Stats</span>
+                    <i id="sidebar2-stats-refresh" class="sidebar2-stats-refresh fa fa-refresh" title="Refresh statistics"></i>
+                </div>
+                <div class="sidebar2-stats-content">
+                    <div class="sidebar2-stats-item">
+                        <i class="fa fa-cog sidebar2-stats-item-icon"></i>
+                        <span class="sidebar2-stats-label">Tests:</span>
+                        <span id="sidebar2-stats-tests" class="sidebar2-stats-value">-</span>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <i class="fa fa-cogs sidebar2-stats-item-icon"></i>
+                        <span class="sidebar2-stats-label">Suites:</span>
+                        <span id="sidebar2-stats-suites" class="sidebar2-stats-value">-</span>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <i class="fa fa-file-o sidebar2-stats-item-icon"></i>
+                        <span class="sidebar2-stats-label">Static:</span>
+                        <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
+                    </div>
+                </div>
+            </div>
         </div>
     #end
 

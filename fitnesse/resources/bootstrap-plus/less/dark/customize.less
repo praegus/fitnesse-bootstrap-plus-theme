@@ -1975,3 +1975,99 @@ li.runWithOrangeBeard a {
     display: none;
   }
 }
+
+/* Sidebar 2.0 Statistics Panel (Dark Theme) */
+.sidebar2-stats-panel {
+  border-top: 1px solid #404040;
+  background-color: #333333;
+  flex-shrink: 0; /* Don't shrink the stats panel */
+  margin-top: auto; /* Push to bottom */
+}
+
+.sidebar2-stats-header {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #404040;
+  border-bottom: 1px solid #495057;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e9ecef;
+}
+
+.sidebar2-stats-icon {
+  margin-right: 6px;
+  color: #66b3ff;
+  font-size: 12px;
+}
+
+.sidebar2-stats-title {
+  flex: 1;
+}
+
+.sidebar2-stats-refresh {
+  cursor: pointer;
+  color: #adb5bd;
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #66b3ff;
+    background-color: #495057;
+  }
+  
+  &.loading {
+    animation: spin 1s linear infinite;
+    color: #66b3ff;
+  }
+}
+
+.sidebar2-stats-content {
+  padding: 6px 12px;
+}
+
+.sidebar2-stats-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 13px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sidebar2-stats-item-icon {
+  width: 16px;
+  margin-right: 6px;
+  color: #adb5bd;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sidebar2-stats-label {
+  color: #adb5bd;
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+.sidebar2-stats-value {
+  color: #e9ecef;
+  font-weight: 600;
+  min-width: 20px;
+  
+  &.success {
+    color: #19d817; /* Use lighter green color for dark theme links */
+  }
+  
+  &.error {
+    color: #dc3545;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
