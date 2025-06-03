@@ -210,7 +210,7 @@ function indexesOf(string, regex) {
 function populateContext() {
     var helpList = '<div class="helper-content" >';
     var helpId = 0;
-    helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fa fa-undo" id="clearFilter" title="Clear Filter"></button>&nbsp;<button class="fa fa-refresh" id="resync" title="Reload Context"></button>';
+    helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fas fa-undo" id="clearFilter" title="Clear Filter"></button>&nbsp;<button class="fas fa-rotate-right" id="resync" title="Reload Context"></button>';
     helpList += '<ol id="side-bar-tree" class="tree">';
 
     helpList += '<li class="coll closed"><label for="tree-scenarios">Scenario\'s</label>';
@@ -220,7 +220,7 @@ function populateContext() {
     $.each(sortedScenarios, function (sIndex, s) {
         helpList += '<li class="coll closed">';
         helpList += '<label for="help-' + helpId + '"><span>' + s.contexthelp + '</span></label>';
-        helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
+        helpList += '<i class="filterIt fas fa-plus-circle insert" aria-hidden="false" insertText="|' + s.wikiText + '" title="' + s.name.UcFirst() + '"></i>';
         helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
         helpList += '<ol>';
         helpId = helpId + 1;
@@ -259,7 +259,7 @@ function populateContext() {
             signatureList.push(cstr.readableName.toLowerCase() + '#' + cstr.parameters.length);
 
             helpList += '<li class="docItem">';
-            helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="' + cstr.usage + '" title="' + c.readableName + '"></i>';
+            helpList += '<i class="filterIt fas fa-plus-circle insert" aria-hidden="false" insertText="' + cstr.usage + '" title="' + c.readableName + '"></i>';
             helpList += '<b>' + cstr.usage + '</b><br />';
 
             if (cstr.hasOwnProperty('docString') && cstr['docString']) {
@@ -284,7 +284,7 @@ function populateContext() {
             helpList += '<label class="' + labelCss + '" for="help-' + helpId + '"><span>' + m.contexthelp;
 
             helpList += '</span></label>';
-            helpList += '<i class="filterIt fa fa-plus-circle insert" aria-hidden="false" insertText="' + m.usage + '" title="' + m.readableName + '"></i>';
+            helpList += '<i class="filterIt fas fa-plus-circle insert" aria-hidden="false" insertText="' + m.usage + '" title="' + m.readableName + '"></i>';
             helpList += '<input class="togglebox" type="checkbox" id="help-' + helpId + '" />';
             helpId = helpId + 1;
 

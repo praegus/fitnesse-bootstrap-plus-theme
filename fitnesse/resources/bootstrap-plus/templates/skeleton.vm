@@ -217,7 +217,7 @@
                         <span id="sidebar2-stats-suites" class="sidebar2-stats-value">-</span>
                     </div>
                     <div class="sidebar2-stats-item">
-                        <i class="fa fa-file-o sidebar2-stats-item-icon"></i>
+                        <i class="fas fa-file sidebar2-stats-item-icon"></i>
                         <span class="sidebar2-stats-label">Static:</span>
                         <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
                     </div>

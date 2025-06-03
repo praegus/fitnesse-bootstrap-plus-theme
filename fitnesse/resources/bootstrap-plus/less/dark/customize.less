@@ -662,11 +662,11 @@ fieldset {
 }
 
 .icon-test {
-  color: #00aeee;;
+  color: #40c057;
 }
 
 .icon-suite {
-  color: @brand-primary;
+  color: #66b3ff;
 }
 
 .icon-static {
@@ -1580,11 +1580,17 @@ kbd {
   margin-right: 8px;
   font-size: 12px;
   
-  &.icon-suite { color: #40c057; }
-  &.icon-test { color: #66b3ff; }
+  &.icon-suite { color: #66b3ff; }
+  &.icon-test { color: #40c057; }
   &.icon-static { color: #adb5bd; }
   &.icon-special { color: #fd7e14; }
   &.icon-scenariolib { color: #9775fa; }
+  
+  /* Grey versions for pruned pages */
+  &.icon-suite-grey { color: #6c757d; }
+  &.icon-test-grey { color: #6c757d; }
+  &.icon-special-grey { color: #6c757d; }
+  &.icon-scenariolib-grey { color: #6c757d; }
   
   &.fitnesse-root-icon {
     background-image: url(../img/suite-favicon.png);
@@ -1593,7 +1599,7 @@ kbd {
     background-position: center;
     
     i {
-      display: none; // Hide the FontAwesome icon
+      opacity: 0;
     }
   }
 }
@@ -1639,6 +1645,14 @@ kbd {
   
   .sidebar2-tree-node {
     margin-left: 20px;
+  }
+}
+
+/* Pruned Pages Styling for Sidebar 2.0 (Dark Theme) */
+.sidebar2-tree-node.sidebar2-pruned {
+  .sidebar2-text-pruned {
+    color: #6c757d !important; /* Lighter grey text */
+    opacity: 0.8;
   }
 }
 

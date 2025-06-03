@@ -167,7 +167,7 @@ function showNotification(type, message) {
     // Create notification element
     const notificationHtml = 
         `<div class="push-notification push-${type}" id="notification">
-            <i class="notification-icon fa fa-${icon}" aria-hidden="true"></i>
+            <i class="notification-icon fas fa-${icon}" aria-hidden="true"></i>
             ${message}
         </div>`;
     
@@ -454,21 +454,21 @@ $(function() {
         $(this).remove();
     });
     $('.test').each(function () {
-        $(this).before('<i class="fa fa-cog icon-suite" aria-hidden="true"></i>&nbsp;');
+        $(this).before('<i class="fas fa-gear icon-test" aria-hidden="true"></i>&nbsp;');
     });
     $('.suite').each(function () {
-        $(this).before('<i class="fa fa-cogs icon-test" aria-hidden="true" title="show/hide"></i>&nbsp;');
+        $(this).before('<i class="fas fa-gears icon-suite" aria-hidden="true" title="show/hide"></i>&nbsp;');
     });
     $('.static').each(function () {
         if($(this).attr('href').endsWith('.ScenarioLibrary')) {
-            $(this).before('<i class="fa fa-bolt icon-scenariolib" aria-hidden="true"></i>&nbsp;');
+            $(this).before('<i class="fas fa-bolt icon-scenariolib" aria-hidden="true"></i>&nbsp;');
         } else if ($(this).attr('href').endsWith('.SetUp') ||
                     $(this).attr('href').endsWith('.SuiteSetUp') ||
                     $(this).attr('href').endsWith('.TearDown') ||
                     $(this).attr('href').endsWith('.SuiteTearDown'))  {
-            $(this).before('<i class="fa fa-wrench icon-special" aria-hidden="true"></i>&nbsp;');
+            $(this).before('<i class="fas fa-wrench icon-special" aria-hidden="true"></i>&nbsp;');
         } else {
-            $(this).before('<i class="fa fa-file-o icon-static" aria-hidden="true"></i>&nbsp;');
+            $(this).before('<i class="fas fa-file icon-static" aria-hidden="true"></i>&nbsp;');
         }
     });
 
@@ -1062,7 +1062,7 @@ function sidebarContentLayerLoopOptimized(parentElement, children, currentDepth)
             const toggleIcon = $(li).find('i').first();
             if (!toggleIcon.hasClass('iconToggle')) {
                 toggleIcon.removeClass('iconWidth');
-                toggleIcon.addClass('iconToggle iconWidth fa fa-angle-right');
+                toggleIcon.addClass('iconToggle iconWidth fas fa-angle-right');
             }
         } else if (content.children && content.children.length === 0) {
             // If the API explicitly tells us there are no children, we can mark this node
@@ -1094,26 +1094,26 @@ function getSidebarContentHtml(content) {
         console.log('Content type:', content.type);
     }
     
-    let iconClass = 'fa fa-file-o icon-static';
+    let iconClass = 'fas fa-file icon-static';
     
     // Special case for FitNesse root page - try multiple detection methods
     if (content.name === 'FitNesseRoot' || content.path === 'FitNesseRoot' ||
         content.name === 'root' || content.path === 'root' ||
         (!content.path && content.name && content.name.toLowerCase().includes('root'))) {
-        iconClass = 'fa fitnesse-root-icon';
+        iconClass = 'fas fitnesse-root-icon';
     } else if (content.type) {
         if (content.type.includes('suite')) {
-            iconClass = 'fa fa-cogs icon-test';
+            iconClass = 'fas fa-gears icon-suite';
         } else if (content.type.includes('test')) {
-            iconClass = 'fa fa-cog icon-suite';
+            iconClass = 'fas fa-gear icon-test';
         }
         
         // Special page types
         if (content.path && (content.path.endsWith('.SetUp') || content.path.endsWith('.SuiteSetUp') || 
                          content.path.endsWith('.TearDown') || content.path.endsWith('.SuiteTearDown'))) {
-            iconClass = 'fa fa-wrench icon-special';
+            iconClass = 'fas fa-wrench icon-special';
         } else if (content.path && content.path.endsWith('.ScenarioLibrary')) {
-            iconClass = 'fa fa-bolt icon-scenariolib';
+            iconClass = 'fas fa-bolt icon-scenariolib';
         }
     }
     
@@ -1122,7 +1122,7 @@ function getSidebarContentHtml(content) {
     
     // Only add the toggle icon class if we know the content has children
     if (content.children && content.children.length > 0) {
-        toggleClass = 'iconToggle iconWidth fa fa-angle-right';
+        toggleClass = 'iconToggle iconWidth fas fa-angle-right';
     } else {
         // For nodes without children or unknown status, just add spacing
         toggleClass = 'iconWidth';
@@ -1130,7 +1130,7 @@ function getSidebarContentHtml(content) {
     
     let highlight = location.pathname === ('/' + content.path) ? ' class="highlight"' : '';
     const linkedText = content.type.includes('linked') ? ' @' : '';
-    const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fa fa-link" aria-hidden="true"></i>' : '';
+    const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fas fa-link" aria-hidden="true"></i>' : '';
     const tagString = sidebarTags(content.tags);
 
     // If Frontpage
@@ -1138,7 +1138,7 @@ function getSidebarContentHtml(content) {
     
     // If files
     if (content.path.slice(0, 5) === 'files') {
-        iconClass = content.type.includes('suite') ? 'fa fa-folder-o' : iconClass;
+        iconClass = content.type.includes('suite') ? 'fas fa-folder-open' : iconClass;
     }
     
     // Wrench for setup/teardown pages
@@ -1146,12 +1146,12 @@ function getSidebarContentHtml(content) {
         content.path.endsWith('.SuiteSetUp') ||
         content.path.endsWith('.TearDown') ||
         content.path.endsWith('.SuiteTearDown')) {
-        iconClass = 'fa fa-wrench icon-special'
+        iconClass = 'fas fa-wrench icon-special'
     }
     
     // bolt for scenariolibrary
     if(content.path.endsWith('.ScenarioLibrary')) {
-        iconClass = 'fa fa-bolt icon-scenariolib'
+        iconClass = 'fas fa-bolt icon-scenariolib'
     }
 
     return '<li id="' + content.path.replace(/\./g, '') + '">' +
@@ -1253,13 +1253,13 @@ function toggleIconClickEvent() {
                         parentLi.attr('data-no-children', 'true');
                         
                         // Remove the toggle icon since there are no children
-                        $(this).removeClass('iconToggle fa-angle-right');
+                        $(this).removeClass('iconToggle fas fa-angle-right');
                         $(this).addClass('iconWidth');
                     }
                 },
                 error: function(xhr) {
                     console.log('Error loading children: ' + xhr.status, xhr);
-                    $(this).removeClass('fa-spinner fa-spin').addClass('fa-angle-right');
+                    $(this).removeClass('fa-spinner fa-spin').addClass('fas fa-angle-right');
                 }
             });
         }
@@ -1348,40 +1348,40 @@ $(function(){
             },
             items: {
                 "run": {name: "Run",
-                        icon: "fa-play-circle-o",
+                        icon: "fa-circle-play",
                         visible: function(key, opt) { return showRunnablePageItems(opt); }
                         },
                 "runNewTab": {name: "Run in New Tab",
-                        icon: "fa-play-circle-o",
+                        icon: "fa-circle-play",
                         visible: function(key, opt) { return showRunnablePageItems(opt); },
                         className: "contextmenu-newtab"
                         },
                 "sep0": {type: "cm_separator", visible: function(key, opt) { return showRunnablePageItems(opt); }
                         },
-                "edit": {name: "Edit", icon: "fa-edit"},
-                "editNewTab": {name: "Edit in New Tab", icon: "fa-edit", className: "contextmenu-newtab"},
-                "rename": {name: "Rename", icon: "fa-pencil"},
-                "move": {name: "Move", icon: "fa-long-arrow-right"},
-                "delete": {name: "Delete", icon: "fa-trash-o"},
+                "edit": {name: "Edit", icon: "fa-pen-to-square"},
+                "editNewTab": {name: "Edit in New Tab", icon: "fa-pen-to-square", className: "contextmenu-newtab"},
+                "rename": {name: "Rename", icon: "fa-pen"},
+                "move": {name: "Move", icon: "fa-arrow-right"},
+                "delete": {name: "Delete", icon: "fa-trash"},
                 "sep1": {type: "cm_separator"},
                 "fold1": {
                     name: "Add",
                     icon: "fa-plus",
                     items: {
-                        addStatic: {name: "Static Page", icon: "fa-file-o"},
-                        addSuite: {name: "Suite Page", icon: "fa-cogs"},
-                        addTest: {name: "Test Page", icon: "fa-cog"}
+                        addStatic: {name: "Static Page", icon: "fa-file"},
+                        addSuite: {name: "Suite Page", icon: "fa-gears"},
+                        addTest: {name: "Test Page", icon: "fa-gear"}
                     }
                 },
                 "sep2": {type: "cm_separator"},
                 "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
-                "setSidebarRoot": {name: "Set as Sidebar Root", icon: "fa-thumb-tack"},
+                "setSidebarRoot": {name: "Set as Sidebar Root", icon: "fa-thumbtack"},
                 "testhistory": {name: "Test History",
-                                icon: "fa-history",
+                                icon: "fa-clock-rotate-left",
                                 visible: function(key, opt) {
                                     return showRunnablePageItems(opt);
                                  }},
-                "properties":  {name: "Properties", icon:"fa-ellipsis-h"}
+                "properties":  {name: "Properties", icon:"fa-ellipsis"}
             }
         });
     }
@@ -1404,7 +1404,7 @@ function handleContextMenuClick(key, element) {
          getSidebarContent(placeEverythingForSidebar);
          $("#resetSidebarRoot").remove();
          if (!$("#resetSidebarRoot").is(":visible")) {
-            $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
+            $(".buttonSidebarDiv").append('<i id="resetSidebarRoot" class="fas fa-rotate-right buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>');
          }
          //Manually register onClick handler
          $('#resetSidebarRoot').on('click', function () {
@@ -1798,7 +1798,7 @@ function loadSidebar2Tree(isManualRefresh = false) {
             console.log('Error loading Sidebar 2.0 tree: ' + xhr.status, xhr);
             $('#sidebar2Content').html(`
                 <div class="sidebar2-loading">
-                    <i class="fa fa-exclamation-triangle" style="margin-right: 8px; color: #dc3545;"></i>
+                    <i class="fas fa-exclamation-triangle" style="margin-right: 8px; color: #dc3545;"></i>
                     <span>Error loading tree</span>
                 </div>
             `);
@@ -1821,7 +1821,7 @@ function renderSidebar2Tree(contentArray, isManualRefresh = false) {
     if (!contentArray || contentArray.length === 0) {
         $('#sidebar2Content').html(`
             <div class="sidebar2-loading">
-                <i class="fa fa-info-circle" style="margin-right: 8px; color: #6c757d;"></i>
+                <i class="fas fa-info-circle" style="margin-right: 8px; color: #6c757d;"></i>
                 <span>No content found</span>
             </div>
         `);
@@ -1872,7 +1872,7 @@ function renderSidebar2Tree(contentArray, isManualRefresh = false) {
                     if (rootChildrenContainer.length > 0 && !rootChildrenContainer.hasClass('expanded')) {
                         rootChildrenContainer.addClass('expanded');
                         if (rootToggleIcon.length > 0) {
-                            rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                            rootToggleIcon.removeClass('fas fa-angle-right').addClass('fas fa-angle-down');
                         }
                     }
                     
@@ -1892,37 +1892,57 @@ function renderSidebar2Tree(contentArray, isManualRefresh = false) {
 }
 
 /**
+ * Check if a page type indicates it's pruned (ignored during execution)
+ */
+function isPagePruned(pageType) {
+    if (!pageType) return false;
+    return pageType.includes('pruned');
+}
+
+/**
+ * Check if a page should be styled as pruned (either directly pruned or child of pruned page)
+ */
+function shouldApplyPrunedStyling(item, parentIsPruned = false) {
+    return parentIsPruned || isPagePruned(item.type);
+}
+
+/**
  * Create a tree node for Sidebar 2.0
  */
-function createSidebar2TreeNode(item, depth) {
+function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
     const nodeId = 'sidebar2-' + (item.path || 'root').replace(/\./g, '-');
     const isCurrentPage = location.pathname === '/' + item.path || 
                          (location.pathname === '/' && item.path === 'FrontPage') ||
                          (location.pathname === '/FrontPage' && item.path === 'FrontPage');
     
+    // Check if this page should be styled as pruned
+    const isPruned = shouldApplyPrunedStyling(item, parentIsPruned);
+    
     // Determine icon class
-    let iconClass = 'fa fa-file-o icon-static';
+    let iconClass = 'fas fa-file icon-static';
     
     // Special case for FitNesse root page - try multiple detection methods
     if (item.name === 'FitNesseRoot' || item.path === 'FitNesseRoot' || 
         item.name === 'root' || item.path === 'root' ||
         (depth === 0 && !item.path) || (depth === 0 && item.path === '')) {
-        iconClass = 'fa fitnesse-root-icon';
+        iconClass = 'fas fitnesse-root-icon';
     } else if (item.type) {
         if (item.type.includes('suite')) {
-            iconClass = 'fa fa-cogs icon-test';
+            iconClass = isPruned ? 'fas fa-gears icon-suite-grey' : 'fas fa-gears icon-suite';
         } else if (item.type.includes('test')) {
-            iconClass = 'fa fa-cog icon-suite';
+            iconClass = isPruned ? 'fas fa-gear icon-test-grey' : 'fas fa-gear icon-test';
         }
         
         // Special page types
         if (item.path && (item.path.endsWith('.SetUp') || item.path.endsWith('.SuiteSetUp') || 
                          item.path.endsWith('.TearDown') || item.path.endsWith('.SuiteTearDown'))) {
-            iconClass = 'fa fa-wrench icon-special';
+            iconClass = isPruned ? 'fas fa-wrench icon-special-grey' : 'fas fa-wrench icon-special';
         } else if (item.path && item.path.endsWith('.ScenarioLibrary')) {
-            iconClass = 'fa fa-bolt icon-scenariolib';
+            iconClass = isPruned ? 'fas fa-bolt icon-scenariolib-grey' : 'fas fa-bolt icon-scenariolib';
         }
     }
+    
+    // If it's a static page and pruned, we keep icon-static since it's already grey
     
     // Determine additional CSS classes for the tree node based on the item type
     let additionalClasses = '';
@@ -1931,22 +1951,27 @@ function createSidebar2TreeNode(item, depth) {
         additionalClasses = item.type.replace(/\s+/g, ' '); // Clean up any extra spaces
     }
     
+    // Add pruned class if page is pruned
+    if (isPruned) {
+        additionalClasses += ' sidebar2-pruned';
+    }
+    
     // Create node structure
     const linkedText = item.type && item.type.includes('linked') ? ' @' : '';
-    const symbolicIcon = item.isSymlink === true ? '<i class="fa fa-link sidebar2-symlink-icon" aria-hidden="true" title="Symbolic Link"></i>' : '';
+    const symbolicIcon = item.isSymlink === true ? '<i class="fas fa-link sidebar2-symlink-icon" aria-hidden="true" title="Symbolic Link"></i>' : '';
     
     const node = $(`
         <div class="sidebar2-tree-node ${isCurrentPage ? 'current-page' : ''} ${additionalClasses}" data-path="${item.path || ''}" data-depth="${depth}" id="${nodeId}">
             <div class="sidebar2-node-content" data-href="/${item.path || ''}">
                 <div class="sidebar2-node-toggle ${!item.hasOwnProperty('children') ? 'no-children' : ''}">
-                    ${!item.hasOwnProperty('children') ? '' : '<i class="fa fa-angle-right"></i>'}
+                    ${!item.hasOwnProperty('children') ? '' : '<i class="fas fa-angle-right"></i>'}
                 </div>
                 <div class="sidebar2-node-icon ${iconClass.split(' ').slice(-1)[0]}">
                     <i class="${iconClass}" aria-hidden="true"></i>
                 </div>
                 <div class="sidebar2-node-text" title="${item.name || item.path}">
                     ${symbolicIcon}
-                    <span class="sidebar2-node-name">${item.name || item.path}${linkedText}</span>
+                    <span class="sidebar2-node-name ${isPruned ? 'sidebar2-text-pruned' : ''}">${item.name || item.path}${linkedText}</span>
                     ${sidebar2Tags(item.tags)}
                 </div>
             </div>
@@ -1955,10 +1980,11 @@ function createSidebar2TreeNode(item, depth) {
     
     // Add direct children for initial levels only (depth 0)
     // Deeper levels will be loaded dynamically via AJAX
+    // Pass down pruned status to children
     if (item.children && item.children.length > 0 && depth === 0) {
         const childrenContainer = $('<div class="sidebar2-node-children"></div>'); // Not expanded by default
         item.children.forEach(child => {
-            const childNode = createSidebar2TreeNode(child, depth + 1);
+            const childNode = createSidebar2TreeNode(child, depth + 1, isPruned);
             childrenContainer.append(childNode);
         });
         node.append(childrenContainer);
@@ -2048,14 +2074,14 @@ function setupSidebar2EventHandlers() {
             items: {
                 "run": {
                     name: "Run",
-                    icon: "fa-play-circle-o",
+                    icon: "fa-circle-play",
                     visible: function(key, opt) { 
                         return showSidebar2RunnablePageItems(opt); 
                     }
                 },
                 "runNewTab": {
                     name: "Run in New Tab",
-                    icon: "fa-play-circle-o",
+                    icon: "fa-circle-play",
                     visible: function(key, opt) { 
                         return showSidebar2RunnablePageItems(opt); 
                     },
@@ -2067,31 +2093,31 @@ function setupSidebar2EventHandlers() {
                         return showSidebar2RunnablePageItems(opt); 
                     }
                 },
-                "edit": {name: "Edit", icon: "fa-edit"},
-                "editNewTab": {name: "Edit in New Tab", icon: "fa-edit", className: "contextmenu-newtab"},
-                "rename": {name: "Rename", icon: "fa-pencil"},
-                "move": {name: "Move", icon: "fa-long-arrow-right"},
-                "delete": {name: "Delete", icon: "fa-trash-o"},
+                "edit": {name: "Edit", icon: "fa-pen-to-square"},
+                "editNewTab": {name: "Edit in New Tab", icon: "fa-pen-to-square", className: "contextmenu-newtab"},
+                "rename": {name: "Rename", icon: "fa-pen"},
+                "move": {name: "Move", icon: "fa-arrow-right"},
+                "delete": {name: "Delete", icon: "fa-trash"},
                 "sep1": {type: "cm_separator"},
                 "fold1": {
                     name: "Add",
                     icon: "fa-plus",
                     items: {
-                        addStatic: {name: "Static Page", icon: "fa-file-o"},
-                        addSuite: {name: "Suite Page", icon: "fa-cogs"},
-                        addTest: {name: "Test Page", icon: "fa-cog"}
+                        addStatic: {name: "Static Page", icon: "fa-file"},
+                        addSuite: {name: "Suite Page", icon: "fa-gears"},
+                        addTest: {name: "Test Page", icon: "fa-gear"}
                     }
                 },
                 "sep2": {type: "cm_separator"},
                 "copypath": {name: "Copy Page Path", icon: "fa-clipboard"},
                 "testhistory": {
                     name: "Test History",
-                    icon: "fa-history",
+                    icon: "fa-clock-rotate-left",
                     visible: function(key, opt) {
                         return showSidebar2RunnablePageItems(opt);
                     }
                 },
-                "properties": {name: "Properties", icon: "fa-ellipsis-h"}
+                "properties": {name: "Properties", icon: "fa-ellipsis"}
             }
         });
     }
@@ -2240,10 +2266,14 @@ function renderSidebar2Children(parentNode, children, baseDepth) {
         return;
     }
     
+    // Check if parent node is pruned to pass down to children
+    const $parentNode = $(parentNode);
+    const parentIsPruned = $parentNode.hasClass('sidebar2-pruned');
+    
     const childrenContainer = $('<div class="sidebar2-node-children expanded"></div>');
     
     children.forEach(child => {
-        const childNode = createSidebar2TreeNode(child, baseDepth + 1);
+        const childNode = createSidebar2TreeNode(child, baseDepth + 1, parentIsPruned);
         
         // Don't pre-create grandchildren containers - let them be loaded dynamically
         // Only mark as loaded if this is explicitly a leaf node
@@ -2728,7 +2758,7 @@ function ensureRootNodeExpanded() {
                 console.log('No expanded nodes found, expanding root node as fallback');
                 rootChildrenContainer.addClass('expanded');
                 if (rootToggleIcon.length > 0) {
-                    rootToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
+                    rootToggleIcon.removeClass('fas fa-angle-right').addClass('fas fa-angle-down');
                 }
                 
                 // Save the updated state with root expanded
@@ -3050,9 +3080,9 @@ function loadSidebar2ProjectStats() {
     const $refreshBtn = $('#sidebar2-stats-refresh');
     
     // Show loading state for all values
-    $statsTests.html('<i class="fa fa-spinner fa-spin"></i>');
-    $statsSuites.html('<i class="fa fa-spinner fa-spin"></i>');
-    $statsStatic.html('<i class="fa fa-spinner fa-spin"></i>');
+    $statsTests.html('<i class="fas fa-spinner fa-spin"></i>');
+    $statsSuites.html('<i class="fas fa-spinner fa-spin"></i>');
+    $statsStatic.html('<i class="fas fa-spinner fa-spin"></i>');
     $refreshBtn.addClass('loading');
     
     console.log('Loading project statistics in background...');

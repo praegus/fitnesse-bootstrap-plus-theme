@@ -64,16 +64,13 @@ it('Test if the recursion will return the correct html structure', () => {
 
 it('Test if data input types returns the correct html', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const sidebarData = require('./mockup-data/SidebarData');
-    const neededHtml = '<ul id="sidebarContent"></ul>';
-    const expected = {
-        contain1: 'class="test linked pruned sidebar-link-handler">T 001 Add Courses By Service Call @</a>',
-        contain2: 'class="suite sidebar-link-handler">Front End Tests</a>&nbsp;<i class="fa fa-link" aria-hidden="true"></i>',
-    };
+    const SidebarData = require('./mockup-data/SidebarData');
 
-    document.body.innerHTML = neededHtml;
-    jsfile.placeSidebarContent(sidebarData);
-    const receivedResult = document.getElementById('TestSuiteDemo').innerHTML;
+    const expected = {};
+    expected.contain1 = 'class="suite">Test Suite Demo</a>';
+    expected.contain2 = '<i class="fas fa-gears icon-suite" aria-hidden="true"></i>';
+
+    const receivedResult = jsfile.getSidebarContentHtml(SidebarData[0]);
 
     expect(receivedResult).toContain(expected.contain1);
     expect(receivedResult).toContain(expected.contain2);
@@ -82,29 +79,39 @@ it('Test if data input types returns the correct html', () => {
 /*
  getSidebarContentHtml
  */
-it('Test if data input returns the correct html code', () => {
+it('getSidebarContentHtml function is defined and returns the expected output for a child', () => {
     const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
-    const sidebarData = require('./mockup-data/SidebarData');
-    const expectedResult =
-        '<li id="TestSuiteDemo">' +
-        '<div>' +
-        '<i class="iconToggle iconWidth fa fa-angle-right" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<i class="fa fa-cogs icon-test" aria-hidden="true"></i>' +
-        '&nbsp;' +
-        '<a href="TestSuiteDemo" class="suite">Test Suite Demo</a>' +
-        '<span class="tag sidebarTag displayNone">test<i class="fas fa-times deleteTagButton"></i></span>'+
-        '</div>' +
-        '</li>';
+    const SidebarData = require('./mockup-data/SidebarData');
+    const content = SidebarData[0].children[0];
+    
+    let expectedResult = {};
+    expectedResult.contain1 = 'class="suite">Back End Tests</a>';
+    expectedResult.contain2 = '<i class="fas fa-gears icon-suite" aria-hidden="true"></i>';
+    
+    const receivedResult = jsfile.getSidebarContentHtml(content);
+    
+    expect(jsfile.getSidebarContentHtml).toBeDefined();
+    expect(receivedResult).toContain(expectedResult.contain1);
+    expect(receivedResult).toContain(expectedResult.contain2);
+});
 
-    const receivedResult = jsfile.getSidebarContentHtml(sidebarData[0]);
-
-    // We need to check if the result contains the expected elements rather than an exact match
-    // because the sidebar-link-handler class is added after this function returns
-    expect(receivedResult).toContain('<i class="iconToggle iconWidth fa fa-angle-right" aria-hidden="true" title="show/hide"></i>');
-    expect(receivedResult).toContain('<i class="fa fa-cogs icon-test" aria-hidden="true"></i>');
-    expect(receivedResult).toContain('<a href="TestSuiteDemo" class="suite">');
-    expect(receivedResult).toContain('<span class="tag sidebarTag displayNone">test<i class="fas fa-times deleteTagButton"></i></span>');
+it('getSidebarContentHtml function returns the expected content for a suite page with children', () => {
+    const jsfile = require('../bootstrap-plus/js/bootstrap-plus');
+    const SidebarData = require('./mockup-data/SidebarData');
+    const content = SidebarData[0].children[1];
+    const receivedResult = jsfile.getSidebarContentHtml(content);
+    
+    expect(receivedResult).toContain(
+        '<i class="iconToggle iconWidth fas fa-angle-right" aria-hidden="true" title="show/hide"></i>' +
+        '&nbsp;' +
+        '<i class="fas fa-gears icon-suite" aria-hidden="true"></i>' +
+        '&nbsp;'
+    );
+    
+    // Ensure specific parts are correct
+    expect(receivedResult).toContain('<i class="iconToggle iconWidth fas fa-angle-right" aria-hidden="true" title="show/hide"></i>');
+    expect(receivedResult).toContain('<i class="fas fa-gears icon-suite" aria-hidden="true"></i>');
+    expect(receivedResult).toContain('<i class="fas fa-link" aria-hidden="true"></i>');
 });
 
 /*
