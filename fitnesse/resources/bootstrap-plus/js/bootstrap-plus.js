@@ -406,14 +406,17 @@ $(function() {
         var footerHeight = $('footer').height();
         var navHeight = $('nav').height();
         
-        if (footerHeight !== 0) {
+        // Check if footer is actually visible (not just has height)
+        var footerIsVisible = $('footer').is(':visible') && footerHeight > 0;
+        
+        if (footerIsVisible) {
             // Calculate available height: viewport height minus nav height minus footer height minus padding
             // Increased buffer from 10px to 30px to ensure bottom content is visible
             var availableHeight = 'calc(100vh - ' + navHeight + 'px - ' + footerHeight + 'px - 30px)';
             $('#sidebar2').css('height', availableHeight);
             $('#sidebar2').css('max-height', availableHeight);
         } else {
-            // If no footer, use the original full viewport height minus nav and some padding
+            // If no footer or footer is hidden, use the original full viewport height minus nav and some padding
             var availableHeight = 'calc(100vh - ' + navHeight + 'px - 20px)';
             $('#sidebar2').css('height', availableHeight);
             $('#sidebar2').css('max-height', availableHeight);
@@ -431,6 +434,59 @@ $(function() {
             adjustSidebar2Height();
         }, 50);
     });
+    
+    // Monitor footer visibility changes with MutationObserver
+    function setupFooterVisibilityMonitor() {
+        var footer = document.querySelector('footer');
+        if (!footer) return;
+        
+        // Create a MutationObserver to watch for style changes on the footer
+        var footerObserver = new MutationObserver(function(mutations) {
+            var shouldAdjust = false;
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && 
+                    (mutation.attributeName === 'style' || 
+                     mutation.attributeName === 'class')) {
+                    shouldAdjust = true;
+                }
+            });
+            
+            if (shouldAdjust) {
+                // Small delay to ensure CSS changes are applied
+                setTimeout(function() {
+                    adjustSidebar2Height();
+                }, 50);
+            }
+        });
+        
+        // Start observing the footer for attribute changes
+        footerObserver.observe(footer, {
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+        
+        // Also monitor for changes to the body class (which might affect footer visibility)
+        var bodyObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    // Body class changed, check if this affects footer visibility
+                    setTimeout(function() {
+                        adjustSidebar2Height();
+                    }, 100);
+                }
+            });
+        });
+        
+        bodyObserver.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+    }
+    
+    // Set up footer monitoring after page load
+    setTimeout(function() {
+        setupFooterVisibilityMonitor();
+    }, 200);
 
     // Tooltips
     getToolTips(placeToolTip);
