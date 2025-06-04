@@ -41,6 +41,12 @@
         #set( $sidebar2 = 'false' )
     #end
 
+    #set( $sidebar2StatsCookieName = "sidebar2Stats")
+    #set ($sidebar2Stats = $request.getCookie($sidebar2StatsCookieName))
+    #if($sidebar2Stats == "")
+        #set( $sidebar2Stats = 'true' )
+    #end
+
     #set($sidebarRootCookieName = "sidebarRoot")
     #set ($sidebarRoot = $request.getCookie($sidebarRootCookieName))
 
@@ -199,7 +205,7 @@
                 </div>
             </div>
             <div id="sidebar2Content"></div>
-            <div class="sidebar2-stats-panel">
+            <div class="sidebar2-stats-panel#if( $sidebar2Stats != 'true' ) displayNone#end">
                 <div class="sidebar2-stats-header">
                     <i class="sidebar2-stats-icon fa fa-bar-chart"></i>
                     <span class="sidebar2-stats-title">Project Stats</span>
@@ -220,6 +226,11 @@
                         <i class="fas fa-file sidebar2-stats-item-icon"></i>
                         <span class="sidebar2-stats-label">Static:</span>
                         <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <i class="fas fa-link sidebar2-stats-item-icon"></i>
+                        <span class="sidebar2-stats-label">Symlinks:</span>
+                        <span id="sidebar2-stats-symlinks" class="sidebar2-stats-value">-</span>
                     </div>
                 </div>
             </div>

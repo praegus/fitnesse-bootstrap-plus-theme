@@ -662,7 +662,7 @@ fieldset {
 }
 
 .icon-test {
-  color: #40c057;
+  color: #A8CF45;
 }
 
 .icon-suite {
@@ -670,8 +670,7 @@ fieldset {
 }
 
 .icon-static {
-  color: #fff;
-  font-size: 0.8em !important;
+  color: #ffffff;
 }
 
 .icon-special {
@@ -1581,14 +1580,15 @@ kbd {
   font-size: 12px;
   
   &.icon-suite { color: #66b3ff; }
-  &.icon-test { color: #40c057; }
-  &.icon-static { color: #adb5bd; }
+  &.icon-test { color: #A8CF45; }
+  &.icon-static { color: #ffffff; }
   &.icon-special { color: #fd7e14; }
   &.icon-scenariolib { color: #9775fa; }
   
   /* Grey versions for pruned pages */
   &.icon-suite-grey { color: #6c757d; }
   &.icon-test-grey { color: #6c757d; }
+  &.icon-static-grey { color: #6c757d !important; }
   &.icon-special-grey { color: #6c757d; }
   &.icon-scenariolib-grey { color: #6c757d; }
   
@@ -1651,8 +1651,7 @@ kbd {
 /* Pruned Pages Styling for Sidebar 2.0 (Dark Theme) */
 .sidebar2-tree-node.sidebar2-pruned {
   .sidebar2-text-pruned {
-    color: #6c757d !important; /* Lighter grey text */
-    opacity: 0.8;
+    text-decoration: line-through !important; /* Add strikethrough for better visibility */
   }
 }
 
@@ -1998,6 +1997,10 @@ li.runWithOrangeBeard a {
   background-color: #333333;
   flex-shrink: 0; /* Don't shrink the stats panel */
   margin-top: auto; /* Push to bottom */
+  
+  &.displayNone {
+    display: none !important;
+  }
 }
 
 .sidebar2-stats-header {
@@ -2075,7 +2078,7 @@ li.runWithOrangeBeard a {
   min-width: 20px;
   
   &.success {
-    color: #19d817; /* Use lighter green color for dark theme links */
+    color: #A8CF45; /* Use the specified green color for dark theme */
   }
   
   &.error {
@@ -2086,4 +2089,9 @@ li.runWithOrangeBeard a {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Additional specific override for static pruned icons */
+.sidebar2-tree-node.sidebar2-pruned .sidebar2-node-icon.icon-static-grey {
+  color: #6c757d !important;
 }

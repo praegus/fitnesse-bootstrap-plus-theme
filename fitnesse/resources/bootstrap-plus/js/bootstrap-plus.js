@@ -755,6 +755,12 @@ $(function() {
         }
     );
 
+    $('body').on('click', '#sidebar2-stats-switch', function (e) {
+            e.preventDefault();
+            switchSidebar2Stats();
+        }
+    );
+
     $('body').on('click', '#collapseSidebarDiv', function (e) {
             e.preventDefault();
             switchCollapseSidebar();
@@ -895,6 +901,30 @@ $(function() {
             }
             
             showNotification('success', 'Sidebar 2.0 enabled!');
+        }
+    }
+
+    function switchSidebar2Stats() {
+        if (getCookie('sidebar2Stats') == 'true') {
+            setBootstrapPlusConfigCookie('sidebar2Stats', 'false');
+            $('#sidebar2-stats-switch').removeClass('fa-toggle-on');
+            $('#sidebar2-stats-switch').addClass('fa-toggle-off');
+            $('.sidebar2-stats-panel').addClass('displayNone');
+            showNotification('info', 'Sidebar 2.0 project stats disabled');
+        } else {
+            setBootstrapPlusConfigCookie('sidebar2Stats', 'true');
+            $('#sidebar2-stats-switch').removeClass('fa-toggle-off');
+            $('#sidebar2-stats-switch').addClass('fa-toggle-on');
+            $('.sidebar2-stats-panel').removeClass('displayNone');
+            
+            // Load stats if sidebar2 is visible
+            if ($('#sidebar2').is(':visible')) {
+                setTimeout(() => {
+                    loadSidebar2ProjectStats();
+                }, 500);
+            }
+            
+            showNotification('success', 'Sidebar 2.0 project stats enabled!');
         }
     }
 
@@ -1987,6 +2017,9 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
             iconClass = isPruned ? 'fas fa-gears icon-suite-grey' : 'fas fa-gears icon-suite';
         } else if (item.type.includes('test')) {
             iconClass = isPruned ? 'fas fa-gear icon-test-grey' : 'fas fa-gear icon-test';
+        } else {
+            // Default static page
+            iconClass = isPruned ? 'fas fa-file icon-static-grey' : 'fas fa-file icon-static';
         }
         
         // Special page types
@@ -1996,9 +2029,10 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
         } else if (item.path && item.path.endsWith('.ScenarioLibrary')) {
             iconClass = isPruned ? 'fas fa-bolt icon-scenariolib-grey' : 'fas fa-bolt icon-scenariolib';
         }
+    } else {
+        // If no type, consider it static and apply pruned logic
+        iconClass = isPruned ? 'fas fa-file icon-static-grey' : 'fas fa-file icon-static';
     }
-    
-    // If it's a static page and pruned, we keep icon-static since it's already grey
     
     // Determine additional CSS classes for the tree node based on the item type
     let additionalClasses = '';
@@ -2023,7 +2057,7 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
                     ${!item.hasOwnProperty('children') ? '' : '<i class="fas fa-angle-right"></i>'}
                 </div>
                 <div class="sidebar2-node-icon ${iconClass.split(' ').slice(-1)[0]}">
-                    <i class="${iconClass}" aria-hidden="true"></i>
+                    <i class="sidebar2-node-icon ${iconClass}" aria-hidden="true"></i>
                 </div>
                 <div class="sidebar2-node-text" title="${item.name || item.path}">
                     ${symbolicIcon}
@@ -3125,20 +3159,22 @@ function expandSingleNode(node, path) {
  * This function loads the complete tree without depth limit to gather statistics
  */
 function loadSidebar2ProjectStats() {
-    // Don't load stats if sidebar2 is not visible
-    if (!$('#sidebar2').is(':visible')) {
+    // Don't load stats if sidebar2 is not visible or stats are disabled
+    if (!$('#sidebar2').is(':visible') || getCookie('sidebar2Stats') !== 'true') {
         return;
     }
     
     const $statsTests = $('#sidebar2-stats-tests');
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
+    const $statsSymlinks = $('#sidebar2-stats-symlinks');
     const $refreshBtn = $('#sidebar2-stats-refresh');
     
     // Show loading state for all values
     $statsTests.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsSuites.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsStatic.html('<i class="fas fa-spinner fa-spin"></i>');
+    $statsSymlinks.html('<i class="fas fa-spinner fa-spin"></i>');
     $refreshBtn.addClass('loading');
     
     console.log('Loading project statistics in background...');
@@ -3190,6 +3226,7 @@ function calculateProjectStats(contentArray) {
         testPages: 0,
         suitePages: 0,
         staticPages: 0,
+        symlinks: 0,
         totalPages: 0
     };
     
@@ -3202,6 +3239,11 @@ function calculateProjectStats(contentArray) {
             if (node && typeof node === 'object') {
                 // Check if this node is a symlink or if we're already in a symlinked subtree
                 const isSymlinked = node.isSymlink === true || isInSymlinkedSubtree;
+                
+                // Count symlinks only if this node is a symlink AND none of its parents is a symlink
+                if (node.isSymlink === true && !isInSymlinkedSubtree) {
+                    stats.symlinks++;
+                }
                 
                 // Skip counting if this page is symlinked (directly or through ancestor)
                 if (!isSymlinked) {
@@ -3244,11 +3286,13 @@ function updateSidebar2StatsDisplay(stats) {
     const $statsTests = $('#sidebar2-stats-tests');
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
+    const $statsSymlinks = $('#sidebar2-stats-symlinks');
     
     // Update all statistics with success styling
     $statsTests.removeClass('error').addClass('success').text(stats.testPages);
     $statsSuites.removeClass('error').addClass('success').text(stats.suitePages);
     $statsStatic.removeClass('error').addClass('success').text(stats.staticPages);
+    $statsSymlinks.removeClass('error').addClass('success').text(stats.symlinks);
 }
 
 /**
@@ -3259,16 +3303,19 @@ function showStatsError(message) {
     const $statsTests = $('#sidebar2-stats-tests');
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
+    const $statsSymlinks = $('#sidebar2-stats-symlinks');
     
     // Show error message for all statistics
     $statsTests.removeClass('success').addClass('error').text('!');
     $statsSuites.removeClass('success').addClass('error').text('!');
     $statsStatic.removeClass('success').addClass('error').text('!');
+    $statsSymlinks.removeClass('success').addClass('error').text('!');
     
     // Add title attribute with full error message for debugging
     $statsTests.attr('title', message);
     $statsSuites.attr('title', message);
     $statsStatic.attr('title', message);
+    $statsSymlinks.attr('title', message);
 }
 
 /**
@@ -3282,19 +3329,19 @@ function setupSidebar2StatsEventHandlers() {
         loadSidebar2ProjectStats();
     });
     
-    // Load initial statistics when sidebar2 becomes visible
-    if ($('#sidebar2').is(':visible')) {
+    // Load initial statistics when sidebar2 becomes visible AND stats are enabled
+    if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
         // Delay initial load to not block sidebar tree loading
         setTimeout(() => {
             loadSidebar2ProjectStats();
         }, 1000);
     }
     
-    // Reload stats when sidebar2 is refreshed
+    // Reload stats when sidebar2 is refreshed (only if stats are enabled)
     $('#sidebar2-refresh').off('click.sidebar2StatsRefresh').on('click.sidebar2StatsRefresh', function() {
         // Delay stats reload to not interfere with tree refresh
         setTimeout(() => {
-            if ($('#sidebar2').is(':visible')) {
+            if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
                 loadSidebar2ProjectStats();
             }
         }, 2000);

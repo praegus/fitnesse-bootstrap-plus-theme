@@ -600,7 +600,6 @@ font-size:12px;
 
 .icon-static {
   color: #222222;
-  font-size: 0.8em !important;
 }
 
 .icon-special {
@@ -1861,13 +1860,14 @@ li.runWithOrangeBeard a {
   
   &.icon-suite { color: #007bff; }
   &.icon-test { color: #28a745; }
-  &.icon-static { color: #6c757d; }
+  &.icon-static { color: #000000; } /* Black color for normal static pages */
   &.icon-special { color: #fd7e14; }
   &.icon-scenariolib { color: #6f42c1; }
   
   /* Grey versions for pruned pages */
   &.icon-suite-grey { color: #999999; }
   &.icon-test-grey { color: #999999; }
+  &.icon-static-grey { color: #999999 !important; }
   &.icon-special-grey { color: #999999; }
   &.icon-scenariolib-grey { color: #999999; }
   
@@ -1930,8 +1930,7 @@ li.runWithOrangeBeard a {
 /* Pruned Pages Styling for Sidebar 2.0 */
 .sidebar2-tree-node.sidebar2-pruned {
   .sidebar2-text-pruned {
-    color: #999999 !important; /* Lighter grey text */
-    opacity: 0.8;
+    text-decoration: line-through !important; /* Add strikethrough for better visibility */
   }
 }
 
@@ -2075,6 +2074,10 @@ li.runWithOrangeBeard a {
   background-color: #f8f9fa;
   flex-shrink: 0; /* Don't shrink the stats panel */
   margin-top: auto; /* Push to bottom */
+  
+  &.displayNone {
+    display: none !important;
+  }
 }
 
 .sidebar2-stats-header {
@@ -2163,4 +2166,9 @@ li.runWithOrangeBeard a {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Additional specific override for static pruned icons */
+.sidebar2-tree-node.sidebar2-pruned .sidebar2-node-icon.icon-static-grey {
+  color: #999999 !important;
 }

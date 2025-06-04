@@ -57,6 +57,18 @@
             </li>
         #end
 
+        #if ( $sidebar2Stats == 'true' )
+            <li>
+                <button class="fa fa-toggle-on prefsbutton" id="sidebar2-stats-switch" title="Toggle sidebar project stats panel"></button>
+                Sidebar 2.0 Project Stats
+            </li>
+        #else
+            <li>
+                <button class="fa fa-toggle-off prefsbutton" id="sidebar2-stats-switch" title="Toggle sidebar project stats panel"></button>
+                Sidebar 2.0 Project Stats
+            </li>
+        #end
+
         #if ( $highlightSymbols == 'true' )
                     <li>
                         <button class="fa fa-toggle-on prefsbutton" id="highlight-switch" title="Toggle symbol collapse on result pages"></button>
