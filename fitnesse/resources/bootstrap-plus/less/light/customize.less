@@ -1855,7 +1855,7 @@ li.runWithOrangeBeard a {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 8px;
+  margin-right: 4px;
   font-size: 12px;
   
   &.icon-suite { color: #007bff; }
@@ -1890,7 +1890,7 @@ li.runWithOrangeBeard a {
   overflow: visible; /* Allow content to overflow naturally */
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 3px; /* Reduced from 6px to bring symlink icon closer to page icon */
   min-width: 0;
 }
 
@@ -1902,10 +1902,11 @@ li.runWithOrangeBeard a {
 
 .sidebar2-symlink-icon {
   color: #6c757d;
-  font-size: 11px;
-  margin-right: 4px;
+  font-size: 12px;
+  margin-right: 2px; /* Reduced from 4px to 2px for tighter spacing */
   flex-shrink: 0;
   opacity: 0.8;
+  line-height: 1; /* Ensure proper vertical alignment */
   
   &:hover {
     opacity: 1;
@@ -2137,10 +2138,13 @@ li.runWithOrangeBeard a {
 
 .sidebar2-stats-item-icon {
   width: 16px;
-  margin-right: 6px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
   color: #6c757d;
   font-size: 12px;
-  text-align: center;
 }
 
 .sidebar2-stats-label {

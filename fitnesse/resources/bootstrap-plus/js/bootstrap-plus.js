@@ -524,7 +524,7 @@ $(function() {
                     $(this).attr('href').endsWith('.SuiteTearDown'))  {
             $(this).before('<i class="fas fa-wrench icon-special" aria-hidden="true"></i>&nbsp;');
         } else {
-            $(this).before('<i class="fas fa-file icon-static" aria-hidden="true"></i>&nbsp;');
+            $(this).before('<i class="far fa-file icon-static" aria-hidden="true"></i>&nbsp;');
         }
     });
 
@@ -1180,7 +1180,7 @@ function getSidebarContentHtml(content) {
         console.log('Content type:', content.type);
     }
     
-    let iconClass = 'fas fa-file icon-static';
+    let iconClass = 'far fa-file icon-static';
     
     // Special case for FitNesse root page - try multiple detection methods
     if (content.name === 'FitNesseRoot' || content.path === 'FitNesseRoot' ||
@@ -2005,7 +2005,7 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
     const isPruned = shouldApplyPrunedStyling(item, parentIsPruned);
     
     // Determine icon class
-    let iconClass = 'fas fa-file icon-static';
+    let iconClass = 'far fa-file icon-static';
     
     // Special case for FitNesse root page - try multiple detection methods
     if (item.name === 'FitNesseRoot' || item.path === 'FitNesseRoot' || 
@@ -2019,7 +2019,7 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
             iconClass = isPruned ? 'fas fa-gear icon-test-grey' : 'fas fa-gear icon-test';
         } else {
             // Default static page
-            iconClass = isPruned ? 'fas fa-file icon-static-grey' : 'fas fa-file icon-static';
+            iconClass = isPruned ? 'far fa-file icon-static-grey' : 'far fa-file icon-static';
         }
         
         // Special page types
@@ -2031,7 +2031,7 @@ function createSidebar2TreeNode(item, depth, parentIsPruned = false) {
         }
     } else {
         // If no type, consider it static and apply pruned logic
-        iconClass = isPruned ? 'fas fa-file icon-static-grey' : 'fas fa-file icon-static';
+        iconClass = isPruned ? 'far fa-file icon-static-grey' : 'far fa-file icon-static';
     }
     
     // Determine additional CSS classes for the tree node based on the item type
