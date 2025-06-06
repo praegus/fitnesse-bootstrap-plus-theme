@@ -1,30 +1,4 @@
-// Needed for Jest
-try {
-    module.exports = {
-        getSidebarContentHtml: getSidebarContentHtml,
-        placeSidebarContent: placeSidebarContent,
-        toggleIconClickEvent: toggleIconClickEvent,
-        expandRouteSidebarIcons: expandRouteSidebarIcons,
-        expandSidebarIcons: expandSidebarIcons,
-        placeToolTip:placeToolTip,
-        createTagInput: createTagInput,
-        checkIfNewTagIsValid: checkIfNewTagIsValid,
-        postTagInHtml: postTagInHtml,
-        inputBorderStyling: inputBorderStyling,
-        deleteClickAndHoverEvent: deleteClickAndHoverEvent,
-        joinTagList: joinTagList,
-        deleteTag: deleteTag,
-        generateTestHistoryTable: generateTestHistoryTable,
-        getPageHistory: getPageHistory,
-        getWorkSpace: getWorkSpace,
-        isFilesPath: isFilesPath,
-        getCookie: getCookie,
-        createSidebar2TreeNode: createSidebar2TreeNode,
-        showSidebar2RunnablePageItems: showSidebar2RunnablePageItems
-    };
-} catch (e) {
-    //Intentionally left blank
-}
+// Module exports will be added at the end of the file for proper function declaration hoisting
 
 /**
  * @return {string}
@@ -1045,6 +1019,10 @@ function getSidebarContent(callback) {
 }
 
 function getWorkSpace(mainWorkspace) {
+    // Handle null/undefined input
+    if (!mainWorkspace) {
+        return '/root';
+    }
 
     if (getCookie('sidebarRoot').length == 0 && (mainWorkspace === '/' || mainWorkspace.toLowerCase() === '/frontpage')) {
         mainWorkspace = '/root';
@@ -1172,6 +1150,11 @@ function sidebarContentLayerLoopOptimized(parentElement, children, currentDepth)
 
 // Generate the li for the html
 function getSidebarContentHtml(content) {
+    // Handle null/undefined input
+    if (!content) {
+        return '';
+    }
+    
     // Debug logging to see actual data structure
     if (content.name && (content.name.includes('Root') || content.name.includes('root'))) {
         console.log('Regular sidebar root item data:', content);
@@ -1180,77 +1163,61 @@ function getSidebarContentHtml(content) {
         console.log('Content type:', content.type);
     }
     
-    let iconClass = 'far fa-file icon-static';
+    let iconClass;
     
-    // Special case for FitNesse root page - try multiple detection methods
-    if (content.name === 'FitNesseRoot' || content.path === 'FitNesseRoot' ||
+    // Determine icon class with clear precedence for special pages
+    const isRoot = content.name === 'FitNesseRoot' || content.path === 'FitNesseRoot' ||
         content.name === 'root' || content.path === 'root' ||
-        (!content.path && content.name && content.name.toLowerCase().includes('root'))) {
+        (!content.path && content.name && content.name.toLowerCase().includes('root'));
+
+    if (isRoot) {
         iconClass = 'fas fitnesse-root-icon';
-    } else if (content.type) {
-        if (content.type.includes('suite')) {
-            iconClass = 'fas fa-gears icon-suite';
-        } else if (content.type.includes('test')) {
-            iconClass = 'fas fa-gear icon-test';
-        }
-        
-        // Special page types
-        if (content.path && (content.path.endsWith('.SetUp') || content.path.endsWith('.SuiteSetUp') || 
-                         content.path.endsWith('.TearDown') || content.path.endsWith('.SuiteTearDown'))) {
-            iconClass = 'fas fa-wrench icon-special';
-        } else if (content.path && content.path.endsWith('.ScenarioLibrary')) {
-            iconClass = 'fas fa-bolt icon-scenariolib';
-        }
+    } else if (content.path && content.path.endsWith('.ScenarioLibrary')) {
+        iconClass = 'fas fa-bolt icon-scenariolib';
+    } else if (content.path && (content.path.endsWith('.SetUp') || content.path.endsWith('.SuiteSetUp') ||
+               content.path.endsWith('.TearDown') || content.path.endsWith('.SuiteTearDown'))) {
+        iconClass = 'fas fa-wrench icon-special';
+    } else if (content.path && content.path.startsWith('files/') && content.type && content.type.includes('suite')) {
+        // Special case for suite-like folders under /files
+        iconClass = 'fas fa-folder-open';
+    } else if (content.type && content.type.includes('suite')) {
+        iconClass = 'fas fa-gears icon-suite';
+    } else if (content.type && content.type.includes('test')) {
+        iconClass = 'fas fa-gear icon-test';
+    } else {
+        iconClass = 'far fa-file icon-static'; // Default
     }
     
     // Determine if we should show the toggle icon
-    let toggleClass = '';
+    const hasChildren = content.children && content.children.length > 0;
+    const toggleClass = hasChildren ? 'iconToggle iconWidth fas fa-angle-right' : 'iconWidth';
     
-    // Only add the toggle icon class if we know the content has children
-    if (content.children && content.children.length > 0) {
-        toggleClass = 'iconToggle iconWidth fas fa-angle-right';
-    } else {
-        // For nodes without children or unknown status, just add spacing
-        toggleClass = 'iconWidth';
+    let highlightClass = location.pathname === ('/' + content.path) ? 'highlight' : '';
+    // Special case for FrontPage
+    if (content.path === 'FrontPage' && location.pathname === '/') {
+        highlightClass = 'highlight';
     }
-    
-    let highlight = location.pathname === ('/' + content.path) ? ' class="highlight"' : '';
-    const linkedText = content.type.includes('linked') ? ' @' : '';
+
+    const linkedText = content.type && content.type.includes('linked') ? ' @' : '';
     const symbolicIcon = content.isSymlink === true ? '&nbsp;<i class="fas fa-link" aria-hidden="true"></i>' : '';
     const tagString = sidebarTags(content.tags);
 
-    // If Frontpage
-    highlight = content.path === 'FrontPage' && location.pathname === '/' ? ' class="highlight"' : highlight;
-    
-    // If files
-    if (content.path.slice(0, 5) === 'files') {
-        iconClass = content.type.includes('suite') ? 'fas fa-folder-open' : iconClass;
-    }
-    
-    // Wrench for setup/teardown pages
-    if(content.path.endsWith('.SetUp') ||
-        content.path.endsWith('.SuiteSetUp') ||
-        content.path.endsWith('.TearDown') ||
-        content.path.endsWith('.SuiteTearDown')) {
-        iconClass = 'fas fa-wrench icon-special'
-    }
-    
-    // bolt for scenariolibrary
-    if(content.path.endsWith('.ScenarioLibrary')) {
-        iconClass = 'fas fa-bolt icon-scenariolib'
-    }
+    const nodeId = (content.path || 'root').replace(/\./g, '');
+    const highlightAttr = highlightClass ? ` class="${highlightClass}"` : '';
 
-    return '<li id="' + content.path.replace(/\./g, '') + '">' +
-        '<div' + highlight + '>' +
-        '<i class="' + toggleClass + '" aria-hidden="true" title="show/hide"></i>' +
-        '&nbsp;' +
-        '<i class="' + iconClass + '" aria-hidden="true"></i>' +
-        '&nbsp;' +
-        '<a href="' + content.path + '" class="' + content.type + '">' + content.name + linkedText + '</a>' +
-        symbolicIcon +
-        tagString +
-        '</div>' +
-        '</li>';
+    return `
+        <li id="${nodeId}">
+            <div${highlightAttr}>
+                <i class="${toggleClass}" aria-hidden="true" title="show/hide"></i>
+                &nbsp;
+                <i class="${iconClass}" aria-hidden="true"></i>
+                &nbsp;
+                <a href="${content.path}" class="${content.type || ''}">${content.name}${linkedText}</a>
+                ${symbolicIcon}
+                ${tagString}
+            </div>
+        </li>
+    `;
 }
 
 function sidebarTags(tagsArray){
@@ -1511,31 +1478,8 @@ function handleContextMenuClick(key, element) {
 }
 
 function getResponder(key, element) {
-    var el = element[0];
-        switch(key) {
-          case "run":
-          case "runNewTab":
-              return el.classList.contains('suite') ? 'suite' : 'test';
-          case "edit":
-          case "editNewTab":
-              return 'edit';
-          case "rename":
-              return 'refactor&type=rename';
-          case "move":
-              return 'refactor&type=move';
-          case "delete":
-              return 'deletePage';
-          case "testhistory":
-              return 'testHistory';
-          case "properties":
-              return 'properties';
-          case "addStatic":
-              return 'new&pageTemplate=.TemplateLibrary.StaticPage';
-          case "addSuite":
-              return 'new&pageTemplate=.TemplateLibrary.SuitePage';
-          case "addTest":
-              return 'new&pageTemplate=.TemplateLibrary.TestPage';
-        }
+    var isSuite = element[0].classList.contains('suite');
+    return getPageActionResponder(key, isSuite);
 }
 
 /*
@@ -2574,11 +2518,18 @@ function handleSidebar2ContextMenuClick(key, element) {
  * Get responder string for Sidebar 2.0 context menu actions
  */
 function getSidebar2Responder(key, element) {
-    var el = element;
+    var isSuite = element.classList.contains('suite');
+    return getPageActionResponder(key, isSuite);
+}
+
+/**
+ * Get responder string for page actions (Context Menu)
+ */
+function getPageActionResponder(key, isSuite) {
     switch(key) {
         case "run":
         case "runNewTab":
-            return el.classList.contains('suite') ? 'suite' : 'test';
+            return isSuite ? 'suite' : 'test';
         case "edit":
         case "editNewTab":
             return 'edit';
@@ -2599,7 +2550,7 @@ function getSidebar2Responder(key, element) {
         case "addTest":
             return 'new&pageTemplate=.TemplateLibrary.TestPage';
         default:
-            return '';
+            return ''; // Return empty for unknown keys to avoid "undefined" in URL
     }
 }
 
@@ -3396,4 +3347,32 @@ function setFocusToCurrentPage() {
         
         console.log('Keyboard focus set to:', focusTarget.data('path') || 'root');
     }
+}
+
+// Needed for Jest - exports at end for proper function hoisting
+try {
+    module.exports = {
+        getSidebarContentHtml: getSidebarContentHtml,
+        placeSidebarContent: placeSidebarContent,
+        toggleIconClickEvent: toggleIconClickEvent,
+        expandRouteSidebarIcons: expandRouteSidebarIcons,
+        expandSidebarIcons: expandSidebarIcons,
+        placeToolTip: placeToolTip,
+        createTagInput: createTagInput,
+        checkIfNewTagIsValid: checkIfNewTagIsValid,
+        postTagInHtml: postTagInHtml,
+        inputBorderStyling: inputBorderStyling,
+        deleteClickAndHoverEvent: deleteClickAndHoverEvent,
+        joinTagList: joinTagList,
+        deleteTag: deleteTag,
+        generateTestHistoryTable: generateTestHistoryTable,
+        getPageHistory: getPageHistory,
+        getWorkSpace: getWorkSpace,
+        isFilesPath: isFilesPath,
+        getCookie: getCookie,
+        createSidebar2TreeNode: createSidebar2TreeNode,
+        showSidebar2RunnablePageItems: showSidebar2RunnablePageItems
+    };
+} catch (e) {
+    // Intentionally left blank
 }
