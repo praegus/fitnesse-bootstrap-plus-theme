@@ -3119,6 +3119,7 @@ function loadSidebar2ProjectStats() {
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
     const $statsSymlinks = $('#sidebar2-stats-symlinks');
+    const $statsSkipped = $('#sidebar2-stats-skipped');
     const $refreshBtn = $('#sidebar2-stats-refresh');
     
     // Show loading state for all values
@@ -3126,6 +3127,7 @@ function loadSidebar2ProjectStats() {
     $statsSuites.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsStatic.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsSymlinks.html('<i class="fas fa-spinner fa-spin"></i>');
+    $statsSkipped.html('<i class="fas fa-spinner fa-spin"></i>');
     $refreshBtn.addClass('loading');
     
     console.log('Loading project statistics in background...');
@@ -3178,6 +3180,7 @@ function calculateProjectStats(contentArray) {
         suitePages: 0,
         staticPages: 0,
         symlinks: 0,
+        skippedPages: 0,
         totalPages: 0
     };
     
@@ -3199,6 +3202,11 @@ function calculateProjectStats(contentArray) {
                 // Skip counting if this page is symlinked (directly or through ancestor)
                 if (!isSymlinked) {
                     stats.totalPages++;
+                    
+                    // Count skipped pages (those with type containing 'pruned')
+                    if (node.type && node.type.includes('pruned')) {
+                        stats.skippedPages++;
+                    }
                     
                     // Count by page type using the same logic as createSidebar2TreeNode
                     if (node.type) {
@@ -3238,12 +3246,14 @@ function updateSidebar2StatsDisplay(stats) {
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
     const $statsSymlinks = $('#sidebar2-stats-symlinks');
+    const $statsSkipped = $('#sidebar2-stats-skipped');
     
     // Update all statistics with success styling
     $statsTests.removeClass('error').addClass('success').text(stats.testPages);
     $statsSuites.removeClass('error').addClass('success').text(stats.suitePages);
     $statsStatic.removeClass('error').addClass('success').text(stats.staticPages);
     $statsSymlinks.removeClass('error').addClass('success').text(stats.symlinks);
+    $statsSkipped.removeClass('error').addClass('success').text(stats.skippedPages);
 }
 
 /**
@@ -3255,18 +3265,21 @@ function showStatsError(message) {
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
     const $statsSymlinks = $('#sidebar2-stats-symlinks');
+    const $statsSkipped = $('#sidebar2-stats-skipped');
     
     // Show error message for all statistics
     $statsTests.removeClass('success').addClass('error').text('!');
     $statsSuites.removeClass('success').addClass('error').text('!');
     $statsStatic.removeClass('success').addClass('error').text('!');
     $statsSymlinks.removeClass('success').addClass('error').text('!');
+    $statsSkipped.removeClass('success').addClass('error').text('!');
     
     // Add title attribute with full error message for debugging
     $statsTests.attr('title', message);
     $statsSuites.attr('title', message);
     $statsStatic.attr('title', message);
     $statsSymlinks.attr('title', message);
+    $statsSkipped.attr('title', message);
 }
 
 /**

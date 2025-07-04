@@ -213,24 +213,49 @@
                 </div>
                 <div class="sidebar2-stats-content">
                     <div class="sidebar2-stats-item">
-                        <i class="fa fa-cog sidebar2-stats-item-icon"></i>
-                        <span class="sidebar2-stats-label">Tests:</span>
-                        <span id="sidebar2-stats-tests" class="sidebar2-stats-value">-</span>
+                        <div class="sidebar2-stats-left">
+                            <i class="fa fa-cog sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Tests:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-tests" class="sidebar2-stats-value">-</span>
+                        </div>
                     </div>
                     <div class="sidebar2-stats-item">
-                        <i class="fa fa-cogs sidebar2-stats-item-icon"></i>
-                        <span class="sidebar2-stats-label">Suites:</span>
-                        <span id="sidebar2-stats-suites" class="sidebar2-stats-value">-</span>
+                        <div class="sidebar2-stats-left">
+                            <i class="fa fa-cogs sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Suites:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-suites" class="sidebar2-stats-value">-</span>
+                        </div>
                     </div>
                     <div class="sidebar2-stats-item">
-                        <i class="far fa-file sidebar2-stats-item-icon"></i>
-                        <span class="sidebar2-stats-label">Static:</span>
-                        <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
+                        <div class="sidebar2-stats-left">
+                            <i class="far fa-file sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Static:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
+                        </div>
                     </div>
                     <div class="sidebar2-stats-item">
-                        <i class="fas fa-link sidebar2-stats-item-icon"></i>
-                        <span class="sidebar2-stats-label">Symlinks:</span>
-                        <span id="sidebar2-stats-symlinks" class="sidebar2-stats-value">-</span>
+                        <div class="sidebar2-stats-left">
+                            <i class="fas fa-link sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Symlinks:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-symlinks" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="fas fa-ban sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Skipped:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-skipped" class="sidebar2-stats-value">-</span>
+                        </div>
                     </div>
                 </div>
             </div>

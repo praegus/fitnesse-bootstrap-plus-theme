@@ -11,3 +11,14 @@
         transform: rotate(360deg);
     }
 }
+
+/* Sidebar 2.0 stats alignment */
+.sidebar2-stats-left {
+    display: flex;
+    align-items: center;
+}
+.sidebar2-stats-right {
+    margin-left: auto;
+    min-width: 30px;
+    text-align: right;
+}
