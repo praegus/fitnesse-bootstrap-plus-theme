@@ -2373,8 +2373,8 @@ function expandSingleNode(node, path) {
                 childrenContainer.addClass('expanded');
                 toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
                 
-                // Add smooth expand animation
-                childrenContainer.hide().slideDown(150);
+                // Show immediately during initial state restoration (no animation)
+                childrenContainer.show();
             }
             resolve();
             
@@ -2388,8 +2388,8 @@ function expandSingleNode(node, path) {
                     updatedChildrenContainer.addClass('expanded');
                     updatedToggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
                     
-                    // Add smooth expand animation
-                    updatedChildrenContainer.hide().slideDown(150);
+                    // Show immediately during initial state restoration (no animation)
+                    updatedChildrenContainer.show();
                 }
                 resolve();
                 
@@ -2402,18 +2402,155 @@ function expandSingleNode(node, path) {
             if (childrenContainer.length > 0 && !childrenContainer.hasClass('expanded')) {
                 childrenContainer.addClass('expanded');
                 toggleIcon.removeClass('fa-angle-right').addClass('fa-angle-down');
-                childrenContainer.hide().slideDown(150);
+                childrenContainer.show();
             }
             resolve();
         }
     });
 }
 
+// Project stats cache configuration
+const STATS_CACHE_CONFIG = {
+    enabled: true,
+    version: '1.0',
+    storagePrefix: 'sidebar2Stats_',
+    fallbackOnError: true
+};
+
+const STATS_CACHE_KEY = STATS_CACHE_CONFIG.storagePrefix + 'data';
+const STATS_CACHE_VERSION_KEY = STATS_CACHE_CONFIG.storagePrefix + 'version';
+
+/**
+ * Check if we have valid cached project stats
+ * @returns {boolean} - True if valid cache exists
+ */
+function hasValidStatsCache() {
+    if (!STATS_CACHE_CONFIG.enabled) {
+        return false;
+    }
+    
+    try {
+        // Check if localStorage is available
+        if (typeof Storage === 'undefined' || !localStorage) {
+            console.log('localStorage not available for stats cache');
+            return false;
+        }
+        
+        // Check cache version
+        const cachedVersion = localStorage.getItem(STATS_CACHE_VERSION_KEY);
+        if (cachedVersion !== STATS_CACHE_CONFIG.version) {
+            console.log('Stats cache version mismatch - clearing cache');
+            clearStatsCache();
+            return false;
+        }
+        
+        // Check if cache data exists
+        const cachedData = localStorage.getItem(STATS_CACHE_KEY);
+        if (!cachedData) {
+            return false;
+        }
+        
+        // Try to parse cache data
+        const parsedData = JSON.parse(cachedData);
+        if (!parsedData || !parsedData.stats || !parsedData.timestamp) {
+            console.log('Invalid stats cache data structure');
+            clearStatsCache();
+            return false;
+        }
+        
+        console.log('Valid stats cache found');
+        return true;
+        
+    } catch (error) {
+        console.warn('Error checking stats cache validity:', error);
+        clearStatsCache();
+        return false;
+    }
+}
+
+/**
+ * Get cached project stats
+ * @returns {Object|null} - Cached stats object or null if not available
+ */
+function getCachedStats() {
+    try {
+        const cachedData = localStorage.getItem(STATS_CACHE_KEY);
+        if (!cachedData) {
+            return null;
+        }
+        
+        const parsedData = JSON.parse(cachedData);
+        console.log('Loading project stats from cache (cached at:', new Date(parsedData.timestamp).toLocaleString(), ')');
+        
+        return parsedData.stats;
+        
+    } catch (error) {
+        console.warn('Error reading cached stats:', error);
+        clearStatsCache();
+        return null;
+    }
+}
+
+/**
+ * Store project stats in cache
+ * @param {Object} stats - Statistics object to cache
+ */
+function cacheStats(stats) {
+    if (!STATS_CACHE_CONFIG.enabled) {
+        return;
+    }
+    
+    try {
+        // Check if localStorage is available
+        if (typeof Storage === 'undefined' || !localStorage) {
+            console.log('localStorage not available - skipping stats caching');
+            return;
+        }
+        
+        const cacheData = {
+            version: STATS_CACHE_CONFIG.version,
+            timestamp: Date.now(),
+            stats: stats
+        };
+        
+        // Store cache data and version
+        localStorage.setItem(STATS_CACHE_KEY, JSON.stringify(cacheData));
+        localStorage.setItem(STATS_CACHE_VERSION_KEY, STATS_CACHE_CONFIG.version);
+        
+        console.log('Project stats cached successfully');
+        
+    } catch (error) {
+        console.warn('Error caching stats:', error);
+        
+        // Handle quota exceeded error
+        if (error.name === 'QuotaExceededError') {
+            console.warn('localStorage quota exceeded - clearing stats cache');
+            clearStatsCache();
+        }
+    }
+}
+
+/**
+ * Clear/invalidate the stats cache
+ */
+function clearStatsCache() {
+    try {
+        if (typeof Storage !== 'undefined' && localStorage) {
+            localStorage.removeItem(STATS_CACHE_KEY);
+            localStorage.removeItem(STATS_CACHE_VERSION_KEY);
+            console.log('Stats cache cleared');
+        }
+    } catch (error) {
+        console.warn('Error clearing stats cache:', error);
+    }
+}
+
 /**
  * Load project statistics in the background
  * This function loads the complete tree without depth limit to gather statistics
+ * @param {boolean} forceRefresh - If true, bypass cache and force fresh data load
  */
-function loadSidebar2ProjectStats() {
+function loadSidebar2ProjectStats(forceRefresh = false) {
     // Don't load stats if sidebar2 is not visible or stats are disabled
     if (!$('#sidebar2').is(':visible') || getCookie('sidebar2Stats') !== 'true') {
         return;
@@ -2426,7 +2563,18 @@ function loadSidebar2ProjectStats() {
     const $statsSkipped = $('#sidebar2-stats-skipped');
     const $refreshBtn = $('#sidebar2-stats-refresh');
     
-    // Show loading state for all values
+    // Check cache first (unless forcing refresh)
+    if (!forceRefresh && hasValidStatsCache()) {
+        const cachedStats = getCachedStats();
+        if (cachedStats) {
+            // Load from cache - instant display, no loading indicators needed
+            updateSidebar2StatsDisplay(cachedStats, true); // Pass true to indicate cached data
+            console.log('✓ Project stats loaded from cache - instant display, no server request needed');
+            return;
+        }
+    }
+    
+    // Show loading state for all values (only when actually loading from server)
     $statsTests.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsSuites.html('<i class="fas fa-spinner fa-spin"></i>');
     $statsStatic.html('<i class="fas fa-spinner fa-spin"></i>');
@@ -2434,7 +2582,11 @@ function loadSidebar2ProjectStats() {
     $statsSkipped.html('<i class="fas fa-spinner fa-spin"></i>');
     $refreshBtn.addClass('loading');
     
-    console.log('Loading project statistics in background...');
+    if (forceRefresh) {
+        console.log('🔄 Loading project statistics (forced refresh - bypassing cache)...');
+    } else {
+        console.log('📈 Loading project statistics (cache miss - fetching from server)...');
+    }
     
     // Use root path to get complete tree
     const rootPath = location.protocol + '//' + location.host + '/root';
@@ -2446,10 +2598,14 @@ function loadSidebar2ProjectStats() {
         dataType: 'json',
         timeout: 30000, // 30 second timeout for large projects
         success: function(contentArray) {
-            console.log('Project statistics loaded successfully');
+            console.log('✅ Project statistics loaded successfully from server');
             try {
                 const stats = calculateProjectStats(contentArray);
-                updateSidebar2StatsDisplay(stats);
+                updateSidebar2StatsDisplay(stats, false); // Pass false to indicate fresh data
+                
+                // Cache the calculated stats for future use
+                cacheStats(stats);
+                
             } catch (error) {
                 console.error('Error calculating project statistics:', error);
                 showStatsError('Error calculating statistics');
@@ -2544,8 +2700,9 @@ function calculateProjectStats(contentArray) {
 /**
  * Update the statistics display with calculated values
  * @param {Object} stats - Statistics object with counts
+ * @param {boolean} fromCache - Whether the data is from cache (for UI indication)
  */
-function updateSidebar2StatsDisplay(stats) {
+function updateSidebar2StatsDisplay(stats, fromCache = false) {
     const $statsTests = $('#sidebar2-stats-tests');
     const $statsSuites = $('#sidebar2-stats-suites');
     const $statsStatic = $('#sidebar2-stats-static');
@@ -2558,6 +2715,28 @@ function updateSidebar2StatsDisplay(stats) {
     $statsStatic.removeClass('error').addClass('success').text(stats.staticPages);
     $statsSymlinks.removeClass('error').addClass('success').text(stats.symlinks);
     $statsSkipped.removeClass('error').addClass('success').text(stats.skippedPages);
+    
+    // Add subtle cache indicator (optional - can be enabled/disabled)
+    if (fromCache) {
+        // Add a small visual indicator that data is from cache
+        const cacheTitle = 'Loaded from cache - click refresh for latest data';
+        $statsTests.attr('title', cacheTitle);
+        $statsSuites.attr('title', cacheTitle);
+        $statsStatic.attr('title', cacheTitle);
+        $statsSymlinks.attr('title', cacheTitle);
+        $statsSkipped.attr('title', cacheTitle);
+        
+        console.log('📄 Stats displayed from cache');
+    } else {
+        // Fresh data - remove any previous cache titles
+        $statsTests.removeAttr('title');
+        $statsSuites.removeAttr('title');
+        $statsStatic.removeAttr('title');
+        $statsSymlinks.removeAttr('title');
+        $statsSkipped.removeAttr('title');
+        
+        console.log('✨ Fresh stats displayed from server');
+    }
 }
 
 /**
@@ -2587,19 +2766,81 @@ function showStatsError(message) {
 }
 
 /**
+ * Utility function to get cache status information (for debugging)
+ * @returns {Object} - Cache status information
+ */
+function getStatsCacheInfo() {
+    const info = {
+        enabled: STATS_CACHE_CONFIG.enabled,
+        version: STATS_CACHE_CONFIG.version,
+        hasCache: false,
+        cacheTimestamp: null,
+        cacheAge: null
+    };
+    
+    try {
+        if (typeof Storage !== 'undefined' && localStorage) {
+            const cachedData = localStorage.getItem(STATS_CACHE_KEY);
+            if (cachedData) {
+                const parsedData = JSON.parse(cachedData);
+                info.hasCache = true;
+                info.cacheTimestamp = parsedData.timestamp;
+                info.cacheAge = Date.now() - parsedData.timestamp;
+                info.cacheAgeMinutes = Math.round(info.cacheAge / (1000 * 60));
+            }
+        }
+    } catch (error) {
+        info.error = error.message;
+    }
+    
+    return info;
+}
+
+/**
+ * Initialize stats cache management and event handlers
+ */
+function initializeStatsCache() {
+    // Optional: Clear cache on page visibility change (when user returns to tab)
+    // This ensures fresh data when switching back to the tab after being away
+    if (typeof document.addEventListener === 'function') {
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden && STATS_CACHE_CONFIG.enabled) {
+                // User returned to tab - optionally refresh if data is old
+                // For now, we keep the cache until manual refresh
+                console.log('Page visibility changed - cache remains valid until manual refresh');
+            }
+        });
+    }
+}
+
+/**
  * Setup event handlers for the statistics panel
  */
 function setupSidebar2StatsEventHandlers() {
-    // Handle refresh button click
+    // Initialize cache management
+    initializeStatsCache();
+    // Handle refresh button click - force fresh data load (bypass cache)
     $('#sidebar2-stats-refresh').off('click.sidebar2Stats').on('click.sidebar2Stats', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        loadSidebar2ProjectStats();
+        console.log('Stats refresh button clicked - bypassing cache');
+        loadSidebar2ProjectStats(true); // forceRefresh = true
     });
     
     // Load initial statistics when sidebar2 becomes visible AND stats are enabled
     if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
-        // Delay initial load to not block sidebar tree loading
+        // Check cache immediately to avoid showing dash placeholder
+        if (hasValidStatsCache()) {
+            const cachedStats = getCachedStats();
+            if (cachedStats) {
+                // Load from cache immediately - no delay needed
+                updateSidebar2StatsDisplay(cachedStats, true);
+                console.log('✓ Project stats loaded from cache immediately on page load');
+                return; // Don't schedule delayed load
+            }
+        }
+        
+        // No cache available - delay initial load to not block sidebar tree loading
         setTimeout(() => {
             loadSidebar2ProjectStats();
         }, 1000);
@@ -2607,10 +2848,11 @@ function setupSidebar2StatsEventHandlers() {
     
     // Reload stats when sidebar2 is refreshed (only if stats are enabled)
     $('#sidebar2-refresh').off('click.sidebar2StatsRefresh').on('click.sidebar2StatsRefresh', function() {
-        // Delay stats reload to not interfere with tree refresh
+        // When tree is refreshed, also refresh stats (bypass cache)
         setTimeout(() => {
             if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
-                loadSidebar2ProjectStats();
+                console.log('Sidebar2 tree refreshed - forcing stats refresh');
+                loadSidebar2ProjectStats(true); // forceRefresh = true
             }
         }, 2000);
     });
@@ -2682,7 +2924,13 @@ try {
         isFilesPath: isFilesPath,
         getCookie: getCookie,
         createSidebar2TreeNode: createSidebar2TreeNode,
-        showSidebar2RunnablePageItems: showSidebar2RunnablePageItems
+        showSidebar2RunnablePageItems: showSidebar2RunnablePageItems,
+        // Cache management functions (for testing)
+        hasValidStatsCache: hasValidStatsCache,
+        getCachedStats: getCachedStats,
+        cacheStats: cacheStats,
+        clearStatsCache: clearStatsCache,
+        getStatsCacheInfo: getStatsCacheInfo
     };
 } catch (e) {
     // Intentionally left blank
