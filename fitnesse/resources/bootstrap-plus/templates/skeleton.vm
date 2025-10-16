@@ -136,7 +136,7 @@
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
-        #if( $sidebar == 'false' )
+        #if( $sidebar == 'false' && $sidebar2 == 'false' )
             <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
             <div class="toggle-bar" style="display:none">Context help</div>
         #end
@@ -304,7 +304,7 @@
 
 
     ## Context help
-    #if( $sidebar == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
+    #if( ($sidebar == 'true' || $sidebar2 == 'true') && $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
             <div id="contextHelpContent" class="scrollbar">
