@@ -29,12 +29,6 @@
         #set($sidebarTags = 'false')
     #end
 
-    #set( $sidebarCookieName = "sidebar")
-    #set ($sidebar = $request.getCookie($sidebarCookieName))
-    #if($sidebar == "")
-        #set( $sidebar = 'false' )
-    #end
-
     #set( $sidebar2CookieName = "sidebar2")
     #set ($sidebar2 = $request.getCookie($sidebar2CookieName))
     #if($sidebar2 == "")
@@ -50,18 +44,12 @@
     #set($sidebarRootCookieName = "sidebarRoot")
     #set ($sidebarRoot = $request.getCookie($sidebarRootCookieName))
 
-    #set( $collapseSidebarCookieName = "collapseSidebar")
-    #set ($collapseSidebar = $request.getCookie($collapseSidebarCookieName))
-    #if($collapseSidebar == "")
-        #set( $collapseSidebar = 'false' )
-    #end
-
-    #set ($sidebarWidthCookieName = "sidebarPosition")
-    #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
-    #if($sidebarWidth == "")
-        #set( $sidebarWidth = '15vw' )
+    #set ($sidebar2WidthCookieName = "sidebar2Position")
+    #set ($sidebar2Width = $request.getCookie($sidebar2WidthCookieName))
+    #if($sidebar2Width == "")
+        #set( $sidebar2Width = '15vw' )
     #else
-        #set( $sidebarWidth = $sidebarWidth + 'px' )
+        #set( $sidebar2Width = $sidebar2Width + 'px' )
     #end
 
     #set ($contextHelpWidthCookieName = "contextHelpPosition")
@@ -136,7 +124,7 @@
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
-        #if( $sidebar == 'false' && $sidebar2 == 'false' )
+        #if( $sidebar2 == 'false' )
             <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
             <div class="toggle-bar" style="display:none">Context help</div>
         #end
@@ -157,17 +145,6 @@
 <div id="contentDiv">
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("Files"))
-        ## Closed Sidebar
-        <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
-            <div id="collapseSidebarDiv"
-                #if( $collapseSidebar == 'false' && !$bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivColor"
-                #elseif( $bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivDisabled" #end
-            >
-                <p id="collapseSidebarText">Project</p>
-                <i id="collapseSidebarIcon" class="fa fa-folder"></i>
-            </div>
-        </div>
-
         ## Closed Sidebar 2.0
         <div id="closedSidebar2" class="displayNone">
             <div id="collapseSidebar2Div">
@@ -176,24 +153,8 @@
             </div>
         </div>
 
-        ## Open Sidebar
-        <div id="sidebar" style="width: $sidebarWidth;" #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end>
-            <div class="buttonSidebarDiv">
-                <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
-                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
-                <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
-                #if ($sidebarRoot && $sidebarRoot.length() > 0)
-                    <i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>
-                #end
-            </div>
-
-            <ul id="sidebarContent" class="scrollbar">
-                <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
-            </ul>
-        </div>
-
         ## Sidebar 2.0 - Enhanced Tree View
-        <div id="sidebar2" style="width: $sidebarWidth;" #if( $sidebar2 != 'true' ) class="displayNone" #end>
+        <div id="sidebar2" style="width: $sidebar2Width;" #if( $sidebar2 != 'true' ) class="displayNone" #end>
             <div class="sidebar2-header">
                 <div class="sidebar2-title">
                     <i id="sidebar2-hide-toggle" class="fa fa-chevron-left sidebar2-hide-btn" aria-hidden="true" title="Hide sidebar"></i>
@@ -271,7 +232,7 @@
             #parse( $headerTemplate )
         </header>
 
-        <article #if( $sidebar == 'true' && !$bodyClass.equalsIgnoreCase("EditPage") ) id="articleWithSidebar" #end>
+        <article>
             #if(!$bodyClass.equalsIgnoreCase("EditPage"))
 
                 ## Tooltips front page
@@ -304,7 +265,7 @@
 
 
     ## Context help
-    #if( ($sidebar == 'true' || $sidebar2 == 'true') && $bodyClass.equalsIgnoreCase("EditPage") )
+    #if( $sidebar2 == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
             <div id="contextHelpContent" class="scrollbar">

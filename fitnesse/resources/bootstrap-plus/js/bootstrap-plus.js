@@ -717,12 +717,6 @@ $(function() {
         }
     );
 
-    $('body').on('click', '#sidebar-switch', function (e) {
-            e.preventDefault();
-            switchSidebar();
-        }
-    );
-
     $('body').on('click', '#sidebar2-switch', function (e) {
             e.preventDefault();
             switchSidebar2();
@@ -732,18 +726,6 @@ $(function() {
     $('body').on('click', '#sidebar2-stats-switch', function (e) {
             e.preventDefault();
             switchSidebar2Stats();
-        }
-    );
-
-    $('body').on('click', '#collapseSidebarDiv', function (e) {
-            e.preventDefault();
-            switchCollapseSidebar();
-        }
-    );
-
-    $('body').on('click', '#sidebarTags-switch', function (e) {
-            e.preventDefault();
-            switchSidebarTags();
         }
     );
 
