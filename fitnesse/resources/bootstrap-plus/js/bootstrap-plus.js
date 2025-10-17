@@ -609,9 +609,9 @@ $(function() {
     $('body').on('click', '#history-specialPages-switch', function (e) {
         e.preventDefault();
         switchHistorySpecialPages();
-        var info = getPageHistory(location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages'), generateTestHistoryTable);
-        $('#recentTestHistoryTable').html('');
-        $('#recentTestHistoryTable').load(info);
+        var url = location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/?recentTestHistory&specPageFilter=' + getCookie('historySpecialPages');
+        $('#recentTestHistoryTable').empty();
+        getPageHistory(url, generateTestHistoryTable);
         }
     );
     $('body').on('click', '.coll', function () {
@@ -847,34 +847,40 @@ function getPageHistory(url, callback) {
 }
 
 function generateTestHistoryTable(data) {
-    const check = document.getElementById('recentTestHistoryTable');
-    if (check !== undefined) {
-        const parser = new DOMParser();
-        let parserhtml = parser.parseFromString(data, 'text/html');
-        let table = parserhtml.getElementsByTagName('table')[0];
-        const rows = table.getElementsByTagName('tr');
-
-        // Make row length no longer than 5
-        if (rows.length > 5) {
-            let rowNumberToSlice = rows.length - 5;
-            $(rows, 'tr').slice(-rowNumberToSlice).remove();
-        }
-
-        // Make new column named "last 5 results"
-        let resultsReportTd = rows[0].childNodes[9];
-        resultsReportTd.innerText = 'Last 5 Results';
-        resultsReportTd.setAttribute('colspan', 5);
-        // Make cell length from column "last 5 results" no longer than 5
-        for (let i = 1; i < rows.length; i++) {
-            let cells = rows[i].getElementsByTagName('td');
-            // 4 columns + 5 cells
-            if (cells.length > 9) {
-                $(cells, 'td').slice(9).remove();
-            }
-        }
-
-        check.appendChild(table);
+    const container = document.getElementById('recentTestHistoryTable');
+    if (!container) {
+        return;
     }
+
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(data, 'text/html');
+    const table = parsed.getElementsByTagName('table')[0];
+    if (!table) {
+        return;
+    }
+
+    const rows = table.getElementsByTagName('tr');
+
+    // Make row length no longer than 5
+    if (rows.length > 5) {
+        let rowNumberToSlice = rows.length - 5;
+        $(rows, 'tr').slice(-rowNumberToSlice).remove();
+    }
+
+    // Make new column named "last 5 results"
+    let resultsReportTd = rows[0].childNodes[9];
+    resultsReportTd.innerText = 'Last 5 Results';
+    resultsReportTd.setAttribute('colspan', 5);
+    // Make cell length from column "last 5 results" no longer than 5
+    for (let i = 1; i < rows.length; i++) {
+        let cells = rows[i].getElementsByTagName('td');
+        // 4 columns + 5 cells
+        if (cells.length > 9) {
+            $(cells, 'td').slice(9).remove();
+        }
+    }
+
+    container.appendChild(table);
 }
 
 /*
