@@ -2024,9 +2024,7 @@ function restoreSidebar2State() {
                 
                 setTimeout(() => {
                     if (state.scrollPosition) {
-                        $('#sidebar2Content').animate({
-                            scrollTop: state.scrollPosition
-                        }, 300); // Smooth scroll animation
+            $('#sidebar2Content').scrollTop(state.scrollPosition);
                     }
                     
                     // Set focus to current page after restoration and scroll are complete
@@ -2235,17 +2233,15 @@ function showSidebar2LoadingOverlay(message = 'Loading...') {
     $('#sidebar2Content').css('position', 'relative').append(overlay);
     
     // Smooth fade in
-    overlay.hide().fadeIn(200);
+    overlay.show();
 }
 
 /**
  * Hide loading overlay for Sidebar 2.0
  */
 function hideSidebar2LoadingOverlay() {
-    $('.sidebar2-restore-overlay').fadeOut(200, function() {
-        $(this).remove();
-        $('#sidebar2Content').css('position', '');
-    });
+    $('.sidebar2-restore-overlay').remove();
+    $('#sidebar2Content').css('position', '');
 }
 
 /**
@@ -2294,7 +2290,7 @@ function restoreExpandedNodesOptimized(nodesByDepth) {
             Promise.allSettled(promises).then(() => {
                 currentDepthIndex++;
                 // Small delay between depth levels to avoid overwhelming the browser
-                setTimeout(processNextDepth, 50);
+                setTimeout(processNextDepth, 0);
             });
         }
         
