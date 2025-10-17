@@ -166,11 +166,14 @@
                 </div>
             </div>
             <div id="sidebar2Content"></div>
-            <div class="sidebar2-stats-panel#if( $sidebar2Stats != 'true' ) displayNone#end">
+            <div class="sidebar2-stats-panel collapsed#if( $sidebar2Stats != 'true' ) displayNone#end">
                 <div class="sidebar2-stats-header">
                     <i class="sidebar2-stats-icon fa fa-bar-chart"></i>
                     <span class="sidebar2-stats-title">Project Stats</span>
                     <i id="sidebar2-stats-refresh" class="sidebar2-stats-refresh fa fa-refresh" title="Refresh statistics"></i>
+                    <span class="sidebar2-stats-toggle">
+                        <i class="fa fa-chevron-up"></i>
+                    </span>
                 </div>
                 <div class="sidebar2-stats-content">
                     <div class="sidebar2-stats-item">

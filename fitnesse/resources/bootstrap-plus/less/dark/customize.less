@@ -2003,6 +2003,29 @@ li.runWithOrangeBeard a {
   &.displayNone {
     display: none !important;
   }
+  
+  /* Collapsed state - only show header */
+  &.collapsed .sidebar2-stats-content {
+    display: none;
+  }
+  
+  /* Expanded state - show content with animation */
+  &.expanded .sidebar2-stats-content {
+    display: block;
+  }
+  
+  /* Toggle icon change */
+  &.collapsed .sidebar2-stats-toggle i {
+    &:before {
+      content: "\f077"; /* fa-chevron-up */
+    }
+  }
+  
+  &.expanded .sidebar2-stats-toggle i {
+    &:before {
+      content: "\f078"; /* fa-chevron-down */
+    }
+  }
 }
 
 .sidebar2-stats-header {
@@ -2014,6 +2037,13 @@ li.runWithOrangeBeard a {
   font-size: 13px;
   font-weight: 600;
   color: #e9ecef;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #495057;
+  }
 }
 
 .sidebar2-stats-icon {
@@ -2024,6 +2054,17 @@ li.runWithOrangeBeard a {
 
 .sidebar2-stats-title {
   flex: 1;
+}
+
+.sidebar2-stats-toggle {
+  margin-left: 12px;
+  color: #adb5bd;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+  
+  i {
+    transition: transform 0.2s ease;
+  }
 }
 
 .sidebar2-stats-refresh {
@@ -2047,6 +2088,7 @@ li.runWithOrangeBeard a {
 
 .sidebar2-stats-content {
   padding: 6px 12px;
+  transition: all 0.2s ease;
 }
 
 .sidebar2-stats-item {

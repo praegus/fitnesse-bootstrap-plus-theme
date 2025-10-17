@@ -2814,11 +2814,53 @@ function initializeStatsCache() {
 }
 
 /**
+ * Toggle stats panel expanded/collapsed state
+ */
+function toggleStatsPanel() {
+    const $statsPanel = $('.sidebar2-stats-panel');
+    
+    if ($statsPanel.hasClass('collapsed')) {
+        // Expand the panel
+        $statsPanel.removeClass('collapsed').addClass('expanded');
+        
+        // Load stats if not already loaded and panel is enabled
+        if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
+            // Check if we need to load stats
+            const currentValue = $('#sidebar2-stats-tests').text();
+            if (currentValue === '-') {
+                // Load stats when expanding for the first time
+                if (hasValidStatsCache()) {
+                    const cachedStats = getCachedStats();
+                    if (cachedStats) {
+                        updateSidebar2StatsDisplay(cachedStats, true);
+                        console.log('✓ Project stats loaded from cache on expand');
+                    }
+                } else {
+                    loadSidebar2ProjectStats();
+                }
+            }
+        }
+    } else {
+        // Collapse the panel
+        $statsPanel.removeClass('expanded').addClass('collapsed');
+    }
+}
+
+/**
  * Setup event handlers for the statistics panel
  */
 function setupSidebar2StatsEventHandlers() {
     // Initialize cache management
     initializeStatsCache();
+    
+    // Handle header click to toggle expand/collapse
+    $('.sidebar2-stats-header').off('click.sidebar2StatsToggle').on('click.sidebar2StatsToggle', function(e) {
+        // Don't toggle if clicking the refresh button
+        if ($(e.target).closest('#sidebar2-stats-refresh').length === 0) {
+            toggleStatsPanel();
+        }
+    });
+    
     // Handle refresh button click - force fresh data load (bypass cache)
     $('#sidebar2-stats-refresh').off('click.sidebar2Stats').on('click.sidebar2Stats', function(e) {
         e.preventDefault();
@@ -2827,30 +2869,16 @@ function setupSidebar2StatsEventHandlers() {
         loadSidebar2ProjectStats(true); // forceRefresh = true
     });
     
-    // Load initial statistics when sidebar2 becomes visible AND stats are enabled
-    if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
-        // Check cache immediately to avoid showing dash placeholder
-        if (hasValidStatsCache()) {
-            const cachedStats = getCachedStats();
-            if (cachedStats) {
-                // Load from cache immediately - no delay needed
-                updateSidebar2StatsDisplay(cachedStats, true);
-                console.log('✓ Project stats loaded from cache immediately on page load');
-                return; // Don't schedule delayed load
-            }
-        }
-        
-        // No cache available - delay initial load to not block sidebar tree loading
-        setTimeout(() => {
-            loadSidebar2ProjectStats();
-        }, 1000);
-    }
+    // Don't load stats automatically on page load - wait for user to expand
+    // Stats will be loaded when panel is expanded for the first time
     
-    // Reload stats when sidebar2 is refreshed (only if stats are enabled)
+    // Reload stats when sidebar2 is refreshed (only if stats are enabled and expanded)
     $('#sidebar2-refresh').off('click.sidebar2StatsRefresh').on('click.sidebar2StatsRefresh', function() {
-        // When tree is refreshed, also refresh stats (bypass cache)
+        // When tree is refreshed, also refresh stats if panel is expanded
         setTimeout(() => {
-            if ($('#sidebar2').is(':visible') && getCookie('sidebar2Stats') === 'true') {
+            if ($('#sidebar2').is(':visible') && 
+                getCookie('sidebar2Stats') === 'true' && 
+                $('.sidebar2-stats-panel').hasClass('expanded')) {
                 console.log('Sidebar2 tree refreshed - forcing stats refresh');
                 loadSidebar2ProjectStats(true); // forceRefresh = true
             }
