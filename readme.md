@@ -14,7 +14,21 @@ Uses Bootstrap 4.4, JQuery 3.4 and CodeMirror 5.52
 * Light and dark version of the theme for the wiki and CodeMirror editor
 * Different favicons for Tests, Suites, Static pages and Edit mode
 * Show the page name first in the page title (So different tabs have recognizable titles)
-* Optional sidebar to ease navigation
+* **Enhanced Sidebar 2.0** with improved style and performance on bigger projects:
+  * Expandable/collapsible tree structure for easy project navigation
+  * Context menu with quick actions (copy path, open in new tab/window, etc.)
+  * Keyboard navigation support with arrow keys and Enter
+  * Optional tag display for pages
+  * Refresh capability to sync with latest project structure
+  * Improved performance
+  * Symlink identification and handling
+* **Project Statistics Panel** showing counts of:
+  * Test pages count
+  * Suite pages count 
+  * Static pages count
+  * Symlinks count
+  * Skipped pages count
+  * Cached statistics with manual refresh option
 * Visual identification of slim tables using icons
 * Failure navigator highlights current failure, eliminates scrolling - jumps to next
 * Adds a 'Recent pages' overview to the end of the frontpage
