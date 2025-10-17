@@ -54,9 +54,9 @@ mvn clean package -DskipTests
 ### Testing
 ```bash
 # Run JavaScript unit tests
-npm run tests
+npm test
 # or
-yarn jest
+npm run tests
 
 # Run specific test file
 npx jest fitnesse/resources/jest/Sidebar.test.js
@@ -111,7 +111,7 @@ This theme requires integration with:
 ## CI/CD Configuration
 
 ### GitHub Actions
-- **Pull Request Testing**: Runs Jest tests on Node.js 12.x
+- **Pull Request Testing**: Runs Jest tests on Node.js 20.x
 - **Master Branch Release**: 
   - Maven release to staging
   - GitHub release creation

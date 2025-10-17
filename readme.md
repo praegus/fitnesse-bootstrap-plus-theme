@@ -2,6 +2,10 @@
  
 You can go to the [DEVELOPMENT_GUIDE.MD](./DEVELOPMENT_GUIDE.MD), for information about how to get started with the Bootstrap-plus FitNesse Theme.
 
+## Testing
+- Unit tests run with Jest 29 using jsdom. Use `npm test` locally and in CI.
+- Tests live in `fitnesse/resources/jest/`. Legacy in-place test `fitnesse/resources/bootstrap-plus/js/bootstrap-plus.test.js` has been migrated and removed.
+
 ### [Bootstrap-plus @ Github.io Website](https://praegus.github.io/fitnesse-bootstrap-plus-theme/)
 
 
