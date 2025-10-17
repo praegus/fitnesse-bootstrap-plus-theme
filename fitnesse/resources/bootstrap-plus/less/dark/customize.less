@@ -2086,6 +2086,18 @@ li.runWithOrangeBeard a {
   }
 }
 
+/* Disable refresh button when panel is collapsed */
+.sidebar2-stats-panel.collapsed .sidebar2-stats-refresh {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  
+  &:hover {
+    color: #adb5bd;
+    background-color: transparent;
+  }
+}
+
 .sidebar2-stats-content {
   padding: 6px 12px;
   transition: all 0.2s ease;
