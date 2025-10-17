@@ -38,7 +38,7 @@
     #set( $sidebar2StatsCookieName = "sidebar2Stats")
     #set ($sidebar2Stats = $request.getCookie($sidebar2StatsCookieName))
     #if($sidebar2Stats == "")
-        #set( $sidebar2Stats = 'true' )
+        #set( $sidebar2Stats = 'false' )
     #end
 
     #set($sidebarRootCookieName = "sidebarRoot")
@@ -126,7 +126,6 @@
     <div class="navbar navbar-default">
         #if( $sidebar2 == 'false' )
             <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
-            <div class="toggle-bar" style="display:none">Context help</div>
         #end
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -148,8 +147,8 @@
         ## Closed Sidebar 2.0
         <div id="closedSidebar2" class="displayNone">
             <div id="collapseSidebar2Div">
-                <p id="collapseSidebar2Text">Project</p>
                 <i id="collapseSidebar2Icon" class="fa fa-chevron-right"></i>
+                <p id="collapseSidebar2Text">Project</p>
             </div>
         </div>
 
@@ -268,9 +267,18 @@
 
 
     ## Context help
-    #if( $sidebar2 == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
+    #if( $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
+            <div class="sidebar2-header">
+                <div class="sidebar2-title">
+                    <i id="contexthelp-hide-toggle" class="fa fa-chevron-right sidebar2-hide-btn" aria-hidden="true" title="Hide sidebar"></i>
+                    Context Help
+                </div>
+                <div class="sidebar2-controls">
+                    <i id="contexthelp-refresh" class="fa fa-refresh" aria-hidden="true" title="Reload context"></i>
+                </div>
+            </div>
             <div id="contextHelpContent" class="scrollbar">
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
             </div>
@@ -280,6 +288,7 @@
         <div id="closedContextHelp">
             <div id="spinner" style="width: 19px; height:19px; margin: 20px 2px; background-size: contain;"></div>
             <div id="collapseCHelpDiv" style="display: none;">
+                <i id="collapseCHelpIcon" class="fa fa-chevron-left"></i>
                 <p id="collapseCHelpText">Context Help</p>
             </div>
         </div>

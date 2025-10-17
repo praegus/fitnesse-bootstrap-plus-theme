@@ -210,7 +210,7 @@ function indexesOf(string, regex) {
 function populateContext() {
     var helpList = '<div class="helper-content" >';
     var helpId = 0;
-    helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<button class="fas fa-undo" id="clearFilter" title="Clear Filter"></button>&nbsp;<button class="fas fa-rotate-right" id="resync" title="Reload Context"></button>';
+    helpList += '<input type="text" class="form-control" id="filter" placeholder="Filter...">&nbsp;<i class="fa fa-times" id="clearFilter" title="Clear Filter"></i>';
     helpList += '<ol id="side-bar-tree" class="tree">';
 
     helpList += '<li class="coll closed"><label for="tree-scenarios">Scenario\'s</label>';
@@ -615,7 +615,7 @@ function setNewContextBadge() {
     badge.setAttribute('id', 'newContext-badge');
     badge.setAttribute('title', 'Document has changed since last context sync!');
     badge.innerHTML = '★';
-    $('#resync').append(badge);
+    $('#contexthelp-refresh').append(badge);
 }
 
 var reservedWords = ['script', 'debug script', 'conditional script', 'storyboard', 'comment', 'table',
@@ -629,8 +629,8 @@ $(document).ready(function () {
             var lineNr = cmEditor.doc.getCursor().line;
             var line = cmEditor.doc.getLine(lineNr);
             var searchString = getInfoForLine(line, false);
-            if (!$('#contextHelp').is(':visible')) {
-                $('.side-bar').slideToggle();
+            if ($('#contextHelp').hasClass('displayNone')) {
+                switchCollapseContextHelp();
             }
             $('#filter').val(searchString.trim());
             filterHelpList();
@@ -683,14 +683,7 @@ $(document).ready(function () {
         }
     });
 
-    $('body').on('click', '.toggle-bar', function (e) {
-            e.preventDefault();
-            if ($('.toggle-bar').attr('populated') === undefined) {
-                populateContext();
-            }
-            $('.side-bar').slideToggle();
-        }
-    );
+    // Deprecated dropdown toggle-bar removed in favor of sidebar-based context help
 
     $('body').on('click', '#cancelEdit', function (e) {
         e.preventDefault();
@@ -729,7 +722,7 @@ $(document).ready(function () {
         filterHelpList();
     });
 
-    $('body').on('click', '#resync', function (e) {
+    $('body').on('click', '#contexthelp-refresh', function (e) {
         e.preventDefault();
         $('.toggle-bar').removeAttr('populated');
         $('#collapseCHelpText').removeAttr('populated');
@@ -763,14 +756,24 @@ $(document).ready(function () {
             }
         }
     );
+
+    // Context help header hide button (acts like Sidebar2 hide)
+    $('body').on('click', '#contexthelp-hide-toggle', function (e) {
+        e.preventDefault();
+        switchCollapseContextHelp();
+    });
 });
 
 function switchCollapseContextHelp() {
     if ($('#contextHelp').hasClass('displayNone')) {
+        // Opening: expand panel to the left and hide the closed bar
         $('#collapseCHelpDiv').addClass('collapseCHelpDivColor');
         $('#contextHelp').removeClass('displayNone');
+        $('#closedContextHelp').addClass('displayNone');
     } else {
+        // Closing: show the closed bar again
         $('#collapseCHelpDiv').removeClass('collapseCHelpDivColor');
         $('#contextHelp').addClass('displayNone');
+        $('#closedContextHelp').removeClass('displayNone');
     }
 }

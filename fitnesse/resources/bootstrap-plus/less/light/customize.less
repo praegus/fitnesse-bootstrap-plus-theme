@@ -737,9 +737,9 @@ li i {
   padding-top: 3px;
 }
 
-button#clearFilter, button#resync {
-  padding: 6px 10px 6px 10px;
-}
+/* deprecated old button styles for clear filter and resync removed */
+/* button#clearFilter, button#resync { }
+*/
 
 button.prefsbutton {
   padding: 4px 3px 3px 3px;
@@ -1236,14 +1236,14 @@ kbd {
 #closedSidebar, #closedContextHelp {
   height: 100%;
   padding: 0 0 5px;
-  background-color: #f8f8f8;
+  background-color: #f8f9fa;
   min-width: 30px;
 }
 #closedSidebar {
-  border-right: 1px solid #e7e7e7;
+  border-right: 1px solid #e0e0e0;
 }
 #closedContextHelp {
-  border-left: 1px solid #e7e7e7;
+  border-left: 1px solid #e0e0e0;
 }
 
 #closedSidebar2 {
@@ -1260,10 +1260,24 @@ kbd {
   cursor: pointer;
 }
 
+/* Match Sidebar2 hover/transition on collapsed bar */
+#collapseCHelpDiv {
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center arrow and text horizontally */
+}
+#collapseCHelpDiv:hover {
+  background-color: #e9ecef;
+}
+
 #collapseSidebar2Div {
   padding: 10px 4px;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center arrow and text horizontally */
 }
 
 #collapseSidebar2Div:hover {
@@ -1287,8 +1301,9 @@ kbd {
   transform: rotate(-180deg);
 }
 #collapseCHelpText {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  transform: rotate(-180deg);
+  color: #495057;
+  font-weight: 600;
 }
 
 #collapseSidebar2Text {
@@ -1307,7 +1322,15 @@ kbd {
 #collapseSidebar2Icon {
   font-size: 16px;
   color: #007bff;
-  margin-top: 8px;
+  display: block;
+  margin: 6px auto 4px;
+}
+
+#collapseCHelpIcon {
+  font-size: 16px;
+  color: #007bff;
+  display: block;
+  margin: 6px auto 4px;
 }
 
 #sidebar, #contextHelp {
@@ -1323,6 +1346,9 @@ kbd {
 #contextHelp {
   border-left: 1px solid #e7e7e7;
   left: 0 !important;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff; /* Match Sidebar2 background */
 }
 
 .buttonSidebarDiv {
@@ -1695,7 +1721,7 @@ li.runWithOrangeBeard a {
   }
 }
 
-#sidebar2-refresh {
+#sidebar2-refresh, #contexthelp-refresh, #clearFilter {
   cursor: pointer;
   color: #6c757d;
   font-size: 13px;
@@ -1711,6 +1737,15 @@ li.runWithOrangeBeard a {
   &:active {
     transform: scale(0.95);
   }
+}
+
+/* fine-tune clear filter icon alignment next to the input */
+#clearFilter {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: 2px; /* slightly lower for optical vertical centering */
+  margin-left: 4px;
 }
 
 .sidebar2-btn {
