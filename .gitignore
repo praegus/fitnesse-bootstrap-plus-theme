@@ -3,4 +3,5 @@
 target/*
 fitnesse/resources/bootstrap-plus/css/fitnesse-bootstrap-plus*.css
 node_modules/*
+WARP.md
 
