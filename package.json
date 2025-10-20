@@ -1,11 +1,16 @@
 {
   "devDependencies": {
-    "jest": "^24.9.0"
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.4.8"
   },
   "scripts": {
+    "test": "jest",
     "tests": "jest"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "roots": [
       "<rootDir>"
     ],
@@ -16,13 +21,26 @@
       "node_modules",
       "resources"
     ],
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "<rootDir>/setup-jest.js"
-    ]
+    ],
+    "testMatch": [
+      "<rootDir>/fitnesse/resources/jest/**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/target/"
+    ],
+    "testEnvironmentOptions": {
+      "url": "http://localhost/FrontPage"
+    }
   },
   "dependencies": {
-    "axios": ">=0.21.1",
     "codemirror": "^5.52.0",
     "jquery": "^3.4.1"
-  }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10"
 }

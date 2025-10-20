@@ -591,16 +591,15 @@ font-size:12px;
 }
 
 .icon-test {
-  color: #2222AA;
+  color: #28a745;
 }
 
 .icon-suite {
-  color: #006600;
+  color: #007bff;
 }
 
 .icon-static {
   color: #222222;
-  font-size: 0.8em !important;
 }
 
 .icon-special {
@@ -613,6 +612,20 @@ font-size:12px;
 
 .icon-scenariolib:before {
   padding: 0 2px 0 2px;
+}
+
+.fitnesse-root-icon {
+  background-image: url(../img/suite-favicon.png) !important;
+  background-size: 14px 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  width: 14px !important;
+  height: 14px !important;
+  display: inline-block !important;
+  
+  &:before {
+    content: "" !important; // Hide FontAwesome icon content
+  }
 }
 
 .contents li {
@@ -724,9 +737,9 @@ li i {
   padding-top: 3px;
 }
 
-button#clearFilter, button#resync {
-  padding: 6px 10px 6px 10px;
-}
+/* deprecated old button styles for clear filter and resync removed */
+/* button#clearFilter, button#resync { }
+*/
 
 button.prefsbutton {
   padding: 4px 3px 3px 3px;
@@ -1223,19 +1236,52 @@ kbd {
 #closedSidebar, #closedContextHelp {
   height: 100%;
   padding: 0 0 5px;
-  background-color: #f8f8f8;
+  background-color: #f8f9fa;
   min-width: 30px;
 }
 #closedSidebar {
-  border-right: 1px solid #e7e7e7;
+  border-right: 1px solid #e0e0e0;
 }
 #closedContextHelp {
-  border-left: 1px solid #e7e7e7;
+  border-left: 1px solid #e0e0e0;
+}
+
+#closedSidebar2 {
+  height: 100%;
+  padding: 0 0 5px;
+  background-color: #f8f9fa;
+  min-width: 30px;
+  border-right: 1px solid #e0e0e0;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
 }
 
 #collapseSidebarDiv, #collapseCHelpDiv {
   padding: 10px 4px;
   cursor: pointer;
+}
+
+/* Match Sidebar2 hover/transition on collapsed bar */
+#collapseCHelpDiv {
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center arrow and text horizontally */
+}
+#collapseCHelpDiv:hover {
+  background-color: #e9ecef;
+}
+
+#collapseSidebar2Div {
+  padding: 10px 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center arrow and text horizontally */
+}
+
+#collapseSidebar2Div:hover {
+  background-color: #e9ecef;
 }
 
 .collapseSidebarDivDisabled, .collapseCHelpDivDisabled {
@@ -1255,13 +1301,36 @@ kbd {
   transform: rotate(-180deg);
 }
 #collapseCHelpText {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
+  transform: rotate(-180deg);
+  color: #495057;
+  font-weight: 600;
+}
+
+#collapseSidebar2Text {
+  writing-mode: tb-rl;
+  font-size: 0.95em;
+  transform: rotate(-180deg);
+  color: #495057;
+  font-weight: 600;
 }
 
 #collapseSidebarIcon {
   font-size: 18px;
   transform: rotate(-90deg);
+}
+
+#collapseSidebar2Icon {
+  font-size: 16px;
+  color: #007bff;
+  display: block;
+  margin: 6px auto 4px;
+}
+
+#collapseCHelpIcon {
+  font-size: 16px;
+  color: #007bff;
+  display: block;
+  margin: 6px auto 4px;
 }
 
 #sidebar, #contextHelp {
@@ -1277,6 +1346,9 @@ kbd {
 #contextHelp {
   border-left: 1px solid #e7e7e7;
   left: 0 !important;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff; /* Match Sidebar2 background */
 }
 
 .buttonSidebarDiv {
@@ -1525,6 +1597,7 @@ tr.scenario-detail > td {
 
 .context-menu-item {
   padding: .2em .5em .2em 2em !important;
+  font-weight: 500 !important;
 }
 .context-menu-list {
   font-size: 0.95em !important;
@@ -1561,4 +1634,636 @@ input#helptext {
 
 li.runWithOrangeBeard a {
     padding: 10px 0px 0px 0px;
+}
+
+/* Sidebar 2.0 - Enhanced Tree View */
+
+#sidebar2 {
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  height: 100vh; /* Full viewport height */
+  max-height: 100vh; /* Prevent sidebar from exceeding viewport */
+}
+
+.sidebar2-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sidebar2-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #495057;
+  font-size: 14px;
+  
+  i {
+    margin-right: 8px;
+    color: #007bff;
+  }
+}
+
+.sidebar2-hide-btn {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.sidebar2-controls {
+  display: flex;
+  gap: 8px;
+}
+
+#sidebar2-tags-switch {
+  cursor: pointer;
+  color: #007bff;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #0056b3;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  &.sidebar2-tags-disabled {
+    color: #adb5bd;
+    
+    &:hover {
+      color: #6c757d;
+      background-color: #e9ecef;
+    }
+  }
+}
+
+#sidebar2-refresh, #contexthelp-refresh, #clearFilter {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* fine-tune clear filter icon alignment next to the input */
+#clearFilter {
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+  top: 2px; /* slightly lower for optical vertical centering */
+  margin-left: 4px;
+}
+
+.sidebar2-btn {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 13px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #e9ecef;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+#sidebar2Content {
+  flex: 1 1 0%; /* Explicit flex shorthand for proper shrinking */
+  overflow-y: scroll; /* Always show scrollbar for consistent UX */
+  overflow-x: auto; /* Allow horizontal scrolling when content overflows */
+  padding: 8px 0;
+  min-height: 0; /* Important for flex items to shrink */
+  height: 0; /* Force height calculation from flex parent */
+  
+  /* Custom scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px; /* Add height for horizontal scrollbar */
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+}
+
+.sidebar2-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  color: #6c757d;
+  font-size: 14px;
+  
+  .spinner-border-sm {
+    margin-right: 8px;
+  }
+}
+
+.sidebar2-tree-node {
+  position: relative;
+  margin: 1px 0;
+  
+  &.current-page > .sidebar2-node-content {
+    background-color: #e3f2fd;
+    border-left: 3px solid #007bff;
+    font-weight: 600;
+  }
+  
+  &.keyboard-focused > .sidebar2-node-content {
+    background-color: #d4edda;
+    border-left: 3px solid #28a745;
+    outline: 2px solid #28a745;
+    outline-offset: -2px;
+  }
+  
+  &.current-page.keyboard-focused > .sidebar2-node-content {
+    background-color: #cce7d0;
+    border-left: 3px solid #007bff;
+    outline: 2px solid #28a745;
+    outline-offset: -2px;
+  }
+}
+
+.sidebar2-node-content {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px 6px 15px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 0;
+  color: #495057;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: #f1f3f4;
+    text-decoration: none;
+    color: #495057;
+  }
+  
+  &:focus {
+    outline: none;
+    background-color: #f1f3f4;
+    text-decoration: none;
+    color: #495057;
+  }
+}
+
+.sidebar2-node-toggle {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px;
+  font-size: 10px;
+  color: #6c757d;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: #e9ecef;
+    color: #495057;
+  }
+  
+  &.loading {
+    animation: spin 1s linear infinite;
+  }
+  
+  &.no-children {
+    visibility: hidden;
+  }
+}
+
+.sidebar2-node-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  margin-top: 2px;
+  font-size: 12px;
+  
+  &.icon-suite { color: #007bff; }
+  &.icon-test { color: #28a745; }
+  &.icon-static { color: #000000; } /* Black color for normal static pages */
+  &.icon-special { color: #fd7e14; }
+  &.icon-scenariolib { color: #6f42c1; }
+  
+  /* Grey versions for pruned pages */
+  &.icon-suite-grey { color: #999999; }
+  &.icon-test-grey { color: #999999; }
+  &.icon-static-grey { color: #999999 !important; }
+  &.icon-special-grey { color: #999999; }
+  &.icon-scenariolib-grey { color: #999999; }
+  
+  &.fitnesse-root-icon {
+    background-image: url(../img/suite-favicon.png);
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    background-position: center;
+    
+    i {
+      opacity: 0;
+    }
+  }
+}
+
+.sidebar2-node-text {
+  flex: 1;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: visible; /* Allow content to overflow naturally */
+  display: flex;
+  align-items: center;
+  gap: 3px; /* Reduced from 6px to bring symlink icon closer to page icon */
+  min-width: 0;
+}
+
+.sidebar2-node-name {
+  flex-shrink: 0; /* Never shrink page names */
+  white-space: nowrap;
+  /* Remove text-overflow: ellipsis to never truncate page names */
+}
+
+.sidebar2-symlink-icon {
+  color: #6c757d;
+  font-size: 12px;
+  margin-right: 2px; /* Reduced from 4px to 2px for tighter spacing */
+  flex-shrink: 0;
+  opacity: 0.8;
+  line-height: 1; /* Ensure proper vertical alignment */
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.sidebar2-node-children {
+  margin-left: 0;
+  padding-left: 0;
+  list-style: none;
+  display: none;
+  
+  &.expanded {
+    display: block;
+  }
+  
+  .sidebar2-tree-node {
+    margin-left: 20px;
+  }
+}
+
+/* Pruned Pages Styling for Sidebar 2.0 */
+.sidebar2-tree-node.sidebar2-pruned {
+  .sidebar2-text-pruned {
+    text-decoration: line-through !important; /* Add strikethrough for better visibility */
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Context Menu Styling for Sidebar 2.0 */
+.sidebar2-context-menu {
+  background-color: #ffffff !important;
+  border: 1px solid #e0e0e0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  padding: 4px 0 !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
+  min-width: 160px !important;
+  
+  /* Viewport constraint handling */
+  &.constrained-height {
+    max-height: none !important;
+    overflow-y: auto !important;
+  }
+}
+
+.sidebar2-context-menu .context-menu-item {
+  background-color: #ffffff !important;
+  color: #495057 !important;
+  padding: 8px 12px 8px 32px !important;
+  border: none !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+  
+  &:hover,
+  &.context-menu-hover {
+    background-color: #f1f3f4 !important;
+    color: #495057 !important;
+  }
+  
+  &.context-menu-disabled {
+    color: #adb5bd !important;
+    background-color: #ffffff !important;
+  }
+  
+  /* Icon styling */
+  &::before {
+    color: #6c757d !important;
+    font-size: 13px !important;
+    width: 1.5em !important;
+    left: 8px !important;
+  }
+  
+  &:hover::before,
+  &.context-menu-hover::before {
+    color: #495057 !important;
+  }
+  
+  &.context-menu-disabled::before {
+    color: #adb5bd !important;
+  }
+}
+
+.sidebar2-context-menu .context-menu-separator {
+  border-bottom: 1px solid #e9ecef !important;
+  margin: 4px 0 !important;
+  padding: 0 !important;
+}
+
+.sidebar2-context-menu .context-menu-submenu::after {
+  border-color: transparent transparent transparent #6c757d !important;
+  right: 8px !important;
+}
+
+.sidebar2-context-menu .context-menu-item.context-menu-hover .context-menu-submenu::after {
+  border-color: transparent transparent transparent #495057 !important;
+}
+
+/* Submenu styling */
+.sidebar2-context-menu .context-menu-item .context-menu-list {
+  top: -4px !important;
+  right: -4px !important;
+}
+
+/* FontAwesome icon adjustments for context menu */
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa::before {
+  color: #6c757d !important;
+  font-size: 13px !important;
+  width: 1.5em !important;
+  left: 8px !important;
+}
+
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa.context-menu-hover::before {
+  color: #495057 !important;
+}
+
+.sidebar2-context-menu .context-menu-icon.context-menu-icon--fa.context-menu-disabled::before {
+  color: #adb5bd !important;
+}
+
+/* Test History */
+
+/* Sidebar 2.0 Tags */
+.sidebar2-node-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  flex-shrink: 0; /* Prevent tags container from shrinking */
+  /* Remove overflow: hidden to always show all tags */
+  
+  .sidebar2-tag {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 10px;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Prevent individual tags from shrinking */
+    
+    &:hover {
+      background-color: #bbdefb;
+      color: #0d47a1;
+    }
+  }
+  
+  &.sidebar2-tags-hidden {
+    display: none;
+  }
+}
+
+.sidebar2-btn {
+}
+
+/* Sidebar 2.0 Statistics Panel */
+.sidebar2-stats-panel {
+  border-top: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  flex-shrink: 0; /* Don't shrink the stats panel */
+  margin-top: auto; /* Push to bottom */
+  
+  &.displayNone {
+    display: none !important;
+  }
+  
+  /* Collapsed state - only show header */
+  &.collapsed .sidebar2-stats-content {
+    display: none;
+  }
+  
+  /* Expanded state - show content with animation */
+  &.expanded .sidebar2-stats-content {
+    display: block;
+  }
+  
+  /* Toggle icon change */
+  &.collapsed .sidebar2-stats-toggle i {
+    &:before {
+      content: "\f077"; /* fa-chevron-up */
+    }
+  }
+  
+  &.expanded .sidebar2-stats-toggle i {
+    &:before {
+      content: "\f078"; /* fa-chevron-down */
+    }
+  }
+}
+
+.sidebar2-stats-header {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #e9ecef;
+  border-bottom: 1px solid #dee2e6;
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  
+  &:hover {
+    background-color: #dee2e6;
+  }
+}
+
+.sidebar2-stats-icon {
+  margin-right: 6px;
+  color: #007bff;
+  font-size: 12px;
+}
+
+.sidebar2-stats-title {
+  flex: 1;
+}
+
+.sidebar2-stats-toggle {
+  margin-left: 12px;
+  color: #6c757d;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+  
+  i {
+    transition: transform 0.2s ease;
+  }
+}
+
+.sidebar2-stats-refresh {
+  cursor: pointer;
+  color: #6c757d;
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #007bff;
+    background-color: #f1f3f4;
+  }
+  
+  &.loading {
+    animation: spin 1s linear infinite;
+    color: #007bff;
+  }
+}
+
+/* Disable refresh button when panel is collapsed */
+.sidebar2-stats-panel.collapsed .sidebar2-stats-refresh {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  
+  &:hover {
+    color: #6c757d;
+    background-color: transparent;
+  }
+}
+
+.sidebar2-stats-content {
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.sidebar2-stats-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 13px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sidebar2-stats-item-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  margin-top: 4px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.sidebar2-stats-label {
+  color: #6c757d;
+  margin-right: 6px;
+  font-weight: 500;
+}
+
+.sidebar2-stats-value {
+  color: #495057;
+  font-weight: 600;
+  min-width: 20px;
+  
+  &.success {
+    color: #007bff; /* Use link blue color instead of green */
+  }
+  
+  &.error {
+    color: #dc3545;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Additional specific override for static pruned icons */
+.sidebar2-tree-node.sidebar2-pruned .sidebar2-node-icon.icon-static-grey {
+  color: #999999 !important;
 }

@@ -29,27 +29,27 @@
         #set($sidebarTags = 'false')
     #end
 
-    #set( $sidebarCookieName = "sidebar")
-    #set ($sidebar = $request.getCookie($sidebarCookieName))
-    #if($sidebar == "")
-        #set( $sidebar = 'false' )
+    #set( $sidebar2CookieName = "sidebar2")
+    #set ($sidebar2 = $request.getCookie($sidebar2CookieName))
+    #if($sidebar2 == "")
+        #set( $sidebar2 = 'false' )
+    #end
+
+    #set( $sidebar2StatsCookieName = "sidebar2Stats")
+    #set ($sidebar2Stats = $request.getCookie($sidebar2StatsCookieName))
+    #if($sidebar2Stats == "")
+        #set( $sidebar2Stats = 'false' )
     #end
 
     #set($sidebarRootCookieName = "sidebarRoot")
     #set ($sidebarRoot = $request.getCookie($sidebarRootCookieName))
 
-    #set( $collapseSidebarCookieName = "collapseSidebar")
-    #set ($collapseSidebar = $request.getCookie($collapseSidebarCookieName))
-    #if($collapseSidebar == "")
-        #set( $collapseSidebar = 'false' )
-    #end
-
-    #set ($sidebarWidthCookieName = "sidebarPosition")
-    #set ($sidebarWidth = $request.getCookie($sidebarWidthCookieName))
-    #if($sidebarWidth == "")
-        #set( $sidebarWidth = '15vw' )
+    #set ($sidebar2WidthCookieName = "sidebar2Position")
+    #set ($sidebar2Width = $request.getCookie($sidebar2WidthCookieName))
+    #if($sidebar2Width == "")
+        #set( $sidebar2Width = '15vw' )
     #else
-        #set( $sidebarWidth = $sidebarWidth + 'px' )
+        #set( $sidebar2Width = $sidebar2Width + 'px' )
     #end
 
     #set ($contextHelpWidthCookieName = "contextHelpPosition")
@@ -124,9 +124,8 @@
 <body#if( $bodyClass ) class="$bodyClass#if( $toolchainTables ) toolchainTest#end"#end>
 <nav class="navbar-fixed-top " role="navigation">
     <div class="navbar navbar-default">
-        #if( $sidebar == 'false' )
+        #if( $sidebar2 == 'false' )
             <div id="spinner" style="display:none; float:right; padding:5px 70px 0 0; width: 42px; height:42px;"></div>
-            <div class="toggle-bar" style="display:none">Context help</div>
         #end
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -145,31 +144,84 @@
 <div id="contentDiv">
     ## Sidebar
     #if(!$pageTitle.getTitle().equalsIgnoreCase("Files"))
-        ## Closed Sidebar
-        <div id="closedSidebar" #if( $sidebar == 'false' ) class="displayNone" #end>
-            <div id="collapseSidebarDiv"
-                #if( $collapseSidebar == 'false' && !$bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivColor"
-                #elseif( $bodyClass.equalsIgnoreCase("testPage") ) class="collapseSidebarDivDisabled" #end
-            >
-                <p id="collapseSidebarText">Project</p>
-                <i id="collapseSidebarIcon" class="fa fa-folder"></i>
+        ## Closed Sidebar 2.0
+        <div id="closedSidebar2" class="displayNone">
+            <div id="collapseSidebar2Div">
+                <i id="collapseSidebar2Icon" class="fa fa-chevron-right"></i>
+                <p id="collapseSidebar2Text">Project</p>
             </div>
         </div>
 
-        ## Open Sidebar
-        <div id="sidebar" style="width: $sidebarWidth;" #if( $sidebar == 'false' || $collapseSidebar == 'true' || $bodyClass.equalsIgnoreCase("testPage") ) class="displayNone" #end>
-            <div class="buttonSidebarDiv">
-                <i id="sidebarTags-switch" aria-hidden="true" title="Show/Hide tags" #if( $sidebarTags == 'true' ) class="buttonSidebar fa fa-tags" #else class="buttonSidebar fa fa-tags noTags" #end></i>
-                <i id="expandAllSidebar" class="fa fa-expand buttonSidebar" aria-hidden="true" title="Expand All"></i>
-                <i id="collapseAllSidebar" class="fa fa-crosshairs buttonSidebar" aria-hidden="true" title="Collapse Except Current"></i>
-                #if ($sidebarRoot && $sidebarRoot.length() > 0)
-                    <i id="resetSidebarRoot" class="fa fa-refresh buttonSidebar" aria-hidden="true" title="Reset sidebar root"></i>
-                #end
+        ## Sidebar 2.0 - Enhanced Tree View
+        <div id="sidebar2" style="width: $sidebar2Width;" #if( $sidebar2 != 'true' ) class="displayNone" #end>
+            <div class="sidebar2-header">
+                <div class="sidebar2-title">
+                    <i id="sidebar2-hide-toggle" class="fa fa-chevron-left sidebar2-hide-btn" aria-hidden="true" title="Hide sidebar"></i>
+                    Project
+                </div>
+                <div class="sidebar2-controls">
+                    <i id="sidebar2-tags-switch" aria-hidden="true" title="Show/Hide page tags" #if( $sidebarTags == 'true' ) class="fa fa-tags" #else class="fa fa-tags sidebar2-tags-disabled" #end></i>
+                    <i id="sidebar2-refresh" class="fa fa-refresh" aria-hidden="true" title="Refresh tree"></i>
+                </div>
             </div>
-
-            <ul id="sidebarContent" class="scrollbar">
-                <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
-            </ul>
+            <div id="sidebar2Content"></div>
+            <div class="sidebar2-stats-panel collapsed#if( $sidebar2Stats != 'true' ) displayNone#end">
+                <div class="sidebar2-stats-header">
+                    <i class="sidebar2-stats-icon fa fa-bar-chart"></i>
+                    <span class="sidebar2-stats-title">Project Stats</span>
+                    <i id="sidebar2-stats-refresh" class="sidebar2-stats-refresh fa fa-refresh" title="Refresh statistics"></i>
+                    <span class="sidebar2-stats-toggle">
+                        <i class="fa fa-chevron-up"></i>
+                    </span>
+                </div>
+                <div class="sidebar2-stats-content">
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="fa fa-cog sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Tests:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-tests" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="fa fa-cogs sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Suites:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-suites" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="far fa-file sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Static:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-static" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="fas fa-link sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Symlinks:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-symlinks" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                    <div class="sidebar2-stats-item">
+                        <div class="sidebar2-stats-left">
+                            <i class="fas fa-ban sidebar2-stats-item-icon"></i>
+                            <span class="sidebar2-stats-label">Skipped:</span>
+                        </div>
+                        <div class="sidebar2-stats-right">
+                            <span id="sidebar2-stats-skipped" class="sidebar2-stats-value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     #end
 
@@ -182,7 +234,7 @@
             #parse( $headerTemplate )
         </header>
 
-        <article #if( $sidebar == 'true' && !$bodyClass.equalsIgnoreCase("EditPage") ) id="articleWithSidebar" #end>
+        <article>
             #if(!$bodyClass.equalsIgnoreCase("EditPage"))
 
                 ## Tooltips front page
@@ -215,9 +267,18 @@
 
 
     ## Context help
-    #if( $sidebar == 'true' && $bodyClass.equalsIgnoreCase("EditPage") )
+    #if( $bodyClass.equalsIgnoreCase("EditPage") )
         ## Open Sidebar
         <div id="contextHelp" style="width: $contextHelpWidth;" class="displayNone">
+            <div class="sidebar2-header">
+                <div class="sidebar2-title">
+                    <i id="contexthelp-hide-toggle" class="fa fa-chevron-right sidebar2-hide-btn" aria-hidden="true" title="Hide sidebar"></i>
+                    Context Help
+                </div>
+                <div class="sidebar2-controls">
+                    <i id="contexthelp-refresh" class="fa fa-refresh" aria-hidden="true" title="Reload context"></i>
+                </div>
+            </div>
             <div id="contextHelpContent" class="scrollbar">
                 <div id="spinner" style="width: 42px; height:42px; margin: 15px 10px;"></div>
             </div>
@@ -227,6 +288,7 @@
         <div id="closedContextHelp">
             <div id="spinner" style="width: 19px; height:19px; margin: 20px 2px; background-size: contain;"></div>
             <div id="collapseCHelpDiv" style="display: none;">
+                <i id="collapseCHelpIcon" class="fa fa-chevron-left"></i>
                 <p id="collapseCHelpText">Context Help</p>
             </div>
         </div>

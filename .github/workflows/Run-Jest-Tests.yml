@@ -1,25 +1,24 @@
-name: Run Jest testcases
+name: Jest
 
-on: [pull_request]
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
+    env:
+      CI: true
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
       - name: Install dependencies
-        run: |
-          yarn install
-      - name: Run Jest
-        run: |
-          yarn jest
+        run: npm ci --no-audit --prefer-offline
+      - name: Run tests
+        run: npm test

@@ -8,7 +8,6 @@ var autocompletes = [];
 
 function loadAutoCompletesFromResponder() {
     $('.navbar #spinner').show();
-    $('.toggle-bar').hide();
     $('#closedContextHelp #spinner').show();
     $('#collapseCHelpDiv').hide();
     if (window.location.pathname.indexOf('ScenarioLibrary') !== -1
@@ -46,7 +45,6 @@ function loadAutoCompletesFromResponder() {
                 autocompletes.push(v.varName);
             });
             $('.navbar #spinner').hide();
-            $('.toggle-bar').show();
             $('#closedContextHelp #spinner').hide();
             $('#collapseCHelpDiv').show();
         },
