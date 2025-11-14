@@ -169,6 +169,37 @@ $(function() {
         clearSidebar2State();
     });
 
+    // Close sidebar when Test or Suite button is clicked
+    $('body').on('click', 'a[href*="?test"], a[href*="?suite"]', function(e) {
+        // Check if this is actually a test/suite execution link (not testHistory, etc.)
+        const href = $(this).attr('href');
+        if (href && (href.match(/\?test(&|$)/) || href.match(/\?suite(&|$)/))) {
+            // Remember the current sidebar state before test starts
+            // Three states: 'expanded', 'minimized', or 'disabled'
+            let sidebarState;
+            const sidebar2Visible = $('#sidebar2').is(':visible') && !$('#sidebar2').hasClass('displayNone');
+            const closedSidebar2Visible = $('#closedSidebar2').is(':visible') && !$('#closedSidebar2').hasClass('displayNone');
+            
+            if (sidebar2Visible) {
+                sidebarState = 'expanded';
+            } else if (closedSidebar2Visible) {
+                sidebarState = 'minimized';
+            } else {
+                sidebarState = 'disabled';
+            }
+            
+            sessionStorage.setItem('sidebar2-state-before-test', sidebarState);
+            
+            // Always mark that we're starting a test run - this will persist during the page load
+            sessionStorage.setItem('sidebar2-test-running', 'true');
+            sessionStorage.setItem('sidebar2-waiting-for-results', 'true');
+            
+            // Hide both sidebar elements during test execution
+            $('#sidebar2').addClass('displayNone');
+            $('#closedSidebar2').addClass('displayNone');
+        }
+    });
+
     // Keyboard navigation for Sidebar 2.0
     $(document).on('keydown', function (e) {
         // Only handle if Sidebar 2.0 is visible and focused
@@ -471,18 +502,77 @@ $(function() {
 
 
     // For showing Sidebar 2.0
-    if (!isFilesPath() && getCookie('sidebar2') == 'true') {
-        $('#sidebar2').removeClass('displayNone');
-        loadSidebar2Tree();
+    // Check if we just finished loading test results
+    const waitingForResults = sessionStorage.getItem('sidebar2-waiting-for-results') === 'true';
+    
+    if (waitingForResults) {
+        // Page has now loaded with results - get the previous state
+        const sidebarStateBeforeTest = sessionStorage.getItem('sidebar2-state-before-test');
         
-        // Apply saved width when initially loading the sidebar
-        var sidebar2Width = getCookie('sidebar2Position');
-        if (sidebar2Width && sidebar2Width !== '') {
-            $('#sidebar2').css('width', sidebar2Width + 'px');
+        // Clear all test-related flags
+        sessionStorage.removeItem('sidebar2-test-running');
+        sessionStorage.removeItem('sidebar2-waiting-for-results');
+        sessionStorage.removeItem('sidebar2-state-before-test');
+        
+        // Remove the inline style that was hiding the sidebar
+        const testRunningStyle = document.getElementById('sidebar2-test-running-style');
+        if (testRunningStyle) {
+            testRunningStyle.remove();
         }
-    } else if (isFilesPath()) {
-        // Hide Sidebar 2.0 when we're in the files section
-        $('#sidebar2').addClass('displayNone');
+        
+        // Restore sidebar to its previous state (before test was started)
+        if (!isFilesPath() && sidebarStateBeforeTest === 'expanded') {
+            // Sidebar was expanded before test, show it expanded again
+            $('#sidebar2').removeClass('displayNone');
+            $('#closedSidebar2').addClass('displayNone');
+            // Use inline style to override any remaining CSS
+            $('#sidebar2').css('display', '');
+            loadSidebar2Tree();
+            
+            var sidebar2Width = getCookie('sidebar2Position');
+            if (sidebar2Width && sidebar2Width !== '') {
+                $('#sidebar2').css('width', sidebar2Width + 'px');
+            }
+        } else if (!isFilesPath() && sidebarStateBeforeTest === 'minimized') {
+            // Sidebar was minimized before test, show it minimized again
+            $('#sidebar2').addClass('displayNone');
+            $('#closedSidebar2').removeClass('displayNone');
+        } else if (sidebarStateBeforeTest === 'disabled') {
+            // Sidebar was disabled before test, keep it disabled
+            $('#sidebar2').addClass('displayNone');
+            $('#closedSidebar2').addClass('displayNone');
+        } else {
+            // Fallback - check cookie preference
+            if (!isFilesPath() && getCookie('sidebar2') == 'true') {
+                $('#sidebar2').removeClass('displayNone');
+                $('#closedSidebar2').addClass('displayNone');
+                $('#sidebar2').css('display', '');
+                loadSidebar2Tree();
+                
+                var sidebar2Width = getCookie('sidebar2Position');
+                if (sidebar2Width && sidebar2Width !== '') {
+                    $('#sidebar2').css('width', sidebar2Width + 'px');
+                }
+            } else {
+                $('#sidebar2').addClass('displayNone');
+                $('#closedSidebar2').addClass('displayNone');
+            }
+        }
+    } else {
+        // Normal page load - show sidebar based on cookie
+        if (!isFilesPath() && getCookie('sidebar2') == 'true') {
+            $('#sidebar2').removeClass('displayNone');
+            loadSidebar2Tree();
+            
+            // Apply saved width when initially loading the sidebar
+            var sidebar2Width = getCookie('sidebar2Position');
+            if (sidebar2Width && sidebar2Width !== '') {
+                $('#sidebar2').css('width', sidebar2Width + 'px');
+            }
+        } else if (isFilesPath()) {
+            // Hide Sidebar 2.0 when we're in the files section
+            $('#sidebar2').addClass('displayNone');
+        }
     }
 
 
@@ -680,36 +770,52 @@ $(function() {
        }
 
 
+function disableSidebar2(options = {}) {
+        const { showNotification: shouldNotify = true, message } = options;
+
+        setBootstrapPlusConfigCookie('sidebar2', 'false');
+        $('#sidebar2-switch').removeClass('fa-toggle-on');
+        $('#sidebar2-switch').addClass('fa-toggle-off');
+        $('#sidebar2').addClass('displayNone');
+
+        if (shouldNotify) {
+            showNotification('info', message || 'Sidebar 2.0 disabled');
+        }
+    }
+
+function enableSidebar2(options = {}) {
+        const { showNotification: shouldNotify = true } = options;
+
+        setBootstrapPlusConfigCookie('sidebar2', 'true');
+        $('#sidebar2-switch').removeClass('fa-toggle-off');
+        $('#sidebar2-switch').addClass('fa-toggle-on');
+
+        if (!isFilesPath()) {
+            $('#sidebar2').removeClass('displayNone');
+            loadSidebar2Tree();
+
+            // Apply saved width when showing the sidebar
+            var sidebar2Width = getCookie('sidebar2Position');
+            if (sidebar2Width && sidebar2Width !== '') {
+                $('#sidebar2').css('width', sidebar2Width + 'px');
+            }
+        }
+
+        // Prefetch and cache project stats on enabling the sidebar (even if stats panel is disabled)
+        setTimeout(() => {
+            loadSidebar2ProjectStats(false, true); // prefetchOnly = true
+        }, 250);
+
+        if (shouldNotify) {
+            showNotification('success', 'Sidebar 2.0 enabled!');
+        }
+    }
+
 function switchSidebar2() {
         if (getCookie('sidebar2') == 'true') {
-            setBootstrapPlusConfigCookie('sidebar2', 'false');
-            $('#sidebar2-switch').removeClass('fa-toggle-on');
-            $('#sidebar2-switch').addClass('fa-toggle-off');
-            $('#sidebar2').addClass('displayNone');
-            showNotification('info', 'Sidebar 2.0 disabled');
+            disableSidebar2();
         } else {
-            setBootstrapPlusConfigCookie('sidebar2', 'true');
-            $('#sidebar2-switch').removeClass('fa-toggle-off');
-            $('#sidebar2-switch').addClass('fa-toggle-on');
-            
-            // Only show sidebar2 if we're not in the files path
-            if (!isFilesPath()) {
-                $('#sidebar2').removeClass('displayNone');
-                loadSidebar2Tree();
-                
-                // Apply saved width when showing the sidebar
-                var sidebar2Width = getCookie('sidebar2Position');
-                if (sidebar2Width && sidebar2Width !== '') {
-                    $('#sidebar2').css('width', sidebar2Width + 'px');
-                }
-            }
-            
-            // Prefetch and cache project stats on enabling the sidebar (even if stats panel is disabled)
-            setTimeout(() => {
-                loadSidebar2ProjectStats(false, true); // prefetchOnly = true
-            }, 250);
-            
-            showNotification('success', 'Sidebar 2.0 enabled!');
+            enableSidebar2();
         }
     }
 

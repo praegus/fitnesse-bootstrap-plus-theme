@@ -107,6 +107,13 @@
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/bootstrap-plus.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/js/custom.js" type="text/javascript"></script>
     <script src="${contextRoot}files/fitnesse/bootstrap-plus/contextmenu/jquery.contextMenu.min.js"></script>
+    
+    <!-- Hide sidebar immediately if test is running to prevent flash of content -->
+    <script type="text/javascript">
+        if (sessionStorage.getItem('sidebar2-test-running') === 'true') {
+            document.write('<style id="sidebar2-test-running-style">#sidebar2 { display: none !important; }</style>');
+        }
+    </script>
 
 </head>
 #if ( $bodyClass )
